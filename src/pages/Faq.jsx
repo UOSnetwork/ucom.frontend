@@ -263,7 +263,7 @@ const Faq = () => {
                         </div>
                       </PanelWrapper>
                       <PanelWrapper
-                        title="When will U°Community migrate to mainnent?"
+                        title="When will U°Community migrate to mainnet?"
                       >
                         <div className="text_faq">
                           <p>There’s no specific date. Your best bet is around mid 2019.</p>
@@ -397,7 +397,7 @@ const Faq = () => {
                       </div>
                     </PanelWrapper>
                     <PanelWrapper
-                      title="When will U°OS migrate to mainnent?"
+                      title="When will U°OS migrate to mainnet?"
                     >
                       <div className="text_faq">
                         <p>There’s no specific date. Your best bet is around mid 2019.</p>
