@@ -28,7 +28,6 @@ const Organization = (props) => {
   const organization = getOrganizationById(props.organizations, props.organizationId);
   const [orgData, setOrgData] = useState(owner);
   const [errors, setErrors] = useState({});
-  const [teamFormVisible, setTeamFormVisible] = useState(false);
 
   console.log(organization);
 
@@ -44,6 +43,10 @@ const Organization = (props) => {
       nickname: organization.nickname,
       avatarFilename: organization.avatarFilename,
       about: organization.about,
+      email: organization.email,
+      phoneNumber: organization.phoneNumber,
+      country: organization.country,
+      city: organization.city,
       usersTeam: organization.usersTeam,
       personalWebsiteUrl: organization.personalWebsiteUrl,
       socialNetworks: organization.socialNetworks || [],
@@ -167,12 +170,17 @@ const Organization = (props) => {
                 </Element>
                 <Element name="Board" className={styles.section}>
                   <h3 className={styles.title}>Board</h3>
-                  <div className={classNames(styles.field, styles.fieldRequired)}>
+                  <div className={styles.field}>
                     <div className={styles.label}>Owner</div>
                     <div className={styles.inputBlock}>
-                      <Link to={urls.getUserUrl(organization.user.id)}>
+                      <Link
+                        to={urls.getUserUrl(organization.user.id)}
+                        className={styles.userCard}
+                        target="_blank"
+                      >
                         <EntryCard
                           disableRate
+                          disabledLink
                           id={organization.user.id}
                           title={organization.user.firstName}
                           nickname={organization.user.accountName}
@@ -185,34 +193,52 @@ const Organization = (props) => {
                   <div className={classNames(styles.field, styles.fieldRequired)}>
                     <div className={styles.label}>Administrators</div>
                     <div className={styles.inputBlock}>
-                      {teamFormVisible &&
-                        <UsersTeamForm
-                          users={orgData.usersTeam}
-                          onChange={(usersTeam) => {
-                            setOrgData({ ...orgData, usersTeam });
-                          }}
-                        />
-                      }
-                      <Button
-                        small
-                        grayBorder
-                        onClick={() => setTeamFormVisible(true)}
-                      >
-                        Add Admin
-                      </Button>
+                      <UsersTeamForm
+                        users={orgData.usersTeam}
+                        onChange={(usersTeam) => {
+                          setOrgData({ ...orgData, usersTeam });
+                        }}
+                      />
                     </div>
                   </div>
                 </Element>
-                <Element name="Contacts" className={styles.section}>
-                  <h3 className={styles.title}>About Me</h3>
+                <Element name="About" className={styles.section}>
+                  <h3 className={styles.title}>About</h3>
                   <div className={styles.textarea}>
                     <Textarea
-                      placeholder="Your story, what passions you — something you want others to know about you"
+                      placeholder="Main idea — something you want others to know about this community…"
                       rows={6}
                       value={orgData.about}
                       onChange={value => setOrgData({ ...orgData, about: value })}
                       isMentioned
                     />
+                  </div>
+                </Element>
+                <Element name="Contacts" className={styles.section}>
+                  <h3 className={styles.title}>Contacts</h3>
+                  <div className={styles.field}>
+                    <div className={styles.label}>Email</div>
+                    <div className={styles.inputBlock}>
+                      <TextInput
+                        // topLabel
+                        placeholder="example@mail.com"
+                        // className={styles.input}
+                        value={orgData.email}
+                        onChange={value => setOrgData({ ...orgData, email: value })}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.field}>
+                    <div className={styles.label}>Phone Number</div>
+                    <div className={styles.inputBlock}>
+                      <TextInput
+                        // topLabel
+                        // placeholder=""
+                        // className={styles.input}
+                        value={orgData.phoneNumber}
+                        onChange={value => setOrgData({ ...orgData, phoneNumber: value })}
+                      />
+                    </div>
                   </div>
                 </Element>
                 <Element name="Links" className={styles.section}>
@@ -233,6 +259,33 @@ const Organization = (props) => {
                     // errors={errors}
                   />
                 </Element>
+                <Element name="Location" className={styles.section}>
+                  <h3 className={styles.title}>Location</h3>
+                  <div className={styles.field}>
+                    <div className={styles.label}>Country</div>
+                    <div className={styles.inputBlock}>
+                      <TextInput
+                        topLabel
+                        placeholder="Your country"
+                        // className={styles.input}
+                        value={orgData.country}
+                        onChange={value => setOrgData({ ...orgData, country: value })}
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.field}>
+                    <div className={styles.label}>City</div>
+                    <div className={styles.inputBlock}>
+                      <TextInput
+                        topLabel
+                        placeholder="Your city"
+                        // className={styles.input}
+                        value={orgData.city}
+                        onChange={value => setOrgData({ ...orgData, city: value })}
+                      />
+                    </div>
+                  </div>
+                </Element>
               </div>
             </div>
           </div>
@@ -246,6 +299,8 @@ Organization.propTypes = {
   users: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   saveOrganization: PropTypes.func.isRequired,
+  onClickClose: PropTypes.func,
+  organizationId: PropTypes.number,
   match: PropTypes.shape({
     params: PropTypes.shape({
       postId: PropTypes.string,
