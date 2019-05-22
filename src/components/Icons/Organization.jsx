@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Icon = () => (
-  <svg width="100%" height="100%" viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
+const Icon = props => (
+  <svg className={props.className} width="100%" height="100%" viewBox="0 0 132 132" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="132" height="132" rx="3" fill="#D8E8E8" />
     <mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="132" height="132">
       <rect width="132" height="132" rx="3" fill="#D8E8E8" />
@@ -11,5 +12,9 @@ const Icon = () => (
     </g>
   </svg>
 );
+
+Icon.propTypes = {
+  className: PropTypes.string,
+};
 
 export default Icon;

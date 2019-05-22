@@ -93,7 +93,7 @@ class RegistrationStepThird extends PureComponent {
                     onChange={checked => this.setState({ termsAccepted: checked })}
                   />
                 </span>
-                <span className="toolbar__main">I accept the  General <a className="registration__link" href="#">Terms and Conditions.</a></span>
+                <span className="toolbar__main">I accept the  General <a target="_blank" rel="noopener noreferrer" className="registration__link" href="/posts/7881">Terms and Conditions.</a></span>
               </span>
             </div>
             <div className="registration-terms__item">

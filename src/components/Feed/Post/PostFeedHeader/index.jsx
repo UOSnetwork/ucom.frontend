@@ -6,10 +6,14 @@ import moment from 'moment';
 import UserCard from '../../../UserCard/UserCard';
 import DropdownMenu from '../../../DropdownMenu';
 import urls from '../../../../utils/urls';
+// import { getFileUrl } from '../../../../utils/urls';
 import { getPostById } from '../../../../store/posts';
+import { selectUser } from '../../../../store/selectors/user';
 import { addSuccessNotification } from '../../../../actions/notifications';
 import styles from './styles.css';
-import { POST_TYPE_MEDIA_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
+import OrgIcon from '../../../Icons/Organization.jsx';
+import { USER_NEWS_FEED_ID } from '../../../../utils/feed.js';
+import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
 import { copyToClipboard } from '../../../../utils/text';
 
 const PostFeedHeader = (props) => {
@@ -40,12 +44,44 @@ const PostFeedHeader = (props) => {
     },
   }];
 
+  let entityForUser;
+  if (props.feedTypeId !== USER_NEWS_FEED_ID) {
+    entityForUser = '';
+  } else if ((post.userId !== post.entityForCard.id) || (props.user.id !== post.entityForCard.id)) {
+    entityForUser = post.entityForCard.accountName;
+  } else if (post.post && props.postTypeId === POST_TYPE_REPOST_ID && (post.post.userId !== post.post.entityForCard.id || props.user.id !== post.post.entityForCard.id)) {
+    entityForUser = post.post.entityForCard.accountName;
+  }
+
+  let entityForOrg;
+  if (props.feedTypeId !== USER_NEWS_FEED_ID) {
+    entityForOrg = '';
+  } else if (post.post && props.postTypeId === POST_TYPE_REPOST_ID) {
+    entityForOrg = post.post.entityForCard.title;
+  } else {
+    entityForOrg = post.entityForCard.title;
+  }
+
   return (
     <Fragment>
       <div className={styles.header}>
         <div className={styles.info}>
-          <Link to={urls.getFeedPostUrl(post)}>{props.createdAt}</Link>
-          {props.formIsVisible && <span> | <span className={styles.edit}>Edit post</span></span>}
+          <Link to={urls.getFeedPostUrl(post)} className={styles.date}>{props.createdAt}</Link>
+          {entityForUser !== '' && entityForUser !== undefined && post.entityNameFor.trim() === 'users' &&
+            <Link to={urls.getUserUrl(post.entityForCard.id)}>@{entityForUser}</Link>
+          }
+          {entityForOrg !== '' && post.entityNameFor.trim() === 'org' && (
+            <Fragment>
+              <Link to={urls.getOrganizationUrl(post.entityForCard.id)}>
+                {post.entityForCard && post.entityForCard.avatarFilename ? (
+                  <img className={styles.orgImg} src={urls.getFileUrl(post.entityForCard.avatarFilename)} alt="img" />
+                ) : (
+                  <OrgIcon className={styles.orgImg} />
+                )}
+              </Link>
+              <Link to={urls.getOrganizationUrl(post.entityForCard.id)}>@{entityForOrg}</Link>
+            </Fragment>
+          )}
         </div>
         { !props.formIsVisible &&
           <div className={styles.dropdown}>
@@ -60,7 +96,18 @@ const PostFeedHeader = (props) => {
 
       {props.userId && POST_TYPE_MEDIA_ID !== props.postTypeId ? (
         <div className={styles.user}>
-          <UserCard userId={post.userId} />
+          <UserCard
+            userId={post.userId}
+          />
+          {/* (entityForOrg !== '' && post.entityNameFor.trim() === 'org' && props.user.organizations.find(x => x.title === post.entityForCard.title) !== undefined) ? (
+            <Fragment>
+              {post.entityForCard && post.entityForCard.avatarFilename !== null ? (
+                <img className={styles.orgImgSmall} src={getFileUrl(post.entityForCard.avatarFilename)} alt="img" />
+              ) : (
+                <OrgIcon className={styles.orgImgSmall} />
+              )}
+            </Fragment>
+          ) : null */}
         </div>
       ) : null}
     </Fragment>
@@ -76,6 +123,7 @@ PostFeedHeader.propTypes = {
   formIsVisible: PropTypes.bool,
   userId: PropTypes.number,
   postTypeId: PropTypes.number,
+  feedTypeId: PropTypes.number,
 };
 
 PostFeedHeader.defaultProps = {
@@ -87,4 +135,6 @@ PostFeedHeader.defaultProps = {
 
 export default connect(state => ({
   posts: state.posts,
+  users: state.users,
+  user: selectUser(state),
 }), { addSuccessNotification })(PostFeedHeader);

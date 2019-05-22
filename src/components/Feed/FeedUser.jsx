@@ -65,6 +65,7 @@ const FeedUser = (props) => {
       onClickLoadMore={onClickLoadMore}
       onSubmitPostForm={onSubmitPostForm}
       filter={props.filter}
+      feedTypeId={props.feedTypeId}
     />
   );
 };

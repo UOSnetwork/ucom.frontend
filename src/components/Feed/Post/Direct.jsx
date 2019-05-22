@@ -37,6 +37,7 @@ const Direct = (props) => {
                 createdAt={moment(post.createdAt).fromNow()}
                 postId={post.id}
                 formIsVisible={formIsVisible}
+                feedTypeId={props.feedTypeId}
                 showForm={() => setFormIsVisible(true)}
               />
               <PostFeedContent
@@ -67,6 +68,7 @@ const Direct = (props) => {
             createdAt={moment(post.createdAt).fromNow()}
             postId={post.id}
             formIsVisible={formIsVisible}
+            feedTypeId={props.feedTypeId}
             showForm={() => setFormIsVisible(true)}
           />
           <PostFeedContent
@@ -93,8 +95,10 @@ const Direct = (props) => {
 
 Direct.propTypes = {
   id: PropTypes.number.isRequired,
+  feedTypeId: PropTypes.number.isRequired,
   posts: PropTypes.objectOf(PropTypes.object).isRequired,
   users: PropTypes.objectOf(PropTypes.object).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
 };

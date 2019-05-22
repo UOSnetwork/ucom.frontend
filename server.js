@@ -22,11 +22,13 @@ routes.forEach((route) => {
   app.get(route.path, async (req, res) => {
     const store = createStore();
     let contentMetaTags;
+    let state;
 
     if (typeof route.getData === 'function') {
       try {
         const data = await route.getData(store, req.params);
 
+        // TODO: Refactoring contentMetaTags, get every prop separately
         if (data && data.contentMetaTags) {
           contentMetaTags = JSON.parse(xss(JSON.stringify(data.contentMetaTags)));
           if (contentMetaTags.path) {
@@ -50,11 +52,17 @@ routes.forEach((route) => {
       };
     }
 
+    try {
+      state = xss(JSON.stringify(store.getState()).replace(/</g, '\\u003c'));
+    } catch (err) {
+      console.error(err);
+    }
+
     const templateData = {
       contentMetaTags,
-      state: xss(JSON.stringify(store.getState())),
       content: renderStatic(store, req.url),
       staticVersion: STATIC_VERSION,
+      state: state || {},
     };
 
     try {

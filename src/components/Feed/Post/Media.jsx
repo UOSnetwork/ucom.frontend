@@ -32,6 +32,7 @@ const Media = (props) => {
     <div className={styles.post} id={`post-${post.id}`}>
       <PostFeedHeader
         postId={post.id}
+        feedTypeId={props.feedTypeId}
         createdAt={moment(post.createdAt).fromNow()}
       />
 
@@ -62,6 +63,7 @@ const Media = (props) => {
 
 Media.propTypes = {
   id: PropTypes.number.isRequired,
+  feedTypeId: PropTypes.number.isRequired,
   posts: PropTypes.objectOf(PropTypes.object).isRequired,
   users: PropTypes.objectOf(PropTypes.object).isRequired,
   sharePopup: PropTypes.bool.isRequired,

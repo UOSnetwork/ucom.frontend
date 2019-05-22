@@ -10,7 +10,7 @@ module.exports = {
       script: 'server.js',
       instances: 2,
       exec_mode: 'cluster',
-      watch: false,
+      watch: ['server.js'],
       autorestart: true,
       env: {
         PORT: HTTP_SERVER_PORT,

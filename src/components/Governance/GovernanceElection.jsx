@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import GovernanceTable from './GovernanceTable';
 import Button from '../Button';
@@ -88,7 +89,7 @@ const GovernanceElection = (props) => {
                       onClick={() => setRoute(1)}
                       role="presentation"
                     >
-                       Select Block Producers
+                      {props.tabTitle}
                     </div>
                   </div>
                   <div className="menu__item_narrow">
@@ -147,6 +148,14 @@ const GovernanceElection = (props) => {
       </div>
     </div>
   );
+};
+
+GovernanceElection.propTypes = {
+  tabTitle: PropTypes.string,
+};
+
+GovernanceElection.defaultProps = {
+  tabTitle: 'Select Block Producers',
 };
 
 export default GovernanceElection;

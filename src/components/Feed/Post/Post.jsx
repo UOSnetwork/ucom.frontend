@@ -23,6 +23,7 @@ const Post = (props) => {
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
+          feedTypeId={props.feedTypeId}
         />
       );
     case POST_TYPE_MEDIA_ID:
@@ -31,6 +32,7 @@ const Post = (props) => {
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
+          feedTypeId={props.feedTypeId}
         />
       );
     default:
@@ -39,6 +41,7 @@ const Post = (props) => {
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
+          feedTypeId={props.feedTypeId}
         />
       );
   }

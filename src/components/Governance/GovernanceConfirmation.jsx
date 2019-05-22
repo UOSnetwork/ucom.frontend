@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import GovernanceTable from './GovernanceTable';
 import Button from '../Button';
@@ -27,13 +28,13 @@ const GovernanceConfirmation = (props) => {
       <div className="content content_base content_base_low">
         <div className="content__inner">
           <div className="content__title_tall">
-            <h1 className="title">Vote for these producers</h1>
+            <h1 className="title">{props.title}</h1>
           </div>
           <div className="governance-vote-title">
             <div className="governance-confirmation-avatar">
               <Avatar src={urls.getFileUrl(props.user.avatarFilename)} size="xsmall" icon={<IconOK />} />
             </div>
-            <div className="title title_xxsmall title_bold">Block Producers to Vote </div>
+            <div className="title title_xxsmall title_bold">{props.titleVote}</div>
           </div>
           <div className="governance-all__table governance-all__table_margin">
             <GovernanceTable
@@ -46,7 +47,7 @@ const GovernanceConfirmation = (props) => {
             <div className="governance-confirmation-avatar">
               <Avatar src={urls.getFileUrl(props.user.avatarFilename)} size="xsmall" icon={<IconNo />} />
             </div>
-            <div className="title title_xxsmall title_bold">Block Producers to Unvote </div>
+            <div className="title title_xxsmall title_bold">{props.titleUnvote}</div>
           </div>
           <div className="governance-all__table governance-all__table_margin_low">
             <GovernanceTable
@@ -92,6 +93,18 @@ const GovernanceConfirmation = (props) => {
       </div>
     </div>
   );
+};
+
+GovernanceConfirmation.propTypes = {
+  title: PropTypes.string,
+  titleVote: PropTypes.string,
+  titleUnvote: PropTypes.string,
+};
+
+GovernanceConfirmation.defaultProps = {
+  title: 'Vote for these producers',
+  titleVote: 'Block Producers to Vote',
+  titleUnvote: 'Block Producers to Unvote',
 };
 
 export default GovernanceConfirmation;

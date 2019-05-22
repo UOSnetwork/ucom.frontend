@@ -23,7 +23,7 @@ export default () => (
     <div className={styles.side}>
       <div className={styles.list}>
         <a href="/faq">FAQ</a>
-        <a href="/about">About</a>
+        <a href="https://uos.network/" target="_blank" rel="noopener noreferrer">About</a>
       </div>
     </div>
   </nav>

@@ -17,7 +17,7 @@ const Feed = props => (
       <div className="feed__list">
         {(props.filter ? props.postIds.filter(props.filter) : props.postIds).map(id => (
           <div className="feed__item" key={id}>
-            <Post id={id} />
+            <Post id={id} feedTypeId={props.feedTypeId} />
           </div>
         ))}
       </div>
@@ -40,6 +40,7 @@ const Feed = props => (
 
 Feed.propTypes = {
   hasMore: PropTypes.bool.isRequired,
+  feedTypeId: PropTypes.number.isRequired,
   postIds: PropTypes.arrayOf(PropTypes.number).isRequired,
   loading: PropTypes.bool.isRequired,
   loadMoreUrl: PropTypes.string,

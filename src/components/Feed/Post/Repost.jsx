@@ -34,7 +34,7 @@ const Repost = (props) => {
     <div className={styles.post}>
       <PostFeedHeader
         userId={user.id}
-        postTypeId={post.postTypeId}
+        postTypeId={props.postTypeId}
         createdAt={moment(post.createdAt).fromNow()}
         postId={post.id}
         userName={getUserName(user)}
@@ -53,6 +53,7 @@ const Repost = (props) => {
           accountName={post.post.user.accountName}
           profileLink={urls.getUserUrl(post.post.user.id)}
           avatarUrl={urls.getFileUrl(post.post.user.avatarFilename)}
+          feedTypeId={props.feedTypeId}
         />
 
         {post.post.postTypeId === POST_TYPE_MEDIA_ID ? (
@@ -96,6 +97,8 @@ Repost.propTypes = {
   users: PropTypes.objectOf(PropTypes.object).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
+  postTypeId: PropTypes.number.isRequired,
+  feedTypeId: PropTypes.number.isRequired,
 };
 
 export default connect(

@@ -95,9 +95,11 @@ const Governance = ({
       {electionVisibility && (
         <Popup onClickClose={() => setElectionVisibility(false)}>
           <ModalContent closeText="Close" mod="governance-election" onClickClose={() => setElectionVisibility(false)}>
-            <GovernanceElection {...{
-              currentImportance, table, selectedNodes, setConfirmationVisibility, user, currentNodeVisibility,
-            }}
+            <GovernanceElection
+              {...{
+                currentImportance, table, selectedNodes, setConfirmationVisibility, user, currentNodeVisibility,
+              }}
+              tabTitle={+currentNodeVisibility === BLOCK_PRODUCERS ? 'Select Block Producers' : 'Select Calculator Nodes'}
             />
           </ModalContent>
         </Popup>
@@ -106,9 +108,13 @@ const Governance = ({
       {confirmationVisibility && (
         <Popup onClickClose={() => setCloseVisibility(true)}>
           <ModalContent closeText="Close" mod="governance-election" onClickClose={() => setCloseVisibility(true)}>
-            <GovernanceConfirmation {...{
-              selectedNodes, table, user, setVotes, oldSelectedNodes,
-            }}
+            <GovernanceConfirmation
+              {...{
+                selectedNodes, table, user, setVotes, oldSelectedNodes,
+              }}
+              title={+currentNodeVisibility === BLOCK_PRODUCERS ? 'Vote for these producers' : 'Vote for these nodes'}
+              titleVote={+currentNodeVisibility === BLOCK_PRODUCERS ? 'Block Producers to Vote' : 'Nodes to Vote'}
+              titleUnvote={+currentNodeVisibility === BLOCK_PRODUCERS ? 'Block Producers to Unvote' : 'Nodes to Unvote'}
             />
           </ModalContent>
         </Popup>

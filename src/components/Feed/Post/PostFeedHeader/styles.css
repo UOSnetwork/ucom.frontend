@@ -19,18 +19,44 @@
   margin-right: 5px;
 }
 
+.date {
+  margin-right: 10px;
+}
+
+.orgImg {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-top: -3px;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  border-radius: 1px;
+  margin-right: 6px;
+  display: inline;
+}
+
+.orgImgSmall {
+  position: absolute;
+  top: 77px;
+  left: 42px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  border-radius: 1px;
+}
+
 .dropdown {
   margin-left: auto;
 }
 
 .leftTime {
   color: #C4C4C4;
-} 
+}
 
 .limit {
   font-size: 12px;
   color: #000000;
-  opacity: 0.6; 
+  opacity: 0.6;
 }
 
 .edit {
