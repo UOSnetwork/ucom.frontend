@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { truncate } from 'lodash';
 import xss from 'xss';
 import humps from 'lodash-humps';
@@ -8,6 +10,8 @@ import { compressUploadedImage } from '../../../utils/upload';
 import config from '../../../../package.json';
 import { extractHostname } from '../../../utils/url';
 import { sanitizeEmbedContent } from '../../../utils/text';
+import Embed from '../../Embed';
+import EmbedService from '../../../utils/embedService';
 import './styles.css';
 
 class UploadButtons {
@@ -42,6 +46,7 @@ class UploadButtons {
     document.body.appendChild(this.el);
   }
 
+  // TODO: Move to react component
   render() {
     this.el.innerHTML = `
       <div class="medium-upload__trigger">
@@ -145,6 +150,7 @@ export default class MediumUpload extends MediumEditor.Extension {
     this.onUploadStart = params.onUploadStart;
     this.onUploadDone = params.onUploadDone;
     this.onError = params.onError;
+    this.onEmbed = params.onEmbed;
     this.uploadButtons = new UploadButtons({
       onImageSelect: this.uplaodAndAppendImage,
       onVideoEmbedSelect: this.appendEmbed,
@@ -259,140 +265,146 @@ export default class MediumUpload extends MediumEditor.Extension {
   }
 
   appendEmbed = async (url) => {
-    if (!url) {
-      return;
-    }
-
     try {
-      const data = await this.getEmbedData(url);
+      const data = await EmbedService.getDataFromUrl(url);
       const div = document.createElement('div');
       div.contentEditable = false;
-      div.innerHTML = data.videoUrl ?
-        this.renderVideo(data) :
-        this.renderEmbed(data);
+      div.innerHTML = xss(`
+        <a href="${data.url}" class="js-embed">${data.url}</a>
+      `, {
+        whiteList: {
+          a: ['class'],
+        },
+      });
       this.insertEl(div);
-    } catch (e) {
-      console.error(e);
-      this.onError('No supported embed found');
-    }
-  }
+      this.onEmbed(data);
 
-  renderVideo = ({ videoUrl, videoAspectRatio }) => {
-    const paddingBottom = 100 / videoAspectRatio;
-    const xssOptions = {
-      whiteList: {
-        iframe: ['src'],
-      },
-    };
-
-    return `
-      <div class="iframe-video-v2" ${paddingBottom ? `style="padding-bottom: ${paddingBottom}%"` : ''}>
-        ${xss(`
-          <iframe
-            src="${videoUrl}"
-            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        `, xssOptions)}
-      </div>
-    `;
-  }
-
-  renderEmbed = ({
-    url,
-    title,
-    description,
-    imageUrl,
-  }) => {
-    const replaceSymbols = (str) => {
-      let result = str.replace(/@/g, '@&zwnj;');
-      result = result.replace(/#/g, '#&zwnj;');
-      return result;
-    };
-
-    const truncateContent = str => truncate(str, {
-      length: 140,
-      separator: ' ',
-    });
-
-    return `
-      <div class="medium-embed">
-        ${xss(`<a href="${url}" target="_blank">`)}
-          ${imageUrl ? `
-            <span class="medium-embed-img">
-              ${xss(`<img src="${imageUrl}" alt="" />`)}
-            </span>
-          ` : ''}
-
-          <span class="medium-embed-content">
-            ${title ? `
-              <span class="medium-embed-title">
-                ${xss(truncateContent(replaceSymbols(sanitizeEmbedContent(title))))}
-              </span>
-            ` : ''}
-
-            ${description ? `
-              <span class="medium-embed-text">
-                ${xss(truncateContent(replaceSymbols(sanitizeEmbedContent(description))))}
-              </span>
-            ` : ''}
-
-            <span class="medium-embed-link">
-              ${xss(replaceSymbols(extractHostname(url)))}
-            </span>
-          </span>
-        </a>
-      </div>
-    `;
-  }
-
-  getEmbedData = async (url) => {
-    try {
-      let videoUrl;
-      let videoAspectRatio;
-      let imageUrl;
-      const response = humps(await axios.get(config.iframely.httpEndpoint, { params: { url } }));
-      const { data: { links: { player, thumbnail }, meta } } = response;
-
-      if (player) {
-        for (let i = 0; i < player.length; i++) {
-          const { rel, href, media: { aspectRatio } } = player[i];
-
-          if (
-            config.allowedVideoHosts.includes(extractHostname(href)) &&
-            (rel.includes('oembed') || rel.includes('html5'))
-          ) {
-            videoUrl = href;
-            videoAspectRatio = aspectRatio;
-            break;
-          }
-        }
-      }
-
-      if (thumbnail) {
-        for (let i = 0; i < thumbnail.length; i++) {
-          const { rel, href } = thumbnail[i];
-          if (
-            rel.includes('twitter') ||
-            rel.includes('image') ||
-            rel.includes('thumbnail')
-          ) {
-            imageUrl = href;
-            break;
-          }
-        }
-      }
-
-      return {
-        videoUrl,
-        videoAspectRatio,
-        imageUrl,
-        title: meta.title,
-        url: meta.canonical,
-        description: meta.description,
-      };
+      // ReactDOM.render(
+      //   React.createElement(Embed, data, null),
+      //   div,
+      // );
     } catch (err) {
-      throw err;
+      console.error(err);
+      this.onError(err.message);
     }
   }
+
+  // renderVideo = ({ videoUrl, videoAspectRatio }) => {
+  //   const paddingBottom = 100 / videoAspectRatio;
+  //   const xssOptions = {
+  //     whiteList: {
+  //       iframe: ['src'],
+  //     },
+  //   };
+
+  //   return `
+  //     <div class="iframe-video-v2" ${paddingBottom ? `style="padding-bottom: ${paddingBottom}%"` : ''}>
+  //       ${xss(`
+  //         <iframe
+  //           src="${videoUrl}"
+  //           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+  //           allowfullscreen
+  //         ></iframe>
+  //       `, xssOptions)}
+  //     </div>
+  //   `;
+  // }
+
+  // renderEmbed = ({
+  //   url,
+  //   title,
+  //   description,
+  //   imageUrl,
+  // }) => {
+  //   const replaceSymbols = (str) => {
+  //     let result = str.replace(/@/g, '@&zwnj;');
+  //     result = result.replace(/#/g, '#&zwnj;');
+  //     return result;
+  //   };
+
+  //   const truncateContent = str => truncate(str, {
+  //     length: 140,
+  //     separator: ' ',
+  //   });
+
+  //   return `
+  //     <div class="medium-embed">
+  //       ${xss(`<a href="${url}" target="_blank">`)}
+  //         ${imageUrl ? `
+  //           <span class="medium-embed-img">
+  //             ${xss(`<img src="${imageUrl}" alt="" />`)}
+  //           </span>
+  //         ` : ''}
+
+  //         <span class="medium-embed-content">
+  //           ${title ? `
+  //             <span class="medium-embed-title">
+  //               ${xss(truncateContent(replaceSymbols(sanitizeEmbedContent(title))))}
+  //             </span>
+  //           ` : ''}
+
+  //           ${description ? `
+  //             <span class="medium-embed-text">
+  //               ${xss(truncateContent(replaceSymbols(sanitizeEmbedContent(description))))}
+  //             </span>
+  //           ` : ''}
+
+  //           <span class="medium-embed-link">
+  //             ${xss(replaceSymbols(extractHostname(url)))}
+  //           </span>
+  //         </span>
+  //       </a>
+  //     </div>
+  //   `;
+  // }
+
+  // getEmbedData = async (url) => {
+  //   try {
+  //     let videoUrl;
+  //     let videoAspectRatio;
+  //     let imageUrl;
+  //     const response = humps(await axios.get(config.iframely.httpEndpoint, { params: { url } }));
+  //     const { data: { links: { player, thumbnail }, meta } } = response;
+
+  //     if (player) {
+  //       for (let i = 0; i < player.length; i++) {
+  //         const { rel, href, media: { aspectRatio } } = player[i];
+
+  //         if (
+  //           config.allowedVideoHosts.includes(extractHostname(href)) &&
+  //           (rel.includes('oembed') || rel.includes('html5'))
+  //         ) {
+  //           videoUrl = href;
+  //           videoAspectRatio = aspectRatio;
+  //           break;
+  //         }
+  //       }
+  //     }
+
+  //     if (thumbnail) {
+  //       for (let i = 0; i < thumbnail.length; i++) {
+  //         const { rel, href } = thumbnail[i];
+  //         if (
+  //           rel.includes('twitter') ||
+  //           rel.includes('image') ||
+  //           rel.includes('thumbnail')
+  //         ) {
+  //           imageUrl = href;
+  //           break;
+  //         }
+  //       }
+  //     }
+
+  //     return {
+  //       videoUrl,
+  //       videoAspectRatio,
+  //       imageUrl,
+  //       title: meta.title,
+  //       url: meta.canonical,
+  //       description: meta.description,
+  //     };
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // }
 }

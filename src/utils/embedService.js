@@ -61,18 +61,18 @@ export default class EmbedService {
         }
       }
 
-      if (thumbnail) {
-        for (let i = 0; i < thumbnail.length; i++) {
-          const { rel, href } = thumbnail[i];
-          if (
-            rel.includes('twitter') ||
-            rel.includes('image') ||
-            rel.includes('thumbnail')
-          ) {
-            imageUrl = href;
-            break;
+      if (thumbnail && thumbnail.length) {
+        const validTypes = ['twitter', 'thumbnail', 'image'];
+        (() => {
+          for (let i = 0; i < validTypes.length; i++) {
+            for (let j = 0; j < thumbnail.length; j++) {
+              if (thumbnail[j].rel.includes(validTypes[i])) {
+                imageUrl = thumbnail[j].href;
+                return;
+              }
+            }
           }
-        }
+        })();
       }
 
       return {

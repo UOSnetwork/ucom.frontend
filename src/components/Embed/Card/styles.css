@@ -1,9 +1,9 @@
 .card {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .card:hover {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .cover {

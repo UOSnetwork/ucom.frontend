@@ -34,6 +34,9 @@ class Medium extends PureComponent {
           onError: message => this.props.addErrorNotification(message),
           onUploadStart: () => this.props.onUploadStart(),
           onUploadDone: () => this.props.onUploadDone(),
+          onEmbed: (data) => {
+            console.log(data);
+          },
         }),
       },
     });
