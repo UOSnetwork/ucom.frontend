@@ -34,7 +34,7 @@ const UsersTeamForm = (props) => {
               disableRate
               disabledLink
               id={item.id}
-              title={item.firstName}
+              title={item.firstName || item.accountName}
               nickname={item.accountName}
               url={urls.getUserUrl(item.id)}
               avatarSrc={urls.getFileUrl(item.avatarFilename)}
