@@ -1,4 +1,4 @@
-.embed {
+[data-embed] {
   position: relative;
   font-size: 16px;
   line-height: 1.75;

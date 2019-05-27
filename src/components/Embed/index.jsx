@@ -20,7 +20,7 @@ const Embed = ({
   }
 
   return (
-    <div className={styles.embed}>
+    <div data-embed={url}>
       {onClickRemove &&
         <span className={styles.remove}>
           <ButtonRemove onClick={onClickRemove} />

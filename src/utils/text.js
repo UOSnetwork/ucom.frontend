@@ -115,6 +115,7 @@ export const sanitizePostText = memoize(html => sanitizeHtml(html, {
     a: [
       'tag_link',
       'mention_link',
+      'js-embed',
     ],
     iframe: [
       'iframe-video',
@@ -124,9 +125,6 @@ export const sanitizePostText = memoize(html => sanitizeHtml(html, {
     div: {
       'padding-bottom': [/([0-9]*[.])?[0-9]+%$/],
     },
-  },
-  transformTags: {
-    'a': sanitizeHtml.simpleTransform('a', { target: '_blank' }),
   },
 }));
 

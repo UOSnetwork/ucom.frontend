@@ -1,10 +1,13 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
 import xss from 'xss';
 import humps from 'lodash-humps';
 import axios from 'axios';
 import { truncate } from 'lodash';
 import config from '../../package.json';
-import { sanitizeEmbedContent } from './text';
 import { extractHostname, validUrl } from './url';
+import Embed from '../components/Embed';
+import { getEmbedByUrl } from './entityImages';
 
 export default class EmbedService {
   static async getDataAndRenderEmbed(url) {
@@ -88,64 +91,24 @@ export default class EmbedService {
     }
   }
 
-  static renderEmbedCard({
-    url,
-    title,
-    description,
-    imageUrl,
-  }) {
-    return `
-      <div class="medium-embed">
-        ${xss(`<a href="${url}" target="_blank">`)}
-          ${imageUrl ? `
-            <span class="medium-embed-img">
-              ${xss(`<img src="${imageUrl}" alt="" />`)}
-            </span>
-          ` : ''}
-
-          <span class="medium-embed-content">
-            ${title ? `
-              <span class="medium-embed-title">
-                ${xss(sanitizeEmbedContent(title))}
-              </span>
-            ` : ''}
-
-            ${description ? `
-              <span class="medium-embed-text">
-                ${xss(sanitizeEmbedContent(description))}
-              </span>
-            ` : ''}
-
-            <span class="medium-embed-link">
-              ${xss(extractHostname(url))}
-            </span>
-          </span>
-        </a>
-      </div>
-    `;
+  static renderEmbedLink(url) {
+    return xss(`
+      <a href="${url}" class="js-embed" target="_blank">${url}</a>
+    `, {
+      whiteList: {
+        a: ['class', 'href', 'target'],
+      },
+    });
   }
 
-  static renderEmbedVideo({
-    videoUrl,
-    videoAspectRatio,
-  }) {
-    const paddingBottom = 100 / videoAspectRatio;
-    const xssOptions = {
-      whiteList: {
-        iframe: ['src'],
-      },
-    };
+  static renderEmbeds(el, entityImages) {
+    el.querySelectorAll('.js-embed').forEach((el) => {
+      const url = el.href;
+      const embedData = getEmbedByUrl(entityImages, url);
 
-    return `
-      <div class="iframe-video-v2" ${paddingBottom ? `style="padding-bottom: ${paddingBottom}%"` : ''}>
-        ${xss(`
-          <iframe
-            src="${videoUrl}"
-            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        `, xssOptions)}
-      </div>
-    `;
+      if (embedData) {
+        ReactDOM.render(React.createElement(Embed, embedData, null), el.parentNode);
+      }
+    });
   }
 }

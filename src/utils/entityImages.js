@@ -100,3 +100,22 @@ export const getEmbedByUrl = (entityImages, url) => {
 
 export const hasEmbeds = (entityImages = {}) =>
   Boolean(entityImages.embeds && entityImages.embeds.length);
+
+export const filterEmbedsByUrls = (entityImages, urls) => {
+  if (!entityImages) {
+    throw new Error('EntityImages is required argument');
+  }
+
+  if (!Array.isArray(urls)) {
+    throw new Error('Urls must be array');
+  }
+
+  if (!Array.isArray(entityImages.embeds)) {
+    entityImages.embeds = [];
+  }
+
+  entityImages.embeds = entityImages.embeds
+    .filter(embed => urls.includes(embed.url));
+
+  return entityImages;
+};
