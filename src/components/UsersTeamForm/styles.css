@@ -1,0 +1,55 @@
+.userLine {
+  display: grid;
+  grid-template-areas: 'a a a a a b b';
+  padding: 10px;
+  margin: 0px -10px 0;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.userLine:hover {
+  background: #F2F2F2;
+}
+
+.userCard {
+  grid-area: a;
+  text-decoration: none !important;
+}
+
+.userCard > div {
+  align-items: center;
+  height: 36px;
+}
+
+.userStatus {
+  align-items: center;
+  color: #585858;
+  font-size: 12px;
+  line-height: 36px;
+  text-align: right;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.btnRemove {
+  fill: #C4C4C4;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: inherit;
+  font-weight: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.input {
+  margin: 30px 0 30px;
+}

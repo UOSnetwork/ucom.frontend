@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import VerticalMenu from './VerticalMenu';
 import TextInput from './TextInput';
-import UsersTeamForm from './UsersTeamForm';
+import UsersTeamForm from './UsersTeamForm/index.jsx';
 import Textarea from './Textarea';
 import Button from './Button';
 import DropZone from './DropZone';

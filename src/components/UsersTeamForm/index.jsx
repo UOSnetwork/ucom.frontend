@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import Link from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
-import UserSearchInput from './UserSearchInput';
+import UserSearchInput from '../UserSearchInput';
 // import UserCard from './UserCard';
-import EntryCard from './EntryCard/index';
-import IconRemove from './Icons/Remove';
-import { getUserName } from '../utils/user';
-import urls from '../utils/urls';
-import { getUsersTeamStatusById } from '../utils/organization';
+import EntryCard from '../EntryCard/index';
+import IconRemove from '../Icons/Remove';
+import urls from '../../utils/urls';
+import { getUsersTeamStatusById } from '../../utils/organization';
 import {
   USERS_TEAM_STATUS_ID_CONFIRMED,
   USERS_TEAM_STATUS_ID_DECLINED,
-} from '../store/organization';
-import Button from './Button/index';
+} from '../../store/organization';
+import Button from '../Button/index';
+import styles from './styles.css';
 
 const UsersTeamForm = (props) => {
   const [teamFormVisible, setTeamFormVisible] = useState(false);
@@ -22,12 +22,12 @@ const UsersTeamForm = (props) => {
   console.log('users: ', props.users);
 
   return (
-    <div className="board-form">
-      {props.users.map((item, index) => (
-        <div key={item.id}>
+    <div>
+      {props.users && props.users.map((item, index) => (
+        <div key={item.id} className={styles.userLine}>
           <Link
             to={urls.getUserUrl(item.id)}
-            // className={styles.userCard}
+            className={styles.userCard}
             target="_blank"
           >
             <EntryCard
@@ -42,16 +42,16 @@ const UsersTeamForm = (props) => {
           </Link>
           <div
             className={classNames(
-              'user-cards-list__status',
+              styles.userStatus,
               { 'user-cards-list__status_confirmed': item.usersTeamStatus === USERS_TEAM_STATUS_ID_CONFIRMED },
               { 'user-cards-list__status_declined': item.usersTeamStatus === USERS_TEAM_STATUS_ID_DECLINED },
             )}
           >
             {getUsersTeamStatusById(item.usersTeamStatus)}
           </div>
-          <div className="user-cards-list__remove">
+          <div className={styles.btn}>
             <button
-              className="button-clean"
+              className={styles.btnRemove}
               onClick={() => {
                 if (typeof props.onChange === 'function') {
                   const users = [].concat(props.users);
@@ -65,7 +65,7 @@ const UsersTeamForm = (props) => {
           </div>
         </div>
       ))}
-      <div className="board-form__input">
+      <div className={styles.input}>
         {teamFormVisible &&
           <UserSearchInput
             isMulti

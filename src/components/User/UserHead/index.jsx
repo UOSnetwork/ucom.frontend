@@ -46,6 +46,7 @@ const UserHead = (props) => {
               }]));
 
               props.dispatch(updateUser({
+                id: +props.owner.id,
                 avatarFilename: file,
               }));
             }}

@@ -97,8 +97,8 @@ Repost.propTypes = {
   users: PropTypes.objectOf(PropTypes.object).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
-  postTypeId: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
+  postTypeId: PropTypes.number,
 };
 
 export default connect(

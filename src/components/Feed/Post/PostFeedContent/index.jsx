@@ -64,12 +64,16 @@ const PostFeedContent = (props) => {
   );
 };
 
+PostFeedContent.defaultProps = {
+  formIsVisible: false,
+};
+
 PostFeedContent.propTypes = {
   postId: PropTypes.number.isRequired,
-  formIsVisible: PropTypes.bool.isRequired,
   updatePost: PropTypes.func.isRequired,
-  postTypeId: PropTypes.number,
   posts: PropTypes.objectOf(PropTypes.object).isRequired,
+  formIsVisible: PropTypes.bool,
+  postTypeId: PropTypes.number,
 };
 
 export default connect(
