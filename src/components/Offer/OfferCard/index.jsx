@@ -34,6 +34,7 @@ const OfferCard = (props) => {
     props.authShowPopup();
   };
 
+  // TODO: sticky button on mobile
   // const checkSizeWindow = () => {
   //   if (window.scrollY > 485 && window.innerWidth < 414) {
   //     setBtnFixed(true);
@@ -107,29 +108,36 @@ const OfferCard = (props) => {
         }
 
         <div className={styles.infoblockBottom}>
-          {Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) > 0 ? (
+          {(Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) > 0 &&
             <div className={styles.timer}>
               <div className={styles.startedAt}>
                 <div className={styles.startedAtTitle}>Starts</div>
                 <div className={styles.startedAtDate}>{`${month}, ${day}`}</div>
               </div>
             </div>
-          ) : (
-            <Fragment>
-              <div className={styles.timer}>
-                <Countdown date={props.finishedAt} />
+          ) || (Date.parse(new Date()) > Date.parse(new Date(props.finishedAt)) &&
+            <div className={styles.timer}>
+              <div className={styles.startedAt}>
+                <div className={styles.startedAtTitle}>Ended</div>
               </div>
-              <Followers
-                colorLight
-                onClick={() => setPopupVisible(true)}
-                users={(props.users).map(mapUserDataToFollowersProps)}
-                title="Participants"
-                count={+props.count}
-              />
-            </Fragment>
+            </div>
+          ) || (
+            <div className={styles.timer}>
+              <Countdown date={props.finishedAt} />
+            </div>
           )}
+          <Fragment>
+            <Followers
+              colorLight
+              onClick={() => setPopupVisible(true)}
+              users={(props.users).map(mapUserDataToFollowersProps)}
+              title="Participants"
+              count={+props.count}
+            />
+          </Fragment>
 
-          {loaded && Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 && (() => {
+          {loaded && Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 &&
+            Date.parse(new Date()) < Date.parse(new Date(props.finishedAt)) && (() => {
             if (((!props.cookie && !conditions) ||
             (conditions && (conditions.conditions.authGithub === false && !props.cookie) && (conditions.conditions.authMyself === false || conditions.conditions.authMyself === true)) ||
             ((conditions && conditions.airdropStatus !== AirdropStatuses.RECEIVED && conditions.airdropStatus !== AirdropStatuses.PENDING) &&

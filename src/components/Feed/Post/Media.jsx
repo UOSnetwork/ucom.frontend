@@ -1,13 +1,7 @@
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import moment from 'moment';
-import React from 'react';
-import { getPostById } from '../../../store/posts';
-import { selectUser } from '../../../store/selectors/user';
-import { createComment } from '../../../actions/comments';
+import React, { memo } from 'react';
 import { getUserName } from '../../../utils/user';
-import { getUserById } from '../../../store/users';
 import { getPostCover } from '../../../utils/posts';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedFooter from './PostFeedFooter';
@@ -15,22 +9,18 @@ import PostCard from '../../PostMedia/PostCard';
 import urls from '../../../utils/urls';
 import styles from './Post.css';
 
-const Media = (props) => {
-  const post = getPostById(props.posts, props.id);
-
-  if (!post) {
-    return null;
-  }
-
-  const user = getUserById(props.users, post.userId);
-
-  if (!user) {
+const Media = ({
+  post, user, owner, ...props
+}) => {
+  if (!post || !user) {
     return null;
   }
 
   return (
     <div className={styles.post} id={`post-${post.id}`}>
       <PostFeedHeader
+        post={post}
+        user={owner}
         postId={post.id}
         feedTypeId={props.feedTypeId}
         createdAt={moment(post.createdAt).fromNow()}
@@ -51,8 +41,8 @@ const Media = (props) => {
       />
 
       <PostFeedFooter
-        commentsCount={post.commentsCount}
         post={post}
+        commentsCount={post.commentsCount}
         postTypeId={post.postTypeId}
         sharePopup={props.sharePopup}
         toggleShare={props.toggleShare}
@@ -64,20 +54,12 @@ const Media = (props) => {
 Media.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
-  users: PropTypes.objectOf(PropTypes.object).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
+  post: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect(
-  state => ({
-    posts: state.posts,
-    users: state.users,
-    comments: state.comments,
-    user: selectUser(state),
-  }),
-  dispatch => bindActionCreators({
-    createComment,
-  }, dispatch),
-)(Media);
+export default memo(Media, (prev, next) => (
+  prev.sharePopup === next.sharePopup
+));

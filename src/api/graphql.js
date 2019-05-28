@@ -480,16 +480,7 @@ export default {
       page: 1,
       per_page: COMMENTS_PER_PAGE,
     },
-    usersTeamQuery = {
-      page: 1,
-      per_page: 20,
-      order_by: '-score',
-      filters: {
-        airdrops: {
-          id: 1,
-        },
-      },
-    },
+    usersTeamQuery,
   }, options = {}) {
     const query = GraphQLSchema.getOnePostOffer(
       postId,
@@ -506,22 +497,13 @@ export default {
   },
 
   async getOnePostOfferWithUserAirdrop({
-    airdropFilter = { airdrop_id: 1 },
+    airdropFilter,
     postId,
     commentsQuery = {
       page: 1,
       per_page: COMMENTS_PER_PAGE,
     },
-    usersTeamQuery = {
-      page: 1,
-      per_page: 20,
-      order_by: '-score',
-      filters: {
-        airdrops: {
-          id: 1,
-        },
-      },
-    },
+    usersTeamQuery,
   }, options = {}) {
     const query = GraphQLSchema.getOnePostOfferWithUserAirdrop(
       airdropFilter,
@@ -539,16 +521,14 @@ export default {
   },
 
   async getManyUsers({
-    filter = {
-      airdrops: { id: 1 },
-    },
+    airdropFilter,
     orderBy,
     page,
     perPage,
     isMyself,
   }) {
     const query = GraphQLSchema.getManyUsers(
-      filter,
+      airdropFilter,
       orderBy,
       page,
       perPage,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 
 const Icon = props => (
@@ -17,4 +17,8 @@ Icon.propTypes = {
   className: PropTypes.string,
 };
 
-export default Icon;
+Icon.defaultProps = {
+  className: undefined,
+};
+
+export default memo(Icon);

@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './styles.css';
 import UserPick from '../../UserPick/UserPick';
-import Image from './Image';
 import DragAndDrop from '../../DragAndDrop';
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import TributeWrapper from '../../TributeWrapper';
 import { isSubmitKey, isEscKey } from '../../../utils/keyboard';
-import { getGalleryImage } from '../../../utils/entityImages';
+import { getGalleryImages, addGalleryImagesWithCatch } from '../../../utils/entityImages';
 import { initDragAndDropListeners } from '../../../utils/dragAndDrop';
 import api from '../../../api';
 import DropZone from '../../DropZone';
+import PreviewImagesGrid from '../../PreviewImagesGrid';
 import IconClip from '../../Icons/Clip';
 import IconEnter from '../../Icons/Enter';
 
@@ -22,6 +22,9 @@ const Form = (props) => {
   const [dropOnForm, setDropOnForm] = useState(false);
   const fieldEl = useRef(null);
   const textareaEl = useRef(null);
+  const galleryImages = getGalleryImages({ entityImages });
+  const isExistGalleryImages = !!galleryImages.length;
+  const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
 
   const reset = () => {
     setMessage('');
@@ -33,7 +36,7 @@ const Form = (props) => {
   };
 
   const submit = () => {
-    if (message.trim().length || (entityImages.gallery[0] && entityImages.gallery[0].url)) {
+    if (message.trim().length || isExistGalleryImages) {
       props.onSubmit({
         containerId: props.containerId,
         postId: props.postId,
@@ -43,14 +46,15 @@ const Form = (props) => {
       });
       reset();
     }
+    return undefined;
   };
 
-  const onImage = async (files) => {
-    const data = await api.uploadPostImage(files);
-    const { url } = data.files[0];
-    // TODO: make multiple upon creating gallery
-    // setEntityImages({ gallery: [...entityImages.gallery, { url }] });
-    setEntityImages({ gallery: [{ url }] });
+  const onMultipleImages = async (files) => {
+    const savedEntityImages = entityImages;
+    setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
+    const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadPostImage(url)));
+    const urls = data.map(item => item.files[0]);
+    setEntityImages(addGalleryImages(savedEntityImages, urls));
   };
 
   useEffect(() => {
@@ -94,14 +98,14 @@ const Form = (props) => {
               <TributeWrapper
                 enabledImgUrlParse
                 onParseImgUrl={(url) => {
-                    setEntityImages({ gallery: [{ url }] });
+                    onMultipleImages([url]);
                   }
                 }
                 onChange={(message) => {
                   setMessage(message);
                   setTimeout(() => autosize.update(textareaEl.current), 0);
                 }}
-                onImage={e => onImage([e])}
+                onImage={url => onMultipleImages([url])}
               >
                 <textarea
                   ref={textareaEl}
@@ -130,7 +134,7 @@ const Form = (props) => {
                   className={styles.labelFile}
                   multiple
                   onDrop={async (files) => {
-                    await onImage(files[0]);
+                    await onMultipleImages(files);
                   }
                 }
                 />
@@ -145,21 +149,17 @@ const Form = (props) => {
               </div>
             </div>
             <DragAndDrop {...{
-                onImage, dropOnForm,
+                onMultipleImages, dropOnForm,
               }}
             />
           </div>
         </div>
       </div>
 
-      {getGalleryImage({ entityImages }) &&
-        <Image
-          src={getGalleryImage({ entityImages })}
-          onClickRemove={() => {
-            setEntityImages('');
-          }}
-        />
-      }
+      <PreviewImagesGrid {...{
+          isExistGalleryImages, setEntityImages, entityImages,
+        }}
+      />
     </div>
   );
 };

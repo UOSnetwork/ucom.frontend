@@ -1,3 +1,4 @@
+import { memoize } from 'lodash';
 import * as overviewUtils from './overview';
 import { POST_TYPE_MEDIA_ID } from './posts';
 import { getBackendConfig } from './config';
@@ -116,7 +117,7 @@ const urls = {
     return '/overview/publications';
   },
 
-  getFileUrl(filename) {
+  getFileUrl: memoize((filename) => {
     if (!filename) {
       return null;
     }
@@ -126,7 +127,7 @@ const urls = {
     }
 
     return `${getBackendConfig().httpEndpoint}/upload/${filename}`;
-  },
+  }),
 
   getUsersUrl() {
     return '/users';

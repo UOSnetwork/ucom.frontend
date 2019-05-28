@@ -6,6 +6,7 @@ import Popup from './Popup';
 
 const Gallery = ({ images, userId, date }) => {
   const [popupVisible, setPopupVisible] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const mainImage = images.length ? images[0] : null;
   const otherImages = images.length > 0 ? images.slice(1, 5) : null;
   const showMoreLabel = images.length > 5 ? `+ ${images.length - 5}` : null;
@@ -19,7 +20,9 @@ const Gallery = ({ images, userId, date }) => {
       <div className={styles.gallery}>
         <div className={styles.mainImage}>
           <Image
-            onClick={() => setPopupVisible(true)}
+            onClick={() => {
+               setPopupVisible(true); setActiveIndex(0);
+              }}
             src={mainImage.url}
             alt={mainImage.alt}
           />
@@ -29,11 +32,14 @@ const Gallery = ({ images, userId, date }) => {
           <div className={styles.otherImages}>
             {otherImages.map((image, index) => (
               <Image
-                key={image.url}
+                key={index}
                 src={image.url}
                 alt={image.alt}
                 label={index === 3 ? showMoreLabel : null}
-                onClick={() => setPopupVisible(true)}
+                onClick={() => {
+                  setPopupVisible(true);
+                  setActiveIndex(index + 1);
+                }}
               />
             ))}
           </div>
@@ -42,10 +48,14 @@ const Gallery = ({ images, userId, date }) => {
 
       {popupVisible &&
         <Popup
-          date={date}
-          userId={userId}
-          images={images}
-          onClickClose={() => setPopupVisible(false)}
+          {...{
+            activeIndex,
+            setActiveIndex,
+            date,
+            userId,
+            images,
+            onClickClose: () => setPopupVisible(false),
+          }}
         />
       }
     </Fragment>

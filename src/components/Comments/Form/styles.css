@@ -93,15 +93,16 @@
 .imageWrapper {
   position: relative;
   z-index: 0;
-  margin-top: 20px;
-  margin-left: auto;
+
+  width: auto;
 }
 
 .image {
   display: block;
-  max-width: 100%;
+  width: 100%;
   margin-left: auto;
   object-fit: cover;
+  height: 77px;
 }
 
 .imageRemove {
@@ -157,6 +158,32 @@
   display: none;
 }
 
+.dragNdrop {
+  display: flex;
+  align-items: flex-end;
+}
+
 .label:hover {
   fill: #767676;
+}
+
+@keyframes loader {
+  0%{
+    background-position:50% 0%;
+  }
+  33%{
+    background-position:50% 100%;
+  }
+  100%{
+    background-position:50% 0%;
+  }
+}
+
+.preloader {
+  animation-iteration-count: infinite;
+  animation-duration: 1.5s;
+  animation-name: loader;
+  animation-timing-function: ease;
+  background: linear-gradient(180deg, #bbbbbb, #eeeeee);
+  background-size: 200% 200%;
 }

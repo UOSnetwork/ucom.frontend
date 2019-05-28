@@ -1,4 +1,4 @@
-:local(.close) {
+.close {
   position: absolute;
   top: 40px;
   right: 40px;
@@ -11,7 +11,7 @@
   fill: #fff;
 }
 
-:local(.popup) {
+.popup {
   align-self: flex-start;
   display: flex;
   flex-direction: column;
@@ -20,28 +20,68 @@
   color: #fff;
 }
 
-@media (min-width: 1024px) {
-  :local(.popup) {
-    padding: 0 40px;
-  }
-}
-
-:local(.viewport) {
+.viewport {
   flex: 1 1 auto;
   position: relative;
   z-index: 0;
   width: 100%;
   max-width: 1000px;
-  margin: 64px auto;
+  margin-top: 104px;
+  margin-bottom: 64px;
 }
 
-:local(.viewport:after) {
-  content: '';
-  display: block;
-  padding-top: 50%;
+.container {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: auto 1000px auto;
 }
 
-:local(.image) {
+@media (max-width: 1248px) {
+  .container{
+    grid-template-columns: 124px auto 124px;
+  }
+}
+
+.arrow {
+  margin-top: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 40px;
+}
+
+.arrow.active {
+  cursor: pointer;
+}
+
+.arrowBlock {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backface-visibility: hidden;
+}
+
+.arrow.active:hover .arrowBlock {
+  opacity: 1;
+}
+
+.leftArrow {
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 40px;
+}
+
+.arrow, .viewport {
+  height: calc(100vh - 264px);
+}
+
+.rotate {
+  transform: rotate(180deg);
+  display: inline-block;
+}
+
+
+.image {
+  composes: noselect from global;
   position: absolute;
   top: 0;
   left: 0;
@@ -53,7 +93,11 @@
   max-height: 100%;
 }
 
-:local(.toolbar) {
+.pointer {
+  cursor: pointer;
+}
+
+.toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -63,17 +107,17 @@
 }
 
 
-:local(.userCard) {
+.userCard {
   flex: 1 1 auto;
 }
 
-:local(.date) {
+.date {
   margin: 0 0 13px;
   font-size: 12px;
   color: #c4c4c4;
 }
 
-:local(.counter) {
+.counter {
   flex: 1 1 auto;
   text-align: right;
   font-weight: 600;
@@ -81,14 +125,14 @@
   white-space: nowrap;
 }
 
-@media (max-width: 1023px) {
-  :local(.userCard),
-  :local(.counter) {
+@media (max-width: 1103px) {
+  .userCard,
+  .counter{
     display: none;
   }
 }
 
-:local(.thumbs) {
+.thumbs {
   position: relative;
   z-index: 0;
   display: flex;
@@ -97,7 +141,8 @@
   align-items: center;
 }
 
-:local(.thumbWrapper) {
+.thumbWrapper {
+  composes: noselect from global;
   position: relative;
   z-index: 0;
   width: 64px;
@@ -105,7 +150,7 @@
   cursor: pointer;
 }
 
-:local(.thumbWrapper:after) {
+.thumbWrapper:after {
   content: '';
   position: absolute;
   z-index: 1;
@@ -117,165 +162,173 @@
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 }
 
-:local(.thumbWrapper[level]) {
+.thumbWrapper[level] {
   display: none;
 }
 
-:local(.thumbWrapper[level="0"]) {
+.thumbWrapper[level="0"] {
   display: block;
 }
 
-:local(.thumbWrapper[level="0"]:after) {
+.thumbWrapper[level="0"]:after {
   display: none;
 }
 
-:local(.thumbWrapper[level="1"]),
-:local(.thumbWrapper[level="-1"]) {
+.thumbWrapper[level="1"],
+.thumbWrapper[level="-1"] {
   display: block;
   width: 60px;
   height: 60px;
   z-index: -1;
 }
 
-:local(.thumbWrapper[level="1"]) {
+.thumbWrapper[level="1"] {
   margin-left: -15px;
 }
 
-:local(.thumbWrapper[level="-1"]) {
+.thumbWrapper[level="-1"] {
   margin-right: -15px;
 }
 
-:local(.thumbWrapper[level="2"]),
-:local(.thumbWrapper[level="-2"]) {
+.thumbWrapper[level="2"],
+.thumbWrapper[level="-2"] {
   display: block;
   width: 56px;
   height: 56px;
   z-index: -2;
 }
 
-:local(.thumbWrapper[level="2"]) {
+.thumbWrapper[level="2"] {
   margin-left: -18px;
 }
 
-:local(.thumbWrapper[level="-2"]) {
+.thumbWrapper[level="-2"] {
   margin-right: -18px;
 }
 
-:local(.thumbWrapper[level="3"]),
-:local(.thumbWrapper[level="-3"]) {
+.thumbWrapper[level="3"],
+.thumbWrapper[level="-3"] {
   display: block;
   width: 52px;
   height: 52px;
   z-index: -3;
 }
 
-:local(.thumbWrapper[level="3"]) {
+.thumbWrapper[level="3"] {
   margin-left: -21px;
 }
 
-:local(.thumbWrapper[level="-3"]) {
+.thumbWrapper[level="-3"] {
   margin-right: -21px;
 }
 
-:local(.thumbWrapper[level="4"]),
-:local(.thumbWrapper[level="-4"]) {
+.thumbWrapper[level="4"],
+.thumbWrapper[level="-4"] {
   display: block;
   width: 48px;
   height: 48px;
   z-index: -4;
 }
 
-:local(.thumbWrapper[level="4"]) {
+.thumbWrapper[level="4"] {
   margin-left: -24px;
 }
 
-:local(.thumbWrapper[level="-4"]) {
+.thumbWrapper[level="-4"] {
   margin-right: -24px;
 }
 
-:local(.thumbWrapper[level="5"]),
-:local(.thumbWrapper[level="-5"]) {
+.thumbWrapper[level="5"],
+.thumbWrapper[level="-5"] {
   display: block;
   width: 44px;
   height: 44px;
   z-index: -5;
 }
 
-:local(.thumbWrapper[level="5"]) {
+.thumbWrapper[level="5"] {
   margin-left: -27px;
 }
 
-:local(.thumbWrapper[level="-5"]) {
+.thumbWrapper[level="-5"] {
   margin-right: -27px;
 }
 
-:local(.thumbWrapper[level="6"]),
-:local(.thumbWrapper[level="-6"]) {
+.thumbWrapper[level="6"],
+.thumbWrapper[level="-6"] {
   display: block;
   width: 40px;
   height: 40px;
   z-index: -6;
 }
 
-:local(.thumbWrapper[level="6"]) {
+.thumbWrapper[level="6"] {
   margin-left: -30px;
 }
 
-:local(.thumbWrapper[level="-6"]) {
+.thumbWrapper[level="-6"] {
   margin-right: -30px;
 }
 
-:local(.thumbWrapper[level="7"]),
-:local(.thumbWrapper[level="-7"]) {
+.thumbWrapper[level="7"],
+.thumbWrapper[level="-7"] {
   display: block;
   width: 36px;
   height: 36px;
   z-index: -7;
 }
 
-:local(.thumbWrapper[level="7"]) {
+.thumbWrapper[level="7"] {
   margin-left: -33px;
 }
 
-:local(.thumbWrapper[level="-7"]) {
+.thumbWrapper[level="-7"] {
   margin-right: -33px;
 }
 
-:local(.thumbWrapper[level="8"]),
-:local(.thumbWrapper[level="-8"]) {
+.thumbWrapper[level="8"],
+.thumbWrapper[level="-8"] {
   display: block;
   width: 32px;
   height: 32px;
   z-index: -8;
 }
 
-:local(.thumbWrapper[level="8"]) {
+.thumbWrapper[level="8"] {
   margin-left: -36px;
 }
 
-:local(.thumbWrapper[level="-8"]) {
+.thumbWrapper[level="-8"] {
   margin-right: -36px;
 }
 
-:local(.thumbWrapper[level="9"]),
-:local(.thumbWrapper[level="-9"]) {
+.thumbWrapper[level="9"],
+.thumbWrapper[level="-9"] {
   display: block;
   width: 28px;
   height: 28px;
   z-index: -9;
 }
 
-:local(.thumbWrapper[level="9"]) {
+.thumbWrapper[level="9"] {
   margin-left: -39px;
 }
 
-:local(.thumbWrapper[level="-9"]) {
+.thumbWrapper[level="-9"] {
   margin-right: -39px;
 }
 
-:local(.thumb) {
+.thumb {
   width: 100%;
   height: 100%;
   border-radius: 4px;
   object-fit: cover;
+}
+
+.emptyWrapper {
+  cursor: default;
+}
+
+.emptyWrapper:after {
+  background: none;
 }

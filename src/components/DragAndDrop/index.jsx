@@ -15,7 +15,7 @@ const DragAndDrop = props => (
       className={styles.dropZonePost}
       multiple
       onChange={(files) => {
-        props.onImage(files[0]);
+        props.onMultipleImages(files);
       }}
     />
     <div className={styles.dropText}>Drop image here</div>
@@ -23,7 +23,7 @@ const DragAndDrop = props => (
 );
 
 DragAndDrop.propTypes = {
-  onImage: PropTypes.func.isRequired,
+  onMultipleImages: PropTypes.func.isRequired,
   dropOnForm: PropTypes.bool.isRequired,
 };
 

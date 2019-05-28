@@ -107,7 +107,7 @@
 @media(max-width: 976px) {
   .postCard {
     min-height: auto;
-    padding: 20px;
+    padding: 20px 17px;
   }
 }
 

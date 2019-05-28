@@ -24,9 +24,12 @@
 .buttonIcon svg {
   align-self: center;
   justify-self: center;
+  fill: #c4c4c4;
+  transition: fill 0.3s ease;
+
 }
 
-.buttonIcon:hover {
+.buttonIcon:hover svg{
   fill: #767676;
 }
 

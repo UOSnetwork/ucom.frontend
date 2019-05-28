@@ -2,16 +2,16 @@ import { last } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import React, { useState, useRef, useEffect, Fragment } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Avatar from '../Avatar';
 import IconEnter from '../Icons/Enter';
 import { selectUser } from '../../store/selectors/user';
 import { getUserById } from '../../store/users';
+import { addErrorNotification } from '../../actions/notifications';
 import { initDragAndDropListeners } from '../../utils/dragAndDrop';
 import {
-  removeCoverImage,
-  changeCoverImageUrl,
-  getCoverImage,
+  getGalleryImages,
+  addGalleryImagesWithCatch,
   addEmbed as entityImagesAddEmbed,
   removeEmbed as entityImagesRemoveEmbed,
   hasEmbeds as entityImagesHasEmbeds,
@@ -19,7 +19,7 @@ import {
 import TributeWrapper from '../TributeWrapper';
 import EmbedMenu from './Post/EmbedMenu';
 import DragAndDrop from '../DragAndDrop';
-import Image from '../Comments/Form/Image';
+import PreviewImagesGrid from '../PreviewImagesGrid';
 import urls from '../../utils/urls';
 import { getUrlsFromStr, validUrl } from '../../utils/url';
 import api from '../../api';
@@ -35,17 +35,22 @@ const FeedForm = (props) => {
   const [entityImages, setEntityImages] = useState(props.entityImages || {});
   const [dropOnForm, setDropOnForm] = useState(false);
   const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
+  const galleryImages = getGalleryImages({ entityImages });
+  const isExistGalleryImages = !!galleryImages.length;
+  const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
 
   const postHasContent = () => (
     message.trim().length !== 0 ||
-    getCoverImage({ entityImages }) ||
+    isExistGalleryImages ||
     entityImagesHasEmbeds(entityImages)
   );
 
-  const onImage = async (file) => {
-    const data = await api.uploadPostImage(file);
-    const { url } = data.files[0];
-    setEntityImages(changeCoverImageUrl(entityImages, url));
+  const onMultipleImages = async (files) => {
+    const savedEntityImages = entityImages;
+    setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
+    const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadPostImage(url)));
+    const urls = data.map(item => item.files[0]);
+    setEntityImages(addGalleryImages(savedEntityImages, urls));
   };
 
   const sumbitForm = () => {
@@ -118,7 +123,6 @@ const FeedForm = (props) => {
   if (!user) {
     return null;
   }
-
   return (
     <form
       className={classNames({
@@ -158,12 +162,10 @@ const FeedForm = (props) => {
           <div className="feed-form__container">
             <TributeWrapper
               enabledImgUrlParse
-              onImage={onImage}
-              onChange={(message) => {
-                setMessage(message);
-              }}
+              onChange={message => setMessage(message)}
+              onImage={url => onMultipleImages([url])}
               onParseImgUrl={(url) => {
-                setEntityImages(changeCoverImageUrl(entityImages, url));
+                setEntityImages(addGalleryImages(entityImages, [{ url }]));
               }}
             >
               <textarea
@@ -187,56 +189,31 @@ const FeedForm = (props) => {
               />
             </TributeWrapper>
             <DragAndDrop {...{
-                onImage, dropOnForm,
+                onMultipleImages, dropOnForm,
               }}
             />
           </div>
         </div>
       </div>
 
-      {getCoverImage({ entityImages }) &&
-        <Image
-          src={getCoverImage({ entityImages })}
-          onClickRemove={() => {
-            setEntityImages(removeCoverImage(entityImages));
-          }}
-        />
-      }
+      <PreviewImagesGrid {...{
+          isExistGalleryImages, setEntityImages, entityImages,
+        }}
+      />
 
       <div className="feed-form__actions">
         <EmbedMenu
-          onImage={onImage}
+          onImage={onMultipleImages}
           onEmbed={addEmbed}
           disabledEmbed={entityImagesHasEmbeds(entityImages)}
         />
-
-        {props.formIsVisible ? (
-          <Fragment>
-            <div
-              className="feed-form-button"
-              onClick={props.onCancel}
-              role="presentation"
-            >
-              Cancel
-            </div>
-            <div
-              className="feed-form-button feed-form-button__save"
-              disabled={message.trim().length === 0 && !getCoverImage({ entityImages })}
-              role="presentation"
-              onClick={sumbitForm}
-            >
-              Save
-            </div>
-          </Fragment>
-        ) : (
-          <button
-            type="submit"
-            className="feed-form__submit"
-            disabled={!postHasContent()}
-          >
-            <IconEnter />
-          </button>
-        )}
+        <button
+          type="submit"
+          className="feed-form__submit"
+          disabled={message.trim().length === 0 && !isExistGalleryImages}
+        >
+          <IconEnter />
+        </button>
       </div>
     </form>
   );
@@ -262,4 +239,6 @@ FeedForm.defaultProps = {
 export default connect(state => ({
   users: state.users,
   user: selectUser(state),
-}))(FeedForm);
+}), {
+  addErrorNotification,
+})(FeedForm);

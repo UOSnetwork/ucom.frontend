@@ -65,8 +65,7 @@ class HttpActions {
       url, data, params, ...this.getOptions(options),
     };
 
-    return this.request.delete(url, config)
-      .then(this.decodeRespData.bind(this));
+    return this.request.delete(url, config);
   }
 }
 

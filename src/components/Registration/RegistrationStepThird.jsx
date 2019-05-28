@@ -8,10 +8,10 @@ import Checkbox from '../Checkbox';
 import RegistrationBrainkeyVerification from './RegistrationBrainkeyVerification';
 import { THIRD_STEP_ID } from '../../store/registration';
 import { registrationRegister, registrationSetIsTrackingAllowed } from '../../actions/registration';
-import { getAirdropOfferId } from '../../utils/airdrop';
+import { getAirdropOfferId_2 } from '../../utils/airdrop';
 import { getGrecaptchaSitekey } from '../../utils/config';
 
-const offerId = getAirdropOfferId();
+const offerId = getAirdropOfferId_2();
 
 class RegistrationStepThird extends PureComponent {
   constructor(props) {

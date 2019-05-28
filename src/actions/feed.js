@@ -84,9 +84,7 @@ export const feedGetUserPosts = ({
     console.error(e);
   }
 
-  setTimeout(() => {
-    dispatch(feedSetLoading(false));
-  }, 2000);
+  dispatch(feedSetLoading(false));
 };
 
 export const feedCreatePost = (feedTypeId, params) => (dispatch) => {
@@ -136,17 +134,15 @@ export const feedGetPosts = ({
 
   try {
     const data = await graphql.getOverview(params);
+
     dispatch(parseFeedData({
       posts: data.manyPosts.data,
       metadata: data.manyPosts.metadata,
     }));
-
     dispatch(feedSetSideUsers(data.manyUsers.data));
     dispatch(addUsers(data.manyUsers.data));
-
     dispatch(feedSetSideOrganizations(data.manyOrganizations.data));
     dispatch(addOrganizations(data.manyOrganizations.data));
-
     dispatch(feedSetSideTags(data.manyTags.data));
   } catch (e) {
     console.error(e);
@@ -182,4 +178,3 @@ export const feedGetSide = ({
 
   dispatch(feedSetLoading(false));
 };
-

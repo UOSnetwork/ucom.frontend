@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import React, { Fragment } from 'react';
+import React, { Fragment, memo } from 'react';
 import Rate from '../../Rate';
 import styles from './styles.css';
 import Avatar from '../../Avatar';
@@ -88,4 +88,13 @@ PostCard.propTypes = {
   // sharesCount: PropTypes.number,
 };
 
-export default PostCard;
+PostCard.defaultProps = {
+  url: undefined,
+  coverUrl: undefined,
+  rate: undefined,
+  title: undefined,
+  userImageUrl: undefined,
+  userName: undefined,
+};
+
+export default memo(PostCard, () => true);

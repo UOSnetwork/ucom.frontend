@@ -137,13 +137,13 @@ export const copyToClipboard = (str) => {
   document.body.removeChild(el);
 };
 
-export const sanitizeCommentText = memoize(html => sanitizeHtml(html, {
+export const sanitizeCommentTexWithoutLink = memoize(html => sanitizeHtml(html, {
   allowedTags: ['a'],
   allowedSchemes: ['http', 'https'],
   allowedAttributes: {
     a: ['href', 'target', 'class'],
   },
-  textFilter: text => removeMultipleLineBreaks(makeLink(text)),
+  textFilter: text => removeMultipleLineBreaks(text),
 }));
 
 export const sanitizeEmbedContent = memoize(html => sanitizeHtml(html, {
@@ -151,9 +151,7 @@ export const sanitizeEmbedContent = memoize(html => sanitizeHtml(html, {
   allowedAttributes: {},
 }));
 
-if (typeof window !== 'undefined') {
-  window.sanitizeEmbedContent = sanitizeEmbedContent;
-}
+export const sanitizeCommentText = html => sanitizeCommentTexWithoutLink(makeLink(html));
 
 export const sanitizePostTitle = memoize(text => sanitizeHtml(text));
 export const capitalizeFirstLetter = string => string.charAt(0).toUpperCase() + string.slice(1);

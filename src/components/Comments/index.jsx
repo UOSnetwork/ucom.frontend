@@ -1,5 +1,6 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './styles.css';
 import Comment from './Comment';
 import Form from './Form';
@@ -85,4 +86,7 @@ Comments.defaultProps = {
   ownerName: null,
 };
 
-export default Comments;
+export default memo(Comments, (prev, next) => (
+  isEqual(prev.comments, next.comments) &&
+  isEqual(prev.metadata, next.metadata)
+));

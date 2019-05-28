@@ -2,9 +2,10 @@ import HomePage, { getHomePageData } from './pages/Home';
 import UserPage, { getUserPageData } from './pages/User';
 import EditPostPage from './pages/EditPost';
 import ProfilePage from './pages/Profile';
-import PostPage, { getPostPageData } from './pages/Post';
+import PostPage, { PostEosPage, getPostPageData, getPostEosPageData } from './pages/Post';
 import OverviewPage, { getPageData } from './pages/Overview';
 import Offer, { getPostOfferData } from './pages/Offer';
+import Offer2, { getPostOfferData_2 } from './pages/Offer2';
 import UsersPage from './pages/Users';
 import AboutPage from './pages/About';
 import OrganizationsPage from './pages/Organizations';
@@ -16,9 +17,10 @@ import GovernancePage from './components/Governance/Governance';
 import Tag from './pages/Tag';
 import Faq from './pages/Faq';
 import Statistics from './pages/Statistics';
-import { getAirdropOfferId } from './utils/airdrop';
+import { getAirdropOfferId_1, getAirdropOfferId_2 } from './utils/airdrop';
 
-const airdropOfferId = getAirdropOfferId();
+const airdropOfferId_1 = getAirdropOfferId_1();
+const airdropOfferId_2 = getAirdropOfferId_2();
 
 export default [{
   path: '/',
@@ -47,13 +49,21 @@ export default [{
   path: '/posts/:id/edit',
   component: EditPostPage,
 }, {
-  path: `/posts/${airdropOfferId}`,
+  path: `/posts/${airdropOfferId_1}`,
   component: Offer,
   getData: getPostOfferData,
 }, {
+  path: `/posts/${airdropOfferId_2}`,
+  component: Offer2,
+  getData: getPostOfferData_2,
+}, {
   path: '/github',
-  component: Offer,
-  getData: getPostOfferData,
+  component: Offer2,
+  getData: getPostOfferData_2,
+}, {
+  path: '/eos',
+  component: PostEosPage,
+  getData: getPostEosPageData,
 }, {
   path: '/posts/:postId',
   component: PostPage,

@@ -17,13 +17,21 @@
     "staging": 41,
     "production": 4
   },
-  "airdropOfferId": {
+  "airdropOfferId_1": {
     "staging": 14317,
     "production": 6137
   },
+  "airdropOfferId_2": {
+    "staging": 14786,
+    "production": 8515
+  },
   "gitHubAuthLink": {
-    "staging": "https://github.com/login/oauth/authorize/?client_id=ec17c7e5b1f383034c25&state=5idkWlsZKzbpcD7u&redirect_uri=https://staging-backend.u.community/api/v1/github/auth_callback?redirect_uri=https://staging.u.community/posts/14317",
-    "production": "https://github.com/login/oauth/authorize/?client_id=8b4ef608525c8aff2d5e&state=5idkWlsZKzbpcD7u&redirect_uri=https://backend.u.community/api/v1/github/auth_callback?redirect_uri=https://u.community/posts/6137"
+    "staging": "https://github.com/login/oauth/authorize/?client_id=ec17c7e5b1f383034c25&state=5idkWlsZKzbpcD7u&redirect_uri=https://staging-backend.u.community/api/v1/github/auth_callback?redirect_uri=https://staging.u.community/posts/14786",
+    "production": "https://github.com/login/oauth/authorize/?client_id=8b4ef608525c8aff2d5e&state=5idkWlsZKzbpcD7u&redirect_uri=https://backend.u.community/api/v1/github/auth_callback?redirect_uri=https://u.community/posts/8515"
+  },
+  "eosPostId": {
+    "staging": 14718,
+    "production": 8192
   },
   "grecaptchaSitekey": "6Leg_KEUAAAAANesBGRTETXBWJycatPc0EneSbTp",
   "backend": {
@@ -137,7 +145,7 @@
     "ucom-libs-graphql-schemas": "^1.14.0",
     "ucom-libs-social-transactions": "^1.2.0",
     "ucom-libs-wallet": "^2.6.1",
-    "ucom.libs.common": "^1.8.2",
+    "ucom.libs.common": "^1.9.0",
     "uuid": "^3.3.2",
     "validatorjs": "^3.14.2",
     "xss": "^1.0.6"

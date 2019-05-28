@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'react-tippy';
@@ -104,4 +105,6 @@ DropdownMenu.defaultProps = {
   distance: 10,
 };
 
-export default memo(DropdownMenu);
+export default memo(DropdownMenu, (perv, next) => (
+  isEqual(perv.items, next.items)
+));

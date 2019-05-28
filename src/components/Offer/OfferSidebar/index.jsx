@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formatRate } from '../../../utils/rate';
@@ -6,6 +6,7 @@ import PostRating from '../../Rating/PostRating';
 import One from '../../Icons/Airdrop/One';
 import Two from '../../Icons/Airdrop/Two';
 import Three from '../../Icons/Airdrop/Three';
+import Four from '../../Icons/Airdrop/Four';
 import Done from '../../Icons/Airdrop/Done';
 import DoneSmall from '../../Icons/Airdrop/DoneSmall';
 import Dots from '../../Icons/Airdrop/Dots';
@@ -14,17 +15,36 @@ import IconShareCircle from '../../Icons/ShareCircle';
 import ShareBlock from '../../ShareBlock';
 import styles from './styles.css';
 import { authShowPopup } from '../../../actions/auth';
-import IconTelegram from '../../Icons/Socials/TelegramBlack';
+import Telegram from '../../Icons/Socials/TelegramBlack';
 import formatNumber from '../../../utils/formatNumber';
+import IconFacebook from '../../Icons/Socials/Share/Facebook';
+import IconTwitter from '../../Icons/Socials/Share/Twitter';
+import IconTelegram from '../../Icons/Socials/Share/Telegram';
 
 const { AirdropStatuses } = require('ucom.libs.common').Airdrop.Dictionary;
 
 const OfferSidebar = (props) => {
   const [sharePopupVisibility, setSharePopupVisibility] = useState(false);
+  const [shareStatus, setShareStatus] = useState(false);
+  const [originLink, setOriginLink] = useState(false);
 
   const toggleShare = () => {
     setSharePopupVisibility(!sharePopupVisibility);
   };
+
+  const saveShare = () => {
+    localStorage.setItem('ShareAirdrop', true);
+    setShareStatus(true);
+  };
+
+  useEffect(() => {
+    const status = localStorage.getItem('ShareAirdrop');
+    setShareStatus(status);
+  }, [shareStatus]);
+
+  useEffect(() => {
+    setOriginLink(typeof window !== 'undefined' ? window.location.origin : null);
+  }, []);
 
   const { conditions } = props;
 
@@ -62,11 +82,11 @@ const OfferSidebar = (props) => {
             </div>
             <div className={styles.tokens}>
               <div className={styles.tokensColumn}>
-                <div className={styles.tokenNumber}>{formatNumber(conditions.tokens[0].amountClaim)}</div>
+                <div className={styles.tokenNumber}>{formatNumber(conditions.tokens[0].amountClaim.toFixed(2))}</div>
                 <span className={styles.tokenCurr}>UOS</span>
               </div>
               <div className={styles.tokensColumn}>
-                <div className={styles.tokenNumber}>{formatNumber(conditions.tokens[1].amountClaim)}</div>
+                <div className={styles.tokenNumber}>{formatNumber(conditions.tokens[1].amountClaim.toFixed(2))}</div>
                 <span className={styles.tokenCurr}>UOS.Futures</span>
               </div>
             </div>
@@ -82,7 +102,7 @@ const OfferSidebar = (props) => {
             </Fragment>
           </div>
           <div className={styles.statusErrorText}>
-            Something went wrong, please contact us in <a href="https://t.me/uos_network_en" target="_blank" rel="noopener noreferrer"><IconTelegram />Chat</a>
+            Something went wrong, please contact us in <a href="https://t.me/uos_network_en" target="_blank" rel="noopener noreferrer"><Telegram />Chat</a>
           </div>
         </div>
       }
@@ -94,7 +114,7 @@ const OfferSidebar = (props) => {
           </div>
           <div className={styles.optionBlock}>
             <a
-              href={Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 ? props.gitHubAuthLink : null}
+              href={Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 && Date.parse(new Date()) < Date.parse(new Date(props.finishedAt)) ? props.gitHubAuthLink : null}
               className={styles.optionTitle}
             >
               Authorize GitHub
@@ -107,7 +127,7 @@ const OfferSidebar = (props) => {
           <div className={styles.optionBlock}>
             <div
               role="presentation"
-              onClick={() => (Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 ? props.authShowPopup() : null)}
+              onClick={() => (Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 && Date.parse(new Date()) < Date.parse(new Date(props.finishedAt)) ? props.authShowPopup() : null)}
               className={styles.optionTitle}
             >
               Register U°OS account
@@ -115,10 +135,55 @@ const OfferSidebar = (props) => {
             <div className={styles.optionText}>to secure your Importance in the network</div>
           </div>
         </div>
+
         <div className={styles.option}>
-          <div className={styles.optionStatus}>{conditions && conditions.conditions.followingDevExchange === true ? <Done /> : <Three />}</div>
+          <div className={styles.optionStatus}>{shareStatus === 'true' || (conditions && conditions.airdropStatus === AirdropStatuses.RECEIVED) ? <Done /> : <Three />}</div>
           <div className={styles.optionBlock}>
-            <a href={Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 ? `/communities/${props.organizationId}` : null} target="_blank" rel="noopener noreferrer" className={styles.optionTitle}>Join DevExchange</a>
+            <div
+              role="presentation"
+              className={styles.optionTitle}
+            >
+              Share to
+            </div>
+            <div className={styles.optionText}>Let others check their score (and it will help us a lot)</div>
+            <div className={styles.socialIcons}>
+              <Fragment>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${originLink}/github`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.icon}
+                  onClick={() => setTimeout(saveShare, 5000)}
+                >
+                  <IconFacebook />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${originLink}/github`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.icon}
+                  onClick={() => setTimeout(saveShare, 5000)}
+                >
+                  <IconTwitter />
+                </a>
+                <a
+                  href={`https://telegram.me/share/url?url=${originLink}/github`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.icon}
+                  onClick={() => setTimeout(saveShare, 5000)}
+                >
+                  <IconTelegram />
+                </a>
+              </Fragment>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.option}>
+          <div className={styles.optionStatus}>{conditions && conditions.conditions.followingDevExchange === true ? <Done /> : <Four />}</div>
+          <div className={styles.optionBlock}>
+            <a href={Date.parse(new Date(props.startedAt)) - Date.parse(new Date()) < 0 && Date.parse(new Date()) < Date.parse(new Date(props.finishedAt)) ? `/communities/${props.organizationId}` : null} target="_blank" rel="noopener noreferrer" className={styles.optionTitle}>Join DevExchange</a>
             <div className={styles.optionText}>to see your Importance in action and talk to community members</div>
           </div>
         </div>
@@ -167,6 +232,7 @@ OfferSidebar.propTypes = {
   postId: PropTypes.number.isRequired,
   createdAt: PropTypes.string,
   startedAt: PropTypes.string,
+  finishedAt: PropTypes.string,
   link: PropTypes.string.isRequired,
   repostAvailable: PropTypes.bool,
   postTypeId: PropTypes.number,
@@ -184,6 +250,7 @@ OfferSidebar.defaultProps = {
   gitHubAuthLink: '',
   startedAt: '',
   createdAt: '',
+  finishedAt: '',
   organizationId: 101,
 };
 

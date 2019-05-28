@@ -21,3 +21,13 @@ export const getUosGroupId = () => {
 };
 
 export const getGrecaptchaSitekey = () => config.grecaptchaSitekey;
+
+export const getEosPostId = () => {
+  let id = config.eosPostId.staging;
+
+  if (process.env.NODE_ENV === 'production') {
+    id = config.eosPostId.production;
+  }
+
+  return id;
+};

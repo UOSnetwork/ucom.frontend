@@ -117,12 +117,14 @@ export const getOnePostOffer = ({
   postId,
   commentsPage,
   commentsPerPage,
+  usersTeamQuery,
 }, options) => async (dispatch) => {
   try {
     const data = await graphql.getOnePostOffer({
       postId,
       commentsPage,
       commentsPerPage,
+      usersTeamQuery,
     }, options);
     dispatch(commentsAddContainerData({
       containerId: COMMENTS_CONTAINER_ID_POST,
@@ -145,6 +147,7 @@ export const getOnePostOfferWithUserAirdrop = ({
   postId,
   commentsPage,
   commentsPerPage,
+  usersTeamQuery,
 }, options) => async (dispatch) => {
   try {
     const data = await graphql.getOnePostOfferWithUserAirdrop({
@@ -152,6 +155,7 @@ export const getOnePostOfferWithUserAirdrop = ({
       postId,
       commentsPage,
       commentsPerPage,
+      usersTeamQuery,
     }, options);
     dispatch(commentsAddContainerData({
       containerId: COMMENTS_CONTAINER_ID_POST,
