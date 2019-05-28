@@ -20,7 +20,7 @@ import Avatar from '../components/EntryHeader/Avatar';
 import SocialNetworks from '../components/SocialNetworks';
 import UsersTeamForm from '../components/UsersTeamForm/index';
 import { getOrganizationById } from '../store/organizations';
-import { validator } from '../utils/validateFields';
+import { validator, isValid } from '../utils/validateFields';
 import EntryCard from '../components/EntryCard/index';
 
 const Organization = (props) => {
@@ -56,16 +56,18 @@ const Organization = (props) => {
   }, (organization));
 
   const saveProfile = () => {
-  //   orgData.usersSources = orgData.usersSources.filter(e => (e.sourceUrl));
-  //   const checkError = validator(orgData);
-  //   setErrors(checkError);
+    orgData.usersSources = orgData.usersSources.filter(e => (e.sourceUrl));
+    const checkError = validator(orgData);
+    setErrors(checkError);
 
-  //   if (isValid(checkError)) {
-  //     props.updateUser(orgData);
-  //     props.onClickClose();
-  //   }
-    console.log('orgData: ', orgData);
-    props.saveOrganization(orgData);
+    if (isValid(checkError)) {
+      // props.updateUser(orgData);
+      console.log('orgData111: ', orgData);
+      props.saveOrganization(orgData);
+      props.onClickClose();
+    }
+
+    console.log('orgData222: ', orgData);
   };
 
   return (
@@ -80,7 +82,6 @@ const Organization = (props) => {
             <div>
               <div className={styles.sidebar}>
                 <VerticalMenu
-                  sticky
                   sections={[
                     { name: 'General', title: 'General' },
                     { name: 'Board', title: 'Board' },
@@ -150,16 +151,16 @@ const Organization = (props) => {
                         placeholder="Choose Nice Name"
                         // className={styles.input}
                         value={orgData.title}
+                        error={errors.title}
                         onChange={value => setOrgData({ ...orgData, title: value })}
                       />
                     </div>
                   </div>
-                  <div className={classNames(styles.field, styles.fieldRequired)}>
+                  <div className={styles.field}>
                     <div className={styles.label}>Community Link</div>
                     <div className={styles.inputBlock}>
                       <TextInput
                         topLabel
-                        isRequired
                         placeholder="uosnetwork"
                         // className={styles.input}
                         value={orgData.nickname}
@@ -190,7 +191,7 @@ const Organization = (props) => {
                       </Link>
                     </div>
                   </div>
-                  <div className={classNames(styles.field, styles.fieldRequired)}>
+                  <div className={classNames(styles.field, styles.fieldSoical)}>
                     <div className={styles.label}>Administrators</div>
                     <div className={styles.inputBlock}>
                       <UsersTeamForm
@@ -244,7 +245,7 @@ const Organization = (props) => {
                 <Element name="Links" className={styles.section}>
                   <h3 className={styles.title}>Links</h3>
                   <div className={styles.field}>
-                    <div className={styles.label}>My Website</div>
+                    <div className={styles.label}>Community Website</div>
                     <div className={styles.inputBlock}>
                       <TextInput
                       // className={styles.input}

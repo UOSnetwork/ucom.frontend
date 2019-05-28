@@ -167,8 +167,8 @@ h4.title {
 
 .btnSaveOrg {
   margin: 40px 0;
-  position: sticky;
-  top: 405px;
+  /* position: sticky;
+  top: 405px; */
 }
 
 .link {

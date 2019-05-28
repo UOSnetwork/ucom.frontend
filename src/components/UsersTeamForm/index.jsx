@@ -4,7 +4,6 @@ import classNames from 'classnames';
 import { uniqBy } from 'lodash';
 import PropTypes from 'prop-types';
 import UserSearchInput from '../UserSearchInput';
-// import UserCard from './UserCard';
 import EntryCard from '../EntryCard/index';
 import IconRemove from '../Icons/Remove';
 import urls from '../../utils/urls';
@@ -18,8 +17,6 @@ import styles from './styles.css';
 
 const UsersTeamForm = (props) => {
   const [teamFormVisible, setTeamFormVisible] = useState(false);
-
-  console.log('users: ', props.users);
 
   return (
     <div>
@@ -65,8 +62,8 @@ const UsersTeamForm = (props) => {
           </div>
         </div>
       ))}
-      <div className={styles.input}>
-        {teamFormVisible &&
+      {teamFormVisible &&
+        <div className={styles.input}>
           <UserSearchInput
             isMulti
             value={[]}
@@ -79,8 +76,8 @@ const UsersTeamForm = (props) => {
               }
             }}
           />
-        }
-      </div>
+        </div>
+      }
       <Button
         small
         grayBorder

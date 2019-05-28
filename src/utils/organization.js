@@ -48,7 +48,7 @@ export const getSourceNameById = (id) => {
 export const getUsersTeamStatusById = (id) => {
   switch (id) {
     case USERS_TEAM_STATUS_ID_PENDING: {
-      return 'Awaiting Confirmation';
+      return 'Pending';
     }
 
     case USERS_TEAM_STATUS_ID_CONFIRMED: {

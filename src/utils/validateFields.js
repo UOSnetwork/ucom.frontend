@@ -19,7 +19,8 @@ export const validateFields = (
 };
 
 const rule = {
-  firstName: value => (!value && 'Displayed name is required'),
+  firstName: value => ((!value || value.trim() === '') && 'Displayed name is required'),
+  title: value => ((!value || value.trim() === '') && 'Community Name is required'),
 
   personalWebsiteUrl: (value) => {
     const error = !value ? false : !validURL(value) && 'Not a valid URL format';
@@ -32,6 +33,7 @@ const rule = {
       return error;
     },
   }],
+
 };
 
 export const validator = (data, rules = rule) => {
