@@ -27,7 +27,7 @@ export const getUserName = memoize((user) => {
 
   return userData.accountName;
 }, (user) => {
-  const userData = humps(user);
+  const userData = humps(user) || {};
 
   return `${userData.firstName}.${userData.accountName}`;
 });
