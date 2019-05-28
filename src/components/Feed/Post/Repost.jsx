@@ -1,15 +1,8 @@
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import moment from 'moment';
-import React from 'react';
+import React, { memo } from 'react';
 import { getUserName } from '../../../utils/user';
 import urls from '../../../utils/urls';
-import { getPostById } from '../../../store/posts';
-import { getUserById } from '../../../store/users';
-import { selectUser } from '../../../store/selectors/user';
-import { createComment } from '../../../actions/comments';
-import { updatePost } from '../../../actions/posts';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
 import PostFeedFooter from './PostFeedFooter';
@@ -17,22 +10,18 @@ import PostCard from '../../PostMedia/PostCard';
 import { getPostUrl, getPostTypeById, POST_TYPE_MEDIA_ID, getPostCover } from '../../../utils/posts';
 import styles from './Post.css';
 
-const Repost = (props) => {
-  const post = getPostById(props.posts, props.id);
-
-  if (!post || !post.post) {
-    return null;
-  }
-
-  const user = getUserById(props.users, post.userId);
-
-  if (!user) {
+const Repost = ({
+  post, user, owner, ...props
+}) => {
+  if (!post || !post.post || !user) {
     return null;
   }
 
   return (
     <div className={styles.post}>
       <PostFeedHeader
+        post={post}
+        user={owner}
         userId={user.id}
         postTypeId={props.postTypeId}
         createdAt={moment(post.createdAt).fromNow()}
@@ -45,6 +34,8 @@ const Repost = (props) => {
       <div className={styles.repost} id={`post-${post.post.id}`}>
         <PostFeedHeader
           repost
+          post={post}
+          user={owner}
           userId={post.post.user.id}
           postTypeId={post.post.postTypeId}
           createdAt={moment(post.post.createdAt).fromNow()}
@@ -74,6 +65,7 @@ const Repost = (props) => {
           />
         ) : (
           <PostFeedContent
+            post={post}
             postId={post.post.id}
             userId={post.post.user.id}
           />
@@ -93,23 +85,18 @@ const Repost = (props) => {
 
 Repost.propTypes = {
   id: PropTypes.number.isRequired,
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
-  users: PropTypes.objectOf(PropTypes.object).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
-  postTypeId: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
+  postTypeId: PropTypes.number,
+  post: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect(
-  state => ({
-    posts: state.posts,
-    users: state.users,
-    comments: state.comments,
-    user: selectUser(state),
-  }),
-  dispatch => bindActionCreators({
-    createComment,
-    updatePost,
-  }, dispatch),
-)(Repost);
+Repost.defaultProps = {
+  postTypeId: undefined,
+};
+
+export default memo(Repost, (prev, next) => (
+  prev.sharePopup === next.sharePopup
+));

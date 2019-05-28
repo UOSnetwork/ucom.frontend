@@ -1,7 +1,8 @@
+import { memoize } from 'lodash';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import React from 'react';
+import React, { memo } from 'react';
 import UserPick from '../UserPick/UserPick';
 import { getUserById } from '../../store/users';
 import { getUserName } from '../../utils/user';
@@ -43,18 +44,19 @@ MyUserCard.defaultProps = {
   isOwner: false,
 };
 
-export default connect(
-  (state, props) => () => {
-    const user = getUserById(state.users, props.userId);
+export default connect(memoize((state, props) => {
+  const user = getUserById(state.users, props.userId);
 
-    return ({
-      ...props,
-      userPickSrc: user ? urls.getFileUrl(user.avatarFilename) : null,
-      userPickAlt: getUserName(user),
-      url: user ? urls.getUserUrl(user.id) : null,
-      name: getUserName(user),
-      rate: user ? user.currentRate : null,
-    });
-  },
-  null,
-)(MyUserCard);
+  return ({
+    ...props,
+    userPickSrc: user ? urls.getFileUrl(user.avatarFilename) : null,
+    userPickAlt: getUserName(user),
+    url: user ? urls.getUserUrl(user.id) : null,
+    name: getUserName(user),
+    rate: user ? user.currentRate : null,
+  });
+}, (state, props) => {
+  const user = getUserById(state.users, props.userId);
+
+  return `${props.userId}.${user.currentRate}.${user.avatarFilename}.${props.isOwner}`;
+}))(memo(MyUserCard));

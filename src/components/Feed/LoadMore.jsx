@@ -15,7 +15,8 @@ class LoadMore extends PureComponent {
 
       const rect = this.el.getBoundingClientRect();
 
-      if (rect.top - window.innerHeight > 400) {
+
+      if (rect.top - window.innerHeight > 800) {
         return;
       }
 

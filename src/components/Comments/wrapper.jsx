@@ -1,3 +1,4 @@
+import { memoize } from 'lodash';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import Comments from './index';
@@ -10,7 +11,7 @@ import { createComment, getPostComments, getCommentsOnComment } from '../../acti
 import { addErrorNotification } from '../../actions/notifications';
 
 export default connect(
-  (state, props) => {
+  memoize((state, props) => {
     const commentsData = getCommentsByContainer(state, props.containerId, props.postId);
     let comments = [];
     let metadata = {};
@@ -40,7 +41,10 @@ export default connect(
       ownerPageUrl: urls.getUserUrl(state.user.data.id),
       ownerName: getUserName(state.user.data),
     });
-  },
+  }, (state, props) => {
+    const commentsData = getCommentsByContainer(state, props.containerId, props.postId);
+    return `${props.containerId}.${props.postId}.${JSON.stringify(commentsData)}`;
+  }),
 
   dispatch => ({
     onSubmit: ({

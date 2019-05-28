@@ -1,4 +1,3 @@
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -98,10 +97,10 @@ export default connect(
   state => ({
     feed: state.feed,
   }),
-  dispatch => bindActionCreators({
+  {
     feedReset,
     feedGetUserPosts,
     feedCreatePost,
     commentsResetContainerDataById,
-  }, dispatch),
+  },
 )(FeedUser);

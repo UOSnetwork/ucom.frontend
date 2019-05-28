@@ -1,14 +1,11 @@
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import UserCard from '../../../UserCard/UserCard';
 import DropdownMenu from '../../../DropdownMenu';
 import urls from '../../../../utils/urls';
-// import { getFileUrl } from '../../../../utils/urls';
-import { getPostById } from '../../../../store/posts';
-import { selectUser } from '../../../../store/selectors/user';
 import { addSuccessNotification } from '../../../../actions/notifications';
 import styles from './styles.css';
 import OrgIcon from '../../../Icons/Organization.jsx';
@@ -16,9 +13,7 @@ import { USER_NEWS_FEED_ID } from '../../../../utils/feed.js';
 import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
 import { copyToClipboard } from '../../../../utils/text';
 
-const PostFeedHeader = (props) => {
-  const post = getPostById(props.posts, props.postId);
-
+const PostFeedHeader = ({ post, ...props }) => {
   if (!post) {
     return null;
   }
@@ -84,7 +79,7 @@ const PostFeedHeader = (props) => {
             </Fragment>
           )}
         </div>
-        { !props.formIsVisible &&
+        {!props.formIsVisible &&
           <div className={styles.dropdown}>
             <DropdownMenu
               onClickButton={onClickDropdownButton}
@@ -116,26 +111,26 @@ const PostFeedHeader = (props) => {
 };
 
 PostFeedHeader.propTypes = {
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
   createdAt: PropTypes.string.isRequired,
   showForm: PropTypes.func,
   addSuccessNotification: PropTypes.func.isRequired,
   postId: PropTypes.number.isRequired,
   formIsVisible: PropTypes.bool,
   userId: PropTypes.number,
-  postTypeId: PropTypes.number,
-  feedTypeId: PropTypes.number,
+  postTypeId: PropTypes.number.isRequired,
+  feedTypeId: PropTypes.number.isRequired,
+  post: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 PostFeedHeader.defaultProps = {
   userId: null,
-  postTypeId: null,
   showForm: null,
   formIsVisible: false,
 };
 
-export default connect(state => ({
-  posts: state.posts,
-  users: state.users,
-  user: selectUser(state),
-}), { addSuccessNotification })(PostFeedHeader);
+export default connect(null, {
+  addSuccessNotification,
+})(memo(PostFeedHeader, (prev, next) => (
+  prev.user.id === next.user.id
+)));

@@ -98,6 +98,7 @@ export const fetchUserPageData = ({
       trustedByPage,
     });
     const { oneUser, oneUserTrustedBy, oneUserFollowsOrganizations } = data;
+
     dispatch(addUsers(oneUserTrustedBy.data.concat([oneUser])));
     dispatch(addOrganizations(oneUserFollowsOrganizations.data));
     return data;

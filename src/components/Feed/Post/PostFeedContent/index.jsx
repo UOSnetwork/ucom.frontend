@@ -1,12 +1,11 @@
-import React, { Fragment } from 'react';
+import { isEqual } from 'lodash';
+import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import FeedForm from '../../FeedForm';
 import Gallery from '../../../Gallery';
 import { updatePost } from '../../../../actions/posts';
-import { getPostById } from '../../../../store/posts';
 import DescDirectPost from './DescDirectPost';
 import { checkMentionTag } from '../../../../utils/text';
 import { POST_TYPE_DIRECT_ID } from '../../../../utils/posts';
@@ -14,9 +13,7 @@ import styles from './styles.css';
 import urls from '../../../../utils/urls';
 import { getCoverImage } from '../../../../utils/entityImages';
 
-const PostFeedContent = (props) => {
-  const post = getPostById(props.posts, props.postId);
-
+const PostFeedContent = ({ post, ...props }) => {
   if (!post) {
     return null;
   }
@@ -57,7 +54,6 @@ const PostFeedContent = (props) => {
                 </div>
               }
 
-
               {post.description &&
                 <div className={styles.content}>
                   <DescDirectPost
@@ -80,15 +76,13 @@ PostFeedContent.propTypes = {
   postId: PropTypes.number.isRequired,
   formIsVisible: PropTypes.bool.isRequired,
   updatePost: PropTypes.func.isRequired,
-  postTypeId: PropTypes.number,
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
+  postTypeId: PropTypes.number.isRequired,
+  hideForm: PropTypes.func.isRequired,
 };
 
-export default connect(
-  state => ({
-    posts: state.posts,
-  }),
-  dispatch => bindActionCreators({
-    updatePost,
-  }, dispatch),
-)(PostFeedContent);
+export default connect(null, {
+  updatePost,
+})(memo(PostFeedContent, (prev, next) => (
+  prev.post.description === next.post.description &&
+  isEqual(prev.post.entityImages, next.post.entityImages)
+)));

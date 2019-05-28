@@ -1,30 +1,23 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import moment from 'moment';
-import React, { useState, Fragment } from 'react';
-import { getPostById } from '../../../store/posts';
-import { selectUser } from '../../../store/selectors/user';
-import { createComment } from '../../../actions/comments';
-import { getUserById } from '../../../store/users';
+import React, { useState, Fragment, memo } from 'react';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
 import PostFeedFooter from './PostFeedFooter';
 import styles from './Post.css';
 
-const Direct = (props) => {
-  const post = getPostById(props.posts, props.id);
+const Direct = ({
+  user, owner, post, ...props
+}) => {
   const [formIsVisible, setFormIsVisible] = useState(false);
 
-  if (!post) {
+  if (!post || !user) {
     return null;
   }
 
-  const user = getUserById(props.users, post.userId);
-  if (!user) {
-    return null;
-  }
+  const createdAt = moment(post.createdAt).fromNow();
 
   return (
     <Fragment>
@@ -40,16 +33,19 @@ const Direct = (props) => {
               id={`post-${post.id}`}
             >
               <PostFeedHeader
-                userId={props.user.id}
-                createdAt={moment(post.createdAt).fromNow()}
+                post={post}
+                user={owner}
+                userId={owner.id}
+                createdAt={createdAt}
                 postId={post.id}
                 formIsVisible={formIsVisible}
                 feedTypeId={props.feedTypeId}
                 showForm={() => setFormIsVisible(true)}
               />
               <PostFeedContent
+                post={post}
                 postId={props.id}
-                userId={props.user.id}
+                userId={owner.id}
                 postTypeId={post.postTypeId}
                 linkText={post.description}
                 formIsVisible={formIsVisible}
@@ -59,9 +55,9 @@ const Direct = (props) => {
           </div>
           <div className={styles.post} id={`post-${post.id}`}>
             <PostFeedFooter
+              post={post}
               formIsVisible={formIsVisible}
               commentsCount={post.commentsCount}
-              post={post}
               postTypeId={post.postTypeId}
               sharePopup={props.sharePopup}
               toggleShare={props.toggleShare}
@@ -71,16 +67,19 @@ const Direct = (props) => {
         :
         <div className={styles.post} id={`post-${post.id}`}>
           <PostFeedHeader
-            userId={props.user.id}
-            createdAt={moment(post.createdAt).fromNow()}
+            post={post}
+            user={owner}
+            userId={owner.id}
+            createdAt={createdAt}
             postId={post.id}
             formIsVisible={formIsVisible}
             feedTypeId={props.feedTypeId}
             showForm={() => setFormIsVisible(true)}
           />
           <PostFeedContent
+            post={post}
             postId={props.id}
-            userId={props.user.id}
+            userId={owner.id}
             postTypeId={post.postTypeId}
             linkText={post.description}
             formIsVisible={formIsVisible}
@@ -96,28 +95,22 @@ const Direct = (props) => {
         </div>
       }
     </Fragment>
-
   );
 };
 
 Direct.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
-  users: PropTypes.objectOf(PropTypes.object).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+  owner: PropTypes.objectOf(PropTypes.any).isRequired,
+  post: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect(
-  state => ({
-    posts: state.posts,
-    users: state.users,
-    comments: state.comments,
-    user: selectUser(state),
-  }),
-  dispatch => bindActionCreators({
-    createComment,
-  }, dispatch),
-)(Direct);
+export default memo(Direct, (prev, next) => (
+  prev.owner.id === next.owner.id &&
+  prev.post.description === next.post.description &&
+  prev.sharePopup === next.sharePopup &&
+  isEqual(prev.post.entityImages, next.post.entityImages)
+));

@@ -1,18 +1,21 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Direct from './Direct';
 import Repost from './Repost';
 import Media from './Media';
 import { POST_TYPE_REPOST_ID, POST_TYPE_MEDIA_ID } from '../../../utils/posts';
 import { getPostById } from '../../../store/posts';
+import { getUserById } from '../../../store/users';
 
-const Post = (props) => {
+const Post = ({
+  post, user, owner, ...props
+}) => {
   const [sharePopup, setSharePopup] = useState(false);
-  const post = getPostById(props.posts, props.id);
   const toggleShare = () => setSharePopup(!sharePopup);
 
-  if (!post) {
+  if (!post || !user) {
     return null;
   }
 
@@ -20,6 +23,9 @@ const Post = (props) => {
     case POST_TYPE_REPOST_ID:
       return (
         <Repost
+          post={post}
+          user={user}
+          owner={owner}
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
@@ -29,6 +35,9 @@ const Post = (props) => {
     case POST_TYPE_MEDIA_ID:
       return (
         <Media
+          post={post}
+          user={user}
+          owner={owner}
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
@@ -38,6 +47,9 @@ const Post = (props) => {
     default:
       return (
         <Direct
+          post={post}
+          user={user}
+          owner={owner}
           id={props.id}
           sharePopup={sharePopup}
           toggleShare={toggleShare}
@@ -52,6 +64,17 @@ Post.propTypes = {
   id: PropTypes.number.isRequired,
 };
 
-export default connect(state => ({
-  posts: state.posts,
-}))(Post);
+export default connect((state, props) => {
+  const post = getPostById(state.posts, props.id);
+
+  return {
+    post,
+    user: post ? getUserById(state.users, post.userId) : undefined,
+    owner: state.user.data,
+  };
+})(memo(Post, (prev, next) => (
+  prev.owner.id === next.owner.id &&
+  prev.post.description === next.post.description &&
+  prev.sharePopup === next.sharePopup &&
+  isEqual(prev.post.entityImages, next.post.entityImages)
+)));
