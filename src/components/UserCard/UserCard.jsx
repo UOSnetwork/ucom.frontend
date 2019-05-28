@@ -56,7 +56,7 @@ export default connect(memoize((state, props) => {
     rate: user ? user.currentRate : null,
   });
 }, (state, props) => {
-  const user = getUserById(state.users, props.userId);
+  const user = getUserById(state.users, props.userId) || {};
 
   return `${props.userId}.${user.currentRate}.${user.avatarFilename}.${props.isOwner}`;
 }))(memo(MyUserCard));
