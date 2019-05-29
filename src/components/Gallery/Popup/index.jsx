@@ -18,11 +18,24 @@ const GalleryPopup = (props) => {
   const canMoveLeft = activeIndex - 1 >= 0;
   const canMoveRight = activeIndex + 1 < props.images.length;
 
-  const moveLeft = () =>
-    (canMoveLeft ? setActiveIndex(activeIndex - 1) : null);
+  const prevent = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-  const moveRight = () =>
-    (canMoveRight ? setActiveIndex(activeIndex + 1) : null);
+  const moveLeft = (e) => {
+    prevent(e);
+    if (canMoveLeft) {
+      setActiveIndex(activeIndex - 1);
+    }
+  };
+
+  const moveRight = (e) => {
+    prevent(e);
+    if (canMoveRight) {
+      setActiveIndex(activeIndex + 1);
+    }
+  };
 
   const onKeyDown = (event) => {
     if (isLeftArrowKey(event)) {
@@ -58,7 +71,11 @@ const GalleryPopup = (props) => {
         <IconClose />
       </div>
 
-      <div className={styles.popup}>
+      <div
+        role="presentation"
+        onClick={() => props.onClickClose()}
+        className={styles.popup}
+      >
         <div className={styles.container}>
           <div
             role="presentation"
@@ -82,7 +99,6 @@ const GalleryPopup = (props) => {
                 [styles.pointer]: canMoveRight,
               })}
               role="presentation"
-              onClick={moveRight}
               src={props.images[activeIndex].url}
               alt={props.images[activeIndex].alt}
             />
@@ -128,7 +144,10 @@ const GalleryPopup = (props) => {
                 role="presentation"
                 className={styles.thumbWrapper}
                 level={index - activeIndex}
-                onClick={() => setActiveIndex(index)}
+                onClick={(e) => {
+                  prevent(e);
+                  setActiveIndex(index);
+                }}
               >
                 <img
                   className={styles.thumb}
