@@ -39,9 +39,9 @@ const GalleryPopup = (props) => {
 
   const onKeyDown = (event) => {
     if (isLeftArrowKey(event)) {
-      moveLeft();
+      moveLeft(event);
     } else if (isRightArrowKey(event)) {
-      moveRight();
+      moveRight(event);
     }
   };
 
