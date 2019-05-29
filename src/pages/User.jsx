@@ -220,7 +220,7 @@ const UserPage = (props) => {
         </div>
         <div className="layout__main">
           <EntryAbout text={user.about} />
-          <Feed userId={user.id} feedTypeId={USER_WALL_FEED_ID} />
+          <Feed userId={user.id} isCurrentUser={user.id === props.user.id} feedTypeId={USER_WALL_FEED_ID} />
         </div>
         <div className="layout__footer">
           <Footer />
@@ -238,6 +238,7 @@ UserPage.propTypes = {
     }),
   }).isRequired,
   users: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
   posts: PropTypes.objectOf(PropTypes.any).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
@@ -276,6 +277,7 @@ export const getUserPageData = (store, params) => {
 
 export default connect(state => ({
   users: state.users,
+  user: state.user.data,
   posts: state.posts,
   organizations: state.organizations,
   owner: selectUser(state),
