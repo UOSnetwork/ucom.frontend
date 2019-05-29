@@ -11,6 +11,8 @@ const Close = props => (
         props.onClick();
       } else if (document.referrer.indexOf(window.location.origin) === 0) {
         props.history.push(document.referrer.slice(window.location.origin.length));
+      } else if (props.location.state.prevPath) {
+        props.history.push(props.location.state.prevPath);
       } else {
         props.history.push('/');
       }
