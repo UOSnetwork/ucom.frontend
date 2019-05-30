@@ -1,6 +1,7 @@
 import React from 'react';
 import UserCard from './UserCard';
 import IconRemove from './Icons/Remove';
+import OrganizationIcon from './Icons/Organization';
 import urls from '../utils/urls';
 
 const CommunitieList = props => (
@@ -11,6 +12,7 @@ const CommunitieList = props => (
           <div className="toolbar__main">
             <UserCard
               sign=""
+              BlankIcon={OrganizationIcon}
               userName={item.title}
               accountName={item.nickname || item.description}
               avatarUrl={typeof item.avatarFilename === 'string' ? urls.getFileUrl(item.avatarFilename) : item.avatarFilename}

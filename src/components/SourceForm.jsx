@@ -4,6 +4,7 @@ import Button from './Button';
 import AvatarFromFile from './AvatarFromFile';
 import DropZone from './DropZone';
 import Validator from './../utils/validator';
+import OrganizationIcon from './Icons/Organization';
 
 class SourceForm extends PureComponent {
   constructor(props) {
@@ -64,7 +65,7 @@ class SourceForm extends PureComponent {
               <div className="field__label">
                 <div className="field__section">Logotype</div>
                 <div className="field__section">
-                  <AvatarFromFile square rounded size="big" file={this.state.data.avatarFilename} />
+                  <AvatarFromFile BlankIcon={this.props.fieldPrefix === 'Community' ? OrganizationIcon : null} square rounded size="big" file={this.state.data.avatarFilename} />
                 </div>
               </div>
               <div className="field__input">

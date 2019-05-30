@@ -30,6 +30,7 @@ import {
   STEPS_ID_CONTACTS,
 } from '../store/organization';
 import urls from '../utils/urls';
+import OrganizationIcon from './Icons/Organization';
 
 const OrganizationsCreatePage = (props) => {
   switch (props.organization.activeStepId) {
@@ -63,9 +64,9 @@ const OrganizationsCreatePage = (props) => {
                         <div className="field__section">Logotype</div>
                         <div className="field__section">
                           {props.organization.data.avatarFilename && typeof props.organization.data.avatarFilename === 'object' ? (
-                            <AvatarFromFile square rounded size="big" file={props.organization.data.avatarFilename} />
+                            <AvatarFromFile square rounded BlankIcon={OrganizationIcon} size="big" file={props.organization.data.avatarFilename} />
                           ) : (
-                            <Avatar square rounded size="big" src={urls.getFileUrl(props.organization.data.avatarFilename)} />
+                            <Avatar BlankIcon={OrganizationIcon} square rounded size="big" src={urls.getFileUrl(props.organization.data.avatarFilename)} />
                           )}
                         </div>
                       </div>

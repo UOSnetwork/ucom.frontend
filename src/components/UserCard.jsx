@@ -8,8 +8,8 @@ import { filterURL } from '../utils/url';
 
 const UserCard = (props) => {
   const avatar = props.avatarUrl && typeof props.avatarUrl === 'object' ?
-    <AvatarFromFile square={props.squareAvatar} rounded={props.roundedAvatar} size={props.avatarSize} file={props.avatarUrl} /> :
-    <Avatar square={props.squareAvatar} rounded={props.roundedAvatar} src={props.avatarUrl} size={props.avatarSize} />;
+    <AvatarFromFile BlankIcon={props.BlankIcon} square={props.squareAvatar} rounded={props.roundedAvatar} size={props.avatarSize} file={props.avatarUrl} /> :
+    <Avatar BlankIcon={props.BlankIcon} square={props.squareAvatar} rounded={props.roundedAvatar} src={props.avatarUrl} size={props.avatarSize} />;
 
   let LinkTag = 'span';
 

@@ -73,3 +73,18 @@ export const getGalleryImages = (entry) => {
     return [];
   }
 };
+
+export const getFirstImage = (entry) => {
+  try {
+    if (entry.entityImages || entry.entityImages.gallery) {
+      return getEntryImageAttr(entry, 'gallery', 'url', 0);
+    }
+
+    if (entry.entityImages || entry.entityImages.articleTitle) {
+      return getCoverImage(entry);
+    }
+  } catch (e) {
+    return '';
+  }
+  return '';
+};
