@@ -8,9 +8,10 @@ import Media from './Media';
 import { POST_TYPE_REPOST_ID, POST_TYPE_MEDIA_ID } from '../../../utils/posts';
 import { getPostById } from '../../../store/posts';
 import { getUserById } from '../../../store/users';
+import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 
 const Post = ({
-  post, user, owner, ...props
+  post, user, owner, commentsContainerId, ...props
 }) => {
   const [sharePopup, setSharePopup] = useState(false);
   const toggleShare = () => setSharePopup(!sharePopup);
@@ -30,6 +31,7 @@ const Post = ({
           sharePopup={sharePopup}
           toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
+          commentsContainerId={commentsContainerId}
         />
       );
     case POST_TYPE_MEDIA_ID:
@@ -42,6 +44,7 @@ const Post = ({
           sharePopup={sharePopup}
           toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
+          commentsContainerId={commentsContainerId}
         />
       );
     default:
@@ -54,6 +57,7 @@ const Post = ({
           sharePopup={sharePopup}
           toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
+          commentsContainerId={commentsContainerId}
         />
       );
   }
@@ -62,6 +66,11 @@ const Post = ({
 Post.propTypes = {
   posts: PropTypes.objectOf(PropTypes.any).isRequired,
   id: PropTypes.number.isRequired,
+  commentsContainerId: PropTypes.number,
+};
+
+Post.defaultProps = {
+  commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
 export default connect((state, props) => {
