@@ -65,7 +65,7 @@ const Repost = ({
           />
         ) : (
           <PostFeedContent
-            post={post}
+            post={post.post}
             postId={post.post.id}
             userId={post.post.user.id}
           />
