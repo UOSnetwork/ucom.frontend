@@ -15,7 +15,15 @@ const TextInput = ({
   if (isSearch) {
     icon = <div className="text-input__icon"><IconSearch /></div>;
   } else if (error) {
-    icon = <div className="text-input__icon"><InputErrorIcon /></div>;
+    icon = (
+      <div
+        className="text-input__icon text-input__icon-error"
+        role="presentation"
+        onClick={() => onChange('')}
+      >
+        <InputErrorIcon />
+      </div>
+    );
   } else if (isValid) {
     icon = <div className="text-input__icon"><InputCompleteIcon /></div>;
   }
