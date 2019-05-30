@@ -18,11 +18,11 @@ import { parseMediumContent, mediumHasContent, POSTS_DRAFT_LOCALSTORAGE_KEY } fr
 import Popup from '../components/Popup';
 import ModalContent from '../components/ModalContent';
 import PostSubmitForm from '../components/Post/PostSubmitForm';
-import { addServerErrorNotification } from '../actions/notifications';
+import { addServerErrorNotification, addErrorNotification } from '../actions/notifications';
 import { setDiscussions } from '../actions/organization';
 import { getOrganization } from '../actions/organizations';
 import { getOrganizationById } from '../store/organizations';
-import { addEmbed, filterEmbedsByUrls } from '../utils/entityImages';
+import { addEmbed, filterEmbedsByUrls, ENTITY_IMAGES_SYMBOLS_LIMIT, ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR } from '../utils/entityImages';
 
 const EditPost = (props) => {
   const postId = props.match.params.id;
@@ -190,9 +190,15 @@ const EditPost = (props) => {
                 loader.done();
               }}
               onEmbed={(embedData) => {
-                props.dispatch(setDataToStoreToLS({
-                  entityImages: addEmbed(props.post.data.entityImages, embedData),
-                }));
+                const entityImages = addEmbed(props.post.data.entityImages, embedData);
+
+                if (JSON.stringify(entityImages).length > ENTITY_IMAGES_SYMBOLS_LIMIT) {
+                  props.dispatch(addErrorNotification(ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR));
+                } else {
+                  props.dispatch(setDataToStoreToLS({
+                    entityImages: addEmbed(props.post.data.entityImages, embedData),
+                  }));
+                }
               }}
             />
           }

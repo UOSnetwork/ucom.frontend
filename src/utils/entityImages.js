@@ -1,5 +1,8 @@
 import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find } from 'lodash';
 
+export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
+export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
+
 export const getEntryImageAttr = (entry, type, attr, index) => {
   try {
     return entry.entityImages[type][index][attr];
