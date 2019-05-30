@@ -60,6 +60,7 @@ const Tokens = (props) => {
             value={`${formatNumber(tokens.emission)}`}
             label="Emission, UOS"
             action={{
+              disabled: +tokens.emission === 0,
               title: 'Get Emission',
               onClick: async () => {
                 requestActiveKey();
