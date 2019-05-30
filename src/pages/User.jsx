@@ -11,7 +11,7 @@ import {
   fetchUserTrustedBy,
   fetchUserFollowsOrganizations,
 } from '../actions/users';
-import { fetchPost } from '../actions/posts';
+import { postsFetch } from '../actions/posts';
 import { getUserById } from '../store/users';
 import { getPostById } from '../store/posts';
 import Popup from '../components/Popup';
@@ -36,6 +36,7 @@ import { addErrorNotification } from '../actions/notifications';
 import { parseResponseError } from '../utils/errors';
 import { restoreActiveKey } from '../utils/keys';
 import { getOrganizationByIds } from '../store/organizations';
+import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 
 const UserPage = (props) => {
   const userIdOrName = props.match.params.userId;
@@ -93,7 +94,7 @@ const UserPage = (props) => {
     }
     loader.start();
     try {
-      props.dispatch(fetchPost(postId));
+      props.dispatch(postsFetch({ postId }));
     } catch (e) {
       const errorMessage = parseResponseError(e)[0].message;
       props.dispatch(addErrorNotification(errorMessage));
@@ -174,7 +175,7 @@ const UserPage = (props) => {
       {post &&
         <Popup onClickClose={() => props.history.push(urls.getUserUrl(user.id))}>
           <ModalContent mod="post">
-            <Post id={post.id} postTypeId={post.postTypeId} />
+            <Post id={post.id} postTypeId={post.postTypeId} commentsContainerId={COMMENTS_CONTAINER_ID_POST} />
           </ModalContent>
         </Popup>
       }
@@ -262,7 +263,7 @@ export const getUserPageData = (store, params) => {
   const userPromise = store.dispatch(fetchUserPageData({
     userIdentity: params.userId,
   }));
-  const postPromise = params.postId ? store.dispatch(fetchPost(params.postId)) : null;
+  const postPromise = params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null;
   const feedPromise = store.dispatch(feedGetUserPosts({
     feedTypeId: USER_WALL_FEED_ID,
     page: 1,

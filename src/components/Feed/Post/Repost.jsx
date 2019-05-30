@@ -9,9 +9,10 @@ import PostFeedFooter from './PostFeedFooter';
 import PostCard from '../../PostMedia/PostCard';
 import { getPostUrl, getPostTypeById, POST_TYPE_MEDIA_ID, getPostCover } from '../../../utils/posts';
 import styles from './Post.css';
+import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 
 const Repost = ({
-  post, user, owner, ...props
+  post, user, owner, commentsContainerId, ...props
 }) => {
   if (!post || !post.post || !user) {
     return null;
@@ -34,7 +35,7 @@ const Repost = ({
       <div className={styles.repost} id={`post-${post.post.id}`}>
         <PostFeedHeader
           repost
-          post={post}
+          post={post.post}
           user={owner}
           userId={post.post.user.id}
           postTypeId={post.post.postTypeId}
@@ -78,6 +79,7 @@ const Repost = ({
         postTypeId={post.postTypeId}
         sharePopup={props.sharePopup}
         toggleShare={props.toggleShare}
+        commentsContainerId={commentsContainerId}
       />
     </div>
   );
@@ -91,10 +93,12 @@ Repost.propTypes = {
   postTypeId: PropTypes.number,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
+  commentsContainerId: PropTypes.number,
 };
 
 Repost.defaultProps = {
   postTypeId: undefined,
+  commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
 export default memo(Repost, (prev, next) => (

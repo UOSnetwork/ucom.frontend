@@ -7,10 +7,11 @@ import PostFeedHeader from './PostFeedHeader';
 import PostFeedFooter from './PostFeedFooter';
 import PostCard from '../../PostMedia/PostCard';
 import urls from '../../../utils/urls';
+import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import styles from './Post.css';
 
 const Media = ({
-  post, user, owner, ...props
+  post, user, owner, commentsContainerId, ...props
 }) => {
   if (!post || !user) {
     return null;
@@ -46,6 +47,7 @@ const Media = ({
         postTypeId={post.postTypeId}
         sharePopup={props.sharePopup}
         toggleShare={props.toggleShare}
+        commentsContainerId={commentsContainerId}
       />
     </div>
   );
@@ -58,6 +60,11 @@ Media.propTypes = {
   toggleShare: PropTypes.func.isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
+  commentsContainerId: PropTypes.number,
+};
+
+Media.defaultProps = {
+  commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
 export default memo(Media, (prev, next) => (

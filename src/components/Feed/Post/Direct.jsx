@@ -7,9 +7,10 @@ import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
 import PostFeedFooter from './PostFeedFooter';
 import styles from './Post.css';
+import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 
 const Direct = ({
-  user, owner, post, ...props
+  user, owner, post, commentsContainerId, ...props
 }) => {
   const [formIsVisible, setFormIsVisible] = useState(false);
 
@@ -91,6 +92,7 @@ const Direct = ({
             postTypeId={post.postTypeId}
             sharePopup={props.sharePopup}
             toggleShare={props.toggleShare}
+            commentsContainerId={commentsContainerId}
           />
         </div>
       }
@@ -106,6 +108,11 @@ Direct.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   owner: PropTypes.objectOf(PropTypes.any).isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
+  commentsContainerId: PropTypes.number,
+};
+
+Direct.defaultProps = {
+  commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
 export default memo(Direct, (prev, next) => (

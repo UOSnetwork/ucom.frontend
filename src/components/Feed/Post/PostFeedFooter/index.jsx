@@ -11,7 +11,7 @@ import PostRating from '../../../Rating/PostRating';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../../utils/comments';
 
 const PostFeedFooter = ({
-  post, sharePopup, toggleShare, commentsCount,
+  post, sharePopup, toggleShare, commentsCount, commentsContainerId,
 }) => (
   <Fragment>
     <div className={styles.footer}>
@@ -62,7 +62,8 @@ const PostFeedFooter = ({
     </div>
 
     <div className={styles.comments}>
-      <Comments postId={post.id} containerId={COMMENTS_CONTAINER_ID_FEED_POST} />
+      {/* <Comments postId={post.id} containerId={COMMENTS_CONTAINER_ID_FEED_POST} /> */}
+      <Comments postId={post.id} containerId={commentsContainerId} />
     </div>
   </Fragment>
 );
@@ -72,10 +73,12 @@ PostFeedFooter.propTypes = {
   sharePopup: PropTypes.bool.isRequired,
   toggleShare: PropTypes.func.isRequired,
   commentsCount: PropTypes.number,
+  commentsContainerId: PropTypes.number,
 };
 
 PostFeedFooter.defaultProps = {
   commentsCount: 0,
+  commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
 export default memo(PostFeedFooter, (prev, next) => (
