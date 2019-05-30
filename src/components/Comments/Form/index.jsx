@@ -98,7 +98,7 @@ const Form = (props) => {
               <TributeWrapper
                 enabledImgUrlParse
                 onParseImgUrl={(url) => {
-                    onMultipleImages([url]);
+                    setEntityImages(addGalleryImages(entityImages, [{ url }]));
                   }
                 }
                 onChange={(message) => {
