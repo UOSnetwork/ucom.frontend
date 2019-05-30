@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import IconClose from './Icons/Close';
 
 const Close = props => (
@@ -8,8 +9,12 @@ const Close = props => (
     onClick={() => {
       if (typeof props.onClick === 'function') {
         props.onClick();
+      } else if (document.referrer.indexOf(window.location.origin) === 0) {
+        props.history.push(document.referrer.slice(window.location.origin.length));
+      } else if (props.location.state.prevPath) {
+        props.history.push(props.location.state.prevPath);
       } else {
-        window.history.back();
+        props.history.push('/');
       }
     }}
   >
@@ -24,4 +29,4 @@ const Close = props => (
   </div>
 );
 
-export default Close;
+export default withRouter(Close);
