@@ -1,4 +1,4 @@
-import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find } from 'lodash';
+import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find, cloneDeep } from 'lodash';
 
 export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
 export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
@@ -93,6 +93,8 @@ export const addEmbed = (entityImages = {}, data) => {
     throw new Error('Data is required argument');
   }
 
+  const newEntityImages = cloneDeep(entityImages);
+
   let dataToSave = pick(data, [
     'url',
     'title',
@@ -108,15 +110,15 @@ export const addEmbed = (entityImages = {}, data) => {
     throw new Error('EmbedData is empty');
   }
 
-  if (!Array.isArray(entityImages.embeds)) {
-    entityImages.embeds = [];
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
   }
 
-  if (!find(entityImages.embeds, { url: dataToSave.url })) {
-    entityImages.embeds.push(dataToSave);
+  if (!find(newEntityImages.embeds, { url: dataToSave.url })) {
+    newEntityImages.embeds.push(dataToSave);
   }
 
-  return entityImages;
+  return newEntityImages;
 };
 
 export const removeEmbed = (entityImages, embedIndex) => {
@@ -128,13 +130,15 @@ export const removeEmbed = (entityImages, embedIndex) => {
     throw new Error('EmbedIndex is required argument');
   }
 
-  if (!Array.isArray(entityImages.embeds)) {
-    entityImages.embeds = [];
+  const newEntityImages = cloneDeep(entityImages);
+
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
   }
 
-  entityImages.embeds.splice(embedIndex, 1);
+  newEntityImages.embeds.splice(embedIndex, 1);
 
-  return entityImages;
+  return newEntityImages;
 };
 
 export const getEmbedByUrl = (entityImages, url) => {
@@ -163,12 +167,14 @@ export const filterEmbedsByUrls = (entityImages, urls) => {
     throw new Error('Urls must be array');
   }
 
-  if (!Array.isArray(entityImages.embeds)) {
-    entityImages.embeds = [];
+  const newEntityImages = cloneDeep(entityImages);
+
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
   }
 
-  entityImages.embeds = entityImages.embeds
+  newEntityImages.embeds = newEntityImages.embeds
     .filter(embed => urls.includes(embed.url));
 
-  return entityImages;
+  return newEntityImages;
 };
