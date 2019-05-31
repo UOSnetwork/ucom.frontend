@@ -1,0 +1,14 @@
+[data-embed] {
+  position: relative;
+  font-size: 16px;
+  line-height: 1.75;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  background: #fff;
+}
+
+.remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+}

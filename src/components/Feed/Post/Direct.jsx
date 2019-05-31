@@ -22,7 +22,7 @@ const Direct = ({
 
   return (
     <Fragment>
-      {formIsVisible ?
+      {formIsVisible ? (
         <Fragment>
           <div className={styles.container}>
             <div className={styles.overlay} role="presentation" onClick={() => setFormIsVisible(false)} />
@@ -65,7 +65,7 @@ const Direct = ({
             />
           </div>
         </Fragment>
-        :
+      ) : (
         <div className={styles.post} id={`post-${post.id}`}>
           <PostFeedHeader
             post={post}
@@ -95,7 +95,7 @@ const Direct = ({
             commentsContainerId={commentsContainerId}
           />
         </div>
-      }
+      )}
     </Fragment>
   );
 };

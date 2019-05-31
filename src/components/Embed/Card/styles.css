@@ -1,0 +1,44 @@
+.card {
+  text-decoration: none !important;
+}
+
+.card:hover {
+  text-decoration: none !important;
+}
+
+.cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding-top: 48.85%;
+}
+
+.cover img {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content {
+  display: block;
+  padding: 14px 20px 12px;
+}
+
+.title {
+  display: block;
+  font-weight: bold;
+}
+
+.description {
+  display: block;
+}
+
+.link {
+  display: block;
+  font-size: 12px;
+  color: rgba(0,0,0,0.6);
+}

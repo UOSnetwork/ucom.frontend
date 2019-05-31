@@ -18,10 +18,11 @@ import { parseMediumContent, mediumHasContent, POSTS_DRAFT_LOCALSTORAGE_KEY } fr
 import Popup from '../components/Popup';
 import ModalContent from '../components/ModalContent';
 import PostSubmitForm from '../components/Post/PostSubmitForm';
-import { addServerErrorNotification } from '../actions/notifications';
+import { addServerErrorNotification, addErrorNotification } from '../actions/notifications';
 import { setDiscussions } from '../actions/organization';
 import { getOrganization } from '../actions/organizations';
 import { getOrganizationById } from '../store/organizations';
+import { addEmbed, filterEmbedsByUrls, ENTITY_IMAGES_SYMBOLS_LIMIT, ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR } from '../utils/entityImages';
 
 const EditPost = (props) => {
   const postId = props.match.params.id;
@@ -161,18 +162,22 @@ const EditPost = (props) => {
         <div className="edit-post__content">
           {(!postId || loaded) &&
             <Medium
+              entityImages={props.post.data.entityImages}
               value={props.post.data.description}
-              onChange={(content) => {
-                const data = parseMediumContent(content);
-                const dataToSave = {
+              onChange={({ html, urls }) => {
+                const data = parseMediumContent(html);
+                let dataToSave = {
                   description: data.description,
+                  entityImages: filterEmbedsByUrls(props.post.data.entityImages, urls),
                 };
 
                 if (!props.post.data.id) {
-                  dataToSave.title = data.title;
-                  dataToSave.leadingText = data.leadingText;
-                  dataToSave.entityImages = data.entityImages;
+                  dataToSave = {
+                    ...data,
+                    ...dataToSave,
+                  };
                 }
+
                 props.dispatch(setDataToStoreToLS(dataToSave));
                 props.dispatch(validatePost());
               }}
@@ -183,6 +188,17 @@ const EditPost = (props) => {
               onUploadDone={() => {
                 setLoading(false);
                 loader.done();
+              }}
+              onEmbed={(embedData) => {
+                const entityImages = addEmbed(props.post.data.entityImages, embedData);
+
+                if (JSON.stringify(entityImages).length > ENTITY_IMAGES_SYMBOLS_LIMIT) {
+                  props.dispatch(addErrorNotification(ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR));
+                } else {
+                  props.dispatch(setDataToStoreToLS({
+                    entityImages: addEmbed(props.post.data.entityImages, embedData),
+                  }));
+                }
               }}
             />
           }

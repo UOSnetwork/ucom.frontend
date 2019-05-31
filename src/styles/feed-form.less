@@ -39,6 +39,28 @@
   background: #fff;
 }
 
+// TODO: Remove is not need
+.feed-form__edit {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.feed-form-button {
+  text-transform: uppercase;
+  margin-left: auto;
+  color: #505050;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: auto;
+}
+
+.feed-form-button__save {
+  color: #D8352F;
+  margin-left: 30px;
+}
+//
+
 .feed-form__submit {
   display: flex;
   justify-content: center;
@@ -66,6 +88,10 @@
   display: flex;
 }
 
+.feed-form__embed {
+  margin: 0 0 20px;
+}
+
 .feed-form-message {
   padding: 12px;
   flex: 1 1 auto;
@@ -90,6 +116,10 @@
   line-height: 24px;
   resize: none;
   outline: none;
+
+  &::placeholder {
+    color: rgba(0,0,0,0.3);
+  }
 }
 
 .feed-form__actions {

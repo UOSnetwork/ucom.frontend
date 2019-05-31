@@ -53,11 +53,15 @@ class FeedInput extends PureComponent {
 
         {this.state.active && (
           <div className="feed-input__container">
-            <div className="feed-input__overlay" role="presentation" onClick={this.hideForm} />
+            <div
+              role="presentation"
+              className="feed-input__overlay"
+              onClick={this.hideForm}
+            />
             <FeedForm
               onSubmit={this.createPost}
               onCancel={this.hideForm}
-              initialText={this.props.initialText || ''}
+              initialText={this.props.initialText}
             />
           </div>
         )}
@@ -67,8 +71,17 @@ class FeedInput extends PureComponent {
 }
 
 FeedInput.propTypes = {
-  onSubmit: PropTypes.func,
-  users: PropTypes.objectOf(PropTypes.object),
+  onSubmit: PropTypes.func.isRequired,
+  users: PropTypes.objectOf(PropTypes.object).isRequired,
+  initialText: PropTypes.string,
+  user: PropTypes.shape({
+    id: PropTypes.number,
+  }),
+};
+
+FeedInput.defaultProps = {
+  initialText: '',
+  user: {},
 };
 
 export default connect(state => ({

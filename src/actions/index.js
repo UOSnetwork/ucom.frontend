@@ -13,6 +13,7 @@ export const setPostDataToLS = () => (dispatch, getState) => {
     title: data.post.data.title,
     leading_text: data.post.data.leading_text,
     description: data.post.data.description,
+    entityImages: data.post.data.entityImages,
   };
   if (!data.post.data.id) {
     localStorage.setItem(POSTS_DRAFT_LOCALSTORAGE_KEY, JSON.stringify(postData));

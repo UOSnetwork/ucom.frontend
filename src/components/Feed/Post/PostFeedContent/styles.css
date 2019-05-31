@@ -35,3 +35,7 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.embed {
+  margin: 0 0 20px;
+}

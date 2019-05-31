@@ -1,4 +1,7 @@
-import _ from 'lodash';
+import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find, cloneDeep } from 'lodash';
+
+export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
+export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
 
 export const getEntryImageAttr = (entry, type, attr, index) => {
   try {
@@ -16,7 +19,7 @@ export const removeGalleryImage = (entry, index) => ({
 });
 
 export const changeCoverImageUrl = (entry, url) => {
-  if (_.isString(entry)) {
+  if (isString(entry)) {
     try {
       entry = JSON.parse(entry);
     } catch (err) {
@@ -31,7 +34,7 @@ export const changeCoverImageUrl = (entry, url) => {
 };
 
 export const addGalleryImages = (entry, newGallery) => {
-  if (_.isString(entry)) {
+  if (isString(entry)) {
     try {
       entry = JSON.parse(entry);
     } catch (err) {
@@ -87,4 +90,106 @@ export const getFirstImage = (entry) => {
     return '';
   }
   return '';
+};
+
+export const getGalleryImage = entry =>
+  getEntryImageAttr(entry, 'gallery', 'url', 0);
+
+export const addEmbed = (entityImages = {}, data) => {
+  if (!entityImages) {
+    throw new Error('EntityImages is required argument');
+  }
+
+  if (!isObject(entityImages)) {
+    throw new Error('EntityImages must be object');
+  }
+
+  if (!data) {
+    throw new Error('Data is required argument');
+  }
+
+  const newEntityImages = cloneDeep(entityImages);
+
+  let dataToSave = pick(data, [
+    'url',
+    'title',
+    'description',
+    'imageUrl',
+    'videoUrl',
+    'videoAspectRatio',
+  ]);
+
+  dataToSave = omitBy(dataToSave, isUndefined);
+
+  if (!size(dataToSave)) {
+    throw new Error('EmbedData is empty');
+  }
+
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
+  }
+
+  if (!find(newEntityImages.embeds, { url: dataToSave.url })) {
+    newEntityImages.embeds.push(dataToSave);
+  }
+
+  return newEntityImages;
+};
+
+export const removeEmbed = (entityImages, embedIndex) => {
+  if (!entityImages) {
+    throw new Error('EntityImages is required argument');
+  }
+
+  if (!isNumber(embedIndex)) {
+    throw new Error('EmbedIndex is required argument');
+  }
+
+  const newEntityImages = cloneDeep(entityImages);
+
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
+  }
+
+  newEntityImages.embeds.splice(embedIndex, 1);
+
+  return newEntityImages;
+};
+
+export const getEmbedByUrl = (entityImages, url) => {
+  let result;
+
+  if (!entityImages) {
+    throw new Error('EntityImages is required argument');
+  }
+
+  if (Array.isArray(entityImages.embeds)) {
+    result = find(entityImages.embeds, { url });
+  }
+
+  return result;
+};
+
+export const hasEmbeds = (entityImages = {}) =>
+  Boolean(entityImages.embeds && entityImages.embeds.length);
+
+export const filterEmbedsByUrls = (entityImages, urls) => {
+  if (!entityImages) {
+    throw new Error('EntityImages is required argument');
+  }
+
+  if (!Array.isArray(urls)) {
+    throw new Error('Urls must be array');
+  }
+
+  const newEntityImages = cloneDeep(entityImages);
+
+  if (!Array.isArray(newEntityImages.embeds)) {
+    newEntityImages.embeds = [];
+  }
+
+  newEntityImages.embeds = newEntityImages.embeds
+    .filter(embed => urls.includes(embed.url));
+
+  return newEntityImages;
 };

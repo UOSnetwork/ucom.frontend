@@ -1,8 +1,7 @@
-import * as axios from 'axios';
 import MediumEditor from 'medium-editor';
 import api from '../../../api';
-import { UPLOAD_SIZE_LIMIT, UPLOAD_SIZE_LIMIT_ERROR, compressUploadedImage } from '../../../utils/upload';
-import config from '../../../../package.json';
+import { compressUploadedImage } from '../../../utils/upload';
+import EmbedService from '../../../utils/embedService';
 import './styles.css';
 
 class UploadButtons {
@@ -37,6 +36,7 @@ class UploadButtons {
     document.body.appendChild(this.el);
   }
 
+  // TODO: Move to react component
   render() {
     this.el.innerHTML = `
       <div class="medium-upload__trigger">
@@ -140,10 +140,10 @@ export default class MediumUpload extends MediumEditor.Extension {
     this.onUploadStart = params.onUploadStart;
     this.onUploadDone = params.onUploadDone;
     this.onError = params.onError;
+    this.onEmbed = params.onEmbed;
     this.uploadButtons = new UploadButtons({
       onImageSelect: this.uplaodAndAppendImage,
-      onVideoEmbedSelect: this.appendVideoEmbed,
-      onSurveyEmbedSelect: this.appendSurveyEmbed,
+      onVideoEmbedSelect: this.appendEmbed,
     });
   }
 
@@ -195,7 +195,6 @@ export default class MediumUpload extends MediumEditor.Extension {
   insertEl = (el) => {
     const parentEl = this.currentEl.parentNode;
     const newLine = document.createElement('p');
-
     newLine.innerHTML = '<br>';
     parentEl.replaceChild(el, this.currentEl);
     parentEl.insertBefore(newLine, el.nextSibling);
@@ -217,38 +216,25 @@ export default class MediumUpload extends MediumEditor.Extension {
     return true;
   }
 
-  fileIsAllowedSize(file) {
-    if (file.size > UPLOAD_SIZE_LIMIT) {
-      return false;
-    }
-
-    return true;
-  }
-
   uplaodAndAppendImage = async (file) => {
     if (!this.fileIsImage(file)) {
       return;
     }
 
-    if (!this.fileIsAllowedSize(file) && this.onError) {
-      this.onError(UPLOAD_SIZE_LIMIT_ERROR);
+    let compressedImage;
+
+    try {
+      compressedImage = await compressUploadedImage(file);
+    } catch (e) {
+      this.onError(e);
       return;
     }
 
     const p = document.createElement('p');
     p.contentEditable = false;
     const img = document.createElement('img');
-
+    img.src = URL.createObjectURL(file);
     p.appendChild(img);
-    let base64;
-    try {
-      base64 = await compressUploadedImage(file);
-      img.src = base64;
-    } catch (e) {
-      this.onError(e);
-      return;
-    }
-
     this.insertEl(p);
 
     if (this.onUploadStart) {
@@ -256,7 +242,7 @@ export default class MediumUpload extends MediumEditor.Extension {
     }
 
     try {
-      const data = await api.uploadPostImage(base64);
+      const data = await api.uploadPostImage(compressedImage);
       img.src = data.files[0].url;
       this.base.checkContentChanged(this.base.origElements);
     } catch (e) {
@@ -268,38 +254,17 @@ export default class MediumUpload extends MediumEditor.Extension {
     }
   }
 
-  appendVideoEmbed = async (url) => {
-    if (!url) {
-      return;
-    }
-
+  appendEmbed = async (url) => {
     try {
-      const data = await axios.get(config.iframely.httpEndpoint, { params: { url } });
-      const embedUrl = data.data.links.player.find(i => i.rel.some(j => ['oembed', 'html5'].indexOf(j) > 0)).href;
-      const p = document.createElement('p');
-      p.contentEditable = false;
-      p.innerHTML = `
-        <iframe
-          class="iframe-video"
-          src="${embedUrl}"
-          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      `;
-      this.insertEl(p);
-    } catch (e) {
-      if (this.onError) {
-        this.onError('No supported video found');
-      }
-      console.error(e);
+      const data = await EmbedService.getDataFromUrl(url);
+      const div = document.createElement('div');
+      div.contentEditable = false;
+      div.innerHTML = EmbedService.renderEmbedLink(data.url);
+      this.insertEl(div);
+      this.onEmbed(data);
+    } catch (err) {
+      console.error(err);
+      this.onError(err.message);
     }
-  }
-
-  appendSurveyEmbed = () => {
-    const surveyEl = document.createElement('div');
-    surveyEl.setAttribute('data-survey', '');
-    surveyEl.contentEditable = false;
-
-    this.insertEl(surveyEl);
   }
 }

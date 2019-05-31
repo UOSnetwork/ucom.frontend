@@ -1,0 +1,15 @@
+.buttonRemove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 1px;
+  background: rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.buttonRemove:hover {
+  background: rgba(0,0,0,0.3);
+}

@@ -1,8 +1,8 @@
 import { uniqueId } from 'lodash';
 import MediumEditor from 'medium-editor';
 import api from '../../api';
-import { UPLOAD_SIZE_LIMIT, UPLOAD_SIZE_LIMIT_ERROR, UPLAOD_ERROR_BASE, getBase64FromFile } from '../../utils/upload';
 import loader from '../../utils/loader';
+import { UPLAOD_ERROR_BASE, compressUploadedImage } from '../../utils/upload';
 import { getBlockFromElement } from './utils';
 
 const CLASS_DRAG_OVER = 'medium-editor-dragover';
@@ -83,35 +83,21 @@ export default MediumEditor.extensions.fileDragging.extend({
   },
 
   async insertImageFile(file, block) {
-    if (file.size > UPLOAD_SIZE_LIMIT) {
-      if (this.onError) {
-        this.onError(UPLOAD_SIZE_LIMIT_ERROR);
-      }
-      return;
-    }
-
     const p = document.createElement('p');
     p.contentEditable = false;
     const img = this.document.createElement('img');
     const imgId = uniqueId('upload-img');
     img.id = imgId;
+    img.src = URL.createObjectURL(file);
     p.appendChild(img);
     const emptyP = document.createElement('p');
     emptyP.innerHTML = '<br>';
-
-    try {
-      const base64 = await getBase64FromFile(file);
-      img.src = base64;
-      block.parentElement.insertBefore(p, block.nextSibling);
-    } catch (e) {
-      console.error(e);
-      return;
-    }
-
+    block.parentElement.insertBefore(p, block.nextSibling);
     loader.start();
 
     try {
-      const data = await api.uploadPostImage(file);
+      const compressedFile = await compressUploadedImage(file);
+      const data = await api.uploadPostImage(compressedFile);
       const imgUrl = data.files[0].url;
       const imgEl = this.document.getElementById(imgId);
       if (imgEl) {

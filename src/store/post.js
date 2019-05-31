@@ -4,7 +4,7 @@ import { POST_TYPE_MEDIA_ID } from '../utils/posts';
 const getInitialState = () => ({
   data: {
     id: null,
-    entityImages: null,
+    entityImages: {},
     postTypeId: POST_TYPE_MEDIA_ID,
     title: '',
     leadingText: '',

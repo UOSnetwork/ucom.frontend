@@ -3,8 +3,8 @@ import MediumEditor from 'medium-editor';
 import { getBlockFromElement } from '../utils';
 import './styles.css';
 
-export default class MediumEmbed extends MediumEditor.Extension {
-  name = 'MediumEmbed';
+export default class MediumNav extends MediumEditor.Extension {
+  name = 'MediumNav';
 
   init() {
     this.state = {};

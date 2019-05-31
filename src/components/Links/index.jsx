@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import normalizeUrl from 'normalize-url';
 import SocialIcon from '../Icons/Socials/Social';
-import { extractSitename, validURL } from '../../utils/url';
+import { extractSitename, validUrl } from '../../utils/url';
 import styles from './styles.css';
 
 const Links = props => (
   <ul className={styles.links}>
-    {props.urls.filter(validURL).map((item, index) => {
+    {props.urls.filter(validUrl).map((item, index) => {
       const hostName = extractSitename(item);
 
       return (

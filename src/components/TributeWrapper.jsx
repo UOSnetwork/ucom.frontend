@@ -2,8 +2,10 @@ import { isObject } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { defaultTributeConfig } from '../utils/tribute';
-import { getImageFromPasteEvent, VISUAL_DELAY } from '../utils/upload';
+import { getImageFromPasteEvent } from '../utils/upload';
 import { IMG_URL_REGEXP } from '../utils/text';
+
+const VISUAL_DELAY = 1000;
 
 class TributeWrapper extends PureComponent {
   constructor(props) {

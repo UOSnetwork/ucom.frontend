@@ -1,4 +1,4 @@
-import { truncate } from 'lodash';
+import { truncate, memoize } from 'lodash';
 import { removeLineBreaksMultipleSpacesAndTrim } from '../utils/text';
 import urls from './urls';
 
@@ -82,23 +82,20 @@ export const getPostBody = (post) => {
   const createdAtTime = Number.isInteger(+post.createdAt) ? +post.createdAt : new Date(post.createdAt);
   const newPostsTime = 1545226768471;
   const postIsNewEditor = createdAtTime - newPostsTime > 0;
-
-  if (postIsNewEditor) {
-    return post.description;
-  }
-
   let postBody = post.description;
 
-  if (post.mainImageFilename) {
-    postBody = `<p><img src="${urls.getFileUrl(post.mainImageFilename)}" /></p>`.concat(postBody);
-  }
+  if (!postIsNewEditor) {
+    if (post.mainImageFilename) {
+      postBody = `<p><img src="${urls.getFileUrl(post.mainImageFilename)}" /></p>`.concat(postBody);
+    }
 
-  if (post.leadingText) {
-    postBody = `<h2>${post.leadingText}</h2>`.concat(postBody);
-  }
+    if (post.leadingText) {
+      postBody = `<h2>${post.leadingText}</h2>`.concat(postBody);
+    }
 
-  if (post.title) {
-    postBody = `<h1>${post.title}</h1>`.concat(postBody);
+    if (post.title) {
+      postBody = `<h1>${post.title}</h1>`.concat(postBody);
+    }
   }
 
   return postBody;
@@ -112,56 +109,45 @@ export const getPostCover = (post) => {
   }
 };
 
-export const parseMediumContent = (html) => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  const childNodes = Array.from(div.childNodes);
-  const img = div.querySelector('img');
+export const parseMediumContent = memoize((html) => {
+  let entityImages;
 
-  let title = null;
-  let leadingText = null;
-  let entityImages = null;
+  const sentences = html.split(/<[^]+?>/g)
+    .map(s => s.replace(/<\/?[^>]+(>|$)/g, ''))
+    .map(s => s.trim())
+    .filter(s => !!s);
 
-  for (let i = 0; i < childNodes.length; i++) {
-    const textContent = removeLineBreaksMultipleSpacesAndTrim(childNodes[i].textContent);
-    if (textContent) {
-      title = truncate(textContent, {
-        length: POSTS_TITLE_MAX_LENGTH,
-        separator: ' ',
-      });
-      childNodes.splice(i, 1);
-      break;
-    }
-  }
+  const title = truncate(sentences[0], {
+    length: POSTS_TITLE_MAX_LENGTH,
+    separator: ' ',
+  });
 
-  for (let i = 0; i < childNodes.length; i++) {
-    const textContent = removeLineBreaksMultipleSpacesAndTrim(childNodes[i].textContent);
-    if (textContent) {
-      leadingText = truncate(textContent, {
-        length: POSTS_LEADING_TEXT_MAX_LENGTH,
-        separator: ' ',
-      });
-      break;
-    }
-  }
+  const leadingText = truncate(sentences[1], {
+    length: POSTS_LEADING_TEXT_MAX_LENGTH,
+    separator: ' ',
+  });
 
-  if (!leadingText) {
-    leadingText = title;
-  }
+  const description = html.replace('src="http:', 'src="https:');
 
-  if (img) {
+  const imgSrc = /<img.*?src="(.*?)"/.exec(html);
+
+  if (imgSrc) {
     entityImages = {
       articleTitle: [{
-        url: img.src,
+        url: imgSrc[1],
       }],
     };
   }
 
   return ({
-    title, leadingText, entityImages, description: html,
+    title,
+    leadingText,
+    entityImages,
+    description,
   });
-};
+});
 
+// TODO: Refactor with regexp
 export const mediumHasContent = (html = '') => {
   if (typeof document === 'undefined') {
     return false;

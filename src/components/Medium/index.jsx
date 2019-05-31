@@ -1,11 +1,12 @@
 /* eslint-disable global-require, new-cap */
 
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
 import { addErrorNotification } from '../../actions/notifications';
 import TributeWrapper from '../TributeWrapper';
+import EmbedService from '../../utils/embedService';
 import './styles.css';
 
 class Medium extends PureComponent {
@@ -13,8 +14,7 @@ class Medium extends PureComponent {
     const MediumEditor = require('medium-editor');
     const MediumUpload = require('./Upload/index');
     const MediumPost = require('./Post/index');
-    const MediumSurvey = require('./Survey/index');
-    const MediumEmbed = require('./Embed/index');
+    const MediumNav = require('./Nav/index');
     const FileDragging = require('./FileDragging');
     const ImageFromLink = require('./ImageFromLink');
 
@@ -25,8 +25,7 @@ class Medium extends PureComponent {
       placeholder: false,
       autoLink: true,
       extensions: {
-        mediumEmbed: new MediumEmbed.default(),
-        mediumSurvey: new MediumSurvey.default(),
+        mediumNav: new MediumNav.default(),
         imageFromLink: new ImageFromLink.default(),
         fileDragging: new FileDragging.default({
           onError: message => this.props.addErrorNotification(message),
@@ -36,6 +35,9 @@ class Medium extends PureComponent {
           onError: message => this.props.addErrorNotification(message),
           onUploadStart: () => this.props.onUploadStart(),
           onUploadDone: () => this.props.onUploadDone(),
+          onEmbed: (data) => {
+            this.props.onEmbed(data);
+          },
         }),
       },
     });
@@ -45,23 +47,56 @@ class Medium extends PureComponent {
     }
 
     this.mediumEditor.subscribe('editableInput', () => {
-      this.props.onChange(this.mediumEditor.getContent());
+      const html = this.mediumEditor.getContent();
+      if (this.props.value !== html) {
+        this.onChange(html);
+      }
     });
   }
 
   componentDidUpdate() {
-    if (this.props.value && this.props.value !== this.mediumEditor.getContent()) {
+    if (this.props.value && this.props.value !== this.content) {
       this.mediumEditor.setContent(this.props.value);
     }
+    EmbedService.renderEmbeds(this.el, this.props.entityImages);
   }
 
   componentWillUnmount() {
     this.mediumEditor.destroy();
   }
 
+  onChange(html) {
+    const data = this.parseContent(html);
+    this.content = data.html;
+    this.props.onChange(data);
+  }
+
+  parseContent(html) {
+    let result = html;
+    const urls = [];
+    const embeds = html.match(/<div data-embed="(.*?)">(.*?)<\/div>/g);
+
+    if (embeds) {
+      embeds.forEach((embed) => {
+        try {
+          const url = embed.match(/data-embed="(.*?)"/)[0].match(/"(.*?)"/)[1];
+          result = result.replace(embed, EmbedService.renderEmbedLink(url));
+          urls.push(url);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
+
+    return {
+      urls,
+      html: result,
+    };
+  }
+
   render() {
     return (
-      <TributeWrapper onChange={e => this.props.onChange(e)}>
+      <TributeWrapper onChange={e => this.onChange(e)}>
         <div className="post-content" ref={(el) => { this.el = el; }} />
       </TributeWrapper>
     );
@@ -73,14 +108,15 @@ Medium.propTypes = {
   onChange: PropTypes.func,
   onUploadStart: PropTypes.func,
   onUploadDone: PropTypes.func,
+  onEmbed: PropTypes.func.isRequired,
   addErrorNotification: PropTypes.func.isRequired,
 };
 
 Medium.defaultProps = {
-  value: null,
-  onChange: null,
-  onUploadStart: null,
-  onUploadDone: null,
+  value: undefined,
+  onChange: undefined,
+  onUploadStart: undefined,
+  onUploadDone: undefined,
 };
 
 export default connect(

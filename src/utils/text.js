@@ -2,6 +2,7 @@ import he from 'he';
 import { memoize } from 'lodash';
 import sanitizeHtml from 'sanitize-html';
 import urls from './urls';
+import { allowedVideoHosts } from '../../package.json';
 
 export const COPY_TO_CLIPBOARD_SUCCESS_MESSAGE = 'Link copied to clipboard';
 
@@ -80,13 +81,14 @@ export const getTextContent = memoize((content) => {
 });
 
 export const sanitizePostText = memoize(html => sanitizeHtml(html, {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'figure', 'h2', 'h1']),
-  allowedIframeHostnames: ['www.youtube.com', 'player.vimeo.com'],
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'figure', 'h2', 'h1', 'span']),
+  allowedIframeHostnames: allowedVideoHosts,
   allowedSchemes: ['http', 'https'],
   allowedAttributes: {
     iframe: ['src', 'allowfullscreen', 'allow'],
     a: ['href', 'name', 'target', 'class'],
     img: ['src'],
+    div: ['style'],
   },
   allowedClasses: {
     div: [
@@ -97,17 +99,32 @@ export const sanitizePostText = memoize(html => sanitizeHtml(html, {
       'medium-insert-embeds-wide',
       'medium-insert-embed',
       'medium-upload-iframe-wrapper',
+      'medium-embed',
+      'iframe-video-v2',
+    ],
+    span: [
+      'medium-embed-content',
+      'medium-embed-img',
+      'medium-embed-title',
+      'medium-embed-text',
+      'medium-embed-link',
+    ],
+    p: [
+      'medium-embed-link',
     ],
     a: [
       'tag_link',
       'mention_link',
+      'js-embed',
     ],
     iframe: [
       'iframe-video',
     ],
   },
-  transformTags: {
-    'a': sanitizeHtml.simpleTransform('a', { target: '_blank' }),
+  allowedStyles: {
+    div: {
+      'padding-bottom': [/([0-9]*[.])?[0-9]+%$/],
+    },
   },
 }));
 
@@ -127,6 +144,11 @@ export const sanitizeCommentTexWithoutLink = memoize(html => sanitizeHtml(html, 
     a: ['href', 'target', 'class'],
   },
   textFilter: text => removeMultipleLineBreaks(text),
+}));
+
+export const sanitizeEmbedContent = memoize(html => sanitizeHtml(html, {
+  allowedTags: [],
+  allowedAttributes: {},
 }));
 
 export const sanitizeCommentText = html => sanitizeCommentTexWithoutLink(makeLink(html));

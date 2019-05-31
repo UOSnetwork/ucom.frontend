@@ -1,0 +1,60 @@
+.video {
+  position: relative;
+  padding-bottom:  56.2493%;
+  background: #000;
+}
+
+.cover,
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0.7);
+  cursor: pointer;
+  object-fit: cover;
+  transition: filter 0.2s ease;
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  fill: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.cover:hover .play {
+  opacity: 0.8;
+}
+
+.cover:hover img {
+  filter: brightness(0.5);
+}
+
+.site {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 10px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.37);
+  text-transform: capitalize;
+}

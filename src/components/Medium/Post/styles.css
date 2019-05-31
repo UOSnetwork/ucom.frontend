@@ -2,10 +2,6 @@
   position: relative;
 }
 
-:global(.medium-post-placeholder.active-buttons:before) {
-  opacity: 0;
-}
-
 :global(.medium-post-placeholder:before) {
   position: absolute;
   display: block;

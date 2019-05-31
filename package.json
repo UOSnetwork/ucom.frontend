@@ -49,6 +49,11 @@
   "iframely": {
     "httpEndpoint": "https://iframely.u.community/iframely"
   },
+  "allowedVideoHosts": [
+    "youtube.com",
+    "player.vimeo.com",
+    "coub.com"
+  ],
   "maintenanceMode": false,
   "socketEnabled": true,
   "devDependencies": {

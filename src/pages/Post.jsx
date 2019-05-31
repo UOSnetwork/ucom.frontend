@@ -10,11 +10,10 @@ import UserCard from '../components/UserCard/UserCard';
 import UserFollowButton from '../components/User/UserFollowButton';
 import urls from '../utils/urls';
 import ButtonEdit from '../components/ButtonEdit';
-import { sanitizePostText, checkHashTag, checkMentionTag } from '../utils/text';
 import PostRating from '../components/Rating/PostRating';
 import Rate from '../components/Rate';
 import Comments from '../components/Comments/wrapper';
-import { getPostBody, getContentMetaTags, POST_TYPE_DIRECT_ID } from '../utils/posts';
+import { getContentMetaTags, POST_TYPE_DIRECT_ID } from '../utils/posts';
 import loader from '../utils/loader';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { commentsResetContainerDataByEntryId } from '../actions/comments';
@@ -22,6 +21,7 @@ import ShareButton from '../components/ShareButton';
 import ShareBlock from '../components/ShareBlock';
 import NotFoundPage from '../pages/NotFoundPage';
 import { addErrorNotification } from '../actions/notifications';
+import PostContent from '../components/Post/Content';
 import { getEosPostId } from '../utils/config';
 
 const PostPage = (props) => {
@@ -85,12 +85,9 @@ const PostPage = (props) => {
 
             <div className="post-body__main">
               <div className="post-body__content">
-                <div
-                  className="post-content"
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizePostText(checkMentionTag(checkHashTag(getPostBody(props.post)))),
-                  }}
-                />
+                {props.post &&
+                  <PostContent post={props.post} />
+                }
               </div>
 
               <div className="post-body__comments">
