@@ -30,7 +30,7 @@ class Registration extends PureComponent {
         <div className="registration">
           <div className="registration__container">
             <div className="registration__close">
-              <Close />
+              <Close fullRedirect />
             </div>
             <div className="registration__inner">
               <div

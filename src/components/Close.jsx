@@ -9,9 +9,11 @@ const Close = props => (
     onClick={() => {
       if (typeof props.onClick === 'function') {
         props.onClick();
+      } else if (!props.fullRedirect) {
+        props.history.goBack();
       } else if (document.referrer.indexOf(window.location.origin) === 0) {
         props.history.push(document.referrer.slice(window.location.origin.length));
-      } else if (props.location.state.prevPath) {
+      } else if (props.location && props.location.state && props.location.state.prevPath) {
         props.history.push(props.location.state.prevPath);
       } else {
         props.history.push('/');

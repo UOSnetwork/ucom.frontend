@@ -14,7 +14,7 @@ import { sanitizePostText, checkHashTag, checkMentionTag } from '../utils/text';
 import PostRating from '../components/Rating/PostRating';
 import Rate from '../components/Rate';
 import Comments from '../components/Comments/wrapper';
-import { getPostBody, getContentMetaTags, POST_TYPE_DIRECT_ID } from '../utils/posts';
+import { getPostBody, getContentMetaTags, POST_TYPE_DIRECT_ID, POST_TYPE_REPOST_ID } from '../utils/posts';
 import loader from '../utils/loader';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { commentsResetContainerDataByEntryId } from '../actions/comments';
@@ -57,7 +57,9 @@ const PostPage = (props) => {
     return null;
   }
 
-  if (!props.post || (props.post.postTypeId === POST_TYPE_DIRECT_ID)) {
+  if (!props.post ||
+    (props.post.postTypeId === POST_TYPE_DIRECT_ID) ||
+    (props.post.postTypeId === POST_TYPE_REPOST_ID)) {
     return <NotFoundPage />;
   }
 
