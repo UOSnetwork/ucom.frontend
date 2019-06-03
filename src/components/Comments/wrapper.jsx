@@ -27,6 +27,7 @@ export default connect(
           nextDepthTotalAmount: comment.metadata.nextDepthTotalAmount,
           parentId: comment.parentId || 0,
           images: (comment && comment.entityImages) ? comment.entityImages.gallery : [],
+          entityImages: (comment && comment.entityImages) ? comment.entityImages : {},
         })));
 
       ({ metadata } = commentsData);

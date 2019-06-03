@@ -1,36 +1,36 @@
-:local(.comment) {
+.comment {
   padding: 20px;
 }
 
-:local(.comment:first-child) {
+.comment:first-child {
   border-top: 1px solid #E7ECEC;
 }
 
-:local(.comment[depth="1"]) {
+.comment[depth="1"] {
   padding-left: 64px;
 }
 
-:local(.comment[depth="2"]) {
+.comment[depth="2"] {
   padding-left: 108px;
 }
 
-:local(.comment:hover) {
+.comment:hover {
   background: #F9F9F9;
 }
 
-:local(.userCard) {
+.userCard {
   margin: 0 0 12px;
 }
 
-:local(.content) {
+.content {
   padding: 0 0 0 44px ;
 }
 
-:local(.gallery) {
+.gallery {
   margin: 0 0 12px;
 }
 
-:local(.text) {
+.text {
   margin: 0 0 8px;
   font-size: 16px;
   line-height: 23px;
@@ -38,24 +38,28 @@
   white-space: pre-wrap;
 }
 
-:local(.actions) {
+.actions {
   display: flex;
   align-items: center;
 }
 
-:local(.reply) {
+.reply {
   margin: 0 14px 0 0;
   font-size: 14px;
   cursor: pointer;
   color: #D8352F;
 }
 
-:local(.reply:hover) {
+.reply:hover {
   text-decoration: underline;
 }
 
-:local(.date) {
+.date {
   flex: 1 1 auto;
   font-size: 12px;
   color: rgba(0,0,0,0.6);
+}
+
+.embed {
+  margin: 0 0 20px;
 }

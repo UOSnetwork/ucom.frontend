@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import autosize from 'autosize';
+import { last } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './styles.css';
@@ -8,13 +9,23 @@ import DragAndDrop from '../../DragAndDrop';
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import TributeWrapper from '../../TributeWrapper';
 import { isSubmitKey, isEscKey } from '../../../utils/keyboard';
-import { getGalleryImages, addGalleryImagesWithCatch } from '../../../utils/entityImages';
+import {
+  getGalleryImages,
+  addGalleryImagesWithCatch,
+  addEmbed as entityImagesAddEmbed,
+  removeEmbed as entityImagesRemoveEmbed,
+  hasEmbeds as entityImagesHasEmbeds,
+} from '../../../utils/entityImages';
 import { initDragAndDropListeners } from '../../../utils/dragAndDrop';
 import api from '../../../api';
 import DropZone from '../../DropZone';
 import PreviewImagesGrid from '../../PreviewImagesGrid';
 import IconClip from '../../Icons/Clip';
 import IconEnter from '../../Icons/Enter';
+import Embed from '../../Embed';
+import EmbedService from '../../../utils/embedService';
+import { getUrlsFromStr, validUrl } from '../../../utils/url';
+import loader from '../../../utils/loader';
 
 const Form = (props) => {
   const [message, setMessage] = useState(props.message);
@@ -25,6 +36,13 @@ const Form = (props) => {
   const galleryImages = getGalleryImages({ entityImages });
   const isExistGalleryImages = !!galleryImages.length;
   const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
+  const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
+
+  const postHasContent = () => (
+    message.trim().length !== 0 ||
+    isExistGalleryImages ||
+    entityImagesHasEmbeds(entityImages)
+  );
 
   const reset = () => {
     setMessage('');
@@ -36,7 +54,7 @@ const Form = (props) => {
   };
 
   const submit = () => {
-    if (message.trim().length || isExistGalleryImages) {
+    if (postHasContent()) {
       props.onSubmit({
         containerId: props.containerId,
         postId: props.postId,
@@ -49,6 +67,29 @@ const Form = (props) => {
     return undefined;
   };
 
+  const addEmbed = (data) => {
+    if (entityImagesHasEmbeds(entityImages)) {
+      return;
+    }
+
+    setEntityImages(entityImagesAddEmbed(entityImages, data));
+  };
+
+  const parseUrlAndAddEmbed = async (url) => {
+    if (!validUrl(url)) {
+      return;
+    }
+
+    loader.start();
+    try {
+      const embedData = await EmbedService.getDataFromUrl(url);
+      addEmbed(embedData);
+    } catch (err) {
+      console.error(err);
+    }
+    loader.done();
+  };
+
   const onMultipleImages = async (files) => {
     const savedEntityImages = entityImages;
     setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
@@ -56,6 +97,16 @@ const Form = (props) => {
     const urls = data.map(item => item.files[0]);
     setEntityImages(addGalleryImages(savedEntityImages, urls));
   };
+
+  useEffect(() => {
+    if (!embedUrlsFromMessage.length) {
+      return;
+    }
+
+    const url = last(embedUrlsFromMessage);
+
+    parseUrlAndAddEmbed(url);
+  }, [embedUrlsFromMessage]);
 
   useEffect(() => {
     autosize(textareaEl.current);
@@ -73,6 +124,15 @@ const Form = (props) => {
   }, []);
 
   useEffect(() => {
+    if (!message) {
+      return;
+    }
+
+    const lastUrl = last(getUrlsFromStr(message));
+
+    if (!embedUrlsFromMessage.includes(lastUrl)) {
+      setEmbedUrlsFromMessage(embedUrlsFromMessage.concat(lastUrl));
+    }
     autosize.update(textareaEl.current);
   }, [message]);
 
@@ -84,6 +144,16 @@ const Form = (props) => {
       })}
       depth={props.depth}
     >
+      {entityImages.embeds && entityImages.embeds.map((embed, index) => (
+        <div className="feed-form__embed" key={index}>
+          <Embed
+            {...embed}
+            onClickRemove={() => {
+            setEntityImages(entityImagesRemoveEmbed(entityImages, index));
+          }}
+          />
+        </div>
+      ))}
       <div className={styles.formMain}>
         <div className={styles.userPick}>
           <UserPick src={props.userImageUrl} url={props.userPageUrl} alt={props.userName} />
