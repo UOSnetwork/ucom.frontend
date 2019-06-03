@@ -28,7 +28,7 @@ const Header = ({ location, owner, dispatch }) => {
 
   const checkScroll = throttle(() => {
     setIsScroll(window.top.scrollY > 0);
-  }, 500);
+  }, 100);
 
   useEffect(() => {
     window.addEventListener('scroll', checkScroll);
@@ -43,83 +43,85 @@ const Header = ({ location, owner, dispatch }) => {
           [styles.isScroll]: isScroll,
         })}
       >
-        <div className={styles.section}>
-          <Link to={urls.getMainPageUrl()}>
-            <Logo />
-          </Link>
+        <div className={styles.inner}>
+          <div className={styles.section}>
+            <Link to={urls.getMainPageUrl()}>
+              <Logo />
+            </Link>
 
-          <div className={styles.menu}>
-            <Menu
-              items={[{
-                to: urls.getUsersUrl(),
-                isActive: () => location.pathname === urls.getUsersUrl(),
-                title: 'People',
-              }, {
-                to: urls.getOverviewCategoryUrl(),
-                isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
-                title: 'Overview',
-              }, {
-                to: urls.getGovernanceUrl(),
-                isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
-                title: 'Governance',
-              }]}
-            />
+            <div className={styles.menu}>
+              <Menu
+                items={[{
+                  to: urls.getUsersUrl(),
+                  isActive: () => location.pathname === urls.getUsersUrl(),
+                  title: 'People',
+                }, {
+                  to: urls.getOverviewCategoryUrl(),
+                  isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
+                  title: 'Overview',
+                }, {
+                  to: urls.getGovernanceUrl(),
+                  isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
+                  title: 'Governance',
+                }]}
+              />
+            </div>
+
+            <div
+              role="presentation"
+              className={`${styles.icon} ${styles.search}`}
+              onClick={() => setSearchVisible(true)}
+            >
+              <IconSearch />
+            </div>
           </div>
 
-          <div
-            role="presentation"
-            className={`${styles.icon} ${styles.search}`}
-            onClick={() => setSearchVisible(true)}
-          >
-            <IconSearch />
+          <div className={`${styles.section} ${styles.flat}`}>
+            {owner.id ? (
+              <Fragment>
+                <User onClickOrganizationsViewAll={() => setOrganizationsPopupVisible(true)} />
+
+                <SiteNotificationsTooltip>
+                  {({ toggleTooltip, unreadNotifications, tooltipVisibilty }) => (
+                    <span
+                      role="presentation"
+                      className={classNames({
+                        [styles.icon]: true,
+                        [styles.active]: tooltipVisibilty,
+                      })}
+                      onClick={toggleTooltip}
+                    >
+                      <IconBell />
+                      {unreadNotifications > 0 &&
+                        <div className={styles.counter}>
+                          <Counter>{unreadNotifications}</Counter>
+                        </div>
+                      }
+                    </span>
+                  )}
+                </SiteNotificationsTooltip>
+
+                <span
+                  role="presentation"
+                  className={classNames({
+                    [styles.icon]: true,
+                    [styles.wallet]: true,
+                    [styles.active]: walletPopupVisible,
+                  })}
+                  onClick={() => setWalletPopupVisible(!walletPopupVisible)}
+                >
+                  {walletPopupVisible ? <IconClose /> : <IconWallet />}
+                </span>
+              </Fragment>
+            ) : (
+              <Menu
+                items={[{
+                  title: 'Sign IN',
+                  onClick: () => dispatch(authShowPopup()),
+                }]}
+              />
+            )}
           </div>
-        </div>
-
-        <div className={`${styles.section} ${styles.flat}`}>
-          {owner.id ? (
-            <Fragment>
-              <User onClickOrganizationsViewAll={() => setOrganizationsPopupVisible(true)} />
-
-              <SiteNotificationsTooltip>
-                {({ toggleTooltip, unreadNotifications, tooltipVisibilty }) => (
-                  <span
-                    role="presentation"
-                    className={classNames({
-                      [styles.icon]: true,
-                      [styles.active]: tooltipVisibilty,
-                    })}
-                    onClick={toggleTooltip}
-                  >
-                    <IconBell />
-                    {unreadNotifications > 0 &&
-                      <div className={styles.counter}>
-                        <Counter>{unreadNotifications}</Counter>
-                      </div>
-                    }
-                  </span>
-                )}
-              </SiteNotificationsTooltip>
-
-              <span
-                role="presentation"
-                className={classNames({
-                  [styles.icon]: true,
-                  [styles.wallet]: true,
-                  [styles.active]: walletPopupVisible,
-                })}
-                onClick={() => setWalletPopupVisible(!walletPopupVisible)}
-              >
-                {walletPopupVisible ? <IconClose /> : <IconWallet />}
-              </span>
-            </Fragment>
-          ) : (
-            <Menu
-              items={[{
-                title: 'Sign IN',
-                onClick: () => dispatch(authShowPopup()),
-              }]}
-            />
-          )}
         </div>
       </div>
 

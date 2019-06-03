@@ -21,10 +21,11 @@
   box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
 }
 
-.iconSearch {
-  position: fixed;
-  left: 30px;
-  top: 17px;
+.inner {
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .iconSearch svg {
@@ -32,9 +33,6 @@
 }
 
 .iconClose {
-  position: fixed;
-  right: 35px;
-  top: 18px;
   cursor: pointer;
 }
 

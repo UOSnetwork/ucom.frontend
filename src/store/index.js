@@ -14,7 +14,7 @@ import menuPopup from './menuPopup';
 import userForm from './userForm';
 import governance from './governance/index';
 import registration from './registration';
-import mainPostGroup from './mainPostGroup';
+import mainPosts from './mainPosts';
 import feed from './feed';
 import tags from './tags';
 import communityFeed from './communityFeed';
@@ -40,7 +40,7 @@ export const createStore = () => {
     userForm,
     governance,
     registration,
-    mainPostGroup,
+    mainPosts,
     feed,
     tags,
     communityFeed,

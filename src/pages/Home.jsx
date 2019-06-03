@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
 import Footer from '../components/Footer';
-import PostsGroupMain from '../components/PostMedia/PostsGroupMain';
 import Promo from '../components/Promo';
 import LayoutBase from '../components/Layout/LayoutBase';
 import { selectUser } from '../store/selectors';
@@ -10,30 +10,29 @@ import EntryListSection from '../components/EntryListSection';
 import { getUserById, getUsersByIds } from '../store/users';
 import Feed from '../components/Feed/FeedUser';
 import { USER_NEWS_FEED_ID } from '../utils/feed';
-import { getMainPostGroupData } from '../actions/mainPostGroup';
+import { getMainPosts } from '../actions/mainPosts';
 import urls from '../utils/urls';
 import { getUserName } from '../utils/user';
+import PostsGrid from '../components/PostsGrid';
 
-const HomePage = (props) => {
+const HomePage = ({ mainPosts, ...props }) => {
   useEffect(() => {
     if (props.user.id) {
-      props.dispatch(fetchUser(props.user.id));
+      props.fetchUser(props.user.id);
     }
 
-    props.dispatch(getMainPostGroupData());
+    props.getMainPosts();
   }, []);
 
   const user = getUserById(props.users, props.user.id);
 
   return (
     <LayoutBase>
-      <div className="content">
-        <div className="content__inner">
-          <PostsGroupMain />
-        </div>
-      </div>
+      {mainPosts.length > 0 &&
+        <PostsGrid posts={mainPosts} />
+      }
 
-      <div className="content content_shadows">
+      <div className="content">
         {user ? (
           <div className="content__inner">
             <div className="grid grid_content">
@@ -90,13 +89,24 @@ const HomePage = (props) => {
   );
 };
 
-export const getHomePageData = store =>
-  store.dispatch(getMainPostGroupData());
+HomePage.propTypes = {
+  mainPosts: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+};
+
+HomePage.defaultProps = {
+  mainPosts: [],
+};
+
+export const getHomePageData = store => store.dispatch(getMainPosts());
 
 export default connect(
   state => ({
     user: selectUser(state),
     users: state.users,
+    mainPosts: state.mainPosts.posts,
   }),
-  null,
+  {
+    fetchUser,
+    getMainPosts,
+  },
 )(HomePage);
