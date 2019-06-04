@@ -26,7 +26,7 @@ const Post = ({ post, index }) => {
     >
       <div className={styles.inner}>
         <Link className={styles.cover} to={urls.getPostUrl(post)}>
-          {cover && <img className={styles.cover} src={cover} alt="" />}
+          {cover && <img src={cover} alt="" />}
         </Link>
 
         <div className={styles.rate}>

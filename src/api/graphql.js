@@ -8,6 +8,7 @@ import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
 import { LIST_ORDER_BY, LIST_PER_PAGE } from '../utils/list';
+import { POST_TYPE_MEDIA_ID } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
 
@@ -326,6 +327,31 @@ export default {
     }
   },
 
+  async getPosts({
+    page = 1,
+    perPage = FEED_PER_PAGE,
+    commentsPage = 1,
+    commentsPerPage = COMMENTS_PER_PAGE,
+    postTypeId = POST_TYPE_MEDIA_ID,
+  }) {
+    const token = getToken();
+    // TODO: Replace to new api method for fetch all posts, like feed
+    const query = await GraphQLSchema.getManyTrendingPostsQuery(
+      postTypeId,
+      page,
+      perPage,
+      commentsPage,
+      commentsPerPage,
+      Boolean(token),
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
 
   async getOverview({
     page = 1,

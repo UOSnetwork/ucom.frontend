@@ -112,6 +112,16 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(0deg, rgba(36, 38, 41, 0.46), rgba(36, 38, 41, 0.46));
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.post.withCover:hover .cover:after {
+  opacity: 0.8;
+}
+
+.post.withCover:hover .cover img {
+  transform: scale(1.025);
 }
 
 .post.small .title {
@@ -136,6 +146,7 @@
   width: 100%;
   height: 100%;
   text-decoration: none;
+  overflow: hidden;
 }
 
 .cover img {
@@ -144,6 +155,8 @@
   height: 100%;
   object-fit: cover;
   border-radius: 3px;
+  transform: none;
+  transition: transform 0.5s ease;
 }
 
 .inner {

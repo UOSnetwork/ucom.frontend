@@ -2,9 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useEffect } from 'react';
 import Footer from '../components/Footer';
-import Promo from '../components/Promo';
 import LayoutBase from '../components/Layout/LayoutBase';
-import { selectUser } from '../store/selectors';
 import { fetchUser } from '../actions/users';
 import EntryListSection from '../components/EntryListSection';
 import { getUserById, getUsersByIds } from '../store/users';
@@ -14,17 +12,15 @@ import { getMainPosts } from '../actions/mainPosts';
 import urls from '../utils/urls';
 import { getUserName } from '../utils/user';
 import PostsGrid from '../components/PostsGrid';
+import FeedMain from '../components/Feed/Main';
+import withLoader from '../utils/withLoader';
 
-const HomePage = ({ mainPosts, ...props }) => {
+const HomePage = ({
+  mainPosts, user, users, ...props
+}) => {
   useEffect(() => {
-    if (props.user.id) {
-      props.fetchUser(props.user.id);
-    }
-
-    props.getMainPosts();
+    withLoader(props.getMainPosts());
   }, []);
-
-  const user = getUserById(props.users, props.user.id);
 
   return (
     <LayoutBase>
@@ -46,7 +42,7 @@ const HomePage = ({ mainPosts, ...props }) => {
                     <EntryListSection
                       title="People"
                       count={user.iFollow.length}
-                      data={getUsersByIds(props.users, user.iFollow).map(item => ({
+                      data={getUsersByIds(users, user.iFollow).map(item => ({
                         id: item.id,
                         title: getUserName(item),
                         avatarSrc: urls.getFileUrl(item.avatarFilename),
@@ -78,7 +74,9 @@ const HomePage = ({ mainPosts, ...props }) => {
             </div>
           </div>
         ) : (
-          <Promo />
+          <div className="content__inner">
+            <FeedMain />
+          </div>
         )}
 
         <div className="content__inner">
@@ -91,18 +89,23 @@ const HomePage = ({ mainPosts, ...props }) => {
 
 HomePage.propTypes = {
   mainPosts: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.any)),
+  users: PropTypes.objectOf(PropTypes.any).isRequired,
+  user: PropTypes.objectOf(PropTypes.any),
+  fetchUser: PropTypes.func.isRequired,
+  getMainPosts: PropTypes.func.isRequired,
 };
 
 HomePage.defaultProps = {
   mainPosts: [],
+  user: null,
 };
 
 export const getHomePageData = store => store.dispatch(getMainPosts());
 
 export default connect(
   state => ({
-    user: selectUser(state),
     users: state.users,
+    user: state.user.data.id ? getUserById(state.users, state.user.data.id) : null,
     mainPosts: state.mainPosts.posts,
   }),
   {

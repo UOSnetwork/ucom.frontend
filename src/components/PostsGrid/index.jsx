@@ -7,7 +7,11 @@ const PostsGrid = ({ posts }) => (
   <div className={styles.container}>
     <div className={styles.postsGrid}>
       {posts.filter(post => Boolean(post.title)).slice(0, 5).map((post, index) => (
-        <Post post={post} index={index} />
+        <Post
+          key={post.id}
+          post={post}
+          index={index}
+        />
       ))}
     </div>
   </div>
