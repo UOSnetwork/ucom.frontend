@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../Section/styles.css';
-import EntryList, { entryItemProps, entryListPropTypes } from '../EntryList';
+import EntryList, { EntryItem } from '../EntryList';
 
 const EntryListSection = (props) => {
   if (!props.data.length) {
@@ -29,14 +29,14 @@ const EntryListSection = (props) => {
 
 EntryListSection.propTypes = {
   title: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(PropTypes.shape(entryItemProps)),
+  data: PropTypes.arrayOf(PropTypes.shape(EntryItem.propTypes)),
   count: PropTypes.number,
-  limit: entryListPropTypes.limit,
-  popupData: entryListPropTypes.popupData,
-  popupMetadata: entryListPropTypes.popupMetadata,
-  onChangePage: entryListPropTypes.onChangePage,
-  onClickViewAll: entryListPropTypes.onClickViewAll,
-  showViewMore: entryListPropTypes.showViewMore,
+  limit: EntryList.propTypes.limit,
+  popupData: EntryList.propTypes.popupData,
+  popupMetadata: EntryList.propTypes.popupMetadata,
+  onChangePage: EntryList.propTypes.onChangePage,
+  onClickViewAll: EntryList.propTypes.onClickViewAll,
+  showViewMore: EntryList.propTypes.showViewMore,
 };
 
 EntryListSection.defaultProps = {

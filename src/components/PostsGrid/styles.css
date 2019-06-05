@@ -124,6 +124,10 @@
   transform: scale(1.025);
 }
 
+.post:hover .footer {
+  opacity: 1;
+}
+
 .post.small .title {
   margin: 0 0 8px;
   font-size: 18px;
@@ -215,6 +219,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  opacity: 0.71;
+  transition: opacity 0.2s ease;
 }
 
 .count {
@@ -235,5 +241,4 @@
 
 .link:hover {
   text-decoration: none;
-  opacity: 0.85;
 }

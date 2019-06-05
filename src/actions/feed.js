@@ -24,7 +24,7 @@ export const feedSetSideUsers = payload => ({ type: 'POSTS_FEED_SET_SIDE_USERS',
 export const feedSetSideOrganizations = payload => ({ type: 'POSTS_FEED_SET_SIDE_ORGANIZATIONS', payload });
 export const feedSetSideTags = payload => ({ type: 'POSTS_FEED_SET_SIDE_TAGS', payload });
 
-export const parsePosts = (posts = []) => (dispatch) => {
+export const addPostsAndComments = (posts = []) => (dispatch) => {
   posts.forEach((post) => {
     if (post.comments) {
       dispatch(commentsAddContainerData({
@@ -45,7 +45,7 @@ export const parseFeedData = ({
   posts,
   metadata,
 }) => (dispatch) => {
-  dispatch(parsePosts(posts));
+  dispatch(addPostsAndComments(posts));
   dispatch(feedAppendPostIds(posts.map(i => i.id)));
   dispatch(feedSetMetadata(metadata));
 };

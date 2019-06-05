@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import React, { useState, Fragment } from 'react';
 import EntryCard from '../EntryCard';
 import styles from '../List/styles.css';
 import EntryListPopup, { entryListPopupPropTypes } from '../EntryListPopup';
 import { filterURL } from '../../utils/url';
 
-const EntryItem = (props) => {
+export const EntryItem = (props) => {
   const LinkTag = props.isExternal ? 'a' : Link;
 
   return (
@@ -18,35 +17,22 @@ const EntryItem = (props) => {
       className={styles.item}
       target={props.isExternal ? '_blank' : undefined}
     >
-      <EntryCard disabledLink {...{ ...props }} />
+      <EntryCard
+        {...props}
+        disabledLink
+      />
     </LinkTag>
   );
 };
 
-export const entryItemProps = {
+EntryItem.propTypes = {
+  ...EntryCard.propTypes,
   id: PropTypes.number.isRequired,
-  organization: PropTypes.bool,
-  avatarSrc: PropTypes.string,
-  url: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  nickname: PropTypes.string,
-  currentRate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  disableRate: PropTypes.bool,
-  disableSign: PropTypes.bool,
-  isExternal: PropTypes.bool,
   follow: PropTypes.bool,
 };
 
-EntryItem.propTypes = entryItemProps;
 EntryItem.defaultProps = {
-  organization: false,
-  avatarSrc: null,
-  url: null,
-  nickname: null,
-  currentRate: null,
-  disableRate: false,
-  disableSign: false,
-  isExternal: false,
+  ...EntryCard.defaultProps,
   follow: false,
 };
 
@@ -93,18 +79,16 @@ const EntryList = (props) => {
   );
 };
 
-export const entryListPropTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(entryItemProps)),
+EntryList.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape(EntryItem.propTypes)),
   limit: PropTypes.number,
   title: PropTypes.string.isRequired,
   onChangePage: PropTypes.func,
-  popupData: PropTypes.arrayOf(PropTypes.shape(entryItemProps)),
+  popupData: PropTypes.arrayOf(PropTypes.shape(EntryItem.propTypes)),
   popupMetadata: entryListPopupPropTypes.metadata,
   onClickViewAll: PropTypes.func,
   showViewMore: PropTypes.bool,
 };
-
-EntryList.propTypes = entryListPropTypes;
 
 EntryList.defaultProps = {
   data: [],
@@ -116,6 +100,4 @@ EntryList.defaultProps = {
   onClickViewAll: undefined,
 };
 
-export default connect(state => ({
-  users: state.users,
-}))(EntryList);
+export default EntryList;

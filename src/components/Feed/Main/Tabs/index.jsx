@@ -1,3 +1,4 @@
+import { range } from 'lodash';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -37,7 +38,11 @@ const Tabs = ({ activeTabId, onClickItem }) => (
             [styles.active]: activeTabId === item.id,
           })}
         >
-          {item.title}
+          <span className={styles.inner}>
+            <span className={styles.left}>{range(5).map(() => `${item.title} `)}&nbsp;</span>
+            {item.title}
+            <span className={styles.right}>&nbsp;{range(5).map(() => `${item.title} `)}</span>
+          </span>
         </div>
       ))}
     </div>

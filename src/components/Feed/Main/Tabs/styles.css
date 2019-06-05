@@ -1,15 +1,17 @@
 .container {
   position: relative;
+  margin: -40px 0 0;
   padding: 122px 0 30px 0;
 }
 
 .title {
   position: absolute;
   top: 15px;
-  left: -70px;
+  left: 0;
   display: flex;
   font-size: 144px;
   font-weight: bold;
+  letter-spacing: -0.02em;
   color: rgba(0,0,0,0.03);
   line-height: 1;
   white-space: nowrap;
@@ -26,6 +28,22 @@
 
 .title .item.active {
   opacity: 1;
+}
+
+.title .inner {
+  position: relative;
+}
+
+.title .left {
+  position: absolute;
+  right: 100%;
+  text-align: right;
+}
+
+.title .right {
+  position: absolute;
+  left: 100%;
+  text-align: left;
 }
 
 .tabs {

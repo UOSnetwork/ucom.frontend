@@ -3,27 +3,27 @@ import { addPosts } from './posts';
 import { addOrganizations } from './organizations';
 
 export const addTags = (payload = []) => (dispatch) => {
-  const tag = [];
+  const tags = [];
 
-  const parseTag = (payload) => {
-    if (payload.users.data) {
-      dispatch(addUsers(payload.users.data));
-      payload.users.data = payload.users.data.map(u => u.id);
+  const parseTag = (tag) => {
+    if (tag.users && tag.users.data) {
+      dispatch(addUsers(tag.users.data));
+      tag.users.data = tag.users.data.map(i => i.id);
     }
 
-    if (payload.posts.data) {
-      dispatch(addPosts(payload.posts.data));
-      payload.posts.data = payload.posts.data.map(u => u.id);
+    if (tag.posts && tag.posts.data) {
+      dispatch(addPosts(tag.posts.data));
+      tag.posts.data = tag.posts.data.map(i => i.id);
     }
 
-    if (payload.orgs.data) {
-      dispatch(addOrganizations(payload.orgs.data));
-      payload.orgs.data = payload.orgs.data.map(u => u.id);
+    if (tag.orgs && tag.orgs.data) {
+      dispatch(addOrganizations(tag.orgs.data));
+      tag.orgs.data = tag.orgs.data.map(i => i.id);
     }
 
-    tag.push(payload);
+    tags.push(tag);
   };
 
   payload.forEach(parseTag);
-  dispatch({ type: 'ADD_TAGS', payload: tag });
+  dispatch({ type: 'ADD_TAGS', payload: tags });
 };

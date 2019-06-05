@@ -119,6 +119,7 @@
     "normalize.css": "^8.0.0",
     "nprogress": "^0.2.0",
     "object-to-formdata": "^1.5.2",
+    "pluralize": "^8.0.0",
     "prop-types": "^15.6.2",
     "rc-pagination": "^1.17.7",
     "react": "^16.7.0-alpha.2",

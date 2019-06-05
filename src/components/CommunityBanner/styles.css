@@ -1,0 +1,29 @@
+.communityBanner {
+  position: relative;
+  height: 300px;
+  margin: 0 0 34px;
+  background: #D8E8E8;
+  box-shadow: 0px 0px 10px rgba(184, 184, 184, 0.25);
+}
+
+.button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+
+.title {
+  position: absolute;
+  bottom: 121px;
+  left: 30px;
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.16;
+}
+
+.logo {
+  position: absolute;
+  right: 30px;
+  bottom: 128px;
+}

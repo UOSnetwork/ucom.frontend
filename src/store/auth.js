@@ -1,6 +1,7 @@
 import { validateFields } from '../utils/validateFields';
 
 const getInitialState = () => ({
+  redirectUrl: undefined,
   visibility: false,
   loading: false,
   errors: {},
@@ -33,11 +34,13 @@ const auth = (state = getInitialState(), action) => {
     }
 
     case 'AUTH_SET_DATA':
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        ...action.payload,
+      };
 
-    default: {
+    default:
       return state;
-    }
   }
 };
 

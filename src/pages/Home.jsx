@@ -24,9 +24,7 @@ const HomePage = ({
 
   return (
     <LayoutBase>
-      {mainPosts.length > 0 &&
-        <PostsGrid posts={mainPosts} />
-      }
+      <PostsGrid posts={mainPosts} />
 
       <div className="content">
         {user ? (
