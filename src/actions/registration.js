@@ -6,6 +6,9 @@ import urls from '../utils/urls';
 import { saveActiveKey, getActivePrivateKey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
 
+const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
+const { SocialApi } = require('ucom-libs-wallet');
+
 export const registrationReset = payload => ({ type: 'REGISTRATION_RESET', payload });
 export const registrationSetStep = payload => ({ type: 'REGISTRATION_SET_STEP', payload });
 export const registrationSetAccountName = payload => ({ type: 'REGISTRATION_SET_ACCOUNT_NAME', payload });
@@ -49,27 +52,62 @@ export const registrationGenerateBrainkey = () => (dispatch) => {
 export const registrationRegister = prevPage => async (dispatch, getState) => {
   const state = getState();
   const { brainkey, accountName, isTrackingAllowed } = state.registration;
+  const activePrivateKey = getActivePrivateKey(brainkey);
 
   dispatch(registrationSetLoading(true));
 
   setTimeout(async () => {
+    let referralData;
+    let registrationData;
+
     try {
-      const data = await api.register({
+      referralData = await api.getReferralState(EventsIds.registration());
+    } catch (err) {
+      console.error(err);
+    }
+
+    try {
+      registrationData = await api.register({
         brainkey,
         accountName,
         isTrackingAllowed,
       });
-
-      saveToken(data.token);
-      saveActiveKey(getActivePrivateKey(brainkey));
-
-      if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
-        window.location.replace(getPostUrl(prevPage));
-      } else {
-        window.location.replace(urls.getUserUrl(data.user.id));
-      }
+      saveToken(registrationData.token);
+      saveActiveKey(activePrivateKey);
     } catch (e) {
       console.error(e);
+    }
+
+    if (
+      referralData &&
+      referralData.affiliatesActions &&
+      referralData.affiliatesActions[0] &&
+      referralData.affiliatesActions[0].accountNameSource &&
+      referralData.affiliatesActions[0].offerId &&
+      referralData.affiliatesActions[0].action
+    ) {
+      try {
+        const signedTransaction = await SocialApi.getReferralFromUserSignedTransactionAsJson(
+          accountName,
+          activePrivateKey,
+          referralData.affiliatesActions[0].accountNameSource,
+        );
+
+        await api.referralTransaction({
+          signedTransaction,
+          accountNameSource: referralData.affiliatesActions[0].accountNameSource,
+          offerId: referralData.affiliatesActions[0].offerId,
+          action: referralData.affiliatesActions[0].action,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
+      window.location.replace(getPostUrl(prevPage));
+    } else {
+      window.location.replace(urls.getUserUrl(registrationData.user.id));
     }
   }, 10);
 };

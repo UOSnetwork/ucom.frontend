@@ -8,14 +8,11 @@ import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
 import { LIST_PER_PAGE } from '../utils/list';
 
-const { Dictionary } = require('ucom-libs-wallet');
+const { WalletApi, SocialApi, Dictionary } = require('ucom-libs-wallet');
+const AppTransaction = require('ucom-libs-social-transactions');
 
 const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
 const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
-
-const { WalletApi, SocialApi } = require('ucom-libs-wallet');
-const AppTransaction = require('ucom-libs-social-transactions');
-
 const { TransactionFactory } = AppTransaction;
 
 if (process.env.NODE_ENV === 'production') {
@@ -532,6 +529,34 @@ class Api {
 
   async syncAccountGithub(options) {
     const response = await this.actions.post('/api/v1/users-external/users/pair', {}, options);
+
+    return humps(response.data);
+  }
+
+  async getReferralState(eventId) {
+    const data = {
+      event_id: eventId,
+    };
+
+    const response = await this.actions.post('/api/v1/affiliates/actions', data);
+
+    return humps(response.data);
+  }
+
+  async referralTransaction({
+    signedTransaction,
+    accountNameSource,
+    offerId,
+    action,
+  }) {
+    const data = snakes({
+      signedTransaction,
+      accountNameSource,
+      offerId,
+      action,
+    });
+
+    const response = await this.actions.post('/api/v1/affiliates/referral-transaction', data);
 
     return humps(response.data);
   }
