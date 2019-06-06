@@ -5,15 +5,14 @@ import classNames from 'classnames';
 import React from 'react';
 import styles from './styles.css';
 
-const TAB_ID_COMMUNITIES = 1;
-const TAB_ID_PEOPLE = 2;
-const TAB_ID_ALL = 3;
-const TAB_ID_OFFERS = 4;
+export const TAB_ID_COMMUNITIES = 1;
+export const TAB_ID_PEOPLE = 2;
+export const TAB_ID_ALL = 3;
+export const TAB_ID_OFFERS = 4;
 
 const tabs = [{
   id: TAB_ID_COMMUNITIES,
   title: 'Communities',
-  disabled: true,
 }, {
   id: TAB_ID_PEOPLE,
   title: 'People',
@@ -39,7 +38,7 @@ const Tabs = ({ activeTabId, onClickItem }) => (
           })}
         >
           <span className={styles.inner}>
-            <span className={styles.left}>{range(5).map(() => `${item.title} `)}&nbsp;</span>
+            <span className={styles.left}>{range(5).map(() => ` ${item.title}`)}&nbsp;</span>
             {item.title}
             <span className={styles.right}>&nbsp;{range(5).map(() => `${item.title} `)}</span>
           </span>

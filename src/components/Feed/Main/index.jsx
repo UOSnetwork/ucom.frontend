@@ -2,7 +2,7 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useState, useEffect, Fragment } from 'react';
-import Tabs from './Tabs';
+import Tabs, { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from './Tabs';
 import FeedView from '../FeedView';
 import graphql from '../../../api/graphql';
 import { MAIN_FEED_ID } from '../../../utils/feed';
@@ -19,43 +19,46 @@ import { addOrganizations } from '../../../actions/organizations';
 import { addTags } from '../../../actions/tags';
 import { getTagsByTitle } from '../../../store/tags';
 import CommunityBanner from '../../CommunityBanner';
+import { sortByRate } from '../../../utils/list';
 
 const SIDEBAR_ENTRY_LIST_LIMIT = 8;
 
 const FeedMain = ({
   dispatch, users, organizations, tags,
 }) => {
-  const [activeTabId, setActiveTabId] = useState();
-
-  const [feedState, setFeedState] = useState({
-    userIds: [],
-    postsIds: [],
-    organizationsIds: [],
-    tagsIds: [],
-    loading: false,
-    hasMore: false,
-    page: 1,
+  const [state, setState] = useState({
+    activeTabId: TAB_ID_PEOPLE,
+    feed: {
+      userIds: [],
+      postsIds: [],
+      organizationsIds: [],
+      tagsIds: [],
+      loading: false,
+      hasMore: false,
+      page: 1,
+    },
+    usersPopup: {
+      ids: [],
+      metadata: {},
+    },
+    organizationsPopup: {
+      ids: [],
+      metadata: {},
+    },
+    tagsPopup: {
+      ids: [],
+      metadata: {},
+    },
   });
 
-  const [usersPopupState, setUsersPopupState] = useState({
-    ids: [],
-    metadata: {},
-  });
-
-  const [organizationsPopupState, setOrganizationsPopupState] = useState({
-    ids: [],
-    metadata: {},
-  });
-
-  const [tagsPopupState, setTagsPopupState] = useState({
-    ids: [],
-    metadata: {},
-  });
-
-  const getFeed = async ({
-    page = 1,
-  }) => {
-    setFeedState(prev => ({ ...prev, loading: true }));
+  const getFeed = async (page = 1) => {
+    setState(prev => ({
+      ...prev,
+      feed: {
+        ...prev.feed,
+        loading: true,
+      },
+    }));
 
     try {
       const data = await withLoader(graphql.getPosts({ page }));
@@ -63,29 +66,29 @@ const FeedMain = ({
         manyPosts, manyUsers, manyOrganizations, manyTags,
       } = data;
 
-      setFeedState(prev => ({
+      setState(prev => ({
         ...prev,
-        page,
-        hasMore: manyPosts.metadata.hasMore,
-        postsIds: prev.postsIds.concat(manyPosts.data.map(i => i.id)),
-        userIds: manyUsers.data.map(i => i.id),
-        tagsIds: manyTags.data.map(i => i.title),
-        organizationsIds: manyOrganizations.data.map(i => i.id),
-      }));
-
-      setUsersPopupState(() => ({
-        ids: manyUsers.data.map(i => i.id),
-        metadata: manyUsers.metadata,
-      }));
-
-      setOrganizationsPopupState(() => ({
-        ids: manyOrganizations.data.map(i => i.id),
-        metadata: manyOrganizations.metadata,
-      }));
-
-      setTagsPopupState(() => ({
-        ids: manyTags.data.map(i => i.title),
-        metadata: manyTags.metadata,
+        feed: {
+          ...prev.feed,
+          page,
+          hasMore: manyPosts.metadata.hasMore,
+          postsIds: (page === 1 ? [] : prev.feed.postsIds).concat(manyPosts.data.map(i => i.id)),
+          userIds: manyUsers.data.map(i => i.id),
+          tagsIds: manyTags.data.map(i => i.title),
+          organizationsIds: manyOrganizations.data.map(i => i.id),
+        },
+        usersPopup: {
+          ids: manyUsers.data.map(i => i.id),
+          metadata: manyUsers.metadata,
+        },
+        organizationsPopup: {
+          ids: manyOrganizations.data.map(i => i.id),
+          metadata: manyOrganizations.metadata,
+        },
+        tagsPopup: {
+          ids: manyTags.data.map(i => i.title),
+          metadata: manyTags.metadata,
+        },
       }));
 
       dispatch(addPostsAndComments(manyPosts.data));
@@ -96,16 +99,24 @@ const FeedMain = ({
       dispatch(addErrorNotification(err.message));
     }
 
-    setFeedState(prev => ({ ...prev, loading: false }));
+    setState(prev => ({
+      ...prev,
+      feed: {
+        ...prev.feed,
+        loading: false,
+      },
+    }));
   };
 
   const getUsersForPopup = async (page) => {
     try {
       const data = await withLoader(graphql.getPosts({ page }));
-      const { manyUsers } = data;
-      setUsersPopupState(() => ({
-        ids: manyUsers.data.map(user => user.id),
-        metadata: manyUsers.metadata,
+      setState(prev => ({
+        ...prev,
+        usersPopup: {
+          ids: data.manyUsers.data.map(user => user.id),
+          metadata: data.manyUsers.metadata,
+        },
       }));
     } catch (err) {
       dispatch(addErrorNotification(err.message));
@@ -115,10 +126,12 @@ const FeedMain = ({
   const getOrganizationsForPopup = async (page) => {
     try {
       const data = await withLoader(graphql.getPosts({ page }));
-      const { manyOrganizations } = data;
-      setUsersPopupState(() => ({
-        ids: manyOrganizations.data.map(i => i.id),
-        metadata: manyOrganizations.metadata,
+      setState(prev => ({
+        ...prev,
+        organizationsPopup: {
+          ids: data.manyOrganizations.data.map(user => user.id),
+          metadata: data.manyOrganizations.metadata,
+        },
       }));
     } catch (err) {
       dispatch(addErrorNotification(err.message));
@@ -128,10 +141,12 @@ const FeedMain = ({
   const getTagsForPopup = async (page) => {
     try {
       const data = await withLoader(graphql.getPosts({ page }));
-      const { manyTags } = data;
-      setTagsPopupState(() => ({
-        ids: manyTags.data.map(i => i.id),
-        metadata: manyTags.metadata,
+      setState(prev => ({
+        ...prev,
+        tagsPopup: {
+          ids: data.manyTags.data.map(user => user.id),
+          metadata: data.manyTags.metadata,
+        },
       }));
     } catch (err) {
       dispatch(addErrorNotification(err.message));
@@ -139,20 +154,74 @@ const FeedMain = ({
   };
 
   const onClickLoadMore = () => {
-    getFeed({ page: feedState.page + 1 });
+    getFeed(state.feed.page + 1);
   };
 
   useEffect(() => {
-    getFeed({ page: feedState.page });
-  }, []);
+    getFeed(1);
+  }, [state.activeTabId]);
+
+  const usersSection = (
+    <EntryListSection
+      title={state.activeTabId === TAB_ID_COMMUNITIES ? 'Recent Top Authors' : 'Top Users of the Day'}
+      limit={SIDEBAR_ENTRY_LIST_LIMIT}
+      data={sortByRate(getUsersByIds(users, state.feed.userIds)).map(user => ({
+        id: user.id,
+        avatarSrc: urls.getFileUrl(user.avatarFilename),
+        url: urls.getUserUrl(user.id),
+        title: getUserName(user),
+        nickname: user.accountName,
+        currentRate: user.currentRate,
+      }))}
+      popupData={getUsersByIds(users, state.usersPopup.ids).map(user => ({
+        id: user.id,
+        avatarSrc: urls.getFileUrl(user.avatarFilename),
+        url: urls.getUserUrl(user.id),
+        title: getUserName(user),
+        nickname: user.accountName,
+        currentRate: user.currentRate,
+      }))}
+      popupMetadata={state.usersPopup.metadata}
+      onChangePage={getUsersForPopup}
+    />
+  );
+
+  const communitiesSections = (
+    <EntryListSection
+      title={state.activeTabId === TAB_ID_COMMUNITIES ? 'Top Communities This Week' : 'Most Buzzin’ Communities'}
+      limit={SIDEBAR_ENTRY_LIST_LIMIT}
+      data={sortByRate(getOrganizationByIds(organizations, state.feed.organizationsIds)).map(organization => ({
+        organization: true,
+        id: organization.id,
+        avatarSrc: urls.getFileUrl(organization.avatarFilename),
+        url: urls.getOrganizationUrl(organization.id),
+        title: organization.title,
+        nickname: organization.nickname,
+        currentRate: organization.currentRate,
+      }))}
+      popupData={getOrganizationByIds(organizations, state.organizationsPopup.ids).map(organization => ({
+        organization: true,
+        id: organization.id,
+        avatarSrc: urls.getFileUrl(organization.avatarFilename),
+        url: urls.getOrganizationUrl(organization.id),
+        title: organization.title,
+        nickname: organization.nickname,
+        currentRate: organization.currentRate,
+      }))}
+      popupMetadata={state.organizationsPopup.metadata}
+      onChangePage={getOrganizationsForPopup}
+    />
+  );
 
   return (
     <Fragment>
       <div className="grid grid_content">
         <div className="grid__item grid__item_main">
           <Tabs
-            activeTabId={activeTabId}
-            onClickItem={setActiveTabId}
+            activeTabId={state.activeTabId}
+            onClickItem={(activeTabId) => {
+              setState(prev => ({ ...prev, activeTabId }));
+            }}
           />
         </div>
       </div>
@@ -161,67 +230,33 @@ const FeedMain = ({
         <div className="grid__item grid__item_main">
           <FeedView
             feedTypeId={MAIN_FEED_ID}
-            postIds={feedState.postsIds}
-            loading={feedState.loading}
-            hasMore={feedState.hasMore}
+            postIds={state.feed.postsIds}
+            loading={state.feed.loading}
+            hasMore={state.feed.hasMore}
             onClickLoadMore={onClickLoadMore}
           />
         </div>
         <div className="grid__item grid__item_side">
-          <CommunityBanner />
-
-          <EntryListSection
-            title="Top Users of the Day"
-            limit={SIDEBAR_ENTRY_LIST_LIMIT}
-            data={getUsersByIds(users, feedState.userIds).map(user => ({
-              id: user.id,
-              avatarSrc: urls.getFileUrl(user.avatarFilename),
-              url: urls.getUserUrl(user.id),
-              title: getUserName(user),
-              nickname: user.accountName,
-              currentRate: user.currentRate,
-            }))}
-            popupData={getUsersByIds(users, usersPopupState.ids).map(user => ({
-              id: user.id,
-              avatarSrc: urls.getFileUrl(user.avatarFilename),
-              url: urls.getUserUrl(user.id),
-              title: getUserName(user),
-              nickname: user.accountName,
-              currentRate: user.currentRate,
-            }))}
-            popupMetadata={usersPopupState.metadata}
-            onChangePage={getUsersForPopup}
+          <CommunityBanner
+            forCommunity={state.activeTabId === TAB_ID_COMMUNITIES}
           />
 
-          <EntryListSection
-            title="Most Buzzin’ Communities"
-            limit={SIDEBAR_ENTRY_LIST_LIMIT}
-            data={getOrganizationByIds(organizations, feedState.organizationsIds).map(organization => ({
-              organization: true,
-              id: organization.id,
-              avatarSrc: urls.getFileUrl(organization.avatarFilename),
-              url: urls.getOrganizationUrl(organization.id),
-              title: organization.title,
-              nickname: organization.nickname,
-              currentRate: organization.currentRate,
-            }))}
-            popupData={getOrganizationByIds(organizations, organizationsPopupState.ids).map(organization => ({
-              organization: true,
-              id: organization.id,
-              avatarSrc: urls.getFileUrl(organization.avatarFilename),
-              url: urls.getOrganizationUrl(organization.id),
-              title: organization.title,
-              nickname: organization.nickname,
-              currentRate: organization.currentRate,
-            }))}
-            popupMetadata={organizationsPopupState.metadata}
-            onChangePage={getOrganizationsForPopup}
-          />
+          {state.activeTabId === TAB_ID_COMMUNITIES ? (
+            <Fragment>
+              {communitiesSections}
+              {usersSection}
+            </Fragment>
+          ) : (
+            <Fragment>
+              {usersSection}
+              {communitiesSections}
+            </Fragment>
+          )}
 
           <EntryListSection
             title="Popular Today"
             limit={SIDEBAR_ENTRY_LIST_LIMIT}
-            data={getTagsByTitle(tags, feedState.tagsIds).map(tag => ({
+            data={sortByRate(getTagsByTitle(tags, state.feed.tagsIds)).map(tag => ({
               id: tag.id,
               url: urls.getTagUrl(tag.title),
               title: `#${tag.title}`,
@@ -230,7 +265,7 @@ const FeedMain = ({
               disableSign: true,
               disableAvatar: true,
             }))}
-            popupData={getTagsByTitle(tags, tagsPopupState.ids).map(tag => ({
+            popupData={getTagsByTitle(tags, state.tagsPopup.ids).map(tag => ({
               id: tag.id,
               url: urls.getTagUrl(tag.title),
               title: `#${tag.title}`,
@@ -239,7 +274,7 @@ const FeedMain = ({
               disableSign: true,
               disableAvatar: true,
             }))}
-            popupMetadata={tagsPopupState.metadata}
+            popupMetadata={state.tagsPopup.metadata}
             onChangePage={getTagsForPopup}
           />
         </div>
