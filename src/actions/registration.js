@@ -67,11 +67,11 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     }
 
     try {
-      registrationData = await api.register({
+      registrationData = await api.register(
         brainkey,
         accountName,
         isTrackingAllowed,
-      });
+      );
       saveToken(registrationData.token);
       saveActiveKey(activePrivateKey);
     } catch (e) {
@@ -93,12 +93,12 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
           referralData.affiliatesActions[0].accountNameSource,
         );
 
-        await api.referralTransaction({
+        await api.referralTransaction(
           signedTransaction,
-          accountNameSource: referralData.affiliatesActions[0].accountNameSource,
-          offerId: referralData.affiliatesActions[0].offerId,
-          action: referralData.affiliatesActions[0].action,
-        });
+          referralData.affiliatesActions[0].accountNameSource,
+          referralData.affiliatesActions[0].offerId,
+          referralData.affiliatesActions[0].action,
+        );
       } catch (err) {
         console.error(err);
       }

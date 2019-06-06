@@ -45,7 +45,7 @@ class Api {
     return humps(response.data);
   }
 
-  async register({ brainkey, accountName, isTrackingAllowed }) {
+  async register(brainkey, accountName, isTrackingAllowed) {
     const activeKey = getActivePrivateKey(brainkey);
     const sign = ecc.sign(accountName, activeKey);
     const publicKey = ecc.privateToPublic(activeKey);
@@ -543,12 +543,12 @@ class Api {
     return humps(response.data);
   }
 
-  async referralTransaction({
+  async referralTransaction(
     signedTransaction,
     accountNameSource,
     offerId,
     action,
-  }) {
+  ) {
     const data = snakes({
       signedTransaction,
       accountNameSource,
