@@ -39,3 +39,12 @@ export const addServerErrorNotification = error => (dispatch) => {
     dispatch(addNotification({ type: NOTIFICATION_TYPE_ERROR, message: parseErrors(error).general }));
   }
 };
+
+export const addMaintenanceNotification = () => (dispatch) => {
+  dispatch(addNotification({
+    type: NOTIFICATION_TYPE_ERROR,
+    autoClose: false,
+    title: 'Warning',
+    message: 'The platform is on maintenance and in a read-only mode. Please avoid posting content, it will not be published.',
+  }));
+};

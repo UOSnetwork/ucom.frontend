@@ -1,46 +1,42 @@
+import { Route, Switch } from 'react-router';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import UserHead from '../components/User/UserHead/index';
-import LayoutBase from '../components/Layout/LayoutBase';
-import { selectUser } from '../store/selectors/user';
+import UserHead from '../../components/User/UserHead/index';
+import LayoutBase from '../../components/Layout/LayoutBase';
+import { selectUser } from '../../store/selectors/user';
 import {
   fetchUserPageData,
   trustUser,
   untrustUser,
   fetchUserTrustedBy,
   fetchUserFollowsOrganizations,
-} from '../actions/users';
-import { postsFetch } from '../actions/posts';
-import { getUserById } from '../store/users';
-import { getPostById } from '../store/posts';
-import Popup from '../components/Popup';
-import ModalContent from '../components/ModalContent';
-import Post from '../components/Feed/Post/Post';
-import urls from '../utils/urls';
-import Feed from '../components/Feed/FeedUser';
-import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../utils/feed';
-import { feedGetUserPosts } from '../actions/feed';
-import loader from '../utils/loader';
-import NotFoundPage from './NotFoundPage';
-import Footer from '../components/Footer';
-import EntrySocialNetworks from '../components/EntrySocialNetworks';
-import EntryCreatedAt from '../components/EntryCreatedAt';
-import EntryContacts from '../components/EntryContacts';
-import EntryAbout from '../components/EntryAbout';
-import EntryListSection from '../components/EntryListSection';
-import Trust from '../components/Trust';
-import { getUserName, userIsOwner } from '../utils/user';
-import { authShowPopup } from '../actions/auth';
-import { addErrorNotification } from '../actions/notifications';
-import { parseResponseError } from '../utils/errors';
-import { restoreActiveKey } from '../utils/keys';
-import { getOrganizationByIds } from '../store/organizations';
-import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
+} from '../../actions/users';
+import { postsFetch } from '../../actions/posts';
+import { getUserById } from '../../store/users';
+import urls from '../../utils/urls';
+import Feed from '../../components/Feed/FeedUser';
+import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
+import { feedGetUserPosts } from '../../actions/feed';
+import NotFoundPage from '../NotFoundPage';
+import Footer from '../../components/Footer';
+import EntrySocialNetworks from '../../components/EntrySocialNetworks';
+import EntryCreatedAt from '../../components/EntryCreatedAt';
+import EntryContacts from '../../components/EntryContacts';
+import EntryAbout from '../../components/EntryAbout';
+import EntryListSection from '../../components/EntryListSection';
+import Trust from '../../components/Trust';
+import { getUserName, userIsOwner } from '../../utils/user';
+import { authShowPopup } from '../../actions/auth';
+import { addErrorNotification } from '../../actions/notifications';
+import { parseResponseError } from '../../utils/errors';
+import { restoreActiveKey } from '../../utils/keys';
+import { getOrganizationByIds } from '../../store/organizations';
+import PostPopup from './Post';
+import withLoader from '../../utils/withLoader';
 
 const UserPage = (props) => {
   const userIdOrName = props.match.params.userId;
-  const postId = +props.match.params.postId;
   const [loaded, setLoaded] = useState(false);
   const [trustedByUsersIds, setTrustedByUsersIds] = useState([]);
   const [trustedByMetadata, setTrustedByMetadata] = useState({});
@@ -49,14 +45,12 @@ const UserPage = (props) => {
   const [organizationsPopupIds, setOrganizationsPopupIds] = useState([]);
   const [organizationsMetadata, setOrganizationsMetadata] = useState({});
   const user = getUserById(props.users, userIdOrName);
-  const post = getPostById(props.posts, postId);
 
   const fetchUserData = async () => {
-    loader.start();
     try {
-      const data = await props.dispatch(fetchUserPageData({
+      const data = await withLoader(props.dispatch(fetchUserPageData({
         userIdentity: userIdOrName,
-      }));
+      })));
       const organizationsIds = data.oneUserFollowsOrganizations.data.map(i => i.id);
 
       setTrustedByUsersIds(data.oneUserTrustedBy.data.map(i => i.id));
@@ -68,38 +62,21 @@ const UserPage = (props) => {
       const errorMessage = parseResponseError(e)[0].message;
       props.dispatch(addErrorNotification(errorMessage));
     }
-    loader.done();
     setLoaded(true);
   };
 
   const fetchTrustedBy = async (page = 1) => {
-    loader.start();
     try {
-      const data = await props.dispatch(fetchUserTrustedBy({
+      const data = await withLoader(props.dispatch(fetchUserTrustedBy({
         userIdentity: userIdOrName,
         page,
-      }));
+      })));
       setTrustedByUsersIds(data.data.map(i => i.id));
       setTrustedByMetadata(data.metadata);
     } catch (e) {
       const errorMessage = parseResponseError(e)[0].message;
       props.dispatch(addErrorNotification(errorMessage));
     }
-    loader.done();
-  };
-
-  const fetchPostData = async () => {
-    if (!postId) {
-      return;
-    }
-    loader.start();
-    try {
-      props.dispatch(postsFetch({ postId }));
-    } catch (e) {
-      const errorMessage = parseResponseError(e)[0].message;
-      props.dispatch(addErrorNotification(errorMessage));
-    }
-    loader.done();
   };
 
   const submitTrust = async (isTrust) => {
@@ -108,38 +85,34 @@ const UserPage = (props) => {
       props.dispatch(authShowPopup());
       return;
     }
-    loader.start();
     setTrustLoading(true);
     try {
-      await props.dispatch((isTrust ? trustUser : untrustUser)({
+      await withLoader(props.dispatch((isTrust ? trustUser : untrustUser)({
         activeKey,
         userId: user.id,
         userAccountName: user.accountName,
         ownerAccountName: props.owner.accountName,
-      }));
+      })));
       await fetchTrustedBy(trustedByMetadata.page);
     } catch (e) {
       const errorMessage = parseResponseError(e)[0].message;
       props.dispatch(addErrorNotification(errorMessage));
     }
-    loader.done();
     setTrustLoading(false);
   };
 
   const fetchOrganizations = async (page = 1) => {
-    loader.start();
     try {
-      const data = await props.dispatch(fetchUserFollowsOrganizations({
+      const data = await withLoader(props.dispatch(fetchUserFollowsOrganizations({
         userIdentity: userIdOrName,
         page,
-      }));
+      })));
       setOrganizationsPopupIds(data.data.map(i => i.id));
       setOrganizationsMetadata(data.metadata);
     } catch (e) {
       const errorMessage = parseResponseError(e)[0].message;
       props.dispatch(addErrorNotification(errorMessage));
     }
-    loader.done();
   };
 
   const mapOrganizationProps = ids =>
@@ -159,10 +132,6 @@ const UserPage = (props) => {
     fetchUserData();
   }, [userIdOrName]);
 
-  useEffect(() => {
-    fetchPostData();
-  }, [postId]);
-
   if (loaded && !user) {
     return <NotFoundPage />;
   } else if (!user) {
@@ -171,14 +140,9 @@ const UserPage = (props) => {
 
   return (
     <LayoutBase gray>
-      {/* TODO: Disable scroll to top */}
-      {post &&
-        <Popup onClickClose={() => props.history.push(urls.getUserUrl(user.id))}>
-          <ModalContent mod="post">
-            <Post id={post.id} postTypeId={post.postTypeId} commentsContainerId={COMMENTS_CONTAINER_ID_POST} />
-          </ModalContent>
-        </Popup>
-      }
+      <Switch>
+        <Route path="/user/:userId/:postId" component={PostPopup} />
+      </Switch>
 
       <div className="layout layout_profile">
         <div className="layout__header">
@@ -235,12 +199,10 @@ UserPage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       userId: PropTypes.string,
-      postId: PropTypes.string,
     }),
   }).isRequired,
   users: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
-  posts: PropTypes.objectOf(PropTypes.any).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -279,7 +241,6 @@ export const getUserPageData = (store, params) => {
 export default connect(state => ({
   users: state.users,
   user: state.user.data,
-  posts: state.posts,
   organizations: state.organizations,
   owner: selectUser(state),
   ownerIsLoading: state.user.loading,

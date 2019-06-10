@@ -17,10 +17,9 @@ import BuyRam from '../components/Resources/Actions/BuyRam';
 import SellRam from '../components/Resources/Actions/SellRam';
 import EditStake from '../components/Resources/Actions/EditStake';
 import SendTokens from '../components/Resources/Actions/SendTokens';
-import { addNotification } from '../actions/notifications';
-import { NOTIFICATION_TYPE_ERROR } from '../store/notifications';
+import { addMaintenanceNotification } from '../actions/notifications';
 
-const App = (props) => {
+const App = ({ addMaintenanceNotification, ...props }) => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       enableGtm();
@@ -40,12 +39,7 @@ const App = (props) => {
     }
 
     if (config.maintenanceMode) {
-      props.addNotification({
-        type: NOTIFICATION_TYPE_ERROR,
-        title: 'Warning',
-        message: 'The platform is on maintenance and in a read-only mode. Please avoid posting content, it will not be published.',
-        autoClose: false,
-      });
+      addMaintenanceNotification();
     }
 
     return removeInitDragAndDropListeners;
@@ -55,18 +49,10 @@ const App = (props) => {
     <Fragment>
       <Page>
         <Switch>
-          {routes.map(r => (
-            <Route
-              exact={typeof r.exact === 'undefined' ? true : r.exact}
-              key={r.path}
-              path={r.path}
-              component={r.component}
-            />
-          ))}
+          {routes.map(route => <Route {...route} key={route.path} />)}
         </Switch>
 
         <Auth />
-        {/* <UserMenu /> */}
       </Page>
 
       {props.settings.visible && <Settings />}
@@ -91,7 +77,7 @@ App.propTypes = {
     editStakeVisible: PropTypes.bool.isRequired,
     sendTokensVisibility: PropTypes.bool.isRequired,
   }).isRequired,
-  addNotification: PropTypes.func.isRequired,
+  addMaintenanceNotification: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
@@ -104,6 +90,6 @@ export default withRouter(connect(
     fetchMyself,
     initNotificationsListeners,
     siteNotificationsSetUnreadAmount,
-    addNotification,
+    addMaintenanceNotification,
   },
 )(App));
