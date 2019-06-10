@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useState, Fragment, useEffect } from 'react';
 import Popup, { Content } from '../Popup';
 import styles from './styles.css';
-// import CopyPanel from '../CopyPanel';
+import CopyPanel from '../CopyPanel';
 import Button from '../Button/index';
 import VerticalMenu from '../VerticalMenu/index';
 import { settingsHide } from '../../actions/settings';
@@ -48,12 +48,21 @@ const Settings = (props) => {
     return null;
   }
 
+  const sections = [
+    { title: 'Resources', name: 'Resources' },
+    { title: 'Keys', name: 'Keys' },
+  ];
+
+  if (props.owner.affiliates && props.owner.affiliates.referralRedirectUrl) {
+    sections.push({ title: 'Referral Link', name: 'Referral' });
+  }
+
   return (
     <Fragment>
       <Popup
         id="settings-popup"
         onClickClose={() => props.dispatch(settingsHide())}
-        paddingBottom="50vh" // TODO: Change to 25vh when social keys enabled
+        paddingBottom="100vh"
       >
         <Content
           fixWidth
@@ -64,10 +73,7 @@ const Settings = (props) => {
               <VerticalMenu
                 sticky
                 stickyTop={86}
-                sections={[
-                  { title: 'Resources', name: 'Resources' },
-                  { title: 'Keys', name: 'Keys' },
-                ]}
+                sections={sections}
                 scrollerOptions={{
                   spy: true,
                   duration: 500,
@@ -161,7 +167,28 @@ const Settings = (props) => {
                   <OwnerActiveKeys />
                 </div>
               </Element>
+
+              {props.owner.affiliates && props.owner.affiliates.referralRedirectUrl &&
+                <Element
+                  name="Referral"
+                  className={styles.section}
+                >
+                  <h3 className={styles.title}>Referral Link</h3>
+                  <div className={styles.subSection}>
+                    <div className={styles.subSection}>
+                      <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get half the importance they acquire.</p>
+                      <div className={styles.copy}>
+                        <CopyPanel
+                          label="Your referral link"
+                          value={props.owner.affiliates.referralRedirectUrl}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </Element>
+              }
             </div>
+
             <div className={styles.footer}>
               Go to&nbsp;
               <Link
@@ -216,6 +243,9 @@ Settings.propTypes = {
   }).isRequired,
   owner: PropTypes.shape({
     id: PropTypes.number,
+    affiliates: PropTypes.shape({
+      referralRedirectUrl: PropTypes.string,
+    }),
   }).isRequired,
 };
 

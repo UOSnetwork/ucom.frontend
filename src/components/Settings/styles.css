@@ -4,10 +4,11 @@
   grid-template-columns: 200px 1fr;
   grid-template-rows: 1fr;
   grid-column-gap: 100px;
+  grid-row-gap: 50px;
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 86px 40px 59px;
+  padding: 86px 40px 128px;
   font-size: 16px;
   line-height: 28px;
 }
