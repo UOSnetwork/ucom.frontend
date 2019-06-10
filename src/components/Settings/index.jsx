@@ -49,6 +49,7 @@ const Settings = (props) => {
   }
 
   return (
+    // TODO: Use Grid/styles.css for profile grid
     <Fragment>
       <Popup
         id="settings-popup"
@@ -166,7 +167,7 @@ const Settings = (props) => {
               Go to&nbsp;
               <Link
                 className="link red"
-                to={urls.getUserEditProfileUrl()}
+                to={urls.getUserEditProfileUrl(props.owner.id)}
                 onClick={() => props.dispatch(settingsHide())}
               >
                 Profile Edit

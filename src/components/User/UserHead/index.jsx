@@ -25,7 +25,7 @@ const UserHead = (props) => {
     <div className={styles.entryHead}>
       {userIsOwner(user, props.owner) &&
         <div className={styles.edit}>
-          <ButtonEdit strech url={urls.getUserEditProfileUrl()} />
+          <ButtonEdit strech url={urls.getUserEditProfileUrl(user.id)} />
         </div>
       }
 

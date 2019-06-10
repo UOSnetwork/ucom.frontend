@@ -49,6 +49,11 @@ export default [{
   getData: getUserPageData,
 }, {
   exact: true,
+  path: '/user/:userId/profile',
+  component: UserPage,
+  getData: getUserPageData,
+}, {
+  exact: true,
   path: '/posts/new',
   component: EditPostPage,
 }, {

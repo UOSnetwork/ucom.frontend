@@ -33,6 +33,7 @@ import { parseResponseError } from '../../utils/errors';
 import { restoreActiveKey } from '../../utils/keys';
 import { getOrganizationByIds } from '../../store/organizations';
 import PostPopup from './Post';
+import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
 
 const UserPage = (props) => {
@@ -141,6 +142,7 @@ const UserPage = (props) => {
   return (
     <LayoutBase gray>
       <Switch>
+        <Route path="/user/:userId/profile" component={ProfilePopup} />
         <Route path="/user/:userId/:postId" component={PostPopup} />
       </Switch>
 

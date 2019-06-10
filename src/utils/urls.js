@@ -32,8 +32,8 @@ const urls = {
     return `/user/${userId}`;
   },
 
-  getUserEditProfileUrl() {
-    return '/profile/';
+  getUserEditProfileUrl(userId) {
+    return `/user/${userId}/profile`;
   },
 
   getGovernanceUrl() {

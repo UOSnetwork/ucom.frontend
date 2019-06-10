@@ -1,0 +1,91 @@
+.title {
+  margin: 0 0 41px;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.125;
+  color: #E4E4E4;
+}
+
+.description {
+  margin: 0 0 40px;
+}
+
+.section {
+  margin: 0 0 53px;
+}
+
+.subTitle {
+  font-size: 28px;
+  line-height: 1.14;
+  margin: 0 0 41px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  margin: 0 0 32px;
+}
+
+.field .data {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.upload {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  max-width: 414px;
+  cursor: pointer;
+}
+
+.uploadIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+}
+
+.uploadText {
+  font-size: 12px;
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 30px 50px;
+  border: 1px solid #B1B1B1;
+  border-radius: 4px;
+  line-height: 1.75;
+  outline: none;
+  resize: none;
+}
+
+.textarea:focus {
+  border-color: #585858;
+}
+
+.textarea::placeholder {
+  color: #C1C1C1;
+  opacity: 1;
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  fill: #C4C4C4;
+  transition: fill 0.2s ease;
+}
+
+.remove:hover {
+  fill: #D8352F;
+}
