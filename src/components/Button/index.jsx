@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React, { memo } from 'react';
+import React from 'react';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
@@ -64,4 +64,4 @@ Button.defaultProps = {
   disabled: false,
 };
 
-export default memo(Button);
+export default Button;

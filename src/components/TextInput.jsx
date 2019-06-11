@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import IconSearch from '../components/Icons/Search';
@@ -9,12 +9,13 @@ import { decodeText } from '../utils/text';
 const TextInput = ({
   value, error, label, topLabel, placeholder, subtext, isSearch, inputWidth, isRequired, type, onChange, disabled, maxLength, isValid, className, ymDisableKeys, touched = false, ...rest
 }) => {
+  const [dirty, setDirty] = useState(false);
   const isIconExist = isSearch || error || isValid;
   let icon;
 
   if (isSearch) {
     icon = <div className="text-input__icon"><IconSearch /></div>;
-  } else if (error) {
+  } else if (error && (touched || dirty)) {
     icon = (
       <div
         className="text-input__icon text-input__icon-error"
@@ -49,15 +50,16 @@ const TextInput = ({
             maxLength={maxLength}
             value={value === null || value === undefined ? '' : decodeText(value)}
             className={cn('text-input__input', {
-              'text-input__input_error': Boolean(error),
+              'text-input__input_error': Boolean(error && (touched || dirty)),
               'text-input__input_with-icon': Boolean(isIconExist),
               'ym-disable-keys': ymDisableKeys,
             })}
             type={type || 'text'}
             disabled={disabled}
             placeholder={placeholder}
-            touched={touched.toString()}
+            touched={dirty || touched ? 'true' : undefined}
             onChange={(e) => {
+              setDirty(true);
               if (typeof onChange === 'function') {
                 onChange(e.target.value);
               }
@@ -69,7 +71,7 @@ const TextInput = ({
         </div>
       </label>
       { subtext && <div className="text-input__subtext">{subtext}</div> }
-      { error && <div className="text-input__error">{error}</div> }
+      { error && (dirty || touched) && <div className="text-input__error">{error}</div> }
     </div>
   );
 };

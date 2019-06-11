@@ -9,8 +9,8 @@ import Profile from '../../components/Profile';
 const ProfilePopup = ({ history, user }) => (
   <Popup
     id="profile-popup"
+    paddingBottom="70vh"
     onClickClose={() => history.push(urls.getUserUrl(user.id))}
-    paddingBottom="100vh"
   >
     <Content
       fixWidth

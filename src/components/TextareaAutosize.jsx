@@ -20,7 +20,11 @@ const TextareaAutosize = ({ value, onChange, ...props }) => {
 
   return (
     <TributeWrapper onChange={onChange}>
-      <textarea ref={textareaEl} {...props} />
+      <textarea
+        {...props}
+        ref={textareaEl}
+        value={value}
+      />
     </TributeWrapper>
   );
 };
