@@ -67,26 +67,6 @@
   font-size: 12px;
 }
 
-.textarea {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 30px 50px;
-  border: 1px solid #B1B1B1;
-  border-radius: 4px;
-  line-height: 1.75;
-  outline: none;
-  resize: none;
-}
-
-.textarea:focus {
-  border-color: #585858;
-}
-
-.textarea::placeholder {
-  color: #C1C1C1;
-  opacity: 1;
-}
-
 .remove {
   display: flex;
   align-items: center;

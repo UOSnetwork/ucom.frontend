@@ -18,6 +18,7 @@ const ProfilePopup = ({ history, user }) => (
     >
       <Profile
         userId={user.id}
+        onSuccess={() => history.push(urls.getUserUrl(user.id))}
       />
     </Content>
   </Popup>

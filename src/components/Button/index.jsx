@@ -10,6 +10,7 @@ const Button = (props) => {
 
   return (
     <Tag
+      type={props.type}
       to={props.url}
       href={filterURL(props.url)}
       target={props.external ? '_blank' : undefined}
@@ -48,6 +49,7 @@ Button.propTypes = {
   small: PropTypes.bool,
   cap: PropTypes.bool,
   disabled: PropTypes.bool,
+  type: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -62,6 +64,7 @@ Button.defaultProps = {
   small: false,
   cap: false,
   disabled: false,
+  type: 'button',
 };
 
 export default Button;
