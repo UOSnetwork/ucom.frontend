@@ -1,4 +1,3 @@
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
@@ -138,8 +137,8 @@ export default withRouter(connect(
   state => ({
     registration: state.registration,
   }),
-  dispatch => bindActionCreators({
+  {
     registrationRegister,
     registrationSetIsTrackingAllowed,
-  }, dispatch),
+  },
 )(RegistrationStepThird));

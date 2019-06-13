@@ -1,4 +1,4 @@
-import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
@@ -54,11 +54,24 @@ class Registration extends PureComponent {
   }
 }
 
+Registration.propTypes = {
+  registrationReset: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      prevPath: PropTypes.string,
+    }),
+  }),
+};
+
+Registration.defaultProps = {
+  location: undefined,
+};
+
 export default withRouter(connect(
   state => ({
     registration: state.registration,
   }),
-  dispatch => bindActionCreators({
+  {
     registrationReset,
-  }, dispatch),
+  },
 )(Registration));
