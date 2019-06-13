@@ -29,6 +29,11 @@
     grid-template-columns: 1fr;
     grid-row-gap: 86px;
   }
+
+  .grid.profile .sidebar {
+    position: static;
+    grid-row-start: 2;
+  }
 }
 
 @media (max-width: 767px) {

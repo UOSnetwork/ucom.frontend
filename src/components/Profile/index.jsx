@@ -29,7 +29,7 @@ const USER_EDITABLE_PROPS = [
 ];
 
 const Profile = ({
-  user, updateUser, addErrorNotification, addSuccessNotification, onSuccess,
+  user, updateUser, addErrorNotification, addSuccessNotification, onSuccess, isNewUser,
 }) => {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -128,11 +128,11 @@ const Profile = ({
             />
           </div>
           <Button
-            red
             strech
+            red={isNewUser}
             type="submit"
           >
-            Create
+            {isNewUser ? 'Create' : 'Save Changes'}
           </Button>
         </div>
         <div className={gridStyles.content}>
@@ -154,7 +154,7 @@ const Profile = ({
               <div className={profileStyles.data}>
                 <DropzoneWrapper
                   className={profileStyles.upload}
-                  accept="image/jpeg, image/png"
+                  accept="image/jpeg, image/png, image/gif"
                   onChange={(avatarFilename) => {
                     setAvatarPreview(URL.createObjectURL(avatarFilename));
                     setDataAndValidate({ ...data, avatarFilename });
@@ -303,6 +303,7 @@ Profile.propTypes = {
     })),
     personalWebsiteUrl: PropTypes.string,
   }),
+  isNewUser: PropTypes.bool,
   updateUser: PropTypes.func.isRequired,
   addErrorNotification: PropTypes.func.isRequired,
   addSuccessNotification: PropTypes.func.isRequired,
@@ -311,6 +312,7 @@ Profile.propTypes = {
 
 Profile.defaultProps = {
   user: undefined,
+  isNewUser: false,
 };
 
 export default connect(state => ({

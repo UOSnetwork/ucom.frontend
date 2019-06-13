@@ -81,3 +81,18 @@
 .remove:hover {
   fill: #D8352F;
 }
+
+@media (max-width: 1023px) {
+  .menu {
+    display: none;
+  }
+
+  .field {
+    grid-template-columns: 1fr;
+  }
+
+  .field .data {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+}

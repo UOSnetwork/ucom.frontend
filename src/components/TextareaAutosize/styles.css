@@ -32,3 +32,9 @@
   margin: 12px 0 0;
   color: #d8352f;
 }
+
+@media (max-width: 1023px) {
+  .textarea {
+    padding: 15px 16px 17px 16px;
+  }
+}
