@@ -107,7 +107,7 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
       window.location.replace(getPostUrl(prevPage));
     } else {
-      window.location.replace(urls.getUserUrl(registrationData.user.id));
+      window.location.replace(urls.getUserEditProfileUrl(registrationData.user.id));
     }
   }, 10);
 };
