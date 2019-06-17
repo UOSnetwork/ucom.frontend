@@ -45,7 +45,7 @@ const request = async (data, extraOptions = {}) => {
   }
 };
 
-export default {
+const api = {
   async getUserPageData({
     userIdentity,
     trustedByOrderBy = LIST_ORDER_BY,
@@ -327,27 +327,135 @@ export default {
     }
   },
 
-  async getMainPageTopPostsByEntity(entityName = ENTITY_NAMES_USERS) {
+  getPostsFeedQueryPart({
+    postTypeIds = [POST_TYPE_MEDIA_ID],
+    entityNamesFrom = [ENTITY_NAMES_USERS],
+    entityNamesFor = [ENTITY_NAMES_USERS],
+    orderBy = '-current_rate',
+    page = 1,
+    perPage = 10,
+    commentsPage,
+    commentsPerPage = 10,
+  }) {
+    const params = {
+      filters: {
+        post_type_ids: postTypeIds,
+        entity_names_from: entityNamesFrom,
+        entity_names_for: entityNamesFor,
+      },
+      order_by: orderBy,
+      page,
+      per_page: perPage,
+    };
+
+    const include = commentsPage ? {
+      comments: {
+        page: commentsPage,
+        per_page: commentsPerPage,
+      },
+    } : undefined;
+
+    return GraphQLSchema.getPostsFeedQueryPart(params, include);
+  },
+
+  async getPostsFeed(params) {
     const query = GraphQLSchema.getQueryMadeFromParts([
-      GraphQLSchema.getPostsFeedQueryPart({
-        filters: {
-          post_type_ids: [POST_TYPE_MEDIA_ID],
-          entity_names_from: [
-            entityName,
-          ],
-          entity_names_for: [
-            entityName,
-          ],
-        },
-        order_by: '-current_rate',
-        page: 1,
-        per_page: 10,
-      }),
+      api.getPostsFeedQueryPart(params),
     ]);
 
     try {
       const data = await request({ query });
       return data.data.postsFeed;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  getManyUsersQueryPart({
+    overviewType = 'trending',
+    orderBy = '-scaled_social_rate_delta',
+    page = 1,
+    perPage = 10,
+  }) {
+    const params = {
+      filters: {
+        overview_type: overviewType,
+      },
+      order_by: orderBy,
+      page,
+      per_page: perPage,
+    };
+
+    return GraphQLSchema.getManyUsersQueryPart(params);
+  },
+
+  async getManyUsers(params) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      api.getManyUsersQueryPart(params),
+    ]);
+
+    try {
+      const data = await request({ query });
+      return data.data.manyUsers;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getTrendingOrganizations({
+    page = 1,
+    perPage = 10,
+  }) {
+    const query = GraphQLSchema.getManyTrendingOrganizationsQuery(
+      page,
+      perPage,
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getTrendingTags({
+    page = 1,
+    perPage = 10,
+  }) {
+    const query = GraphQLSchema.getManyTrendingTagsQuery(
+      page,
+      perPage,
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getMainPageData({
+    manyUsersParams = {},
+    postsFeedParams = {},
+  }) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      api.getManyUsersQueryPart(manyUsersParams),
+      api.getPostsFeedQueryPart(postsFeedParams),
+    ]);
+
+    try {
+      const result = await Promise.all([
+        request({ query }),
+        api.getTrendingOrganizations({}),
+        api.getTrendingTags({}),
+      ]);
+      return {
+        ...result[0].data,
+        ...result[1],
+        ...result[2],
+      };
     } catch (e) {
       throw e;
     }
@@ -572,14 +680,14 @@ export default {
     }
   },
 
-  async getManyUsers({
+  async getManyUsersAirdrop({
     airdropFilter,
     orderBy,
     page,
     perPage,
     isMyself,
   }) {
-    const query = GraphQLSchema.getManyUsers(
+    const query = GraphQLSchema.getManyUsersAirdrop(
       airdropFilter,
       orderBy,
       page,
@@ -595,3 +703,5 @@ export default {
     }
   },
 };
+
+export default api;
