@@ -2,28 +2,30 @@ import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useState, useEffect, Fragment } from 'react';
-import Tabs, { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from './Tabs';
-import FeedView from '../FeedView';
-import graphql from '../../../api/graphql';
-import { MAIN_FEED_ID } from '../../../utils/feed';
-import { addPostsAndComments } from '../../../actions/feed';
-import { addUsers } from '../../../actions/users';
-import { addErrorNotification } from '../../../actions/notifications';
-import withLoader from '../../../utils/withLoader';
-import EntryListSection from '../../EntryListSection';
-import { getUsersByIds } from '../../../store/users';
-import urls from '../../../utils/urls';
-import { getUserName } from '../../../utils/user';
-import { getOrganizationByIds } from '../../../store/organizations';
-import { addOrganizations } from '../../../actions/organizations';
-import { addTags } from '../../../actions/tags';
-import { getTagsByTitle } from '../../../store/tags';
-import CommunityBanner from '../../CommunityBanner';
-import { sortByRate } from '../../../utils/list';
+import Tabs, { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
+import FeedView from '../../components/Feed/FeedView';
+import graphql from '../../api/graphql';
+import { MAIN_FEED_ID } from '../../utils/feed';
+import { addPostsAndComments } from '../../actions/feed';
+import { addUsers } from '../../actions/users';
+import { addErrorNotification } from '../../actions/notifications';
+import withLoader from '../../utils/withLoader';
+import EntryListSection from '../..//components/EntryListSection';
+import { getUsersByIds } from '../../store/users';
+import urls from '../../utils/urls';
+import { getUserName } from '../../utils/user';
+import { getOrganizationByIds } from '../../store/organizations';
+import { addOrganizations } from '../../actions/organizations';
+import { addTags } from '../../actions/tags';
+import { getTagsByTitle } from '../../store/tags';
+import CommunityBanner from '../../components/CommunityBanner';
+import { sortByRate } from '../../utils/list';
+import PostsGrid from '../../components/PostsGrid';
+import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG } from '../../utils/posts';
 
 const SIDEBAR_ENTRY_LIST_LIMIT = 8;
 
-const FeedMain = ({
+const Guest = ({
   dispatch, users, organizations, tags,
 }) => {
   const [state, setState] = useState({
@@ -49,7 +51,18 @@ const FeedMain = ({
       ids: [],
       metadata: {},
     },
+    topPosts: [],
   });
+
+  const getTopPosts = async (activeTabId) => {
+    try {
+      const entityName = activeTabId === TAB_ID_PEOPLE ? ENTITY_NAMES_USERS : ENTITY_NAMES_ORG;
+      const data = await withLoader(graphql.getMainPageTopPostsByEntity(entityName));
+      setState(prev => ({ ...prev, topPosts: data.data }));
+    } catch (err) {
+      dispatch(addErrorNotification(err.message));
+    }
+  };
 
   const getFeed = async (page = 1) => {
     setState(prev => ({
@@ -157,10 +170,6 @@ const FeedMain = ({
     getFeed(state.feed.page + 1);
   };
 
-  useEffect(() => {
-    getFeed(1);
-  }, [state.activeTabId]);
-
   const usersSection = (
     <EntryListSection
       title={state.activeTabId === TAB_ID_COMMUNITIES ? 'Recent Top Authors' : 'Top Users of the Day'}
@@ -213,77 +222,89 @@ const FeedMain = ({
     />
   );
 
+  useEffect(() => {
+    getFeed(1);
+    getTopPosts(state.activeTabId);
+  }, [state.activeTabId]);
+
   return (
     <Fragment>
-      <div className="grid grid_content">
-        <div className="grid__item grid__item_main">
-          <Tabs
-            activeTabId={state.activeTabId}
-            onClickItem={(activeTabId) => {
-              setState(prev => ({ ...prev, activeTabId }));
-            }}
-          />
+      <PostsGrid posts={state.topPosts} />
+
+      <div className="content">
+        <div className="content__inner">
+          <div className="grid grid_content">
+            <div className="grid__item grid__item_main">
+              <Tabs
+                activeTabId={state.activeTabId}
+                onClickItem={(activeTabId) => {
+                  setState(prev => ({ ...prev, activeTabId }));
+                }}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+        <div className="content__inner">
+          <div className="grid grid_content">
+            <div className="grid__item grid__item_main">
+              <FeedView
+                feedTypeId={MAIN_FEED_ID}
+                postIds={state.feed.postsIds}
+                loading={state.feed.loading}
+                hasMore={state.feed.hasMore}
+                onClickLoadMore={onClickLoadMore}
+              />
+            </div>
+            <div className="grid__item grid__item_side">
+              <CommunityBanner
+                forCommunity={state.activeTabId === TAB_ID_COMMUNITIES}
+              />
 
-      <div className="grid grid_content">
-        <div className="grid__item grid__item_main">
-          <FeedView
-            feedTypeId={MAIN_FEED_ID}
-            postIds={state.feed.postsIds}
-            loading={state.feed.loading}
-            hasMore={state.feed.hasMore}
-            onClickLoadMore={onClickLoadMore}
-          />
-        </div>
-        <div className="grid__item grid__item_side">
-          <CommunityBanner
-            forCommunity={state.activeTabId === TAB_ID_COMMUNITIES}
-          />
+              {state.activeTabId === TAB_ID_COMMUNITIES ? (
+                <Fragment>
+                  {communitiesSections}
+                  {usersSection}
+                </Fragment>
+              ) : (
+                <Fragment>
+                  {usersSection}
+                  {communitiesSections}
+                </Fragment>
+              )}
 
-          {state.activeTabId === TAB_ID_COMMUNITIES ? (
-            <Fragment>
-              {communitiesSections}
-              {usersSection}
-            </Fragment>
-          ) : (
-            <Fragment>
-              {usersSection}
-              {communitiesSections}
-            </Fragment>
-          )}
-
-          <EntryListSection
-            title="Popular Today"
-            limit={SIDEBAR_ENTRY_LIST_LIMIT}
-            data={sortByRate(getTagsByTitle(tags, state.feed.tagsIds)).map(tag => ({
-              id: tag.id,
-              url: urls.getTagUrl(tag.title),
-              title: `#${tag.title}`,
-              nickname: pluralize('posts', tag.currentPostsAmount, true),
-              currentRate: tag.currentRate,
-              disableSign: true,
-              disableAvatar: true,
-            }))}
-            popupData={getTagsByTitle(tags, state.tagsPopup.ids).map(tag => ({
-              id: tag.id,
-              url: urls.getTagUrl(tag.title),
-              title: `#${tag.title}`,
-              nickname: pluralize('posts', tag.currentPostsAmount, true),
-              currentRate: tag.currentRate,
-              disableSign: true,
-              disableAvatar: true,
-            }))}
-            popupMetadata={state.tagsPopup.metadata}
-            onChangePage={getTagsForPopup}
-          />
+              <EntryListSection
+                title="Popular Today"
+                limit={SIDEBAR_ENTRY_LIST_LIMIT}
+                data={sortByRate(getTagsByTitle(tags, state.feed.tagsIds)).map(tag => ({
+                  id: tag.id,
+                  url: urls.getTagUrl(tag.title),
+                  title: `#${tag.title}`,
+                  nickname: pluralize('posts', tag.currentPostsAmount, true),
+                  currentRate: tag.currentRate,
+                  disableSign: true,
+                  disableAvatar: true,
+                }))}
+                popupData={getTagsByTitle(tags, state.tagsPopup.ids).map(tag => ({
+                  id: tag.id,
+                  url: urls.getTagUrl(tag.title),
+                  title: `#${tag.title}`,
+                  nickname: pluralize('posts', tag.currentPostsAmount, true),
+                  currentRate: tag.currentRate,
+                  disableSign: true,
+                  disableAvatar: true,
+                }))}
+                popupMetadata={state.tagsPopup.metadata}
+                onChangePage={getTagsForPopup}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </Fragment>
   );
 };
 
-FeedMain.propTypes = {
+Guest.propTypes = {
   dispatch: PropTypes.func.isRequired,
   users: PropTypes.objectOf(PropTypes.any).isRequired,
   organizations: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -294,4 +315,4 @@ export default connect(state => ({
   users: state.users,
   organizations: state.organizations,
   tags: state.tags,
-}))(FeedMain);
+}))(Guest);

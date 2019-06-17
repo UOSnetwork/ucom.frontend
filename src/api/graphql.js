@@ -8,7 +8,7 @@ import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
 import { LIST_ORDER_BY, LIST_PER_PAGE } from '../utils/list';
-import { POST_TYPE_MEDIA_ID } from '../utils/posts';
+import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
 
@@ -322,6 +322,32 @@ export default {
     try {
       const data = await request({ query });
       return data.data.tagWallFeed;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getMainPageTopPostsByEntity(entityName = ENTITY_NAMES_USERS) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      GraphQLSchema.getPostsFeedQueryPart({
+        filters: {
+          post_type_ids: [POST_TYPE_MEDIA_ID],
+          entity_names_from: [
+            entityName,
+          ],
+          entity_names_for: [
+            entityName,
+          ],
+        },
+        order_by: '-current_rate',
+        page: 1,
+        per_page: 10,
+      }),
+    ]);
+
+    try {
+      const data = await request({ query });
+      return data.data.postsFeed;
     } catch (e) {
       throw e;
     }
