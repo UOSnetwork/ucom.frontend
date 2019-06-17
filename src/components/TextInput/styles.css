@@ -49,3 +49,14 @@
   margin: 12px 0 0;
   color: #d8352f;
 }
+
+.data.withPrefix {
+  display: grid;
+  align-items: center;
+  grid-template-columns: max-content 1fr;
+  grid-gap: 11px;
+}
+
+.prefix {
+  color: #B1B1B1;
+}

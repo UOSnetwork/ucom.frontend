@@ -97,7 +97,7 @@ const urls = {
       return null;
     }
 
-    return `/communities/${id}/edit`;
+    return `/communities/${id}/profile`;
   },
 
   getOverviewCategoryUrl(params = {}) {

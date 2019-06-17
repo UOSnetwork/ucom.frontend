@@ -1,6 +1,6 @@
 import { memoize } from 'lodash';
 
-export const extractHostname = (url) => {
+export const extractHostname = memoize((url) => {
   if (!url) {
     return null;
   }
@@ -19,9 +19,9 @@ export const extractHostname = (url) => {
   const name = hostname.replace('www.', '').split('.');
 
   return name.join('.');
-};
+});
 
-export const extractSitename = (url) => {
+export const extractSitename = memoize((url) => {
   const hostname = extractHostname(url);
 
   if (!hostname) {
@@ -29,7 +29,7 @@ export const extractSitename = (url) => {
   }
 
   return hostname.split('.')[0];
-};
+});
 
 // https://gist.github.com/jpillora/7885636
 /* eslint-disable */
@@ -40,17 +40,17 @@ export const validUrl = memoize((str) => {
 });
 /* eslint-enable */
 
-export const filterURL = (url) => {
+export const filterURL = memoize((url) => {
   if (validUrl(url)) {
     return url;
   }
 
   return '';
-};
+});
 
-export const isHttpsUrl = url => url.indexOf('https://') === 0;
+export const isHttpsUrl = memoize(url => url.indexOf('https://') === 0);
 
-export const getUrlsFromStr = (str = '') => {
+export const getUrlsFromStr = memoize((str = '') => {
   let result = [];
   const matches = str.match(/\bhttps?:\/\/\S+/gi);
 
@@ -59,4 +59,4 @@ export const getUrlsFromStr = (str = '') => {
   }
 
   return result;
-};
+});

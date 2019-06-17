@@ -6,7 +6,7 @@
 .textarea {
   box-sizing: border-box;
   width: 100%;
-  padding: 30px 50px;
+  padding: 15px 16px 17px 16px;
   border: 1px solid #B1B1B1;
   border-radius: 4px;
   line-height: 1.75;
@@ -31,10 +31,4 @@
 .errorMessage {
   margin: 12px 0 0;
   color: #d8352f;
-}
-
-@media (max-width: 1023px) {
-  .textarea {
-    padding: 15px 16px 17px 16px;
-  }
 }

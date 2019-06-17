@@ -4,7 +4,7 @@ import React from 'react';
 import Popup, { Content } from '../../components/Popup';
 import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
-import Profile from '../../components/Profile';
+import Profile from '../../components/Profile/User';
 
 const ProfilePopup = ({ history, user }) => (
   <Popup

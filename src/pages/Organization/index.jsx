@@ -1,52 +1,42 @@
+import { Route, Switch } from 'react-router';
 import { arrayMove } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Footer from '../components/Footer';
-import OrganizationHeader from '../components/Organization/OrganizationHeader';
-import { getOrganization, addOrganizations } from '../actions/organizations';
-import { selectUser } from '../store/selectors';
-import LayoutBase from '../components/Layout/LayoutBase';
-import { getOrganizationById } from '../store/organizations';
-import { getPostById } from '../store/posts';
-import Popup from '../components/Popup';
-import ModalContent from '../components/ModalContent';
-import Post from '../components/Feed/Post/Post';
-import urls from '../utils/urls';
-import { fetchPost } from '../actions/posts';
-import Feed from '../components/Feed/FeedUser';
-import { ORGANIZATION_FEED_ID } from '../utils/feed';
-import OrganizationAdmins from '../components/Organization/OrganizationAdmins';
-import OrganizationSources from '../components/Organization/OrganizationSources';
-import { extractHostname } from '../utils/url';
-import EntrySocialNetworks from '../components/EntrySocialNetworks';
-import EntryLocation from '../components/EntryLocation';
-import EntryCreatedAt from '../components/EntryCreatedAt';
-import EntryContacts from '../components/EntryContacts';
-import EntryAbout from '../components/EntryAbout';
-import Discussions from '../components/Discussions';
-import { getUserName } from '../utils/user';
-import { validateDiscationPostUrl, userIsTeam } from '../utils/organization';
-import { setDiscussions } from '../actions/organization';
-import loader from '../utils/loader';
+import Footer from '../../components/Footer';
+import OrganizationHeader from '../../components/Organization/OrganizationHeader';
+import { getOrganization, addOrganizations } from '../../actions/organizations';
+import { selectUser } from '../../store/selectors';
+import LayoutBase from '../../components/Layout/LayoutBase';
+import { getOrganizationById } from '../../store/organizations';
+import urls from '../../utils/urls';
+import Feed from '../../components/Feed/FeedUser';
+import { ORGANIZATION_FEED_ID } from '../../utils/feed';
+import OrganizationAdmins from '../../components/Organization/OrganizationAdmins';
+import OrganizationSources from '../../components/Organization/OrganizationSources';
+import { extractHostname } from '../../utils/url';
+import EntrySocialNetworks from '../../components/EntrySocialNetworks';
+import EntryLocation from '../../components/EntryLocation';
+import EntryCreatedAt from '../../components/EntryCreatedAt';
+import EntryContacts from '../../components/EntryContacts';
+import EntryAbout from '../../components/EntryAbout';
+import Discussions from '../../components/Discussions';
+import { getUserName } from '../../utils/user';
+import { validateDiscationPostUrl, userIsTeam } from '../../utils/organization';
+import { setDiscussions } from '../../actions/organization';
+import PostPopup from './Post';
+import ProfilePopup from './Profile';
+import withLoader from '../../utils/withLoader';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
-  const postId = +props.match.params.postId;
   const isExternalSource = source => source.sourceType === 'external';
 
   useEffect(() => {
-    props.dispatch(getOrganization(organizationId));
+    withLoader(props.dispatch(getOrganization(organizationId)));
   }, [organizationId]);
 
-  useEffect(() => {
-    if (postId) {
-      props.dispatch(fetchPost(postId));
-    }
-  }, [postId]);
-
   const organization = getOrganizationById(props.organizations, organizationId);
-  const post = getPostById(props.posts, postId);
 
   if (!organization || !organization.discussions) {
     return null;
@@ -66,13 +56,10 @@ const OrganizationPage = (props) => {
 
   return (
     <LayoutBase gray>
-      {Boolean(post) &&
-        <Popup onClickClose={() => props.history.push(urls.getOrganizationUrl(organizationId))}>
-          <ModalContent mod="post">
-            <Post id={post.id} postTypeId={post.postTypeId} />
-          </ModalContent>
-        </Popup>
-      }
+      <Switch>
+        <Route path="/communities/:organizationId/profile" component={ProfilePopup} />
+        <Route path="/communities/:organizationId/:postId" component={PostPopup} />
+      </Switch>
 
       <div className="layout layout_profile">
         <div className="layout__header">
@@ -110,26 +97,22 @@ const OrganizationPage = (props) => {
             validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
             newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
             onSubmit={async (postId) => {
-              loader.start();
-              await props.dispatch(setDiscussions({
+              await withLoader(props.dispatch(setDiscussions({
                 organizationId,
                 discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
-              }));
-              await props.dispatch(getOrganization(organizationId));
-              loader.done();
+              })));
+              await withLoader(props.dispatch(getOrganization(organizationId)));
             }}
             onSortEnd={async (e) => {
-              loader.start();
               const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
               props.dispatch(addOrganizations([{
                 id: organizationId,
                 discussions,
               }]));
-              await props.dispatch(setDiscussions({
+              await withLoader(props.dispatch(setDiscussions({
                 organizationId,
                 discussions: discussions.map(i => ({ id: i.id })),
-              }));
-              loader.done();
+              })));
             }}
             items={organization.discussions.map(item => ({
               id: item.id,
@@ -139,13 +122,11 @@ const OrganizationPage = (props) => {
               authorUrl: urls.getUserUrl(item.user.id),
               commentCount: item.commentsCount,
               onClickRemove: async (id) => {
-                loader.start();
-                await props.dispatch(setDiscussions({
+                await withLoader(props.dispatch(setDiscussions({
                   organizationId,
                   discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
-                }));
-                await props.dispatch(getOrganization(organizationId));
-                loader.done();
+                })));
+                await withLoader(props.dispatch(getOrganization(organizationId)));
               },
             }))}
           />
@@ -171,7 +152,6 @@ OrganizationPage.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   organizations: PropTypes.objectOf(PropTypes.any).isRequired,
-  posts: PropTypes.objectOf(PropTypes.any).isRequired,
   dispatch: PropTypes.func.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number,

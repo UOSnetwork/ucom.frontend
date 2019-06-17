@@ -11,14 +11,14 @@ import TextInput from '../TextInput';
 import Textarea from '../TextareaAutosize';
 import Button from '../Button/index';
 import IconRemove from '../Icons/Remove';
-import VerticalMenu from '../VerticalMenu';
 import UserPick from '../UserPick/UserPick';
 import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
-import validator from '../../utils/validate';
+import { validateUser } from '../../utils/validate';
 import { updateUser } from '../../actions/users';
 import { addErrorNotification, addSuccessNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
+import Menu from './Menu';
 
 const USER_EDITABLE_PROPS = [
   'avatarFilename',
@@ -29,7 +29,7 @@ const USER_EDITABLE_PROPS = [
 ];
 
 const Profile = ({
-  user, updateUser, addErrorNotification, addSuccessNotification, onSuccess, isNewUser,
+  user, updateUser, addErrorNotification, addSuccessNotification, onSuccess,
 }) => {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -38,29 +38,7 @@ const Profile = ({
   const [avatarPreview, setAvatarPreview] = useState(undefined);
 
   const validate = (data) => {
-    const errors = validator(data, {
-      personalWebsiteUrl: {
-        url: true,
-      },
-      firstName: {
-        presence: {
-          allowEmpty: false,
-        },
-      },
-      about: {
-        length: {
-          maximum: 1024,
-        },
-      },
-      usersSources: {
-        array: {
-          sourceUrl: {
-            presence: true,
-            url: true,
-          },
-        },
-      },
-    });
+    const errors = validateUser(data);
 
     setErrors(errors);
 
@@ -110,30 +88,13 @@ const Profile = ({
     >
       <div className={`${gridStyles.grid} ${gridStyles.profile}`}>
         <div className={gridStyles.sidebar}>
-          <div className={profileStyles.menu}>
-            <VerticalMenu
-              sections={[
-                { title: 'Personal Info', name: 'personalInfo' },
-                { title: 'About Me', name: 'aboutMe' },
-                { title: 'Links', name: 'links' },
-              ]}
-              scrollerOptions={{
-                spy: true,
-                duration: 500,
-                delay: 100,
-                offset: -73,
-                smooth: true,
-                containerId: 'profile-popup',
-              }}
-            />
-          </div>
-          <Button
-            strech
-            red={isNewUser}
-            type="submit"
-          >
-            {isNewUser ? 'Create' : 'Save Changes'}
-          </Button>
+          <Menu
+            sections={[
+              { title: 'Personal Info', name: 'personalInfo' },
+              { title: 'About Me', name: 'aboutMe' },
+              { title: 'Links', name: 'links' },
+            ]}
+          />
         </div>
         <div className={gridStyles.content}>
           <h2 className={profileStyles.title}>Your Profile</h2>
@@ -149,7 +110,7 @@ const Profile = ({
           >
             <h3 className={profileStyles.subTitle}>Personal Info</h3>
 
-            <div className={profileStyles.field}>
+            <div className={`${profileStyles.field} ${profileStyles.fieldUpload}`}>
               <div className={profileStyles.label}>Photo</div>
               <div className={profileStyles.data}>
                 <DropzoneWrapper
@@ -303,7 +264,6 @@ Profile.propTypes = {
     })),
     personalWebsiteUrl: PropTypes.string,
   }),
-  isNewUser: PropTypes.bool,
   updateUser: PropTypes.func.isRequired,
   addErrorNotification: PropTypes.func.isRequired,
   addSuccessNotification: PropTypes.func.isRequired,
@@ -312,7 +272,6 @@ Profile.propTypes = {
 
 Profile.defaultProps = {
   user: undefined,
-  isNewUser: false,
 };
 
 export default connect(state => ({

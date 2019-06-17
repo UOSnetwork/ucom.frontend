@@ -1,3 +1,4 @@
+import { memoize } from 'lodash';
 import api from '../api';
 import {
   SOURCES_ID_FACEBOOK,
@@ -5,10 +6,11 @@ import {
   SOURCES_ID_MEDIUM,
   SOURCES_ID_TWITTER,
   SOURCES_ID_GITHUB,
-  USERS_TEAM_STATUS_ID_PENDING,
   USERS_TEAM_STATUS_ID_CONFIRMED,
   USERS_TEAM_STATUS_ID_DECLINED,
 } from '../store/organization';
+
+export const SOURCE_TYPE_EXTERNAL = 'external';
 
 export const getOrganizationUrl = (id) => {
   if (!id) {
@@ -45,12 +47,8 @@ export const getSourceNameById = (id) => {
   }
 };
 
-export const getUsersTeamStatusById = (id) => {
+export const getUsersTeamStatusById = memoize((id) => {
   switch (id) {
-    case USERS_TEAM_STATUS_ID_PENDING: {
-      return 'Pending';
-    }
-
     case USERS_TEAM_STATUS_ID_CONFIRMED: {
       return 'Confirmed';
     }
@@ -60,10 +58,10 @@ export const getUsersTeamStatusById = (id) => {
     }
 
     default: {
-      return null;
+      return 'Pending';
     }
   }
-};
+});
 
 export const userIsAdmin = (user, organization) => user && organization && +organization.userId === +user.id;
 

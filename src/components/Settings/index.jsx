@@ -63,7 +63,7 @@ const Settings = (props) => {
       <Popup
         id="settings-popup"
         onClickClose={() => props.dispatch(settingsHide())}
-        paddingBottom="100vh"
+        paddingBottom="70vh"
       >
         <Content
           fixWidth

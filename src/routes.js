@@ -1,7 +1,6 @@
 import HomePage, { getHomePageData } from './pages/Home';
 import UserPage, { getUserPageData } from './pages/User/index';
 import EditPostPage from './pages/EditPost';
-import ProfilePage from './pages/Profile';
 import PostPage, { PostEosPage, getPostPageData, getPostEosPageData } from './pages/Post';
 import OverviewPage, { getPageData } from './pages/Overview';
 import Offer, { getPostOfferData } from './pages/Offer';
@@ -91,10 +90,6 @@ export default [{
   component: RegistrationPage,
 }, {
   exact: true,
-  path: '/profile',
-  component: ProfilePage,
-}, {
-  exact: true,
   path: '/users',
   component: UsersPage,
 }, {
@@ -114,16 +109,16 @@ export default [{
   path: '/communities/new',
   component: OrganizationsCreatePage,
 }, {
-  exact: true,
+  exact: false,
   path: '/communities/:id',
   component: OrganizationPage,
 }, {
   exact: true,
-  path: '/communities/:id/edit',
-  component: OrganizationsCreatePage,
+  path: '/communities/:id/:postId',
+  component: OrganizationPage,
 }, {
   exact: true,
-  path: '/communities/:id/:postId',
+  path: '/communities/:id/profile',
   component: OrganizationPage,
 }, {
   exact: true,

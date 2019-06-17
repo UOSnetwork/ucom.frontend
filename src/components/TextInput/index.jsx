@@ -5,7 +5,7 @@ import IconError from '../Icons/InputError';
 import styles from './styles.css';
 
 const TextInput = ({
-  label, value, submited, onChange, maxLength, type, disabled, placeholder, error,
+  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix,
 }) => {
   const [dirty, setDirty] = useState(false);
 
@@ -21,7 +21,15 @@ const TextInput = ({
         {label &&
           <div className={styles.label}>{label}</div>
         }
-        <div className={styles.data}>
+        <div
+          className={classNames({
+            [styles.data]: true,
+            [styles.withPrefix]: Boolean(prefix),
+          })}
+        >
+          {prefix &&
+            <span className={styles.prefix}>{prefix}</span>
+          }
           <input
             type={type}
             value={value || ''}

@@ -300,13 +300,13 @@ class Api {
 
   async createOrganization(data) {
     const url = '/api/v1/organizations';
-    const response = await this.actions.post(url, data);
+    const response = await this.actions.post(url, snakes(data));
 
     return response.data;
   }
 
   async updateOrganization(data) {
-    const response = await this.actions.patch(`/api/v1/organizations/${data.id}`, data);
+    const response = await this.actions.patch(`/api/v1/organizations/${data.id}`, snakes(data));
 
     return response.data;
   }

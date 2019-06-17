@@ -11,7 +11,6 @@ import users from './users';
 import comments from './comments';
 import organizations from './organizations';
 import menuPopup from './menuPopup';
-import userForm from './userForm';
 import governance from './governance/index';
 import registration from './registration';
 import mainPostGroup from './mainPostGroup';
@@ -37,7 +36,6 @@ export const createStore = () => {
     comments,
     organizations,
     menuPopup,
-    userForm,
     governance,
     registration,
     mainPostGroup,
