@@ -51,6 +51,7 @@ const posts = (state = getInitialState(), action) => {
 };
 
 export const getPostById = (posts, postId) => posts.data[postId];
+export const getPostByIds = (posts, postIds) => postIds.map(id => posts.data[id]);
 
 export const getPostsByUserId = (posts, userId) => (
   Object.entries(posts.data)

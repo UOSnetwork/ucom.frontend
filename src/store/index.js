@@ -22,9 +22,11 @@ import tagsFeed from './tagsFeed';
 import user from './user';
 import settings from './settings';
 import walletSimple from './walletSimple';
+import mainPage from './mainPage';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    mainPage,
     settings,
     user,
     post,
@@ -52,7 +54,6 @@ export const createStore = () => {
 
   if (typeof window !== 'undefined' && window.APP_STATE !== undefined) {
     preloadedState = window.APP_STATE;
-    delete window.APP_STATE;
   }
 
   return redux.createStore(

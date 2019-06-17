@@ -14,6 +14,7 @@ import { getUserName } from '../../utils/user';
 import PostsGrid from '../../components/PostsGrid';
 import withLoader from '../../utils/withLoader';
 import Guest from './Guest';
+import { getPageData } from '../../actions/mainPage';
 
 const HomePage = ({
   mainPosts, user, users, ...props
@@ -97,7 +98,10 @@ HomePage.defaultProps = {
   user: null,
 };
 
-export const getHomePageData = store => store.dispatch(getMainPosts());
+export const getHomePageData = store => Promise.all([
+  store.dispatch(getMainPosts()),
+  store.dispatch(getPageData()),
+]);
 
 export default connect(
   state => ({

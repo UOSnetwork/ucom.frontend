@@ -1,13 +1,10 @@
 import pluralize from 'pluralize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { useState, useEffect, Fragment } from 'react';
-import Tabs, { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
+import React, { useEffect, Fragment } from 'react';
+import Tabs, { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
 import FeedView from '../../components/Feed/FeedView';
-import graphql from '../../api/graphql';
 import { MAIN_FEED_ID } from '../../utils/feed';
-import { addPostsAndComments } from '../../actions/feed';
-import { addUsers } from '../../actions/users';
 import { addErrorNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
 import EntryListSection from '../..//components/EntryListSection';
@@ -15,216 +12,60 @@ import { getUsersByIds } from '../../store/users';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import { getOrganizationByIds } from '../../store/organizations';
-import { addOrganizations } from '../../actions/organizations';
-import { addTags } from '../../actions/tags';
 import { getTagsByTitle } from '../../store/tags';
+import { getPostByIds } from '../../store/posts';
 import CommunityBanner from '../../components/CommunityBanner';
 import { sortByRate } from '../../utils/list';
 import PostsGrid from '../../components/PostsGrid';
-import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../../utils/posts';
+import { getPageData, getFeed, getUsersForPopup, getOrganizationsForPopup, getTagsForPopup, changeTab } from '../../actions/mainPage';
 
 const SIDEBAR_ENTRY_LIST_LIMIT = 8;
 
 const Guest = ({
-  dispatch, users, organizations, tags,
+  posts, users, organizations, tags, state, addErrorNotification, ...props
 }) => {
-  const [state, setState] = useState({
-    activeTabId: TAB_ID_PEOPLE,
-    feed: {
-      userIds: [],
-      postsIds: [],
-      organizationsIds: [],
-      tagsIds: [],
-      loading: false,
-      hasMore: false,
-      page: 1,
-    },
-    usersPopup: {
-      ids: [],
-      metadata: {},
-    },
-    organizationsPopup: {
-      ids: [],
-      metadata: {},
-    },
-    tagsPopup: {
-      ids: [],
-      metadata: {},
-    },
-    topPosts: [],
-  });
-
-  const getTopPosts = async () => {
+  const getPageData = async (tabId) => {
     try {
-      const data = await withLoader(graphql.getPostsFeed({
-        postTypeIds: [POST_TYPE_MEDIA_ID],
-        entityNamesFrom: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-        entityNamesFor: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-        orderBy: '-current_rate',
-      }));
-      setState(prev => ({ ...prev, topPosts: data.data }));
+      await withLoader(props.getPageData(tabId));
     } catch (err) {
-      dispatch(addErrorNotification(err.message));
+      console.error(err);
+      addErrorNotification(err.message);
     }
   };
 
-  const getPageData = async () => {
-    setState(prev => ({
-      ...prev,
-      feed: {
-        ...prev.feed,
-        loading: true,
-      },
-    }));
-
+  const getFeed = async (page, tabId) => {
     try {
-      const data = await withLoader(graphql.getMainPageData({
-        postsFeedParams: {
-          page: 1,
-          postTypeIds: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
-          entityNamesFrom: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-          entityNamesFor: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-          orderBy: '-id',
-          commentsPage: 1,
-          commentsPerPage: 3,
-        },
-      }));
-
-      const {
-        postsFeed, manyUsers, manyOrganizations, manyTags,
-      } = data;
-
-      setState(prev => ({
-        ...prev,
-        feed: {
-          ...prev.feed,
-          page: 1,
-          hasMore: postsFeed.metadata.hasMore,
-          postsIds: postsFeed.data.map(i => i.id),
-          userIds: manyUsers.data.map(i => i.id),
-          organizationsIds: manyOrganizations.data.map(i => i.id),
-          tagsIds: manyTags.data.map(i => i.title),
-        },
-        usersPopup: {
-          ids: manyUsers.data.map(i => i.id),
-          metadata: manyUsers.metadata,
-        },
-        organizationsPopup: {
-          ids: manyOrganizations.data.map(i => i.id),
-          metadata: manyOrganizations.metadata,
-        },
-        tagsPopup: {
-          ids: manyTags.data.map(i => i.title),
-          metadata: manyTags.metadata,
-        },
-      }));
-
-      dispatch(addPostsAndComments(postsFeed.data));
-      dispatch(addUsers(manyUsers.data));
-      dispatch(addOrganizations(manyOrganizations.data));
-      dispatch(addTags(manyTags.data));
+      await withLoader(props.getFeed(tabId, page));
     } catch (err) {
-      dispatch(addErrorNotification(err.message));
+      console.error(err);
+      addErrorNotification(err.message);
     }
-
-    setState(prev => ({
-      ...prev,
-      feed: {
-        ...prev.feed,
-        loading: false,
-      },
-    }));
-  };
-
-  const getFeed = async (page) => {
-    setState(prev => ({
-      ...prev,
-      feed: {
-        ...prev.feed,
-        loading: true,
-      },
-    }));
-
-    try {
-      const postsFeed = await withLoader(graphql.getPostsFeed({
-        page,
-        postTypeIds: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
-        entityNamesFrom: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-        entityNamesFor: state.activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-        orderBy: '-id',
-        commentsPage: 1,
-        commentsPerPage: 3,
-      }));
-
-      setState(prev => ({
-        ...prev,
-        feed: {
-          ...prev.feed,
-          page,
-          hasMore: postsFeed.metadata.hasMore,
-          postsIds: prev.feed.postsIds.concat(postsFeed.data.map(i => i.id)),
-        },
-      }));
-
-      dispatch(addPostsAndComments(postsFeed.data));
-    } catch (err) {
-      dispatch(addErrorNotification(err.message));
-    }
-
-    setState(prev => ({
-      ...prev,
-      feed: {
-        ...prev.feed,
-        loading: false,
-      },
-    }));
   };
 
   const getUsersForPopup = async (page) => {
     try {
-      const data = await withLoader(graphql.getManyUsers({ page }));
-      setState(prev => ({
-        ...prev,
-        usersPopup: {
-          ids: data.data.map(user => user.id),
-          metadata: data.metadata,
-        },
-      }));
-      dispatch(addUsers(data.data));
+      await withLoader(props.getUsersForPopup(page));
     } catch (err) {
-      dispatch(addErrorNotification(err.message));
+      console.error(err);
+      addErrorNotification(err.message);
     }
   };
 
   const getOrganizationsForPopup = async (page) => {
     try {
-      const data = await withLoader(graphql.getTrendingOrganizations({ page }));
-      setState(prev => ({
-        ...prev,
-        organizationsPopup: {
-          ids: data.manyOrganizations.data.map(org => org.id),
-          metadata: data.manyOrganizations.metadata,
-        },
-      }));
-      dispatch(addOrganizations(data.manyOrganizations.data));
+      await withLoader(props.getOrganizationsForPopup(page));
     } catch (err) {
-      dispatch(addErrorNotification(err.message));
+      console.error(err);
+      addErrorNotification(err.message);
     }
   };
 
   const getTagsForPopup = async (page) => {
     try {
-      const data = await withLoader(graphql.getTrendingTags({ page }));
-      setState(prev => ({
-        ...prev,
-        tagsPopup: {
-          ids: data.manyTags.data.map(tag => tag.title),
-          metadata: data.manyTags.metadata,
-        },
-      }));
-      dispatch(addTags(data.manyTags.data));
+      await withLoader(props.getTagsForPopup(page));
     } catch (err) {
-      dispatch(addErrorNotification(err.message));
+      console.error(err);
+      addErrorNotification(err.message);
     }
   };
 
@@ -281,17 +122,20 @@ const Guest = ({
   );
 
   const onClickLoadMore = () => {
-    getFeed(state.feed.page + 1);
+    getFeed(state.feed.page + 1, state.activeTabId);
   };
 
   useEffect(() => {
-    getPageData();
-    getTopPosts();
+    if (window.APP_STATE) {
+      delete window.APP_STATE;
+    } else {
+      getPageData(state.activeTabId);
+    }
   }, [state.activeTabId]);
 
   return (
     <Fragment>
-      <PostsGrid posts={state.topPosts} />
+      <PostsGrid posts={getPostByIds(posts, state.topPostsIds)} />
 
       <div className="content">
         <div className="content__inner">
@@ -300,7 +144,7 @@ const Guest = ({
               <Tabs
                 activeTabId={state.activeTabId}
                 onClickItem={(activeTabId) => {
-                  setState(prev => ({ ...prev, activeTabId }));
+                  props.changeTab(activeTabId);
                 }}
               />
             </div>
@@ -367,14 +211,32 @@ const Guest = ({
 };
 
 Guest.propTypes = {
-  dispatch: PropTypes.func.isRequired,
   users: PropTypes.objectOf(PropTypes.any).isRequired,
   organizations: PropTypes.objectOf(PropTypes.any).isRequired,
   tags: PropTypes.objectOf(PropTypes.any).isRequired,
+  posts: PropTypes.objectOf(PropTypes.any).isRequired,
+  state: PropTypes.objectOf(PropTypes.any).isRequired,
+  getPageData: PropTypes.func.isRequired,
+  getFeed: PropTypes.func.isRequired,
+  getUsersForPopup: PropTypes.func.isRequired,
+  getOrganizationsForPopup: PropTypes.func.isRequired,
+  getTagsForPopup: PropTypes.func.isRequired,
+  changeTab: PropTypes.func.isRequired,
+  addErrorNotification: PropTypes.func.isRequired,
 };
 
 export default connect(state => ({
   users: state.users,
   organizations: state.organizations,
   tags: state.tags,
-}))(Guest);
+  state: state.mainPage,
+  posts: state.posts,
+}), {
+  getPageData,
+  getFeed,
+  getUsersForPopup,
+  getOrganizationsForPopup,
+  getTagsForPopup,
+  changeTab,
+  addErrorNotification,
+})(Guest);
