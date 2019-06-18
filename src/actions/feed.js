@@ -24,11 +24,7 @@ export const feedSetSideUsers = payload => ({ type: 'POSTS_FEED_SET_SIDE_USERS',
 export const feedSetSideOrganizations = payload => ({ type: 'POSTS_FEED_SET_SIDE_ORGANIZATIONS', payload });
 export const feedSetSideTags = payload => ({ type: 'POSTS_FEED_SET_SIDE_TAGS', payload });
 
-
-export const parseFeedData = ({
-  posts,
-  metadata,
-}) => (dispatch) => {
+export const addPostsAndComments = (posts = []) => (dispatch) => {
   posts.forEach((post) => {
     if (post.comments) {
       dispatch(commentsAddContainerData({
@@ -38,12 +34,18 @@ export const parseFeedData = ({
         comments: post.comments.data,
         metadata: post.comments.metadata,
       }));
-
       delete post.comments;
     }
   });
 
   dispatch(addPosts(posts));
+};
+
+export const parseFeedData = ({
+  posts,
+  metadata,
+}) => (dispatch) => {
+  dispatch(addPostsAndComments(posts));
   dispatch(feedAppendPostIds(posts.map(i => i.id)));
   dispatch(feedSetMetadata(metadata));
 };
@@ -130,6 +132,7 @@ export const feedGetPosts = ({
     commentsPerPage: COMMENTS_INITIAL_COUNT_USER_WALL_FEED,
     commentsPage: page,
   };
+
   dispatch(feedSetLoading(true));
 
   try {
@@ -150,6 +153,7 @@ export const feedGetPosts = ({
 
   dispatch(feedSetLoading(false));
 };
+
 export const feedGetSide = ({
   categoryId,
   tab,
@@ -162,7 +166,9 @@ export const feedGetSide = ({
     side,
     postTypeId,
   };
+
   dispatch(feedSetLoading(true));
+
   try {
     const data = await graphql.getOverviewSide(params);
     const payload = data[`many${side}`].data;

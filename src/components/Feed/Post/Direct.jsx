@@ -37,10 +37,7 @@ const Direct = ({
                 post={post}
                 user={owner}
                 userId={owner.id}
-                createdAt={createdAt}
-                postId={post.id}
                 formIsVisible={formIsVisible}
-                feedTypeId={props.feedTypeId}
                 showForm={() => setFormIsVisible(true)}
               />
               <PostFeedContent

@@ -21,19 +21,22 @@ const EntryCard = (props) => {
     <div
       className={classNames({
         [styles.entryCard]: true,
+        [styles.disableAvatar]: props.disableAvatar,
         [styles.withRate]: !props.disableRate,
       })}
     >
-      <div className={styles.userPick}>
-        <LinkTag
-          title={props.title}
-          to={props.url}
-          href={filterURL(props.url)}
-          target={props.isExternal ? '_blank' : undefined}
-        >
-          <UserPick shadow organization={props.organization} src={props.avatarSrc} />
-        </LinkTag>
-      </div>
+      {!props.disableAvatar &&
+        <div className={styles.userPick}>
+          <LinkTag
+            title={props.title}
+            to={props.url}
+            href={filterURL(props.url)}
+            target={props.isExternal ? '_blank' : undefined}
+          >
+            <UserPick shadow organization={props.organization} src={props.avatarSrc} />
+          </LinkTag>
+        </div>
+      }
       <div className={styles.title}>
         <LinkTag
           title={props.title}
@@ -56,7 +59,7 @@ const EntryCard = (props) => {
       </div>
       {!props.disableRate &&
         <div className={styles.rate}>
-          {formatRate(props.currentRate)}°
+          {formatRate(props.currentRate, true)}
         </div>
       }
     </div>
@@ -73,6 +76,7 @@ EntryCard.propTypes = {
   disabledLink: PropTypes.bool,
   disableRate: PropTypes.bool,
   disableSign: PropTypes.bool,
+  disableAvatar: PropTypes.bool,
   isExternal: PropTypes.bool,
 };
 
@@ -83,6 +87,7 @@ EntryCard.defaultProps = {
   disabledLink: false,
   disableRate: false,
   disableSign: false,
+  disableAvatar: false,
   isExternal: false,
   url: undefined,
 };

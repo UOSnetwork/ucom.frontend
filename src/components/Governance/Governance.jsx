@@ -74,7 +74,7 @@ const Governance = ({
   const tableBP = governance.nodes.data[BLOCK_PRODUCERS];
   const tableCN = governance.nodes.data[CALCULATOR_NODES];
   const table = governance.nodes.data[currentNodeVisibility];
-  const currentImportance = user.uosAccountsProperties && Math.ceil(normalizeAmount(user.uosAccountsProperties.scaledImportance));
+  const currentImportance = Math.ceil(normalizeAmount(user.scaledImportance));
   const selectedNodes = rawSelectedNodes[currentNodeVisibility];
   const oldSelectedNodes = governance.nodes.selectedData[currentNodeVisibility];
 

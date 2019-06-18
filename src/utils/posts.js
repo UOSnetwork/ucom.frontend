@@ -2,13 +2,21 @@ import { truncate, memoize } from 'lodash';
 import { removeLineBreaksMultipleSpacesAndTrim } from '../utils/text';
 import urls from './urls';
 
+const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
+const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
+
+// TODO: Move all constants to utils/constants.js
+
 export const UPVOTE_STATUS = 'upvote';
 export const DOWNVOTE_STATUS = 'downvote';
 export const NOVOTE_STATUS = 'no_vote';
 
-export const POST_TYPE_MEDIA_ID = 1;
+export const ENTITY_NAMES_USERS = EntityNames.USERS;
+export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
+
+export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
+export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
 export const POST_TYPE_OFFER_ID = 2;
-export const POST_TYPE_DIRECT_ID = 10;
 export const POST_TYPE_REPOST_ID = 11;
 
 export const POSTS_CATREGORIES_HOT_ID = 1;

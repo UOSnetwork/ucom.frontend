@@ -11,6 +11,11 @@
   grid-template-columns: 36px 1fr max-content;
 }
 
+.entryCard.disableAvatar .title,
+.entryCard.disableAvatar .nickname {
+  grid-column-start: 1;
+}
+
 .userPick {
   grid-row-start: 1;
   grid-row-end: 3;

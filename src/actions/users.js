@@ -198,7 +198,7 @@ export const unfollowUser = ({
   }
 };
 
-export const getManyUsers = ({
+export const getManyUsersAirdrop = ({
   airdropFilter,
   orderBy,
   page,
@@ -206,7 +206,7 @@ export const getManyUsers = ({
   isMyself,
 }) => async (dispatch) => {
   try {
-    const data = await graphql.getManyUsers({
+    const data = await graphql.getManyUsersAirdrop({
       airdropFilter,
       orderBy,
       page,

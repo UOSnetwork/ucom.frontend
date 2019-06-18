@@ -4,11 +4,12 @@ import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
 } from '../store/notifications';
+import { ERROR_SERVER } from '../utils/constants';
 
 export const addNotification = payload => ({ type: 'ADD_NOTIFICATION', payload });
 export const closeNotification = payload => ({ type: 'CLOSE_NOTIFICATION', payload });
 
-export const addErrorNotification = message => (dispatch) => {
+export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
   dispatch(addNotification({
     message,
     title: 'Error',

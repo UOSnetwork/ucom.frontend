@@ -1,4 +1,4 @@
-:local(.button) {
+.button {
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -18,64 +18,64 @@
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
-:local(.button:hover) {
+.button:hover {
   border-color: #000;
   text-decoration: none;
 }
 
-:local(.button.strech) {
+.button.strech {
   width: 100%;
 }
 
-:local(.button.grayBorder) {
+.button.grayBorder {
   border-color: #ddd;
 }
 
-:local(.button.grayBorder:hover) {
+.button.grayBorder:hover {
   border-color: #000;
 }
 
-:local(.button.red) {
+.button.red {
   border-color: #D8352F;
   background: #D8352F;
   color: #fff;
 }
 
-:local(.button.red:hover) {
+.button.red:hover {
   border-color: #C32924;
   background: #C32924;
 }
 
-:local(.button.transparent) {
+.button.transparent {
   border-color: transparent;
 }
 
-:local(.button.transparent:hover) {
+.button.transparent:hover {
   border-color: transparent;
   color: #D8352F;
 }
 
-:local(.button.disabled) {
+.button.disabled {
   opacity: 0.3;
   cursor: default;
 }
 
-:local(.button.cap) {
+.button.cap {
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 0.06em;
 }
 
-:local(.button.big) {
+.button.big {
   height: 60px;
 }
 
-:local(.button.small) {
+.button.small {
   height: 40px;
   padding: 0 15px;
 }
 
-:local(.inner) {
+.inner {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

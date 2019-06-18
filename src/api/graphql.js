@@ -8,6 +8,7 @@ import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
 import { LIST_ORDER_BY, LIST_PER_PAGE } from '../utils/list';
+import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
 
@@ -39,12 +40,12 @@ const request = async (data, extraOptions = {}) => {
       throw resp;
     }
     return humps(resp.data);
-  } catch (e) {
-    throw e;
+  } catch (err) {
+    throw err;
   }
 };
 
-export default {
+const api = {
   async getUserPageData({
     userIdentity,
     trustedByOrderBy = LIST_ORDER_BY,
@@ -326,6 +327,165 @@ export default {
     }
   },
 
+  getPostsFeedQueryPart({
+    postTypeIds = [POST_TYPE_MEDIA_ID],
+    entityNamesFrom = [ENTITY_NAMES_USERS],
+    entityNamesFor = [ENTITY_NAMES_USERS],
+    orderBy = '-current_rate',
+    page = 1,
+    perPage = 10,
+    commentsPage,
+    commentsPerPage = 10,
+  }) {
+    const params = {
+      filters: {
+        post_type_ids: postTypeIds,
+        entity_names_from: entityNamesFrom,
+        entity_names_for: entityNamesFor,
+      },
+      order_by: orderBy,
+      page,
+      per_page: perPage,
+    };
+
+    const include = commentsPage ? {
+      comments: {
+        page: commentsPage,
+        per_page: commentsPerPage,
+      },
+    } : undefined;
+
+    return GraphQLSchema.getPostsFeedQueryPart(params, include);
+  },
+
+  async getPostsFeed(params) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      api.getPostsFeedQueryPart(params),
+    ]);
+
+    try {
+      const data = await request({ query });
+      return data.data.postsFeed;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  getManyUsersQueryPart({
+    overviewType = 'trending',
+    orderBy = '-scaled_social_rate_delta',
+    page = 1,
+    perPage = 10,
+  }) {
+    const params = {
+      filters: {
+        overview_type: overviewType,
+      },
+      order_by: orderBy,
+      page,
+      per_page: perPage,
+    };
+
+    return GraphQLSchema.getManyUsersQueryPart(params);
+  },
+
+  async getManyUsers(params) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      api.getManyUsersQueryPart(params),
+    ]);
+
+    try {
+      const data = await request({ query });
+      return data.data.manyUsers;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getTrendingOrganizations({
+    page = 1,
+    perPage = 10,
+  }) {
+    const query = GraphQLSchema.getManyTrendingOrganizationsQuery(
+      page,
+      perPage,
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getTrendingTags({
+    page = 1,
+    perPage = 10,
+  }) {
+    const query = GraphQLSchema.getManyTrendingTagsQuery(
+      page,
+      perPage,
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getMainPageData({
+    manyUsersParams = {},
+    postsFeedParams = {},
+  }) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      api.getManyUsersQueryPart(manyUsersParams),
+      api.getPostsFeedQueryPart(postsFeedParams),
+    ]);
+
+    try {
+      const result = await Promise.all([
+        request({ query }),
+        api.getTrendingOrganizations({}),
+        api.getTrendingTags({}),
+      ]);
+      return {
+        ...result[0].data,
+        ...result[1],
+        ...result[2],
+      };
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getPosts({
+    page = 1,
+    perPage = FEED_PER_PAGE,
+    commentsPage = 1,
+    commentsPerPage = COMMENTS_PER_PAGE,
+    postTypeId = POST_TYPE_MEDIA_ID,
+  }) {
+    const token = getToken();
+    // TODO: Replace to new api method for fetch all posts, like feed
+    const query = await GraphQLSchema.getManyTrendingPostsQuery(
+      postTypeId,
+      page,
+      perPage,
+      commentsPage,
+      commentsPerPage,
+      Boolean(token),
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
 
   async getOverview({
     page = 1,
@@ -520,14 +680,14 @@ export default {
     }
   },
 
-  async getManyUsers({
+  async getManyUsersAirdrop({
     airdropFilter,
     orderBy,
     page,
     perPage,
     isMyself,
   }) {
-    const query = GraphQLSchema.getManyUsers(
+    const query = GraphQLSchema.getManyUsersAirdrop(
       airdropFilter,
       orderBy,
       page,
@@ -543,3 +703,5 @@ export default {
     }
   },
 };
+
+export default api;
