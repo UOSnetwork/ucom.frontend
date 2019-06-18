@@ -60,31 +60,33 @@ const SearchPopup = (props) => {
   return (
     <div className={styles.modal}>
       <div className={styles.search}>
-        <div className={styles.iconSearch}>
-          <IconSearch />
-        </div>
-        <input
-          autoFocus
-          onChange={(e) => {
-            setUserName(e.target.value);
-            debouncedSetSearch(e.target.value);
-          }}
-          className={styles.input}
-          placeholder="Search for people in U°OS blockchain…"
-          type="text"
-          spellCheck="false"
-          onKeyUp={(e) => {
-            if (props.onClickClose && e.keyCode === KEY_ESCAPE) {
-              props.onClickClose();
-            }
-          }}
-        />
-        <div
-          role="presentation"
-          className={styles.iconClose}
-          onClick={() => props.onClickClose && props.onClickClose()}
-        >
-          <IconClose />
+        <div className={styles.inner}>
+          <div className={styles.iconSearch}>
+            <IconSearch />
+          </div>
+          <input
+            autoFocus
+            onChange={(e) => {
+              setUserName(e.target.value);
+              debouncedSetSearch(e.target.value);
+            }}
+            className={styles.input}
+            placeholder="Search for people in U°OS blockchain…"
+            type="text"
+            spellCheck="false"
+            onKeyUp={(e) => {
+              if (props.onClickClose && e.keyCode === KEY_ESCAPE) {
+                props.onClickClose();
+              }
+            }}
+          />
+          <div
+            role="presentation"
+            className={styles.iconClose}
+            onClick={() => props.onClickClose && props.onClickClose()}
+          >
+            <IconClose />
+          </div>
         </div>
       </div>
 

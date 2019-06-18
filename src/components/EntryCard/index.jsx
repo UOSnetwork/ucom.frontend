@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React from 'react';
@@ -11,17 +12,24 @@ const EntryCard = (props) => {
   const LinkTag = props.disabledLink ? 'span' : props.isExternal ? 'a' : Link;
 
   return (
-    <div className={styles.entryCard}>
-      <div className={styles.userPick}>
-        <LinkTag
-          title={props.title}
-          to={props.url}
-          href={filterURL(props.url)}
-          target={props.isExternal ? '_blank' : undefined}
-        >
-          <UserPick shadow organization={props.organization} src={props.avatarSrc} />
-        </LinkTag>
-      </div>
+    <div
+      className={classNames({
+        [styles.entryCard]: true,
+        [styles.disableAvatar]: props.disableAvatar,
+      })}
+    >
+      {!props.disableAvatar &&
+        <div className={styles.userPick}>
+          <LinkTag
+            title={props.title}
+            to={props.url}
+            href={filterURL(props.url)}
+            target={props.isExternal ? '_blank' : undefined}
+          >
+            <UserPick shadow organization={props.organization} src={props.avatarSrc} />
+          </LinkTag>
+        </div>
+      }
       <div className={styles.title}>
         <LinkTag
           title={props.title}
@@ -44,7 +52,7 @@ const EntryCard = (props) => {
       </div>
       {!props.disableRate &&
         <div className={styles.rate}>
-          {formatRate(props.currentRate)}°
+          {formatRate(props.currentRate, true)}
         </div>
       }
     </div>
@@ -61,6 +69,7 @@ EntryCard.propTypes = {
   disabledLink: PropTypes.bool,
   disableRate: PropTypes.bool,
   disableSign: PropTypes.bool,
+  disableAvatar: PropTypes.bool,
   isExternal: PropTypes.bool,
 };
 
@@ -71,6 +80,7 @@ EntryCard.defaultProps = {
   disabledLink: false,
   disableRate: false,
   disableSign: false,
+  disableAvatar: false,
   isExternal: false,
 };
 

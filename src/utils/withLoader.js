@@ -2,7 +2,7 @@ import loader from './loader';
 
 export default (promise) => {
   loader.start();
-  promise
+  return promise
     .then((e) => {
       loader.done();
       return e;

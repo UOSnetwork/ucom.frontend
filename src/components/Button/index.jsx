@@ -21,6 +21,7 @@ const Button = (props) => {
         [styles.grayBorder]: props.grayBorder,
         [styles.red]: props.red,
         [styles.transparent]: props.transparent,
+        [styles.large]: props.large,
         [styles.big]: props.big,
         [styles.small]: props.small,
         [styles.medium]: props.big,

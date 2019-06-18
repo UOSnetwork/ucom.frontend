@@ -17,7 +17,7 @@ import { commentsResetContainerDataByEntryId } from '../actions/comments';
 import OfferSidebar from '../components/Offer/OfferSidebar';
 import OfferContent from '../components/Offer/OfferContent';
 import { getToken, getCookie } from '../utils/token';
-import { getManyUsers, fetchMyself } from '../actions/users';
+import { getManyUsersAirdrop, fetchMyself } from '../actions/users';
 import api from '../api';
 import EntrySubHeader from '../components/EntrySubHeader';
 import stylesSubHeader from '../components/EntrySubHeader/styles.css';
@@ -61,7 +61,7 @@ const Offer = (props) => {
   };
 
   const getParticipants = (page = 1) => {
-    props.getManyUsers({
+    props.getManyUsersAirdrop({
       airdropFilter: { airdrops: { id: airdropId_2.id } },
       orderBy: '-score',
       page,
@@ -194,7 +194,7 @@ Offer.propTypes = {
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsResetContainerDataByEntryId: PropTypes.func.isRequired,
   getOnePostOfferWithUserAirdrop: PropTypes.func.isRequired,
-  getManyUsers: PropTypes.func.isRequired,
+  getManyUsersAirdrop: PropTypes.func.isRequired,
   getOrganization: PropTypes.func.isRequired,
   addErrorNotification: PropTypes.func.isRequired,
 };
@@ -211,7 +211,7 @@ export default connect(
     commentsResetContainerDataByEntryId,
     getOnePostOffer,
     getOnePostOfferWithUserAirdrop,
-    getManyUsers,
+    getManyUsersAirdrop,
     getOrganization,
     fetchMyself,
     addErrorNotification,

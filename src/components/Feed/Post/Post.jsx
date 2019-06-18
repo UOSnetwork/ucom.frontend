@@ -82,6 +82,8 @@ export default connect((state, props) => {
     owner: state.user.data,
   };
 })(memo(Post, (prev, next) => (
+  prev.post &&
+  next.post &&
   prev.owner.id === next.owner.id &&
   prev.post.description === next.post.description &&
   prev.sharePopup === next.sharePopup &&

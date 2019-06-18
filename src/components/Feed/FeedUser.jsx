@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { feedReset, feedGetUserPosts, feedCreatePost } from '../../actions/feed';
 import { FEED_PER_PAGE } from '../../utils/feed';
 import { POST_TYPE_DIRECT_ID } from '../../utils/posts';
-import Feed from './FeedView';
+import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
 import loader from '../../utils/loader';
@@ -56,7 +56,7 @@ const FeedUser = (props) => {
   }, [props.userId, props.organizationId, props.tagIdentity]);
 
   return (
-    <Feed
+    <FeedView
       hasMore={props.feed.metadata.hasMore}
       postIds={props.feed.postIds}
       loading={props.feed.loading}
