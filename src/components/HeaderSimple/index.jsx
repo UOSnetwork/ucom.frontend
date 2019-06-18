@@ -19,6 +19,7 @@ import SiteNotificationsTooltip from '../SiteNotificationsTooltip';
 import Counter from '../Counter';
 import Search from '../Search';
 import Menu from '../Menu';
+import { getUserById } from '../../store/users';
 
 const Header = ({ location, owner, dispatch }) => {
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
@@ -159,10 +160,14 @@ Header.propTypes = {
   }).isRequired,
   owner: PropTypes.shape({
     id: PropTypes.number,
-  }).isRequired,
+  }),
   dispatch: PropTypes.func.isRequired,
 };
 
+Header.defaultProps = {
+  owner: {},
+};
+
 export default withRouter(connect(state => ({
-  owner: state.user.data,
+  owner: getUserById(state.users, state.user.data.id),
 }))(Header));

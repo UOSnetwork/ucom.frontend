@@ -14,6 +14,7 @@ import urls from '../../utils/urls';
 import styles from './styles.css';
 import { settingsShow } from '../../actions/settings';
 import { logout } from '../../utils/auth';
+import { getUserById } from '../../store/users';
 
 const ORGANIZATIONS_ITEMS_LIMIT = 3;
 
@@ -85,15 +86,16 @@ User.propTypes = {
   user: PropTypes.shape({
     avatarFilename: PropTypes.string,
     currentRate: PropTypes.number,
-  }).isRequired,
+  }),
   dispatch: PropTypes.func.isRequired,
   onClickOrganizationsViewAll: PropTypes.func,
 };
 
 User.defaultProps = {
   onClickOrganizationsViewAll: undefined,
+  user: {},
 };
 
 export default connect(state => ({
-  user: state.user.data,
+  user: getUserById(state.users, state.user.data.id),
 }))(User);
