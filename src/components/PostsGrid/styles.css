@@ -70,6 +70,15 @@
   .postsGrid {
     grid-template-columns: 1fr;
   }
+
+  .post .title {
+    margin: 0 0 8px !important;
+    font-size: 18px !important;
+  }
+
+  .post .content {
+    padding: 23px 30px !important;
+  }
 }
 
 .post {
