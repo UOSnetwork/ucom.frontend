@@ -3,11 +3,11 @@ import { addPostsAndComments } from './feed';
 import { addOrganizations } from './organizations';
 import { addTags } from './tags';
 import { addUsers } from './users';
-import { TAB_ID_PEOPLE } from '../components/Feed/Tabs';
+import { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
 import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils/posts';
 
 export const reset = () => ({ type: 'MAIN_PAGE_RESET' });
-export const setData = payload => ({ type: 'MAIN_PAGE_SET', payload });
+export const setData = payload => ({ type: 'MAIN_PAGE_SET_DATA', payload });
 
 export const changeTab = activeTabId => (dispatch) => {
   dispatch(setData({
@@ -15,7 +15,7 @@ export const changeTab = activeTabId => (dispatch) => {
   }));
 };
 
-export const getPageData = (activeTabId = TAB_ID_PEOPLE) => async (dispatch) => {
+export const getPageData = (activeTabId = TAB_ID_COMMUNITIES) => async (dispatch) => {
   dispatch(setData({
     feed: { loading: true },
   }));

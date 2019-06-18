@@ -126,11 +126,7 @@ const Guest = ({
   };
 
   useEffect(() => {
-    if (window.APP_STATE) {
-      delete window.APP_STATE;
-    } else {
-      getPageData(state.activeTabId);
-    }
+    getPageData(state.activeTabId);
   }, [state.activeTabId]);
 
   return (

@@ -1,4 +1,5 @@
 import { camelCase } from 'lodash';
+import { ERROR_SERVER } from './constants';
 
 export const getError = (errors, fieldName) => {
   if (!errors) {
@@ -50,7 +51,7 @@ export const parseResponseError = (error) => {
     return data.errors;
   } catch (e) {
     return [{
-      message: 'Could not complete request, please try again later',
+      message: ERROR_SERVER,
       field: 'general',
     }];
   }

@@ -40,8 +40,8 @@ const request = async (data, extraOptions = {}) => {
       throw resp;
     }
     return humps(resp.data);
-  } catch (e) {
-    throw e;
+  } catch (err) {
+    throw err;
   }
 };
 

@@ -17,7 +17,10 @@ const FeedView = props => (
       <div className="feed__list">
         {(props.filter ? props.postIds.filter(props.filter) : props.postIds).map(id => (
           <div className="feed__item" key={id}>
-            <Post id={id} feedTypeId={props.feedTypeId} />
+            <Post
+              id={id}
+              feedTypeId={props.feedTypeId}
+            />
           </div>
         ))}
       </div>

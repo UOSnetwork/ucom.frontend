@@ -15,6 +15,7 @@ import PostsGrid from '../../components/PostsGrid';
 import withLoader from '../../utils/withLoader';
 import Guest from './Guest';
 import { getPageData } from '../../actions/mainPage';
+import { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
 
 const HomePage = ({
   mainPosts, user, users, ...props
@@ -100,7 +101,7 @@ HomePage.defaultProps = {
 
 export const getHomePageData = store => Promise.all([
   store.dispatch(getMainPosts()),
-  store.dispatch(getPageData()),
+  store.dispatch(getPageData(TAB_ID_COMMUNITIES)),
 ]);
 
 export default connect(

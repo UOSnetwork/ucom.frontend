@@ -66,7 +66,7 @@ const Tabs = ({ activeTabId, onClickItem }) => (
               disabled={!item.disabled}
               position="top"
               arrow
-              title="Coming Soon"
+              title={item.disabled ? 'Coming Soon' : undefined}
             >
               {item.title}
             </Tooltip>

@@ -1,7 +1,7 @@
-import { TAB_ID_PEOPLE } from '../components/Feed/Tabs';
+import { TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
 
 const getInitialState = () => ({
-  activeTabId: TAB_ID_PEOPLE,
+  activeTabId: TAB_ID_COMMUNITIES,
   feed: {
     userIds: [],
     loading: false,
@@ -31,7 +31,7 @@ export default (state = getInitialState(), action) => {
     case 'MAIN_PAGE_RESET':
       return getInitialState();
 
-    case 'MAIN_PAGE_SET':
+    case 'MAIN_PAGE_SET_DATA':
       return {
         ...state,
         ...action.payload,

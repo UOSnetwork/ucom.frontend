@@ -54,6 +54,7 @@ export const createStore = () => {
 
   if (typeof window !== 'undefined' && window.APP_STATE !== undefined) {
     preloadedState = window.APP_STATE;
+    delete window.APP_STATE;
   }
 
   return redux.createStore(
