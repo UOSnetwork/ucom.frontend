@@ -4,7 +4,14 @@ import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
 } from '../store/notifications';
-import { ERROR_SERVER } from '../utils/constants';
+import {
+  ERROR_SERVER,
+  NOTIFICATION_TITLE_ERROR,
+  NOTIFICATION_TITLE_SUCCESS,
+  NOTIFICATION_ERROR_FORM_VALIDATION,
+  NOTIFICATION_ERROR_MAINTANCE_MODE,
+  NOTIFICATION_TITLE_WARNING,
+} from '../utils/constants';
 
 export const addNotification = payload => ({ type: 'ADD_NOTIFICATION', payload });
 export const closeNotification = payload => ({ type: 'CLOSE_NOTIFICATION', payload });
@@ -12,7 +19,7 @@ export const closeNotification = payload => ({ type: 'CLOSE_NOTIFICATION', paylo
 export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
   dispatch(addNotification({
     message,
-    title: 'Error',
+    title: NOTIFICATION_TITLE_ERROR,
     type: NOTIFICATION_TYPE_ERROR,
   }));
 };
@@ -20,7 +27,7 @@ export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
 export const addSuccessNotification = message => (dispatch) => {
   dispatch(addNotification({
     type: NOTIFICATION_TYPE_SUCCESS,
-    title: 'Success',
+    title: NOTIFICATION_TITLE_SUCCESS,
     message,
   }));
 };
@@ -28,8 +35,8 @@ export const addSuccessNotification = message => (dispatch) => {
 export const addValidationErrorNotification = () => (dispatch) => {
   dispatch(addNotification({
     type: NOTIFICATION_TYPE_ERROR,
-    title: 'Error',
-    message: 'Some fields in the form are incorrect',
+    title: NOTIFICATION_TITLE_ERROR,
+    message: NOTIFICATION_ERROR_FORM_VALIDATION,
   }));
 };
 
@@ -45,7 +52,7 @@ export const addMaintenanceNotification = () => (dispatch) => {
   dispatch(addNotification({
     type: NOTIFICATION_TYPE_ERROR,
     autoClose: false,
-    title: 'Warning',
-    message: 'The platform is on maintenance and in a read-only mode. Please avoid posting content, it will not be published.',
+    title: NOTIFICATION_TITLE_WARNING,
+    message: NOTIFICATION_ERROR_MAINTANCE_MODE,
   }));
 };

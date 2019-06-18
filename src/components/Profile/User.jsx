@@ -14,9 +14,9 @@ import IconRemove from '../Icons/Remove';
 import UserPick from '../UserPick/UserPick';
 import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
-import { validateUser } from '../../utils/validate';
+import Validate from '../../utils/validate';
 import { updateUser } from '../../actions/users';
-import { addErrorNotification, addSuccessNotification } from '../../actions/notifications';
+import { addValidationErrorNotification, addSuccessNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
 import Menu from './Menu';
 
@@ -29,7 +29,7 @@ const USER_EDITABLE_PROPS = [
 ];
 
 const Profile = ({
-  user, updateUser, addErrorNotification, addSuccessNotification, onSuccess,
+  user, updateUser, addValidationErrorNotification, addSuccessNotification, onSuccess,
 }) => {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -38,12 +38,9 @@ const Profile = ({
   const [avatarPreview, setAvatarPreview] = useState(undefined);
 
   const validate = (data) => {
-    const errors = validateUser(data);
+    const { errors, isValid } = Validate.validateUser(data);
 
     setErrors(errors);
-
-    const hasErrors = !!errors;
-    const isValid = !hasErrors;
 
     return isValid;
   };
@@ -58,6 +55,10 @@ const Profile = ({
 
     setSubmited(true);
 
+    if (!isValid) {
+      addValidationErrorNotification();
+    }
+
     if (!isValid || loading) {
       return;
     }
@@ -69,14 +70,21 @@ const Profile = ({
       addSuccessNotification('Profile has been updated');
       setTimeout(onSuccess, 0);
     } catch (err) {
-      addErrorNotification(err.message);
+      setErrors(Validate.parseResponseError(err.response));
+      addValidationErrorNotification();
     }
 
     setLoading(false);
   };
 
   useEffect(() => {
-    setData(cloneDeep(pick(user, USER_EDITABLE_PROPS)));
+    const data = cloneDeep(pick(user, USER_EDITABLE_PROPS));
+
+    if (data && data.usersSources) {
+      data.usersSources = data.usersSources.filter(item => item.sourceUrl);
+    }
+
+    setData(data);
   }, [user]);
 
   return (
@@ -142,7 +150,7 @@ const Profile = ({
                   submited={submited}
                   placeholder="Nickname or name, maybe emoji…"
                   value={data.firstName}
-                  error={errors && errors.firstName && errors.firstName[0]}
+                  error={errors && errors.firstName}
                   onChange={(firstName) => {
                     setDataAndValidate({ ...data, firstName });
                   }}
@@ -162,7 +170,7 @@ const Profile = ({
               placeholder="Your story, what passions you — something you want others to know about you"
               className={profileStyles.textarea}
               value={data.about}
-              error={errors && errors.about && errors.about[0]}
+              error={errors && errors.about}
               onChange={(about) => {
                 setDataAndValidate({ ...data, about });
               }}
@@ -182,7 +190,7 @@ const Profile = ({
                   submited={submited}
                   placeholder="https://site.com"
                   value={data.personalWebsiteUrl}
-                  error={errors && errors.personalWebsiteUrl && errors.personalWebsiteUrl[0]}
+                  error={errors && errors.personalWebsiteUrl}
                   onChange={(personalWebsiteUrl) => {
                     setDataAndValidate({ ...data, personalWebsiteUrl });
                   }}
@@ -190,27 +198,22 @@ const Profile = ({
               </div>
             </div>
 
-            {data.usersSources && data.usersSources.map((item, index) => (
-              <div
-                key={index}
-                className={profileStyles.field}
-              >
-                {index === 0 &&
-                  <div className={profileStyles.label}>Social Networks</div>
-                }
-                <div className={profileStyles.data}>
-                  <TextInput
-                    submited={submited}
-                    placeholder="https://github.com/username"
-                    value={item.sourceUrl}
-                    error={errors && errors.usersSources && errors.usersSources[0][index] && errors.usersSources[0][index].sourceUrl[0]}
-                    onChange={(sourceUrl) => {
-                      const { usersSources } = data;
-                      usersSources[index].sourceUrl = sourceUrl;
-                      setDataAndValidate({ ...data, usersSources });
-                    }}
-                  />
-                  {data.usersSources && data.usersSources.length > 1 &&
+            <div className={profileStyles.field}>
+              <div className={profileStyles.label}>Social Networks</div>
+              <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+                {data.usersSources && data.usersSources.map((item, index) => (
+                  <div className={`${profileStyles.entry} ${profileStyles.input}`} key={index}>
+                    <TextInput
+                      submited={submited}
+                      placeholder="http://example.com"
+                      value={item.sourceUrl}
+                      error={errors && errors.usersSources && errors.usersSources[index] && errors.usersSources[index].sourceUrl}
+                      onChange={(sourceUrl) => {
+                        const { usersSources } = data;
+                        usersSources[index].sourceUrl = sourceUrl;
+                        setDataAndValidate({ ...data, usersSources });
+                      }}
+                    />
                     <span
                       role="presentation"
                       className={profileStyles.remove}
@@ -222,16 +225,9 @@ const Profile = ({
                     >
                       <IconRemove />
                     </span>
-                  }
-                </div>
-              </div>
-            ))}
+                  </div>
+                ))}
 
-            <div className={profileStyles.field}>
-              {(!data.usersSources || data.usersSources.length === 0) &&
-                <div className={profileStyles.label}>Social Networks</div>
-              }
-              <div className={profileStyles.data}>
                 <div>
                   <Button
                     small
@@ -242,7 +238,7 @@ const Profile = ({
                       setDataAndValidate({ ...data, usersSources });
                     }}
                   >
-                    {data.usersSources && data.usersSources.length > 0 ? 'Add Another' : 'Add Profile'}
+                    {data.socialNetworks && data.socialNetworks.length > 0 ? 'Add Another' : 'Add Network'}
                   </Button>
                 </div>
               </div>
@@ -255,17 +251,9 @@ const Profile = ({
 };
 
 Profile.propTypes = {
-  user: PropTypes.shape({
-    avatarFilename: PropTypes.string,
-    firstName: PropTypes.string,
-    about: PropTypes.string,
-    usersSources: PropTypes.arrayOf(PropTypes.shape({
-      sourceUrl: PropTypes.string,
-    })),
-    personalWebsiteUrl: PropTypes.string,
-  }),
+  user: PropTypes.objectOf(PropTypes.any),
   updateUser: PropTypes.func.isRequired,
-  addErrorNotification: PropTypes.func.isRequired,
+  addValidationErrorNotification: PropTypes.func.isRequired,
   addSuccessNotification: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };
@@ -278,7 +266,7 @@ export default connect(state => ({
   user: getUserById(state.users, state.user.data.id),
 }), {
   updateUser,
-  addErrorNotification,
+  addValidationErrorNotification,
   addSuccessNotification,
 })(memo(Profile, (prev, next) => (
   isEqual(pick(prev.user, USER_EDITABLE_PROPS), pick(next.user, USER_EDITABLE_PROPS))

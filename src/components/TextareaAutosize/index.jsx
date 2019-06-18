@@ -6,7 +6,7 @@ import TributeWrapper from '../TributeWrapper';
 import styles from './styles.css';
 
 const TextareaAutosize = ({
-  value, error, submited, onChange, ...props
+  value, error, submited, onChange, className, ...props
 }) => {
   const [dirty, setDirty] = useState(false);
   const textareaEl = useRef(null);
@@ -40,8 +40,8 @@ const TextareaAutosize = ({
         <textarea
           {...props}
           ref={textareaEl}
-          value={value}
-          className={classNames({
+          value={value || ''}
+          className={className || classNames({
             [styles.textarea]: true,
             [styles.error]: error && dirty,
           })}

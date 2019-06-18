@@ -1,4 +1,15 @@
+import { isObject, isArray } from 'lodash';
 import { validUrl } from './url';
+import {
+  VALIDATION_INPUT_MAX_LENGTH,
+  VALIDATION_TEXTAREA_MAX_LENGTH,
+  VALIDATION_INPUT_MAX_LENGTH_ERROR,
+  VALIDATION_TEXTAREA_MAX_LENGTH_ERROR,
+  VALIDATION_REQUIRED_ERROR,
+  VALIDATION_URL_ERROR,
+  REGEX_EMAIL,
+  VALIDATION_EMAIL_ERROR,
+} from './constants';
 
 export default class Validate {
   static validate(data, rules) {
@@ -61,144 +72,84 @@ export default class Validate {
     return true;
   }
 
-  static getValidatorFunctions() {
+  static getValidateFunctions() {
     return {
       reuqired: (val) => {
         if (!val || !val.length) {
-          return 'Field can\'t be blank';
+          return VALIDATION_REQUIRED_ERROR;
         }
         return null;
       },
       url: (val) => {
         if (val) {
-          return validUrl(val) ? null : 'Field is not a valid url';
+          return !validUrl(val) ? VALIDATION_URL_ERROR : null;
+        }
+        return null;
+      },
+      inputMaxLength: (val) => {
+        if (val) {
+          return val.length > VALIDATION_INPUT_MAX_LENGTH ? VALIDATION_INPUT_MAX_LENGTH_ERROR : null;
+        }
+        return null;
+      },
+      textareaMaxLength: (val) => {
+        if (val) {
+          return val.length > VALIDATION_TEXTAREA_MAX_LENGTH ? VALIDATION_TEXTAREA_MAX_LENGTH_ERROR : null;
+        }
+        return null;
+      },
+      email: (val) => {
+        if (val) {
+          return !REGEX_EMAIL.test(String(val).toLowerCase()) ? VALIDATION_EMAIL_ERROR : null;
         }
         return null;
       },
     };
   }
 
-  // static validateCategory(categoryData) {
-  //   const { reuqired, url } = Validator.getValidatorFunctions();
-  //   return Validator.validate(categoryData, {
-  //     name: [reuqired],
-  //     iconUrl: [reuqired, url],
-  //   });
-  // }
+  static validateUser(data) {
+    const {
+      reuqired, url, inputMaxLength, textareaMaxLength,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      firstName: [reuqired, inputMaxLength],
+      about: [textareaMaxLength],
+      personalWebsiteUrl: [url, inputMaxLength],
+      usersSources: [{
+        sourceUrl: [reuqired, url, inputMaxLength],
+      }],
+    });
+  }
+
+  static validateOrganization(data) {
+    const {
+      reuqired, url, inputMaxLength, textareaMaxLength, email,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      title: [reuqired, inputMaxLength],
+      nickname: [reuqired, inputMaxLength],
+      about: [textareaMaxLength],
+      country: [inputMaxLength],
+      city: [inputMaxLength],
+      personalWebsiteUrl: [url, inputMaxLength],
+      email: [reuqired, email, inputMaxLength],
+      phoneNumber: [inputMaxLength],
+      socialNetworks: [{
+        sourceUrl: [reuqired, url, inputMaxLength],
+      }],
+    });
+  }
+
+  static parseResponseError(response) {
+    if (!isObject(response) || !isObject(response.data) || !isArray(response.data.errors)) {
+      return {};
+    }
+
+    return response.data.errors.reduce((obj, item) => ({
+      ...obj,
+      [item.field]: item.message,
+    }), {});
+  }
 }
-
-
-
-
-// const INPUT_MAX_LENGTH = 255;
-// const TEXTAREA_MAX_LENGTH = 1024;
-
-// validate.validators.array = (items, constraints) => {
-//   const errors = items.map(item => validate(item, constraints));
-
-//   return compact(errors).length ? [errors] : null;
-// };
-
-// validate.validators.optionalUrl = (value, options, attribute, attributes) => {
-//   if (validate.isEmpty(value)) {
-//     return null;
-//   }
-
-//   return validate.validators.url(value, options, attribute, attributes);
-// };
-
-// export const validateUser = data =>
-//   validate(data, {
-//     firstName: {
-//       presence: {
-//         allowEmpty: false,
-//       },
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     about: {
-//       length: {
-//         maximum: TEXTAREA_MAX_LENGTH,
-//       },
-//     },
-//     personalWebsiteUrl: {
-//       optionalUrl: true,
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     usersSources: {
-//       array: {
-//         sourceUrl: {
-//           presence: true,
-//           url: true,
-//           length: {
-//             maximum: INPUT_MAX_LENGTH,
-//           },
-//         },
-//       },
-//     },
-//   });
-
-// export const validateOrganization = data =>
-//   validate(data, {
-//     title: {
-//       presence: {
-//         allowEmpty: false,
-//       },
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     nickname: {
-//       presence: {
-//         allowEmpty: false,
-//       },
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     about: {
-//       length: {
-//         maximum: TEXTAREA_MAX_LENGTH,
-//       },
-//     },
-//     country: {
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     city: {
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     personalWebsiteUrl: {
-//       optionalUrl: true,
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     email: {
-//       email: true,
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     phoneNumber: {
-//       length: {
-//         maximum: INPUT_MAX_LENGTH,
-//       },
-//     },
-//     socialNetworks: {
-//       array: {
-//         sourceUrl: {
-//           optionalUrl: true,
-//           length: {
-//             maximum: INPUT_MAX_LENGTH,
-//           },
-//         },
-//       },
-//     },
-//   });
