@@ -18,10 +18,25 @@ export const getOrganization = id => async (dispatch) => {
   }
 };
 
+export const createOrganization = data => async (dispatch) => {
+  try {
+    const result = await api.createOrganization(data);
+    dispatch(addOrganizations([{
+      ...result,
+      ...data,
+    }]));
+    return result;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const updateOrganization = data => async (dispatch) => {
   try {
-    await api.updateOrganization(data);
+    const result = await api.updateOrganization(data);
     dispatch(getOrganization(data.id));
+    return result;
   } catch (err) {
     console.error(err);
     throw err;

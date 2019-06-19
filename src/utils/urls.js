@@ -89,7 +89,7 @@ const urls = {
   },
 
   getOrganizationCrerateUrl() {
-    return '/communities/new';
+    return '#community-new';
   },
 
   getOrganizationEditUrl(id) {
@@ -151,6 +151,10 @@ const urls = {
     }
 
     return urls.getOrganizationUrl(source.entityId);
+  },
+
+  getSettingsUrl() {
+    return '#settings';
   },
 };
 

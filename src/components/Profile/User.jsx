@@ -80,7 +80,7 @@ const Profile = ({
   useEffect(() => {
     const data = cloneDeep(pick(user, USER_EDITABLE_PROPS));
 
-    if (data && data.usersSources) {
+    if (data.usersSources) {
       data.usersSources = data.usersSources.filter(item => item.sourceUrl);
     }
 

@@ -6,7 +6,15 @@ import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
 const Button = (props) => {
-  const Tag = props.url ? props.external ? 'a' : Link : 'button';
+  let Tag;
+
+  if (!props.url) {
+    Tag = 'button';
+  } else if (props.url.indexOf('#') === 0 || props.external) {
+    Tag = 'a';
+  } else {
+    Tag = Link;
+  }
 
   return (
     <Tag

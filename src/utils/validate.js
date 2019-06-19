@@ -12,11 +12,10 @@ import {
 } from './constants';
 
 export default class Validate {
-  static validate(data, rules) {
-    const fields = Object.keys(data);
+  static validate(data = {}, rules = {}) {
     const errors = {};
 
-    fields.forEach((field) => {
+    Object.keys(rules).forEach((field) => {
       const rule = rules[field];
 
       if (!rule) {
@@ -26,12 +25,12 @@ export default class Validate {
       if (Array.isArray(rule) && typeof rule[0] === 'function') {
         const err = rule.map(r => r(data[field])).filter(i => Boolean(i));
         errors[field] = err.length ? err[0] : null;
-      } else if (Array.isArray(rule) && Array.isArray(rule[0])) {
+      } else if (Array.isArray(rule) && Array.isArray(data[field]) && Array.isArray(rule[0])) {
         errors[field] = data[field].map((value) => {
           const err = rule[0].map(r => r(value).filter(i => Boolean(i)));
           return err.length ? err[0] : null;
         });
-      } else if (Array.isArray(rule) && typeof rule[0] === 'object') {
+      } else if (Array.isArray(rule) && Array.isArray(data[field]) && typeof rule[0] === 'object') {
         errors[field] = data[field].map((obj) => {
           const keys = Object.keys(rule[0]);
           const errors = {};

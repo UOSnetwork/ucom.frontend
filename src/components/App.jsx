@@ -18,6 +18,9 @@ import SellRam from '../components/Resources/Actions/SellRam';
 import EditStake from '../components/Resources/Actions/EditStake';
 import SendTokens from '../components/Resources/Actions/SendTokens';
 import { addMaintenanceNotification } from '../actions/notifications';
+import HashRouter from '../components/HashRouter';
+import CreateOrg from '../pages/Organization/Create';
+import urls from '../utils/urls';
 
 const App = ({ addMaintenanceNotification, ...props }) => {
   useEffect(() => {
@@ -47,11 +50,21 @@ const App = ({ addMaintenanceNotification, ...props }) => {
 
   return (
     <Fragment>
+      <HashRouter>
+        {(route) => {
+          switch (route) {
+            case urls.getOrganizationCrerateUrl():
+              return <CreateOrg />;
+            default:
+              return null;
+          }
+        }}
+      </HashRouter>
+
       <Page>
         <Switch>
           {routes.map(route => <Route {...route} key={route.path} />)}
         </Switch>
-
         <Auth />
       </Page>
 

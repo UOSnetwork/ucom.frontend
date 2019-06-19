@@ -7,10 +7,6 @@ import React, { Fragment, PureComponent } from 'react';
 import { registrationGenerateBrainkey, registrationSetBrainkeyStep } from '../../actions/registration';
 import { THIRD_BRAINKEY_STEP_ID } from '../../store/registration';
 
-if (typeof window !== 'undefined') {
-  window.test = crypto;
-}
-
 class RegistrationBrainkeyStepSecond extends PureComponent {
   constructor(props) {
     super(props);

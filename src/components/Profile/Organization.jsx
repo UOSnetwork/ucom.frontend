@@ -3,8 +3,6 @@ import { Element } from 'react-scroll';
 import { isEqual, pick, cloneDeep, uniqBy } from 'lodash';
 import { connect } from 'react-redux';
 import React, { memo, useState, useEffect } from 'react';
-import { getOrganizationById } from '../../store/organizations';
-import { getUserById } from '../../store/users';
 import gridStyles from '../Grid/styles.css';
 import profileStyles from './styles.css';
 import Menu from './Menu';
@@ -26,23 +24,24 @@ import { validUrl, extractSitename } from '../../utils/url';
 import EmbedService from '../../utils/embedService';
 import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addValidationErrorNotification } from '../../actions/notifications';
-import { updateOrganization } from '../../actions/organizations';
+import { updateOrganization, createOrganization } from '../../actions/organizations';
 
-const ORGANIZATION_EDITABLE_PROPS = [
-  'id',
-  'title',
-  'nickname',
-  'avatarFilename',
-  'about',
-  'country',
-  'city',
-  'email',
-  'phoneNumber',
-  'personalWebsiteUrl',
-  'socialNetworks',
-  'usersTeam',
-  'partnershipSources',
-];
+const defaultOrg = {
+  title: '',
+  nickname: '',
+  avatarFilename: '',
+  about: '',
+  country: '',
+  city: '',
+  email: '',
+  phoneNumber: '',
+  personalWebsiteUrl: '',
+  socialNetworks: [],
+  usersTeam: [],
+  partnershipSources: [],
+};
+
+const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
 
 const OrganizationProfile = ({
   owner,
@@ -51,6 +50,7 @@ const OrganizationProfile = ({
   addSuccessNotification,
   addValidationErrorNotification,
   updateOrganization,
+  createOrganization,
 }) => {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -89,9 +89,9 @@ const OrganizationProfile = ({
     setLoading(true);
 
     try {
-      await withLoader(updateOrganization(data));
-      addSuccessNotification('Profile has been updated');
-      setTimeout(onSuccess, 0);
+      const result = await withLoader(data.id ? updateOrganization(data) : createOrganization(data));
+      addSuccessNotification(data.id ? 'Community has been saved' : 'Community has been created');
+      setTimeout(() => onSuccess(result), 0);
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
       addValidationErrorNotification();
@@ -101,9 +101,12 @@ const OrganizationProfile = ({
   };
 
   useEffect(() => {
-    const data = cloneDeep(pick(organization, ORGANIZATION_EDITABLE_PROPS));
+    const data = {
+      ...defaultOrg,
+      ...cloneDeep(pick(organization, ORG_EDITABLE_PROPS)),
+    };
 
-    if (data && data.socialNetworks) {
+    if (data.socialNetworks) {
       data.socialNetworks = data.socialNetworks.filter(item => item.sourceUrl);
     }
 
@@ -112,6 +115,7 @@ const OrganizationProfile = ({
 
   return (
     <form
+      noValidate
       onSubmit={(e) => {
         e.preventDefault();
         submit(data);
@@ -120,6 +124,7 @@ const OrganizationProfile = ({
       <div className={`${gridStyles.grid} ${gridStyles.profile}`}>
         <div className={gridStyles.sidebar}>
           <Menu
+            create={!data.id}
             sections={[
               { title: 'General', name: 'general' },
               { title: 'Board', name: 'board' },
@@ -131,8 +136,7 @@ const OrganizationProfile = ({
           />
         </div>
         <div className={gridStyles.content}>
-          <h2 className={profileStyles.title}>New Community</h2>
-
+          <h2 className={profileStyles.title}>{data.id ? 'Edit Community Profile' : 'New Community'}</h2>
           <p className={profileStyles.description}>
             Few words about profile its how it will affect autoupdates and etc.<br />
             Maybe some tips)
@@ -533,17 +537,14 @@ OrganizationProfile.propTypes = {
   addSuccessNotification: PropTypes.func.isRequired,
   addValidationErrorNotification: PropTypes.func.isRequired,
   updateOrganization: PropTypes.func.isRequired,
+  createOrganization: PropTypes.func.isRequired,
 };
 
-export default connect((state, props) => {
-  const organization = getOrganizationById(state.organizations, props.organizationId);
-  const owner = getUserById(state.users, organization.userId);
-
-  return { organization, owner };
-}, {
-  addSuccessNotification,
+export default connect(null, {
+  createOrganization,
   updateOrganization,
+  addSuccessNotification,
   addValidationErrorNotification,
 })(memo(OrganizationProfile, (prev, next) => (
-  isEqual(pick(prev.organization, ORGANIZATION_EDITABLE_PROPS), pick(next.organization, ORGANIZATION_EDITABLE_PROPS))
+  isEqual(pick(prev.organization, ORG_EDITABLE_PROPS), pick(next.organization, ORG_EDITABLE_PROPS))
 )));
