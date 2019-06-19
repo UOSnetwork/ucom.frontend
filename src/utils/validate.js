@@ -112,7 +112,7 @@ export default class Validate {
     } = Validate.getValidateFunctions();
 
     return Validate.validate(data, {
-      firstName: [reuqired, inputMaxLength],
+      firstName: [inputMaxLength],
       about: [textareaMaxLength],
       personalWebsiteUrl: [url, inputMaxLength],
       usersSources: [{
@@ -133,7 +133,7 @@ export default class Validate {
       country: [inputMaxLength],
       city: [inputMaxLength],
       personalWebsiteUrl: [url, inputMaxLength],
-      email: [reuqired, email, inputMaxLength],
+      email: [email, inputMaxLength],
       phoneNumber: [inputMaxLength],
       socialNetworks: [{
         sourceUrl: [reuqired, url, inputMaxLength],

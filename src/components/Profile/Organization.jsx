@@ -353,7 +353,7 @@ const OrganizationProfile = ({
             <h3 className={profileStyles.subTitle}>Links</h3>
 
             <div className={profileStyles.field}>
-              <div className={profileStyles.label}>My Website</div>
+              <div className={profileStyles.label}>Community Website</div>
               <div className={profileStyles.data}>
                 <TextInput
                   submited={submited}
