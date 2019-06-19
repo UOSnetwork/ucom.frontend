@@ -687,7 +687,7 @@ const api = {
     perPage,
     isMyself,
   }) {
-    const query = GraphQLSchema.getManyUsersAirdrop(
+    const query = GraphQLSchema.getManyUsers(
       airdropFilter,
       orderBy,
       page,
