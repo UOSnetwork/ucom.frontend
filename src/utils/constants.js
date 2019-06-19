@@ -15,3 +15,6 @@ export const VALIDATION_URL_ERROR = 'Field is not a valid url';
 export const VALIDATION_EMAIL_ERROR = 'Field is not a valid email';
 
 export const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const SOURCE_TYPE_EXTERNAL = 'external';
+export const SOURCE_TYPE_INTERNAL = 'internal';

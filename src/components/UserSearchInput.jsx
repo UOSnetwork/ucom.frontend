@@ -8,7 +8,7 @@ import api from '../api';
 import { getUserName } from '../utils/user';
 import urls from '../utils/urls';
 import EntryCard from './EntryCard';
-import { SOURCE_TYPE_EXTERNAL } from '../utils/organization';
+import { SOURCE_TYPE_EXTERNAL } from '../utils/constants';
 
 const SelectUserOption = props => (
   <components.Option {...props}>

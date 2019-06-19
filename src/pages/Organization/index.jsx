@@ -38,10 +38,6 @@ const OrganizationPage = (props) => {
 
   const organization = getOrganizationById(props.organizations, organizationId);
 
-  if (!organization || !organization.discussions) {
-    return null;
-  }
-
   const mapSourcesProps = item => ({
     id: item.id,
     organization: isExternalSource(item) || (item.entityName && item.entityName.trim() === 'org'),
@@ -67,69 +63,85 @@ const OrganizationPage = (props) => {
         </div>
         <div className="layout__sidebar">
           <OrganizationAdmins organizationId={organizationId} />
-          <OrganizationSources
-            title="Partners"
-            sources={(organization.partnershipSources || []).map(mapSourcesProps)}
-          />
-          <OrganizationSources
-            title="Communities"
-            sources={(organization.communitySources || []).map(mapSourcesProps)}
-          />
-          <EntryContacts
-            phone={organization.phoneNumber}
-            email={organization.email}
-          />
-          <EntrySocialNetworks
-            urls={(organization.socialNetworks || []).filter(item => item.sourceUrl && item.sourceUrl.length > 0).map(i => i.sourceUrl)}
-          />
-          <EntryLocation
-            city={organization.city}
-            country={organization.country}
-          />
-          <EntryCreatedAt date={organization.createdAt} />
+          {organization &&
+            <OrganizationSources
+              title="Partners"
+              sources={(organization.partnershipSources || []).map(mapSourcesProps)}
+            />
+          }
+          {organization &&
+            <OrganizationSources
+              title="Communities"
+              sources={(organization.communitySources || []).map(mapSourcesProps)}
+            />
+          }
+          {organization &&
+            <EntryContacts
+              phone={organization.phoneNumber}
+              email={organization.email}
+            />
+          }
+          {organization &&
+            <EntrySocialNetworks
+              urls={(organization.socialNetworks || []).filter(item => item.sourceUrl && item.sourceUrl.length > 0).map(i => i.sourceUrl)}
+            />
+          }
+          {organization &&
+            <EntryLocation
+              city={organization.city}
+              country={organization.country}
+            />
+          }
+          {organization &&
+            <EntryCreatedAt date={organization.createdAt} />
+          }
         </div>
         <div className="layout__main">
-          <EntryAbout text={organization.about} />
+          {organization &&
+            <EntryAbout text={organization.about} />
+          }
 
-          <Discussions
-            editable={userIsTeam(props.user, organization)}
-            placeholder={`Link to ${organization.title} Article`}
-            validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
-            newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
-            onSubmit={async (postId) => {
-              await withLoader(props.dispatch(setDiscussions({
-                organizationId,
-                discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
-              })));
-              await withLoader(props.dispatch(getOrganization(organizationId)));
-            }}
-            onSortEnd={async (e) => {
-              const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
-              props.dispatch(addOrganizations([{
-                id: organizationId,
-                discussions,
-              }]));
-              await withLoader(props.dispatch(setDiscussions({
-                organizationId,
-                discussions: discussions.map(i => ({ id: i.id })),
-              })));
-            }}
-            items={organization.discussions.map(item => ({
-              id: item.id,
-              url: urls.getPostUrl(item),
-              title: item.title,
-              author: getUserName(item.user),
-              authorUrl: urls.getUserUrl(item.user.id),
-              commentCount: item.commentsCount,
-              onClickRemove: async (id) => {
+          {organization && organization.discussions &&
+            <Discussions
+              editable={userIsTeam(props.user, organization)}
+              placeholder={`Link to ${organization.title} Article`}
+              validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
+              newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
+              onSubmit={async (postId) => {
                 await withLoader(props.dispatch(setDiscussions({
                   organizationId,
-                  discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
+                  discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
                 })));
                 await withLoader(props.dispatch(getOrganization(organizationId)));
-              },
-            }))}
-          />
+              }}
+              onSortEnd={async (e) => {
+                const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
+                props.dispatch(addOrganizations([{
+                  id: organizationId,
+                  discussions,
+                }]));
+                await withLoader(props.dispatch(setDiscussions({
+                  organizationId,
+                  discussions: discussions.map(i => ({ id: i.id })),
+                })));
+              }}
+              items={organization.discussions.map(item => ({
+                id: item.id,
+                url: urls.getPostUrl(item),
+                title: item.title,
+                author: getUserName(item.user),
+                authorUrl: urls.getUserUrl(item.user.id),
+                commentCount: item.commentsCount,
+                onClickRemove: async (id) => {
+                  await withLoader(props.dispatch(setDiscussions({
+                    organizationId,
+                    discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
+                  })));
+                  await withLoader(props.dispatch(getOrganization(organizationId)));
+                },
+              }))}
+            />
+          }
 
           <Feed organizationId={organizationId} feedTypeId={ORGANIZATION_FEED_ID} />
         </div>

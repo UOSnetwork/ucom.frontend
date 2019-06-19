@@ -18,13 +18,14 @@ import Button from '../Button/index';
 import UserSearchInput from '../UserSearchInput';
 import Validate from '../../utils/validate';
 import UserPick from '../UserPick/UserPick';
-import { getUsersTeamStatusById, SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/organization';
+import { getUsersTeamStatusById } from '../../utils/organization';
 import api from '../../api';
 import { validUrl, extractSitename } from '../../utils/url';
 import EmbedService from '../../utils/embedService';
 import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addValidationErrorNotification } from '../../actions/notifications';
 import { updateOrganization, createOrganization } from '../../actions/organizations';
+import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
 
 const defaultOrg = {
   title: '',

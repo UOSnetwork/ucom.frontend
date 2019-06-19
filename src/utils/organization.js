@@ -10,9 +10,6 @@ import {
   USERS_TEAM_STATUS_ID_DECLINED,
 } from '../store/organization';
 
-export const SOURCE_TYPE_EXTERNAL = 'external';
-export const SOURCE_TYPE_INTERNAL = 'internal';
-
 export const getOrganizationUrl = (id) => {
   if (!id) {
     return null;
