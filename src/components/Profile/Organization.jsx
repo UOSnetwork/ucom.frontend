@@ -42,6 +42,12 @@ const defaultOrg = {
 };
 
 const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
+const OWNER_PROPS = [
+  'id',
+  'avatarFilename',
+  'accountName',
+  'firstName',
+];
 
 const OrganizationProfile = ({
   owner,
@@ -531,7 +537,7 @@ const OrganizationProfile = ({
 };
 
 OrganizationProfile.propTypes = {
-  owner: PropTypes.objectOf(PropTypes.any).isRequired,
+  owner: PropTypes.objectOf(PropTypes.any),
   organization: PropTypes.objectOf(PropTypes.any).isRequired,
   onSuccess: PropTypes.func.isRequired,
   addSuccessNotification: PropTypes.func.isRequired,
@@ -540,11 +546,16 @@ OrganizationProfile.propTypes = {
   createOrganization: PropTypes.func.isRequired,
 };
 
+OrganizationProfile.defaultProps = {
+  owner: undefined,
+};
+
 export default connect(null, {
   createOrganization,
   updateOrganization,
   addSuccessNotification,
   addValidationErrorNotification,
 })(memo(OrganizationProfile, (prev, next) => (
-  isEqual(pick(prev.organization, ORG_EDITABLE_PROPS), pick(next.organization, ORG_EDITABLE_PROPS))
+  isEqual(pick(prev.organization, ORG_EDITABLE_PROPS), pick(next.organization, ORG_EDITABLE_PROPS)) &&
+  isEqual(pick(prev.owner, OWNER_PROPS), pick(next.owner, OWNER_PROPS))
 )));
