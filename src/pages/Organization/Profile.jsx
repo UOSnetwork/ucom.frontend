@@ -44,6 +44,10 @@ ProfilePopup.propTypes = {
 
 export default connect((state, props) => {
   const organization = getOrganizationById(state.organizations, props.match.params.organizationId);
-  const owner = getUserById(state.users, organization.userId);
+  let owner;
+
+  if (organization) {
+    owner = getUserById(state.users, organization.userId);
+  }
   return { organization, owner };
 })(ProfilePopup);
