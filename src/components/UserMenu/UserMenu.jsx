@@ -17,7 +17,6 @@ import WalletActivity from '../Wallet/WalletActivity';
 import { removeToken } from '../../utils/token';
 import urls from '../../utils/urls';
 import SearchPopup from '../Search';
-import { settingsShow } from '../../actions/settings';
 
 const UserMenu = (props) => {
   const logout = () => {

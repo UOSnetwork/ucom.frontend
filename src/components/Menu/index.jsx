@@ -6,7 +6,16 @@ import styles from './styles.css';
 const Menu = ({ items }) => (
   <div className={styles.menu}>
     {items.map((item, index) => {
-      const NavTag = item.to ? NavLink : 'span';
+      let NavTag;
+
+      if (item.to) {
+        NavTag = NavLink;
+      } else if (item.href) {
+        NavTag = 'a';
+      } else {
+        NavTag = 'span';
+      }
+
       const props = {
         ...item,
         key: index,

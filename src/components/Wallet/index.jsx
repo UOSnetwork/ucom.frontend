@@ -7,13 +7,12 @@ import Transfers from '../Resources/Transfers';
 import styles from './styles.css';
 import urls from '../../utils/urls';
 import Menu from '../Menu';
-import { settingsShow } from '../../actions/settings';
 import { logout } from '../../utils/auth';
 import Popup, { Content } from '../Popup';
 
 // TODO: remove menu-wallet.less nad fix dependencies
 const Wallet = ({
-  location, dispatch, settings, onClickClose,
+  location, onClickClose,
 }) => (
   <Popup
     transparent
@@ -43,8 +42,7 @@ const Wallet = ({
               title: 'Governance',
             }, {
               title: 'Settings',
-              isActive: () => settings.visible,
-              onClick: () => dispatch(settingsShow()),
+              href: urls.getSettingsUrl(),
             }, {
               title: 'Log Out',
               onClick: () => logout(),
@@ -67,10 +65,6 @@ const Wallet = ({
 Wallet.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  settings: PropTypes.shape({
-    visible: PropTypes.bool.isRequired,
   }).isRequired,
   onClickClose: PropTypes.func.isRequired,
 };

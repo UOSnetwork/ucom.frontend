@@ -12,13 +12,12 @@ import DropdownMenu, {
 } from '../DropdownMenu';
 import urls from '../../utils/urls';
 import styles from './styles.css';
-import { settingsShow } from '../../actions/settings';
 import { logout } from '../../utils/auth';
 import { getUserById } from '../../store/users';
 
 const ORGANIZATIONS_ITEMS_LIMIT = 3;
 
-const User = ({ user, dispatch, onClickOrganizationsViewAll }) => {
+const User = ({ user, onClickOrganizationsViewAll }) => {
   const organizations = user.organizations || [];
   const menuItems = [{
     title: 'Publications',
@@ -56,7 +55,7 @@ const User = ({ user, dispatch, onClickOrganizationsViewAll }) => {
       type: DROPDOWN_MENU_ITEM_TYPE_TITLE,
     }, {
       title: 'Settings',
-      onClick: () => dispatch(settingsShow()),
+      url: urls.getSettingsUrl(),
     }, {
       title: 'Log Out',
       type: DROPDOWN_MENU_ITEM_TYPE_LOGOUT,
@@ -87,7 +86,6 @@ User.propTypes = {
     avatarFilename: PropTypes.string,
     currentRate: PropTypes.number,
   }),
-  dispatch: PropTypes.func.isRequired,
   onClickOrganizationsViewAll: PropTypes.func,
 };
 

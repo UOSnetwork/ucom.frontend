@@ -55,6 +55,8 @@ const App = ({ addMaintenanceNotification, ...props }) => {
           switch (route) {
             case urls.getOrganizationCrerateUrl():
               return <CreateOrg />;
+            case urls.getSettingsUrl():
+              return <Settings />;
             default:
               return null;
           }
@@ -68,7 +70,6 @@ const App = ({ addMaintenanceNotification, ...props }) => {
         <Auth />
       </Page>
 
-      {props.settings.visible && <Settings />}
       {props.wallet.buyRamVisible && <BuyRam />}
       {props.wallet.sellRamVisible && <SellRam />}
       {props.wallet.editStakeVisible && <EditStake />}
@@ -81,9 +82,6 @@ const App = ({ addMaintenanceNotification, ...props }) => {
 App.propTypes = {
   fetchMyself: PropTypes.func.isRequired,
   initNotificationsListeners: PropTypes.func.isRequired,
-  settings: PropTypes.shape({
-    visible: PropTypes.bool.isRequired,
-  }).isRequired,
   wallet: PropTypes.shape({
     buyRamVisible: PropTypes.bool.isRequired,
     sellRamVisible: PropTypes.bool.isRequired,
@@ -97,7 +95,6 @@ export default withRouter(connect(
   state => ({
     auth: state.auth,
     wallet: state.walletSimple,
-    settings: state.settings,
   }),
   {
     fetchMyself,
