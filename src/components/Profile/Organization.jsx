@@ -18,7 +18,7 @@ import Button from '../Button/index';
 import UserSearchInput from '../UserSearchInput';
 import Validate from '../../utils/validate';
 import UserPick from '../UserPick/UserPick';
-import { getUsersTeamStatusById, SOURCE_TYPE_EXTERNAL } from '../../utils/organization';
+import { getUsersTeamStatusById, SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/organization';
 import api from '../../api';
 import { validUrl, extractSitename } from '../../utils/url';
 import EmbedService from '../../utils/embedService';
@@ -451,6 +451,7 @@ const OrganizationProfile = ({
                     autoFocus
                     organization
                     value={[]}
+                    placeholder="Find community"
                     loadOptions={async (q) => {
                       if (validUrl(q)) {
                         try {
@@ -475,7 +476,10 @@ const OrganizationProfile = ({
                       }
                     }}
                     onChange={(organizations) => {
-                      const organization = organizations[0];
+                      const organization = {
+                        ...organizations[0],
+                        sourceType: SOURCE_TYPE_INTERNAL,
+                      };
                       const partnershipSources = data.partnershipSources.concat(organization);
                       setDataAndValidate({ ...data, partnershipSources });
                       setPartnersSearchVisible(false);
