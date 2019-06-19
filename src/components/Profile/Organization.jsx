@@ -21,7 +21,6 @@ import UserPick from '../UserPick/UserPick';
 import { getUsersTeamStatusById } from '../../utils/organization';
 import api from '../../api';
 import { validUrl, extractSitename } from '../../utils/url';
-import EmbedService from '../../utils/embedService';
 import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addValidationErrorNotification } from '../../actions/notifications';
 import { updateOrganization, createOrganization } from '../../actions/organizations';
@@ -455,18 +454,12 @@ const OrganizationProfile = ({
                     placeholder="Find community"
                     loadOptions={async (q) => {
                       if (validUrl(q)) {
-                        try {
-                          const data = await EmbedService.getDataFromUrl(q);
-
-                          return [{
-                            title: extractSitename(q),
-                            description: data.description || extractSitename(q),
-                            sourceUrl: q,
-                            sourceType: SOURCE_TYPE_EXTERNAL,
-                          }];
-                        } catch (err) {
-                          return [];
-                        }
+                        return [{
+                          title: extractSitename(q),
+                          description: extractSitename(q),
+                          sourceUrl: q,
+                          sourceType: SOURCE_TYPE_EXTERNAL,
+                        }];
                       }
 
                       try {
@@ -479,7 +472,7 @@ const OrganizationProfile = ({
                     onChange={(organizations) => {
                       const organization = {
                         ...organizations[0],
-                        sourceType: SOURCE_TYPE_INTERNAL,
+                        sourceType: organizations[0].sourceType || SOURCE_TYPE_INTERNAL,
                       };
                       const partnershipSources = data.partnershipSources.concat(organization);
                       setDataAndValidate({ ...data, partnershipSources });
