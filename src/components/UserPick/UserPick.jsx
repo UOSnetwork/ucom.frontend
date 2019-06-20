@@ -2,13 +2,31 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React, { memo } from 'react';
-import UserIcon from '../Icons/User';
-import OrganizationIcon from '../Icons/Organization';
+import IconUser from '../Icons/User';
+import IconOrganization from '../Icons/Organization';
+import IconExternal from '../Icons/External';
 import styles from './styles.css';
 
 const UserPick = (props) => {
-  const LinkTag = props.url ? Link : 'div';
-  const BlankIcon = props.organization ? OrganizationIcon : UserIcon;
+  let BlankIcon;
+
+  if (props.isExternal) {
+    BlankIcon = IconExternal;
+  } else if (props.organization) {
+    BlankIcon = IconOrganization;
+  } else {
+    BlankIcon = IconUser;
+  }
+
+  let LinkTag;
+
+  if (props.url && props.isExternal) {
+    LinkTag = 'a';
+  } else if (props.url) {
+    LinkTag = Link;
+  } else {
+    LinkTag = 'div';
+  }
 
   return (
     <LinkTag
@@ -25,6 +43,7 @@ const UserPick = (props) => {
       })}
       title={props.alt}
       to={props.url}
+      target={props.isExternal ? '_blank' : undefined}
     >
       {props.src ? (
         <img src={props.src} alt={props.alt} />
@@ -44,6 +63,7 @@ UserPick.propTypes = {
   organization: PropTypes.bool,
   shadow: PropTypes.bool,
   size: PropTypes.number,
+  isExternal: PropTypes.bool,
 };
 
 UserPick.defaultProps = {
@@ -55,6 +75,7 @@ UserPick.defaultProps = {
   organization: false,
   shadow: false,
   size: null,
+  isExternal: false,
 };
 
 export default memo(UserPick);

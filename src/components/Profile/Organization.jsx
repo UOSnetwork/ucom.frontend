@@ -25,6 +25,7 @@ import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addValidationErrorNotification } from '../../actions/notifications';
 import { updateOrganization, createOrganization } from '../../actions/organizations';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
+import EmbedService from '../../utils/embedService';
 
 const defaultOrg = {
   title: '',
@@ -39,6 +40,7 @@ const defaultOrg = {
   socialNetworks: [],
   usersTeam: [],
   partnershipSources: [],
+  communitySources: [],
 };
 
 const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
@@ -143,10 +145,6 @@ const OrganizationProfile = ({
         </div>
         <div className={gridStyles.content}>
           <h2 className={profileStyles.title}>{data.id ? 'Edit Community Profile' : 'New Community'}</h2>
-          <p className={profileStyles.description}>
-            Few words about profile its how it will affect autoupdates and etc.<br />
-            Maybe some tips)
-          </p>
 
           <Element
             name="general"
@@ -418,6 +416,35 @@ const OrganizationProfile = ({
             <div className={profileStyles.field}>
               <div className={profileStyles.label}>Partners</div>
               <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+                {data.communitySources && data.communitySources.map((item, index) => (
+                  <div
+                    key={index}
+                    className={profileStyles.entry}
+                  >
+                    <EntryCard
+                      disableRate
+                      organization
+                      disableSign={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                      isExternal={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                      avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                      url={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : urls.getOrganizationUrl(item.entityId)}
+                      title={item.title}
+                      nickname={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : item.nickname}
+                    />
+                    <span
+                      role="presentation"
+                      className={`${profileStyles.remove} ${profileStyles.medium}`}
+                      onClick={() => {
+                        const { communitySources } = data;
+                        communitySources.splice(index, 1);
+                        setDataAndValidate({ ...data, communitySources });
+                      }}
+                    >
+                      <IconRemove />
+                    </span>
+                  </div>
+                ))}
+
                 {data.partnershipSources && data.partnershipSources.map((item, index) => (
                   <div
                     key={index}
@@ -446,6 +473,7 @@ const OrganizationProfile = ({
                     </span>
                   </div>
                 ))}
+
                 {partnersSearchVisible &&
                   <UserSearchInput
                     autoFocus
@@ -454,12 +482,22 @@ const OrganizationProfile = ({
                     placeholder="Find community"
                     loadOptions={async (q) => {
                       if (validUrl(q)) {
-                        return [{
-                          title: extractSitename(q),
-                          description: extractSitename(q),
-                          sourceUrl: q,
-                          sourceType: SOURCE_TYPE_EXTERNAL,
-                        }];
+                        try {
+                          const data = await EmbedService.getDataFromUrl(q);
+                          return [{
+                            title: data.title,
+                            description: data.description,
+                            sourceUrl: q,
+                            sourceType: SOURCE_TYPE_EXTERNAL,
+                          }];
+                        } catch (err) {
+                          return [{
+                            title: extractSitename(q),
+                            description: extractSitename(q),
+                            sourceUrl: q,
+                            sourceType: SOURCE_TYPE_EXTERNAL,
+                          }];
+                        }
                       }
 
                       try {
@@ -487,7 +525,7 @@ const OrganizationProfile = ({
                     disabled={partnersSearchVisible}
                     onClick={() => setPartnersSearchVisible(true)}
                   >
-                    {data.partnershipSources && data.partnershipSources.length > 0 ? 'Add Another' : 'Add Partner'}
+                    {[...(data.partnershipSources || []), ...(data.communitySources || [])].length > 0 ? 'Add Another' : 'Add Partner'}
                   </Button>
                 </div>
               </div>

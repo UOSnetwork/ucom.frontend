@@ -31,11 +31,6 @@ import withLoader from '../../utils/withLoader';
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
   const isExternalSource = source => source.sourceType === 'external';
-
-  useEffect(() => {
-    withLoader(props.dispatch(getOrganization(organizationId)));
-  }, [organizationId]);
-
   const organization = getOrganizationById(props.organizations, organizationId);
 
   const mapSourcesProps = item => ({
@@ -49,6 +44,10 @@ const OrganizationPage = (props) => {
     disableSign: isExternalSource(item),
     isExternal: isExternalSource(item),
   });
+
+  useEffect(() => {
+    withLoader(props.dispatch(getOrganization(organizationId)));
+  }, [organizationId]);
 
   return (
     <LayoutBase gray>
@@ -66,13 +65,10 @@ const OrganizationPage = (props) => {
           {organization &&
             <OrganizationSources
               title="Partners"
-              sources={(organization.partnershipSources || []).map(mapSourcesProps)}
-            />
-          }
-          {organization &&
-            <OrganizationSources
-              title="Communities"
-              sources={(organization.communitySources || []).map(mapSourcesProps)}
+              sources={[
+                ...(organization.communitySources || []).map(mapSourcesProps),
+                ...(organization.partnershipSources || []).map(mapSourcesProps),
+              ]}
             />
           }
           {organization &&

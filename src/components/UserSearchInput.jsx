@@ -21,6 +21,7 @@ const SelectUserOption = props => (
         avatarSrc={urls.getFileUrl(props.data.avatarFilename)}
         title={props.data.title}
         nickname={props.data.sourceType === SOURCE_TYPE_EXTERNAL ? props.data.sourceUrl : props.data.nickname}
+        isExternal={props.data.sourceType === SOURCE_TYPE_EXTERNAL}
       />
     ) : (
       <EntryCard

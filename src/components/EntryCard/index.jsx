@@ -13,8 +13,10 @@ const EntryCard = (props) => {
 
   if (props.disabledLink || !props.url) {
     LinkTag = 'span';
+  } else if (props.isExternal) {
+    LinkTag = 'a';
   } else {
-    LinkTag = props.isExternal ? 'a' : Link;
+    LinkTag = Link;
   }
 
   return (
@@ -33,7 +35,12 @@ const EntryCard = (props) => {
             href={filterURL(props.url)}
             target={props.isExternal ? '_blank' : undefined}
           >
-            <UserPick shadow organization={props.organization} src={props.avatarSrc} />
+            <UserPick
+              shadow
+              src={props.avatarSrc}
+              organization={props.organization}
+              isExternal={props.isExternal}
+            />
           </LinkTag>
         </div>
       }
