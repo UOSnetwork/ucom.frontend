@@ -24,9 +24,6 @@ const Notification = (props) => {
   }
 };
 
-export default connect(
-  null,
-  dispatch => ({
-    closeNotification: id => dispatch(closeNotification(id)),
-  }),
-)(Notification);
+export default connect(null, {
+  closeNotification,
+})(Notification);

@@ -1,14 +1,9 @@
 import { memoize } from 'lodash';
 import api from '../api';
 import {
-  SOURCES_ID_FACEBOOK,
-  SOURCES_ID_REDDIT,
-  SOURCES_ID_MEDIUM,
-  SOURCES_ID_TWITTER,
-  SOURCES_ID_GITHUB,
   USERS_TEAM_STATUS_ID_CONFIRMED,
   USERS_TEAM_STATUS_ID_DECLINED,
-} from '../store/organization';
+} from '../utils/constants';
 
 export const getOrganizationUrl = (id) => {
   if (!id) {
@@ -16,33 +11,6 @@ export const getOrganizationUrl = (id) => {
   }
 
   return `/communities/${id}`;
-};
-
-export const getSourceNameById = (id) => {
-  switch (id) {
-    case SOURCES_ID_FACEBOOK: {
-      return 'Facebook';
-    }
-
-    case SOURCES_ID_REDDIT: {
-      return 'Reddit';
-    }
-
-    case SOURCES_ID_MEDIUM: {
-      return 'Medium';
-    }
-
-    case SOURCES_ID_TWITTER: {
-      return 'Twitter';
-    }
-
-    case SOURCES_ID_GITHUB: {
-      return 'Github';
-    }
-    default: {
-      return null;
-    }
-  }
 };
 
 export const getUsersTeamStatusById = memoize((id) => {

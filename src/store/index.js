@@ -3,7 +3,6 @@ import * as redux from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import post from '../store/post';
 import auth from './auth';
-import organization from './organization';
 import notifications from './notifications';
 import siteNotifications from './siteNotifications';
 import posts from './posts';
@@ -28,7 +27,6 @@ export const createStore = () => {
     user,
     post,
     auth,
-    organization,
     notifications,
     siteNotifications,
     posts,

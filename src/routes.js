@@ -8,7 +8,6 @@ import Offer2, { getPostOfferData_2 } from './pages/Offer2';
 import UsersPage from './pages/Users';
 import AboutPage from './pages/About';
 import OrganizationsPage from './pages/Organizations';
-import OrganizationsCreatePage from './pages/OrganizationsCreate';
 import OrganizationPage from './pages/Organization';
 import NotFoundPage from './pages/NotFoundPage';
 import RegistrationPage from './components/Registration/Registration';
@@ -104,10 +103,6 @@ export default [{
   exact: true,
   path: '/communities',
   component: OrganizationsPage,
-}, {
-  exact: true,
-  path: '/communities/new',
-  component: OrganizationsCreatePage,
 }, {
   exact: false,
   path: '/communities/:id',

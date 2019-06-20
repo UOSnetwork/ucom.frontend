@@ -18,3 +18,13 @@ export const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*
 
 export const SOURCE_TYPE_EXTERNAL = 'external';
 export const SOURCE_TYPE_INTERNAL = 'internal';
+
+export const SOURCES_ID_FACEBOOK = 1;
+export const SOURCES_ID_REDDIT = 2;
+export const SOURCES_ID_MEDIUM = 3;
+export const SOURCES_ID_TWITTER = 4;
+export const SOURCES_ID_GITHUB = 5;
+
+export const USERS_TEAM_STATUS_ID_PENDING = 0;
+export const USERS_TEAM_STATUS_ID_CONFIRMED = 1;
+export const USERS_TEAM_STATUS_ID_DECLINED = 2;

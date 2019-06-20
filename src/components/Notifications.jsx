@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import Notification from './Notifications/Notification';
 
+// TODO: Move to Notifications
 const Notifications = props => (
   <div className="notifications">
     <TransitionGroup className="notifications__list">
