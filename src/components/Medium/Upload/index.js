@@ -225,8 +225,8 @@ export default class MediumUpload extends MediumEditor.Extension {
 
     try {
       compressedImage = await compressUploadedImage(file);
-    } catch (e) {
-      this.onError(e);
+    } catch (err) {
+      this.onError(err.message);
       return;
     }
 

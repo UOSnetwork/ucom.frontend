@@ -9,13 +9,22 @@ import { filterURL } from '../../utils/url';
 
 // TODO: Remove and replace another cards
 const EntryCard = (props) => {
-  const LinkTag = props.disabledLink ? 'span' : props.isExternal ? 'a' : Link;
+  let LinkTag;
+
+  if (props.disabledLink || !props.url) {
+    LinkTag = 'span';
+  } else if (props.isExternal) {
+    LinkTag = 'a';
+  } else {
+    LinkTag = Link;
+  }
 
   return (
     <div
       className={classNames({
         [styles.entryCard]: true,
         [styles.disableAvatar]: props.disableAvatar,
+        [styles.withRate]: !props.disableRate,
       })}
     >
       {!props.disableAvatar &&
@@ -26,7 +35,12 @@ const EntryCard = (props) => {
             href={filterURL(props.url)}
             target={props.isExternal ? '_blank' : undefined}
           >
-            <UserPick shadow organization={props.organization} src={props.avatarSrc} />
+            <UserPick
+              shadow
+              src={props.avatarSrc}
+              organization={props.organization}
+              isExternal={props.isExternal}
+            />
           </LinkTag>
         </div>
       }
@@ -62,7 +76,7 @@ const EntryCard = (props) => {
 EntryCard.propTypes = {
   organization: PropTypes.bool,
   avatarSrc: PropTypes.string,
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
   title: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
   currentRate: PropTypes.number,
@@ -75,13 +89,14 @@ EntryCard.propTypes = {
 
 EntryCard.defaultProps = {
   organization: false,
-  avatarSrc: null,
-  currentRate: null,
+  avatarSrc: undefined,
+  currentRate: undefined,
   disabledLink: false,
   disableRate: false,
   disableSign: false,
   disableAvatar: false,
   isExternal: false,
+  url: undefined,
 };
 
 export default EntryCard;

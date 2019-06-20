@@ -17,10 +17,12 @@ import BuyRam from '../components/Resources/Actions/BuyRam';
 import SellRam from '../components/Resources/Actions/SellRam';
 import EditStake from '../components/Resources/Actions/EditStake';
 import SendTokens from '../components/Resources/Actions/SendTokens';
-import { addNotification } from '../actions/notifications';
-import { NOTIFICATION_TYPE_ERROR } from '../store/notifications';
+import { addMaintenanceNotification } from '../actions/notifications';
+import HashRouter from '../components/HashRouter';
+import CreateOrg from '../pages/Organization/Create';
+import urls from '../utils/urls';
 
-const App = (props) => {
+const App = ({ addMaintenanceNotification, ...props }) => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       enableGtm();
@@ -40,12 +42,7 @@ const App = (props) => {
     }
 
     if (config.maintenanceMode) {
-      props.addNotification({
-        type: NOTIFICATION_TYPE_ERROR,
-        title: 'Warning',
-        message: 'The platform is on maintenance and in a read-only mode. Please avoid posting content, it will not be published.',
-        autoClose: false,
-      });
+      addMaintenanceNotification();
     }
 
     return removeInitDragAndDropListeners;
@@ -53,23 +50,26 @@ const App = (props) => {
 
   return (
     <Fragment>
+      <HashRouter>
+        {(route) => {
+          switch (route) {
+            case urls.getOrganizationCrerateUrl():
+              return <CreateOrg />;
+            case urls.getSettingsUrl():
+              return <Settings />;
+            default:
+              return null;
+          }
+        }}
+      </HashRouter>
+
       <Page>
         <Switch>
-          {routes.map(r => (
-            <Route
-              exact={typeof r.exact === 'undefined' ? true : r.exact}
-              key={r.path}
-              path={r.path}
-              component={r.component}
-            />
-          ))}
+          {routes.map(route => <Route {...route} key={route.path} />)}
         </Switch>
-
         <Auth />
-        {/* <UserMenu /> */}
       </Page>
 
-      {props.settings.visible && <Settings />}
       {props.wallet.buyRamVisible && <BuyRam />}
       {props.wallet.sellRamVisible && <SellRam />}
       {props.wallet.editStakeVisible && <EditStake />}
@@ -82,28 +82,24 @@ const App = (props) => {
 App.propTypes = {
   fetchMyself: PropTypes.func.isRequired,
   initNotificationsListeners: PropTypes.func.isRequired,
-  settings: PropTypes.shape({
-    visible: PropTypes.bool.isRequired,
-  }).isRequired,
   wallet: PropTypes.shape({
     buyRamVisible: PropTypes.bool.isRequired,
     sellRamVisible: PropTypes.bool.isRequired,
     editStakeVisible: PropTypes.bool.isRequired,
     sendTokensVisibility: PropTypes.bool.isRequired,
   }).isRequired,
-  addNotification: PropTypes.func.isRequired,
+  addMaintenanceNotification: PropTypes.func.isRequired,
 };
 
 export default withRouter(connect(
   state => ({
     auth: state.auth,
     wallet: state.walletSimple,
-    settings: state.settings,
   }),
   {
     fetchMyself,
     initNotificationsListeners,
     siteNotificationsSetUnreadAmount,
-    addNotification,
+    addMaintenanceNotification,
   },
 )(App));

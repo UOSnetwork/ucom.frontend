@@ -1,0 +1,159 @@
+.menu {
+  margin: 0 0 40px;
+}
+
+.title {
+  margin: 0 0 41px;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.125;
+  color: #E4E4E4;
+}
+
+.description {
+  margin: 0 0 40px;
+}
+
+.section {
+  margin: 0 0 53px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.subTitle {
+  font-size: 28px;
+  line-height: 1.14;
+  margin: 0 0 41px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: flex-start;
+  margin: 0 0 32px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field.block {
+  align-items: center;
+}
+
+.field .data {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.field .data.entrys {
+  grid-gap: 26px;
+  grid-auto-flow: row;
+  grid-auto-rows: minmax(48px, auto);
+  align-items: center;
+}
+
+.field .label {
+  padding: 10px 0;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  grid-gap: 16px;
+  align-items: center;
+}
+
+.entry.input {
+  grid-gap: 0;
+  align-items: flex-start;
+}
+
+.entry .remove {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.entry:hover .remove {
+  opacity: 1;
+}
+
+.upload {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  max-width: 414px;
+  cursor: pointer;
+}
+
+.uploadIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+}
+
+.uploadIcon.org {
+  border-radius: 3px;
+}
+
+.uploadText {
+  font-size: 12px;
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  fill: #C4C4C4;
+  transition: fill 0.2s ease;
+}
+
+.remove:hover {
+  fill: #D8352F;
+}
+
+.remove.medium {
+  width: 32px;
+  height: 32px;
+}
+
+.cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  background: linear-gradient(0deg, #D8E8E8, #D8E8E8), #FFFFFF;
+  cursor: pointer;
+}
+
+.adminStatus {
+  font-size: 12px;
+  color: #585858;
+}
+
+@media (max-width: 1023px) {
+  .menu {
+    display: none;
+  }
+
+  .field {
+    grid-template-columns: 1fr;
+  }
+
+  .field .data {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+}

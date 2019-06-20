@@ -1,22 +1,37 @@
-import humps from 'lodash-humps';
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
 import { components } from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
-import UserOption from './UserOption';
 import Close from './Icons/Close';
 import api from '../api';
 import { getUserName } from '../utils/user';
 import urls from '../utils/urls';
+import EntryCard from './EntryCard';
+import { SOURCE_TYPE_EXTERNAL } from '../utils/constants';
 
 const SelectUserOption = props => (
   <components.Option {...props}>
-    <UserOption
-      name={getUserName(props.data)}
-      avatar={urls.getFileUrl(humps(props.data).avatarFilename)}
-      nickname={props.data.accountName}
-    />
+    {props.selectProps.organization ? (
+      <EntryCard
+        disabledLink
+        disableRate
+        organization
+        disableSign={props.data.sourceType === SOURCE_TYPE_EXTERNAL}
+        avatarSrc={urls.getFileUrl(props.data.avatarFilename)}
+        title={props.data.title}
+        nickname={props.data.sourceType === SOURCE_TYPE_EXTERNAL ? props.data.sourceUrl : props.data.nickname}
+        isExternal={props.data.sourceType === SOURCE_TYPE_EXTERNAL}
+      />
+    ) : (
+      <EntryCard
+        disabledLink
+        disableRate
+        avatarSrc={urls.getFileUrl(props.data.avatarFilename)}
+        title={getUserName(props.data)}
+        nickname={props.data.accountName}
+      />
+    )}
   </components.Option>
 );
 
@@ -62,9 +77,12 @@ const UserSearchInput = ({
   isMulti,
   placeholder,
   loadOptions,
+  autoFocus,
+  organization,
 }) => (
   <div className="dropdown">
     <AsyncSelect
+      autoFocus={autoFocus}
       value={value}
       isMulti={isMulti}
       isSearchable
@@ -72,18 +90,19 @@ const UserSearchInput = ({
       placeholder={placeholder}
       className="dropdown"
       classNamePrefix="dropdown"
-      loadOptions={loadOptions || api.searchUsers.bind(api)}
+      loadOptions={loadOptions}
       getOptionLabel={data => getUserName(data)}
       getOptionValue={data => data.id}
+      organization={organization}
       components={{
-        MultiValueRemove: CloseButton,
+        Input,
         Control,
         DropdownIndicator,
+        MultiValueRemove: CloseButton,
         Option: SelectUserOption,
-        Input,
       }}
       onChange={(options) => {
-        if (typeof onChange === 'function') {
+        if (onChange) {
           onChange(options);
         }
       }}
@@ -96,6 +115,9 @@ UserSearchInput.propTypes = {
   onChange: PropTypes.func,
   isMulti: PropTypes.bool,
   placeholder: PropTypes.string,
+  loadOptions: PropTypes.func,
+  autoFocus: PropTypes.bool,
+  organization: PropTypes.bool,
 };
 
 UserSearchInput.defaultProps = {
@@ -103,6 +125,16 @@ UserSearchInput.defaultProps = {
   placeholder: 'Find people',
   onChange: undefined,
   value: undefined,
+  autoFocus: false,
+  organization: false,
+  loadOptions: async (q) => {
+    try {
+      const data = await api.searchUsers(q);
+      return data.slice(0, 20);
+    } catch (err) {
+      return [];
+    }
+  },
 };
 
 export default UserSearchInput;

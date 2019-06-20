@@ -3,7 +3,6 @@ import snakes from '../utils/snakes';
 import { getToken, removeToken } from '../utils/token';
 import loader from '../utils/loader';
 // import { enableGtm } from '../utils/gtm';
-import { addServerErrorNotification } from './notifications';
 import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
@@ -147,21 +146,14 @@ export const fetchUserFollowsOrganizations = ({
   }
 };
 
-export const updateUser = payload => async (dispatch) => {
-  loader.start();
-
+export const updateUser = userData => async (dispatch) => {
   try {
-    const data = await api.patchMyself(snakes(payload));
-
-    delete data.currentRate;
-
-    dispatch(addUsers([data]));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
+    const data = await api.patchMyself(snakes(userData));
+    dispatch(fetchUser(data.id));
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
-
-  loader.done();
 };
 
 export const followUser = ({

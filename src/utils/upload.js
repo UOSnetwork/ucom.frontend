@@ -72,7 +72,7 @@ export const compressImageAndRotate = (file, maxWidth, maxHeight, type = 'image/
     const fileName = file.name;
     if (file.type === 'image/gif') {
       if (file.size > UPLOAD_SIZE_LIMIT_GIF) {
-        reject(UPLOAD_SIZE_LIMIT_ERROR_GIF);
+        reject(new Error(UPLOAD_SIZE_LIMIT_ERROR_GIF));
       }
       resolve(file);
     }
@@ -144,7 +144,7 @@ export const compressImageAndRotate = (file, maxWidth, maxHeight, type = 'image/
             });
 
             if (file.size > UPLOAD_SIZE_LIMIT) {
-              reject(UPLOAD_SIZE_LIMIT_ERROR);
+              reject(new Error(UPLOAD_SIZE_LIMIT_ERROR));
             }
 
             resolve(file);

@@ -28,12 +28,21 @@ const DropdownMenu = (props) => {
       html={(
         <div className={styles.tooltipMenu}>
           {props.items.map((item, id) => {
-            const LinkTag = item.url ? Link : 'button';
+            let LinkTag;
+
+            if (!item.url) {
+              LinkTag = 'button';
+            } else if (item.url.indexOf('#') === 0) {
+              LinkTag = 'a';
+            } else {
+              LinkTag = Link;
+            }
 
             return (
               <LinkTag
                 key={id}
                 to={item.url}
+                href={item.url}
                 className={classNames({
                   [styles.item]: true,
                   [styles.title]: item.type === DROPDOWN_MENU_ITEM_TYPE_TITLE,

@@ -32,8 +32,8 @@ const urls = {
     return `/user/${userId}`;
   },
 
-  getUserEditProfileUrl() {
-    return '/profile/';
+  getUserEditProfileUrl(userId) {
+    return `/user/${userId}/profile`;
   },
 
   getGovernanceUrl() {
@@ -89,7 +89,7 @@ const urls = {
   },
 
   getOrganizationCrerateUrl() {
-    return '/communities/new';
+    return '#community-new';
   },
 
   getOrganizationEditUrl(id) {
@@ -97,7 +97,7 @@ const urls = {
       return null;
     }
 
-    return `/communities/${id}/edit`;
+    return `/communities/${id}/profile`;
   },
 
   getOverviewCategoryUrl(params = {}) {
@@ -151,6 +151,10 @@ const urls = {
     }
 
     return urls.getOrganizationUrl(source.entityId);
+  },
+
+  getSettingsUrl() {
+    return '#settings';
   },
 };
 

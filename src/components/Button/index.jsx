@@ -1,15 +1,24 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React, { memo } from 'react';
+import React from 'react';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
 const Button = (props) => {
-  const Tag = props.url ? props.external ? 'a' : Link : 'button';
+  let Tag;
+
+  if (!props.url) {
+    Tag = 'button';
+  } else if (props.url.indexOf('#') === 0 || props.external) {
+    Tag = 'a';
+  } else {
+    Tag = Link;
+  }
 
   return (
     <Tag
+      type={props.type}
       to={props.url}
       href={filterURL(props.url)}
       target={props.external ? '_blank' : undefined}
@@ -49,6 +58,7 @@ Button.propTypes = {
   small: PropTypes.bool,
   cap: PropTypes.bool,
   disabled: PropTypes.bool,
+  type: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -63,6 +73,7 @@ Button.defaultProps = {
   small: false,
   cap: false,
   disabled: false,
+  type: 'button',
 };
 
-export default memo(Button);
+export default Button;

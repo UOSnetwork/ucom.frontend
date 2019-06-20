@@ -1,0 +1,34 @@
+.container {
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px 16px 17px 16px;
+  border: 1px solid #B1B1B1;
+  border-radius: 4px;
+  line-height: 1.75;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s ease;
+}
+
+.textarea:focus {
+  border-color: #585858;
+}
+
+.textarea::placeholder {
+  color: #C1C1C1;
+  opacity: 1;
+}
+
+.textarea.error {
+  border-color: #d8352f;
+}
+
+.errorMessage {
+  margin: 12px 0 0;
+  color: #d8352f;
+}

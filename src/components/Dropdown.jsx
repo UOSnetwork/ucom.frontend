@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import UserOption from './UserOption';
 import Close from './Icons/Close';
 
+// TODO: Remove
+
 const SelectUserOption = props => (
   <components.Option {...props}>
     <UserOption

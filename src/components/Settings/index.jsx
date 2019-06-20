@@ -8,7 +8,6 @@ import styles from './styles.css';
 import CopyPanel from '../CopyPanel';
 import Button from '../Button/index';
 import VerticalMenu from '../VerticalMenu/index';
-import { settingsHide } from '../../actions/settings';
 import Resources from '../Resources';
 import ChangePassword from '../Auth/Features/ChangePassword';
 import GenerateSocialKey from '../Auth/Features/GenerateSocialKey';
@@ -29,6 +28,19 @@ const Settings = (props) => {
   const [passwordIsSet, setPasswordIsSet] = useState(encryptedActiveKeyIsExists());
   const [keys, setKeys] = useState({});
 
+  const sections = [
+    { title: 'Resources', name: 'Resources' },
+    { title: 'Keys', name: 'Keys' },
+  ];
+
+  if (props.owner.affiliates && props.owner.affiliates.referralRedirectUrl) {
+    sections.push({ title: 'Referral Link', name: 'Referral' });
+  }
+
+  const onClickClose = () => {
+    window.location.hash = '';
+  };
+
   useEffect(() => {
     try {
       if (socialKeyIsExists()) {
@@ -44,29 +56,17 @@ const Settings = (props) => {
     }
   }, []);
 
-  if (!props.settings.visible) {
-    return null;
-  }
-
-  const sections = [
-    { title: 'Resources', name: 'Resources' },
-    { title: 'Keys', name: 'Keys' },
-  ];
-
-  if (props.owner.affiliates && props.owner.affiliates.referralRedirectUrl) {
-    sections.push({ title: 'Referral Link', name: 'Referral' });
-  }
-
   return (
+    // TODO: Use Grid/styles.css for profile grid
     <Fragment>
       <Popup
         id="settings-popup"
-        onClickClose={() => props.dispatch(settingsHide())}
-        paddingBottom="100vh"
+        onClickClose={onClickClose}
+        paddingBottom="70vh"
       >
         <Content
           fixWidth
-          onClickClose={() => props.dispatch(settingsHide())}
+          onClickClose={onClickClose}
         >
           <div className={styles.settings}>
             <div className={styles.sidebar}>
@@ -193,8 +193,7 @@ const Settings = (props) => {
               Go to&nbsp;
               <Link
                 className="link red"
-                to={urls.getUserEditProfileUrl()}
-                onClick={() => props.dispatch(settingsHide())}
+                to={urls.getUserEditProfileUrl(props.owner.id)}
               >
                 Profile Edit
               </Link>
@@ -238,9 +237,6 @@ const Settings = (props) => {
 
 Settings.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  settings: PropTypes.shape({
-    visible: PropTypes.bool.isRequired,
-  }).isRequired,
   owner: PropTypes.shape({
     id: PropTypes.number,
     affiliates: PropTypes.shape({
@@ -250,6 +246,5 @@ Settings.propTypes = {
 };
 
 export default connect(state => ({
-  settings: state.settings,
   owner: state.user.data,
 }))(Settings);

@@ -1,9 +1,14 @@
 .entryCard {
   display: grid;
-  grid-template-columns: 36px 1fr max-content;
+  grid-template-columns: 36px 1fr;
   grid-column-gap: 10px;
   grid-row-gap: 2px;
   width: 100%;
+  line-height: normal;
+}
+
+.entryCard.withRate {
+  grid-template-columns: 36px 1fr max-content;
 }
 
 .entryCard.disableAvatar .title,
