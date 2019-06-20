@@ -76,6 +76,11 @@
   stroke: #767676;
 }
 
+.iconEmbed svg,
+.iconEmbed:hover svg {
+  fill: none;
+}
+
 .mainItem {
   display: inline-block;
   vertical-align: middle;

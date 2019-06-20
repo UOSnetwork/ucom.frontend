@@ -39,11 +39,13 @@ export const getPageData = (activeTabId = TAB_ID_COMMUNITIES) => async (dispatch
         entityNamesFor: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
         orderBy: '-current_rate',
       }),
+      activeTabId === TAB_ID_PEOPLE ? graphql.getHotOrganizations() : graphql.getTrendingOrganizations(),
+      graphql.getTrendingTags(),
     ]);
 
     const [{
-      postsFeed, manyUsers, manyOrganizations, manyTags,
-    }, mainPosts] = result;
+      postsFeed, manyUsers,
+    }, mainPosts, { manyOrganizations }, { manyTags }] = result;
 
     dispatch(addPostsAndComments(postsFeed.data.concat(mainPosts.data)));
     dispatch(addUsers(manyUsers.data));
@@ -134,9 +136,12 @@ export const getUsersForPopup = page => async (dispatch) => {
   }
 };
 
-export const getOrganizationsForPopup = page => async (dispatch) => {
+export const getOrganizationsForPopup = (page, activeTabId = TAB_ID_COMMUNITIES) => async (dispatch) => {
   try {
-    const data = await graphql.getTrendingOrganizations({ page });
+    const data = await (activeTabId === TAB_ID_PEOPLE ?
+      graphql.getHotOrganizations({ page }) :
+      graphql.getTrendingOrganizations({ page }));
+
     dispatch(setData({
       organizationsPopup: {
         ids: data.manyOrganizations.data.map(org => org.id),

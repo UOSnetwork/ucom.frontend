@@ -405,8 +405,25 @@ const api = {
   async getTrendingOrganizations({
     page = 1,
     perPage = 10,
-  }) {
+  } = {}) {
     const query = GraphQLSchema.getManyTrendingOrganizationsQuery(
+      page,
+      perPage,
+    );
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getHotOrganizations({
+    page = 1,
+    perPage = 10,
+  } = {}) {
+    const query = GraphQLSchema.getManyHotOrganizationsQuery(
       page,
       perPage,
     );
@@ -422,7 +439,7 @@ const api = {
   async getTrendingTags({
     page = 1,
     perPage = 10,
-  }) {
+  } = {}) {
     const query = GraphQLSchema.getManyTrendingTagsQuery(
       page,
       perPage,
@@ -448,14 +465,8 @@ const api = {
     try {
       const result = await Promise.all([
         request({ query }),
-        api.getTrendingOrganizations({}),
-        api.getTrendingTags({}),
       ]);
-      return {
-        ...result[0].data,
-        ...result[1],
-        ...result[2],
-      };
+      return result[0].data;
     } catch (e) {
       throw e;
     }

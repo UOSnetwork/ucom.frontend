@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import React, { createRef, memo } from 'react';
@@ -28,20 +28,15 @@ const DropdownMenu = (props) => {
       html={(
         <div className={styles.tooltipMenu}>
           {props.items.map((item, id) => {
-            let LinkTag;
+            let LinkTag = 'div';
 
-            if (!item.url) {
-              LinkTag = 'button';
-            } else if (item.url.indexOf('#') === 0) {
+            if (item.url && item.url[0] === '#') {
               LinkTag = 'a';
-            } else {
-              LinkTag = Link;
             }
 
             return (
               <LinkTag
                 key={id}
-                to={item.url}
                 href={item.url}
                 className={classNames({
                   [styles.item]: true,
@@ -55,6 +50,10 @@ const DropdownMenu = (props) => {
                     tooltipRef.current.hideTooltip();
                   }
 
+                  if (item.url && item.url[0] !== '#') {
+                    props.history.push(item.url);
+                  }
+
                   if (item.onClick) {
                     item.onClick();
                   }
@@ -62,7 +61,9 @@ const DropdownMenu = (props) => {
               >
                 {item.avatar}
                 <span className={styles.title}>
-                  {item.title}
+                  <span className={styles.titleInner}>
+                    {item.title}
+                  </span>
                 </span>
               </LinkTag>
             );
@@ -103,6 +104,9 @@ DropdownMenu.propTypes = {
   position: PropTypes.string,
   distance: PropTypes.number,
   onClickButton: PropTypes.func,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 DropdownMenu.defaultProps = {
@@ -114,6 +118,6 @@ DropdownMenu.defaultProps = {
   distance: 10,
 };
 
-export default memo(DropdownMenu, (perv, next) => (
+export default withRouter(memo(DropdownMenu, (perv, next) => (
   isEqual(perv.items, next.items)
-));
+)));

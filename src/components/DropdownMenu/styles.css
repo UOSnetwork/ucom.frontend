@@ -1,5 +1,9 @@
-.title {
+.tooltipMenu {
   max-width: 200px;
+}
+
+.title {
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -9,7 +13,7 @@
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: max-content;
+  grid-auto-columns: minmax(0, max-content);
   align-items: center;
   grid-column-gap: 8px;
   width: 100%;
@@ -23,6 +27,8 @@
   background: none;
   transition: background 0.2s ease, color 0.2s ease;
   outline: none;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .item:first-child {

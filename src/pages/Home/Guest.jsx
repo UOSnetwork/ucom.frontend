@@ -1,6 +1,5 @@
 import pluralize from 'pluralize';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, Fragment } from 'react';
 import Tabs, { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
 import FeedView from '../../components/Feed/FeedView';
@@ -17,55 +16,60 @@ import { getPostByIds } from '../../store/posts';
 import CommunityBanner from '../../components/CommunityBanner';
 import { sortByRate } from '../../utils/list';
 import PostsGrid from '../../components/PostsGrid';
-import { getPageData, getFeed, getUsersForPopup, getOrganizationsForPopup, getTagsForPopup, changeTab } from '../../actions/mainPage';
+import * as mainPageActions from '../../actions/mainPage';
 
 const SIDEBAR_ENTRY_LIST_LIMIT = 8;
 
-const Guest = ({
-  posts, users, organizations, tags, state, addErrorNotification, ...props
-}) => {
+const Guest = () => {
+  const users = useSelector(s => s.users);
+  const organizations = useSelector(s => s.organizations);
+  const tags = useSelector(s => s.tags);
+  const state = useSelector(s => s.mainPage);
+  const posts = useSelector(s => s.posts);
+  const dispatch = useDispatch();
+
   const getPageData = async (tabId) => {
     try {
-      await withLoader(props.getPageData(tabId));
+      await withLoader(dispatch(mainPageActions.getPageData(tabId)));
     } catch (err) {
       console.error(err);
-      addErrorNotification(err.message);
+      dispatch(addErrorNotification(err.message));
     }
   };
 
   const getFeed = async (page, tabId) => {
     try {
-      await withLoader(props.getFeed(tabId, page));
+      await withLoader(dispatch(mainPageActions.getFeed(tabId, page)));
     } catch (err) {
       console.error(err);
-      addErrorNotification(err.message);
+      dispatch(addErrorNotification(err.message));
     }
   };
 
   const getUsersForPopup = async (page) => {
     try {
-      await withLoader(props.getUsersForPopup(page));
+      await withLoader(dispatch(mainPageActions.getUsersForPopup(page)));
     } catch (err) {
       console.error(err);
-      addErrorNotification(err.message);
+      dispatch(addErrorNotification(err.message));
     }
   };
 
-  const getOrganizationsForPopup = async (page) => {
+  const getOrganizationsForPopup = async (page, activeTabId) => {
     try {
-      await withLoader(props.getOrganizationsForPopup(page));
+      await withLoader(dispatch(mainPageActions.getOrganizationsForPopup(page, activeTabId)));
     } catch (err) {
       console.error(err);
-      addErrorNotification(err.message);
+      dispatch(addErrorNotification(err.message));
     }
   };
 
   const getTagsForPopup = async (page) => {
     try {
-      await withLoader(props.getTagsForPopup(page));
+      await withLoader(dispatch(mainPageActions.getTagsForPopup(page)));
     } catch (err) {
       console.error(err);
-      addErrorNotification(err.message);
+      dispatch(addErrorNotification(err.message));
     }
   };
 
@@ -117,7 +121,7 @@ const Guest = ({
         currentRate: organization.currentRate,
       }))}
       popupMetadata={state.organizationsPopup.metadata}
-      onChangePage={getOrganizationsForPopup}
+      onChangePage={page => getOrganizationsForPopup(page, state.activeTabId)}
     />
   );
 
@@ -140,7 +144,7 @@ const Guest = ({
               <Tabs
                 activeTabId={state.activeTabId}
                 onClickItem={(activeTabId) => {
-                  props.changeTab(activeTabId);
+                  dispatch(mainPageActions.changeTab(activeTabId));
                 }}
               />
             </div>
@@ -206,33 +210,4 @@ const Guest = ({
   );
 };
 
-Guest.propTypes = {
-  users: PropTypes.objectOf(PropTypes.any).isRequired,
-  organizations: PropTypes.objectOf(PropTypes.any).isRequired,
-  tags: PropTypes.objectOf(PropTypes.any).isRequired,
-  posts: PropTypes.objectOf(PropTypes.any).isRequired,
-  state: PropTypes.objectOf(PropTypes.any).isRequired,
-  getPageData: PropTypes.func.isRequired,
-  getFeed: PropTypes.func.isRequired,
-  getUsersForPopup: PropTypes.func.isRequired,
-  getOrganizationsForPopup: PropTypes.func.isRequired,
-  getTagsForPopup: PropTypes.func.isRequired,
-  changeTab: PropTypes.func.isRequired,
-  addErrorNotification: PropTypes.func.isRequired,
-};
-
-export default connect(state => ({
-  users: state.users,
-  organizations: state.organizations,
-  tags: state.tags,
-  state: state.mainPage,
-  posts: state.posts,
-}), {
-  getPageData,
-  getFeed,
-  getUsersForPopup,
-  getOrganizationsForPopup,
-  getTagsForPopup,
-  changeTab,
-  addErrorNotification,
-})(Guest);
+export default Guest;
