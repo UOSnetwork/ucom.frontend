@@ -196,7 +196,8 @@ const FeedForm = (props) => {
         </div>
       </div>
 
-      <PreviewImagesGrid {...{
+      <PreviewImagesGrid
+        {...{
           isExistGalleryImages, setEntityImages, entityImages,
         }}
       />
@@ -210,7 +211,7 @@ const FeedForm = (props) => {
         <button
           type="submit"
           className="feed-form__submit"
-          disabled={message.trim().length === 0 && !isExistGalleryImages}
+          disabled={message.trim().length === 0 && !isExistGalleryImages && !entityImagesHasEmbeds(entityImages)}
         >
           <IconEnter />
         </button>

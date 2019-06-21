@@ -11,6 +11,7 @@ import styles from './styles.css';
 import UserPick from '../../../UserPick/UserPick';
 import { POST_TYPE_MEDIA_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
 import { copyToClipboard } from '../../../../utils/text';
+import fromNow from '../../../../utils/fromNow';
 
 const PostFeedHeader = ({ post, ...props }) => {
   if (!post) {
@@ -44,7 +45,7 @@ const PostFeedHeader = ({ post, ...props }) => {
     <Fragment>
       <div className={styles.header}>
         <div className={styles.info}>
-          <Link to={urls.getFeedPostUrl(post)} className={props.formIsVisible ? '' : styles.date}>{props.createdAt}</Link>
+          <Link to={urls.getFeedPostUrl(post)} className={styles.date}>{fromNow(post.createdAt)}</Link>
 
           {props.formIsVisible &&
             <Fragment>

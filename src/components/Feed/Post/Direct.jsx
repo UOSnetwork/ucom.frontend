@@ -1,7 +1,6 @@
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import moment from 'moment';
 import React, { useState, Fragment, memo } from 'react';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
@@ -17,8 +16,6 @@ const Direct = ({
   if (!post || !user) {
     return null;
   }
-
-  const createdAt = moment(post.createdAt).fromNow();
 
   return (
     <Fragment>
@@ -68,7 +65,6 @@ const Direct = ({
             post={post}
             user={owner}
             userId={owner.id}
-            createdAt={createdAt}
             postId={post.id}
             formIsVisible={formIsVisible}
             feedTypeId={props.feedTypeId}
