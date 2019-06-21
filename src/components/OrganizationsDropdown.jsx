@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { PureComponent } from 'react';
 import { Tooltip } from 'react-tippy';
-import UserCard from './UserCard';
 import { selectUser } from '../store/selectors';
 import { getUserName } from '../utils/user';
 import { fetchMyself } from '../actions/users';
 import urls from '../utils/urls';
+import EntryCard from './EntryCard';
 
 class OrganizationsDropdown extends PureComponent {
   state = {
@@ -44,10 +44,12 @@ class OrganizationsDropdown extends PureComponent {
             onClick={() => this.select(null)}
             className="organizations-dropdown__item"
           >
-            <UserCard
-              avatarUrl={urls.getFileUrl(this.props.user.avatarFilename)}
-              userName={getUserName(this.props.user)}
-              accountName={this.props.user.accountName}
+            <EntryCard
+              disableRate
+              disabledLink
+              avatarSrc={urls.getFileUrl(this.props.user.avatarFilename)}
+              title={getUserName(this.props.user)}
+              nickname={this.props.user.accountName}
             />
           </div>
           {(this.props.user.organizations || []).map(item => (
@@ -57,12 +59,13 @@ class OrganizationsDropdown extends PureComponent {
               onClick={() => this.select(item.id)}
               className="organizations-dropdown__item"
             >
-              <UserCard
-                squareAvatar
-                roundedAvatar
-                avatarUrl={urls.getFileUrl(item.avatarFilename)}
-                userName={item.title}
-                accountName={item.nickname}
+              <EntryCard
+                disableRate
+                disabledLink
+                organization
+                avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                title={item.title}
+                nickname={item.nickname}
               />
             </div>
           ))}
