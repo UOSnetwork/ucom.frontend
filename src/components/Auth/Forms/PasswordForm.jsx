@@ -71,6 +71,7 @@ const Password = (props) => {
           big
           cap
           strech
+          type="submit"
           disabled={!password || !passwordRepeat || formError}
         >
           Set Password

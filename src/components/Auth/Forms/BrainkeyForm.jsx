@@ -66,6 +66,7 @@ const BrainkeyForm = (props) => {
           big
           cap
           strech
+          type="submit"
           disabled={!!formError}
         >
           Proceed

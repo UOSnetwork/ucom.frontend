@@ -122,6 +122,7 @@ const EditStake = (props) => {
                   big
                   red
                   strech
+                  type="submit"
                   disabled={!`${cpu}`.length || !`${net}`.length || loading}
                 >
                   Update

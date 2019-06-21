@@ -56,6 +56,7 @@ const KeyForm = (props) => {
           big
           cap
           strech
+          type="submit"
           disabled={props.loading || props.error || formError}
         >
           {props.submitText}

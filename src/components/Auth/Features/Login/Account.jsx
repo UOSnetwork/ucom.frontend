@@ -73,6 +73,7 @@ const Account = (props) => {
                 big
                 cap
                 strech
+                type="submit"
                 disabled={props.loading || formError || props.error}
               >
                 Proceed

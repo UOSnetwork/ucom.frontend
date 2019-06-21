@@ -119,6 +119,7 @@ const SendTokens = (props) => {
                   big
                   red
                   strech
+                  type="submit"
                   disabled={!amount || !user || !user.accountName || loading}
                 >
                   Send

@@ -19,6 +19,7 @@ const PasswordSet = props => (
         big
         red
         strech
+        type="submit"
       >
         Set Password
       </Button>

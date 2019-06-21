@@ -100,6 +100,7 @@ const TradeRam = (props) => {
                   big
                   red
                   strech
+                  type="submit"
                   disabled={!ram || loading}
                 >
                   {props.sell ? 'Sell' : 'Buy'}

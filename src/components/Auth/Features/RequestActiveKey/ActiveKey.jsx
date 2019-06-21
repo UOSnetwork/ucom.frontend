@@ -57,6 +57,7 @@ const ActiveKey = (props) => {
           big
           red
           strech
+          type="submit"
           disabled={props.loading || formError || props.error}
         >
           Send
