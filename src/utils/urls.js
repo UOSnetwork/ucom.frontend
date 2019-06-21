@@ -13,7 +13,7 @@ const urls = {
   },
 
   getNewOrganizationDiscussionUrl(organizationId) {
-    return `/communities/${organizationId}/discussions/new`;
+    return `/posts/new?organizationId=${organizationId}`;
   },
 
   getTagUrl(tag) {

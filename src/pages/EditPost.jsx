@@ -26,7 +26,8 @@ import { addEmbed, filterEmbedsByUrls, ENTITY_IMAGES_SYMBOLS_LIMIT, ENTITY_IMAGE
 
 const EditPost = (props) => {
   const postId = props.match.params.id;
-  const { organizationId } = props.match.params;
+  const urlSearchParams = new URLSearchParams(props.location.search);
+  const organizationId = urlSearchParams.get('organizationId');
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [submitPopupVisible, setSubmitPopupVisible] = useState(false);
