@@ -20,10 +20,12 @@ import tagsFeed from './tagsFeed';
 import user from './user';
 import walletSimple from './walletSimple';
 import mainPage from './mainPage';
+import mainPageUser from './mainPageUser';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
     mainPage,
+    mainPageUser,
     user,
     post,
     auth,

@@ -25,4 +25,5 @@ PostsGrid.defaultProps = {
   posts: [],
 };
 
+export * from './wrappers';
 export default PostsGrid;

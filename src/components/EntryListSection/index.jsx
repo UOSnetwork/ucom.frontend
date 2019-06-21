@@ -50,4 +50,5 @@ EntryListSection.defaultProps = {
   onClickViewAll: undefined,
 };
 
+export * from './wrappers';
 export default EntryListSection;

@@ -45,7 +45,73 @@ const request = async (data, extraOptions = {}) => {
   }
 };
 
+const queryParts = {
+  getOneUserFollowsOrganizationsQueryPart({
+    userIdentity,
+    orderBy = '-current_rate',
+    page = 1,
+    perPage = 10,
+  }) {
+    return GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
+      filters: {
+        user_identity: `${userIdentity}`,
+      },
+      order_by: orderBy,
+      per_page: perPage,
+      page,
+    });
+  },
+
+  getPostsFeedQueryPart({
+    postTypeIds = [POST_TYPE_MEDIA_ID],
+    entityNamesFrom = [ENTITY_NAMES_USERS],
+    entityNamesFor = [ENTITY_NAMES_USERS],
+    orderBy = '-current_rate',
+    page = 1,
+    perPage = 10,
+    commentsPage,
+    commentsPerPage = 10,
+  }) {
+    const params = {
+      filters: {
+        post_type_ids: postTypeIds,
+        entity_names_from: entityNamesFrom,
+        entity_names_for: entityNamesFor,
+      },
+      order_by: orderBy,
+      page,
+      per_page: perPage,
+    };
+
+    const include = commentsPage ? {
+      comments: {
+        page: commentsPage,
+        per_page: commentsPerPage,
+      },
+    } : undefined;
+
+    return GraphQLSchema.getPostsFeedQueryPart(params, include);
+  },
+};
+
 const api = {
+  async getUserMainPageData({
+    followsOrganizationsParams,
+    topPostsParams,
+  }) {
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      queryParts.getOneUserFollowsOrganizationsQueryPart(followsOrganizationsParams),
+      queryParts.getPostsFeedQueryPart(topPostsParams),
+    ]);
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
   async getUserPageData({
     userIdentity,
     trustedByOrderBy = LIST_ORDER_BY,
@@ -69,13 +135,11 @@ const api = {
         per_page: trustedByPerPage,
         page: trustedByPage,
       }),
-      GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
-        filters: {
-          user_identity: `${userIdentity}`,
-        },
-        order_by: followsOrganizationsOrderBy,
-        per_page: followsOrganizationsPerPage,
-        page: followsOrganizationsPage,
+      queryParts.getOneUserFollowsOrganizationsQueryPart({
+        userIdentity,
+        followsOrganizationsOrderBy,
+        followsOrganizationsPerPage,
+        followsOrganizationsPage,
       }),
     ]);
 
@@ -327,40 +391,9 @@ const api = {
     }
   },
 
-  getPostsFeedQueryPart({
-    postTypeIds = [POST_TYPE_MEDIA_ID],
-    entityNamesFrom = [ENTITY_NAMES_USERS],
-    entityNamesFor = [ENTITY_NAMES_USERS],
-    orderBy = '-current_rate',
-    page = 1,
-    perPage = 10,
-    commentsPage,
-    commentsPerPage = 10,
-  }) {
-    const params = {
-      filters: {
-        post_type_ids: postTypeIds,
-        entity_names_from: entityNamesFrom,
-        entity_names_for: entityNamesFor,
-      },
-      order_by: orderBy,
-      page,
-      per_page: perPage,
-    };
-
-    const include = commentsPage ? {
-      comments: {
-        page: commentsPage,
-        per_page: commentsPerPage,
-      },
-    } : undefined;
-
-    return GraphQLSchema.getPostsFeedQueryPart(params, include);
-  },
-
   async getPostsFeed(params) {
     const query = GraphQLSchema.getQueryMadeFromParts([
-      api.getPostsFeedQueryPart(params),
+      queryParts.getPostsFeedQueryPart(params),
     ]);
 
     try {
@@ -459,7 +492,7 @@ const api = {
   }) {
     const query = GraphQLSchema.getQueryMadeFromParts([
       api.getManyUsersQueryPart(manyUsersParams),
-      api.getPostsFeedQueryPart(postsFeedParams),
+      queryParts.getPostsFeedQueryPart(postsFeedParams),
     ]);
 
     try {
