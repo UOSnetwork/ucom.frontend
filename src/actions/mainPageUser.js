@@ -5,7 +5,7 @@ import { addOrganizations } from './organizations';
 
 export const setData = payload => ({ type: 'MAIN_PAGE_USER_SET_DATA', payload });
 
-export const getPageData = userId => async (dispatch) => {
+export const getPageData = userIdentity => async (dispatch) => {
   try {
     const {
       oneUserFollowsOrganizations,
@@ -20,7 +20,7 @@ export const getPageData = userId => async (dispatch) => {
         perPage: 10,
       },
       followsOrganizationsParams: {
-        userIdentity: userId,
+        userIdentity,
         orderBy: '-current_rate',
         page: 1,
         perPage: 10,
@@ -39,6 +39,28 @@ export const getPageData = userId => async (dispatch) => {
         metadata: oneUserFollowsOrganizations.metadata,
       },
       topPostsIds: postsFeed.data.map(post => post.id),
+    }));
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getOrganizations = (userIdentity, page) => async (dispatch) => {
+  try {
+    const result = await graphql.getUserFollowsOrganizations({
+      userIdentity,
+      page,
+      perPage: 10,
+      orderBy: '-current_rate',
+    });
+
+    dispatch(addOrganizations(result.data));
+    dispatch(setData({
+      orgsPopup: {
+        ids: result.data.map(i => i.id),
+        metadata: result.metadata,
+      },
     }));
   } catch (err) {
     console.error(err);

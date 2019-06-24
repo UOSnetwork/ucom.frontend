@@ -1,6 +1,5 @@
-import { merge } from 'lodash';
-
 const getInitialState = () => ({
+  usersIds: [],
   topPostsIds: [],
   orgs: {
     ids: [],
@@ -10,13 +9,23 @@ const getInitialState = () => ({
     ids: [],
     metadata: {},
   },
-  usersIds: [],
 });
 
 export default (state = getInitialState(), action) => {
   switch (action.type) {
     case 'MAIN_PAGE_USER_SET_DATA':
-      return merge(state, action.payload);
+      return {
+        ...state,
+        ...action.payload,
+        orgs: {
+          ...state.orgs,
+          ...action.payload.orgs,
+        },
+        orgsPopup: {
+          ...state.orgsPopup,
+          ...action.payload.orgsPopup,
+        },
+      };
 
     default:
       return state;

@@ -7,6 +7,6 @@ export const selectUsersByIds = (ids = []) => state => getUsersByIds(state.users
 export const selectOrgsByIds = (ids = []) => state => getOrganizationByIds(state.organizations, ids);
 export const selectTagsByTitles = (titles = []) => state => getTagsByTitle(state.tags, titles);
 export const selectPostsByIds = (ids = []) => state => getPostByIds(state.posts, ids);
-export const selectOwner = state => getUserById(state.users, state.user.data.id);
+export const selectOwner = state => getUserById(state.users, state.user.data.id) || {};
 
 export * from './user';

@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
 import Footer from '../../components/Footer';
@@ -14,7 +15,9 @@ import { addErrorNotification } from '../../actions/notifications';
 const HomeUserPage = () => {
   const dispatch = useDispatch();
   const state = useSelector(s => s.mainPageUser);
-  const owner = useSelector(selectOwner);
+  const owner = useSelector(selectOwner, ((prev, next) =>
+    prev && next && prev.id === next.id && isEqual(prev.iFollow, next.iFollow)
+  ));
 
   const getPageData = async (userId) => {
     try {
@@ -25,11 +28,20 @@ const HomeUserPage = () => {
     }
   };
 
+  const getOrganizations = async (page) => {
+    try {
+      await withLoader(dispatch(mainPageUserActions.getOrganizations(owner.id, page)));
+    } catch (err) {
+      console.error(err);
+      dispatch(addErrorNotification(err.message));
+    }
+  };
+
   useEffect(() => {
-    if (owner && owner.id) {
+    if (owner.id) {
       getPageData(owner.id);
     }
-  }, [owner]);
+  }, [owner.id]);
 
   return (
     <LayoutBase>
@@ -62,7 +74,7 @@ const HomeUserPage = () => {
                   ids={state.orgs.ids}
                   popupIds={state.orgsPopup.ids}
                   popupMetadata={state.orgsPopup.metadata}
-                  // onChangePage={page => getOrganizationsForPopup(page, state.activeTabId)}
+                  onChangePage={getOrganizations}
                 />
               </div>
             </div>
