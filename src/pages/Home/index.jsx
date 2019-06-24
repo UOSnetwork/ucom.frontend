@@ -7,9 +7,11 @@ import UserPage from './User';
 import { selectOwner } from '../../store/selectors';
 
 const HomePage = () => {
-  const owner = useSelector(selectOwner);
+  const owner = useSelector(selectOwner, ((prev, next) =>
+    prev && next && prev.id === next.id
+  ));
 
-  return owner ? <UserPage /> : <Guest />;
+  return owner.id ? <UserPage /> : <Guest />;
 };
 
 export const getHomePageData = store => Promise.all([
