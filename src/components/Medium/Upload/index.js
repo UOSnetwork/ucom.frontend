@@ -150,17 +150,10 @@ export default class MediumUpload extends MediumEditor.Extension {
   init() {
     this.base.subscribe('editableKeyup', this.onEdit);
     this.base.subscribe('editableClick', this.onEdit);
-    this.onWindowResize = this.onWindowResize.bind(this);
-    window.addEventListener('resize', this.onWindowResize);
   }
 
   destroy() {
     this.uploadButtons.remove();
-    window.removeEventListener('resize', this.onWindowResize);
-  }
-
-  onWindowResize() {
-    this.uploadButtons.hide();
   }
 
   onEdit = () => {
