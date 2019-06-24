@@ -77,7 +77,7 @@
     "eslint-loader": "^2.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "0.0.0",
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",

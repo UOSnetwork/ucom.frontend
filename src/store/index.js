@@ -12,7 +12,6 @@ import organizations from './organizations';
 import menuPopup from './menuPopup';
 import governance from './governance/index';
 import registration from './registration';
-import mainPosts from './mainPosts';
 import feed from './feed';
 import tags from './tags';
 import communityFeed from './communityFeed';
@@ -20,10 +19,12 @@ import tagsFeed from './tagsFeed';
 import user from './user';
 import walletSimple from './walletSimple';
 import mainPage from './mainPage';
+import mainPageUser from './mainPageUser';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
     mainPage,
+    mainPageUser,
     user,
     post,
     auth,
@@ -36,7 +37,6 @@ export const createStore = () => {
     menuPopup,
     governance,
     registration,
-    mainPosts,
     feed,
     tags,
     communityFeed,

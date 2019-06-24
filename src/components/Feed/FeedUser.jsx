@@ -8,6 +8,7 @@ import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
 import loader from '../../utils/loader';
+import withLoader from '../../utils/withLoader';
 
 const FeedUser = (props) => {
   const onClickLoadMore = async () => {
@@ -25,7 +26,7 @@ const FeedUser = (props) => {
   };
 
   const onSubmitPostForm = (description, entityImages) => {
-    props.feedCreatePost(props.feedTypeId, {
+    withLoader(props.feedCreatePost(props.feedTypeId, {
       organizationId: props.organizationId,
       userId: props.userId,
       data: {
@@ -33,7 +34,7 @@ const FeedUser = (props) => {
         entityImages,
         postTypeId: POST_TYPE_DIRECT_ID,
       },
-    });
+    }));
     if (props.callbackOnSubmit) {
       props.callbackOnSubmit();
     }

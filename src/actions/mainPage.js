@@ -6,7 +6,6 @@ import { addUsers } from './users';
 import { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
 import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils/posts';
 
-export const reset = () => ({ type: 'MAIN_PAGE_RESET' });
 export const setData = payload => ({ type: 'MAIN_PAGE_SET_DATA', payload });
 
 export const changeTab = activeTabId => (dispatch) => {
