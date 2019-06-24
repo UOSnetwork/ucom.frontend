@@ -1,3 +1,5 @@
+// TODO: Remove this when social key feature is enabled
+
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
