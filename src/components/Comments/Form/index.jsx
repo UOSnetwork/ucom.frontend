@@ -111,11 +111,11 @@ const Form = (props) => {
   useEffect(() => {
     autosize(textareaEl.current);
 
-    const removeInitDragAndDropListeners = initDragAndDropListeners(fieldEl.current, () => {
-      setDropOnForm(true);
-    }, () => {
-      setDropOnForm(false);
-    });
+    const removeInitDragAndDropListeners = initDragAndDropListeners(
+      fieldEl.current,
+      () => setDropOnForm(true),
+      () => setDropOnForm(false),
+    );
 
     return () => {
       autosize.destroy(textareaEl);
@@ -124,6 +124,10 @@ const Form = (props) => {
   }, []);
 
   useEffect(() => {
+    if (textareaEl && textareaEl.current) {
+      autosize.update(textareaEl.current);
+    }
+
     if (!message) {
       return;
     }
@@ -133,7 +137,6 @@ const Form = (props) => {
     if (!embedUrlsFromMessage.includes(lastUrl)) {
       setEmbedUrlsFromMessage(embedUrlsFromMessage.concat(lastUrl));
     }
-    autosize.update(textareaEl.current);
   }, [message]);
 
   return (
