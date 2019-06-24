@@ -12,7 +12,6 @@ import organizations from './organizations';
 import menuPopup from './menuPopup';
 import governance from './governance/index';
 import registration from './registration';
-import mainPosts from './mainPosts';
 import feed from './feed';
 import tags from './tags';
 import communityFeed from './communityFeed';
@@ -38,7 +37,6 @@ export const createStore = () => {
     menuPopup,
     governance,
     registration,
-    mainPosts,
     feed,
     tags,
     communityFeed,

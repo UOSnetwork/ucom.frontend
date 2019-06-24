@@ -12,6 +12,10 @@ export const PostsGridWrapper = (props) => {
   );
 };
 
-PostsGridWrapper.propTyeps = {
+PostsGridWrapper.propTypes = {
   ids: PropTyeps.arrayOf(PropTyeps.number),
+};
+
+PostsGridWrapper.defaultProps = {
+  ids: [],
 };
