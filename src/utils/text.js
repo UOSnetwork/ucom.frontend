@@ -101,6 +101,7 @@ export const sanitizePostText = memoize(html => sanitizeHtml(html, {
       'medium-upload-iframe-wrapper',
       'medium-embed',
       'iframe-video-v2',
+      'iframe-video',
     ],
     span: [
       'medium-embed-content',
