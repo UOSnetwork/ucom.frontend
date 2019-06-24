@@ -56,10 +56,10 @@ const Form = (props) => {
   const submit = () => {
     if (postHasContent()) {
       props.onSubmit({
+        message,
         containerId: props.containerId,
         postId: props.postId,
         commentId: props.commentId,
-        message,
         entityImages: JSON.stringify(entityImages),
       });
       reset();

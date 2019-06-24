@@ -91,7 +91,7 @@ const Comment = (props) => {
           ownerPageUrl={props.ownerPageUrl}
           ownerName={props.ownerName}
           onSubmit={props.onSubmit}
-          entityImages={props.entityImages}
+          entityImages={comment.entityImages}
           onClickShowReplies={props.onClickShowReplies}
           onClickReply={() => {
             setFormVisible({ visible: true, name: comment.userAccountName });
@@ -132,7 +132,7 @@ const Comment = (props) => {
           ownerImageUrl={props.ownerImageUrl}
           ownerPageUrl={props.ownerPageUrl}
           ownerName={props.ownerName}
-          entityImages={props.entityImages}
+          entityImages={comment.entityImages}
           onSubmit={props.onSubmit}
           onClickShowReplies={props.onClickShowReplies}
           onClickReply={() => {
