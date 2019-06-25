@@ -30,7 +30,7 @@ const OrganizationAdmins = (props) => {
             url: urls.getUserUrl(item.id),
             title: getUserName(item),
             nickname: item.accountName,
-            currentRate: item.currentRate,
+            scaledImportance: item.scaledImportance,
             follow: true,
           }))}
         />

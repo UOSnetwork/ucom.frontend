@@ -1,9 +1,9 @@
+import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import EntryListSection from './index';
-import { sortByRate } from '../../utils/list';
 import { selectUsersByIds, selectOrgsByIds, selectTagsByTitles } from '../../store/selectors';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
@@ -23,13 +23,13 @@ export const EntryListSectionUsersWrapper = (props) => {
     url: urls.getUserUrl(user.id),
     title: getUserName(user),
     nickname: user.accountName,
-    currentRate: user.currentRate,
+    scaledImportance: user.scaledImportance,
   });
 
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(users).map(mapProps)}
+      data={sortBy(users, ['scaledImportance']).reverse().map(mapProps)}
       popupData={popupUsers ? popupUsers.map(mapProps) : undefined}
     />
   );
@@ -66,7 +66,7 @@ export const EntryListSectionOrgsWrapper = (props) => {
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(orgs).map(mapProps)}
+      data={sortBy(orgs, ['currentRate']).reverse().map(mapProps)}
       popupData={popupOrgs ? popupOrgs.map(mapProps) : undefined}
     />
   );
@@ -103,7 +103,7 @@ export const EntryListSectionTagsWrapper = (props) => {
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(tags).map(mapProps)}
+      data={sortBy(tags, ['currentRate']).reverse().map(mapProps)}
       popupData={popupTags ? popupTags.map(mapProps) : []}
     />
   );

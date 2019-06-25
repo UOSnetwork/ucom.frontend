@@ -10,6 +10,7 @@ import urls from '../utils/urls';
 import IconTableTriangle from '../components/Icons/TableTriangle';
 import SearchInput from '../components/SearchInput';
 import loader from '../utils/loader';
+import { formatScaledImportance } from '../utils/rate';
 
 const { getUsersPagingUrl } = urls;
 
@@ -143,7 +144,7 @@ const UsersPage = (props) => {
                         </td>
                         <td className="list-table__cell list-table__cell_date" data-title="Date" />
                         <td className="list-table__cell" data-title="Rate">
-                          <span className="title title_xsmall title_light">{(+item.currentRate).toLocaleString()}°</span>
+                          <span className="title title_xsmall title_light">{formatScaledImportance(item.scaledImportance)}</span>
                         </td>
                       </tr>
                     ))}

@@ -6,7 +6,7 @@ import styles from './styles.css';
 import UserPick from '../UserPick/UserPick';
 import UserFollowButton from '../User/UserFollowButton';
 import OrganizationFollowButton from '../Organization/OrganizationFollowButton';
-import { formatRate } from '../../utils/rate';
+import { formatScaledImportance, formatRate } from '../../utils/rate';
 
 const EntrySubHeader = props => (
   <div
@@ -29,7 +29,7 @@ const EntrySubHeader = props => (
       <Link className="link red-hover" to={props.userUrl}>{props.userName}</Link>
     </div>
     <div className={styles.rate}>
-      {formatRate(props.userRate)}°
+      {props.organization ? formatRate(props.userRate, true) : formatScaledImportance(props.userRate)}
     </div>
 
     {props.showFollow &&

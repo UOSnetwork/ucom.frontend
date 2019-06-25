@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import classNames from 'classnames';
 import { formatRate } from '../utils/rate';
 
-const Rate = (props) => {
+const Rate = ({ disableRateFormat, ...props }) => {
   if (props.value === undefined) {
     return null;
   }
@@ -11,8 +11,14 @@ const Rate = (props) => {
   return (
     <div className={classNames('rate', props.className)}>
       <div className="rate__value">
-        {formatRate(+props.value)}
-        <span className="rate__degree">{props.dimension}</span>
+        {disableRateFormat ? (
+          <Fragment>{props.value}</Fragment>
+        ) : (
+          <Fragment>
+            {formatRate(+props.value)}
+            <span className="rate__degree">{props.dimension}</span>
+          </Fragment>
+        )}
       </div>
       <div className="rate__label">{props.label}</div>
     </div>
@@ -24,11 +30,13 @@ Rate.propTypes = {
   className: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.number,
+  disableRateFormat: PropTypes.bool,
 };
 
 Rate.defaultProps = {
   dimension: '°',
   label: 'Rate',
+  disableRateFormat: false,
 };
 
 export default Rate;

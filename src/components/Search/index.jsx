@@ -113,7 +113,7 @@ const SearchPopup = (props) => {
                           userPickSrc={urls.getFileUrl(item.avatarFilename)}
                           name={getUserName(item)}
                           accountName={item.accountName}
-                          rate={item.currentRate}
+                          rate={item.scaledImportance}
                           sign="@"
                         />
                       </div>

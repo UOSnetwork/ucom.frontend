@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import UserPick from '../UserPick/UserPick';
-import { formatRate } from '../../utils/rate';
+import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
@@ -66,7 +66,9 @@ const EntryCard = (props) => {
       </div>
       {!props.disableRate &&
         <div className={styles.rate}>
-          {formatRate(props.currentRate, true)}
+          {typeof props.scaledImportance !== 'undefined' ?
+            formatScaledImportance(props.scaledImportance) :
+            formatRate(props.currentRate, true)}
         </div>
       }
     </div>
@@ -80,6 +82,7 @@ EntryCard.propTypes = {
   title: PropTypes.string.isRequired,
   nickname: PropTypes.string.isRequired,
   currentRate: PropTypes.number,
+  scaledImportance: PropTypes.number,
   disabledLink: PropTypes.bool,
   disableRate: PropTypes.bool,
   disableSign: PropTypes.bool,
@@ -91,6 +94,7 @@ EntryCard.defaultProps = {
   organization: false,
   avatarSrc: undefined,
   currentRate: undefined,
+  scaledImportance: undefined,
   disabledLink: false,
   disableRate: false,
   disableSign: false,

@@ -75,7 +75,7 @@ const OrganizationHead = (props) => {
               userName={getUserName(user)}
               profileLink={urls.getUserUrl(user.id)}
               avatarUrl={urls.getFileUrl(user.avatarFilename)}
-              rate={Number(user.currentRate)}
+              rate={Number(Math.ceil(+user.scaledImportance * 1000))}
             />
           </div>
           <div className="toolbar__side">

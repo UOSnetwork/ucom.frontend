@@ -8,7 +8,7 @@ import { getUserById } from '../../store/users';
 import { getUserName } from '../../utils/user';
 import urls from '../../utils/urls';
 import styles from './styles.css';
-import { formatRate } from '../../utils/rate';
+import { formatScaledImportance } from '../../utils/rate';
 
 export const MyUserCard = (props) => {
   const LinkTag = props.url ? Link : 'span';
@@ -22,7 +22,7 @@ export const MyUserCard = (props) => {
         <LinkTag to={props.url}>{props.name}</LinkTag>
       </div>
       <div className={styles.rate}>
-        {formatRate(props.rate)}°
+        {formatScaledImportance(props.rate)}
       </div>
     </div>
   );
@@ -53,10 +53,10 @@ export default connect(memoize((state, props) => {
     userPickAlt: getUserName(user),
     url: user ? urls.getUserUrl(user.id) : null,
     name: getUserName(user),
-    rate: user ? user.currentRate : null,
+    rate: user ? user.scaledImportance : null,
   });
 }, (state, props) => {
   const user = getUserById(state.users, props.userId) || {};
 
-  return `${props.userId}.${user.currentRate}.${user.avatarFilename}.${props.isOwner}`;
+  return `${props.userId}.${user.scaledImportance}.${user.avatarFilename}.${props.isOwner}`;
 }))(memo(MyUserCard));

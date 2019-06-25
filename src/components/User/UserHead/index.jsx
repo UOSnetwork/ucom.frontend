@@ -8,7 +8,7 @@ import urls from '../../../utils/urls';
 import { updateUser, addUsers } from '../../../actions/users';
 import { getUserName, userIsOwner, mapUserDataToFollowersProps } from '../../../utils/user';
 import UserStatus from '../UserStatus';
-import { formatRate } from '../../../utils/rate';
+import { formatScaledImportance } from '../../../utils/rate';
 import UserFollowButton from '../UserFollowButton';
 import Followers, { followersPropTypes } from '../../Followers';
 import ButtonEdit from '../../ButtonEdit';
@@ -57,7 +57,7 @@ const UserHead = (props) => {
           </div>
         </div>
 
-        <div className={styles.rate}>{formatRate(user.currentRate)}°</div>
+        <div className={styles.rate}>{formatScaledImportance(user.scaledImportance)}</div>
       </div>
 
       <div className={styles.side}>

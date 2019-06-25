@@ -11,7 +11,6 @@ import Popup from '../Popup';
 import ModalContent from '../ModalContent';
 import { getUserName } from '../../utils/user';
 import styles from '../List/styles.css';
-import { formatRate } from '../../utils/rate';
 
 const UserList = (props) => {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -36,7 +35,7 @@ const UserList = (props) => {
             url={urls.getUserUrl(item.id)}
             title={getUserName(item)}
             nickname={item.accountName}
-            currentRate={formatRate(item.currentRate)}
+            scaledImportance={item.scaledImportance}
           />
         </Link>
       ))}

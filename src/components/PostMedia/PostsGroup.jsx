@@ -6,6 +6,7 @@ import { getPostTypeById, getPostCover } from '../../utils/posts';
 import { getUserName } from '../../utils/user';
 import urls from '../../utils/urls';
 
+// TODO: Remove this and deps
 const PostsGroup = (props) => {
   if (!props.posts || !props.posts.length) {
     return null;
@@ -37,7 +38,6 @@ const PostsGroup = (props) => {
               accountName={mainPost.user.accountName}
               tags={[getPostTypeById(mainPost.postTypeId)]}
               commentsCount={mainPost.commentsCount}
-              userRate={mainPost.user.currentRate}
             />
           </div>
 

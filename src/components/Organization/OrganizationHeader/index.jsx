@@ -32,7 +32,7 @@ const OrganizationHeader = (props) => {
           userName={getUserName(organization.user)}
           userAvatarUrl={urls.getFileUrl(organization.user.avatarFilename)}
           userId={+organization.user.id}
-          userRate={+organization.user.currentRate}
+          userRate={organization.user.scaledImportance}
           showFollow={!userIsAdmin(props.user, organization)}
         />
       }

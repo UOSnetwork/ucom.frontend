@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import UserPick from '../UserPick/UserPick';
 import styles from './styles.css';
-import { formatRate } from '../../utils/rate';
+import { formatScaledImportance } from '../../utils/rate';
 
 const UserCardLine = (props) => {
   const LinkTag = props.url ? Link : 'div';
@@ -23,7 +23,7 @@ const UserCardLine = (props) => {
       </div>
       {props.rate &&
         <div className={styles.rate}>
-          {formatRate(props.rate)}°
+          {formatScaledImportance(props.rate)}
         </div>
       }
     </LinkTag>
