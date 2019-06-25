@@ -6,7 +6,7 @@ import { getToken } from '../utils/token';
 import { getActivePrivateKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
-import { LIST_PER_PAGE } from '../utils/list';
+import { LIST_PER_PAGE } from '../utils/constants';
 
 const { WalletApi, SocialApi, Dictionary } = require('ucom-libs-wallet');
 const AppTransaction = require('ucom-libs-social-transactions');

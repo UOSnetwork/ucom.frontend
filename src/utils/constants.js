@@ -28,3 +28,7 @@ export const SOURCES_ID_GITHUB = 5;
 export const USERS_TEAM_STATUS_ID_PENDING = 0;
 export const USERS_TEAM_STATUS_ID_CONFIRMED = 1;
 export const USERS_TEAM_STATUS_ID_DECLINED = 2;
+
+export const LIST_ORDER_BY_ID = '-id';
+export const LIST_ORDER_BY_RATE = '-current_rate';
+export const LIST_PER_PAGE = 10;

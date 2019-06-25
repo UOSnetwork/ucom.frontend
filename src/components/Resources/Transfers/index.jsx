@@ -2,7 +2,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import api from '../../../api';
-import { LIST_PER_PAGE } from '../../../utils/list';
+import { LIST_PER_PAGE } from '../../../utils/constants';
 import { addErrorNotification } from '../../../actions/notifications';
 import Item from './Item';
 import loader from '../../../utils/loader';

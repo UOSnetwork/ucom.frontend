@@ -7,7 +7,7 @@ import { getToken } from '../utils/token';
 import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
-import { LIST_ORDER_BY, LIST_PER_PAGE } from '../utils/list';
+import { LIST_ORDER_BY_RATE, LIST_PER_PAGE } from '../utils/constants';
 import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
@@ -48,7 +48,7 @@ const request = async (data, extraOptions = {}) => {
 const queryParts = {
   getOneUserFollowsOrganizationsQueryPart({
     userIdentity,
-    orderBy = '-current_rate',
+    orderBy = LIST_ORDER_BY_RATE,
     page = 1,
     perPage = 10,
   }) {
@@ -66,7 +66,7 @@ const queryParts = {
     postTypeIds = [POST_TYPE_MEDIA_ID],
     entityNamesFrom = [ENTITY_NAMES_USERS],
     entityNamesFor = [ENTITY_NAMES_USERS],
-    orderBy = '-current_rate',
+    orderBy = LIST_ORDER_BY_RATE,
     page = 1,
     perPage = 10,
     commentsPage,
@@ -114,20 +114,32 @@ const api = {
 
   async getUserPageData({
     userIdentity,
-    trustedByOrderBy = LIST_ORDER_BY,
+    trustedByOrderBy = LIST_ORDER_BY_RATE,
     trustedByPerPage = LIST_PER_PAGE,
     trustedByPage = 1,
-    followsOrganizationsOrderBy = LIST_ORDER_BY,
+    followsOrganizationsOrderBy = LIST_ORDER_BY_RATE,
     followsOrganizationsPerPage = LIST_PER_PAGE,
     followsOrganizationsPage = 1,
-  }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      GraphQLSchema.getOneUserQueryPart({
+    iFollowOrderBy = LIST_ORDER_BY_RATE,
+    iFollowPerPage = LIST_PER_PAGE,
+    iFollowPage = 1,
+    followedByOrderBy = LIST_ORDER_BY_RATE,
+    followedByPerPage = LIST_PER_PAGE,
+    followedByPage = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      user: GraphQLSchema.getOneUserQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
         },
       }),
-      GraphQLSchema.getOneUserTrustedByQueryPart({
+      orgs: queryParts.getOneUserFollowsOrganizationsQueryPart({
+        userIdentity,
+        followsOrganizationsOrderBy,
+        followsOrganizationsPerPage,
+        followsOrganizationsPage,
+      }),
+      trustedBy: GraphQLSchema.getOneUserTrustedByQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
         },
@@ -135,13 +147,25 @@ const api = {
         per_page: trustedByPerPage,
         page: trustedByPage,
       }),
-      queryParts.getOneUserFollowsOrganizationsQueryPart({
-        userIdentity,
-        followsOrganizationsOrderBy,
-        followsOrganizationsPerPage,
-        followsOrganizationsPage,
+      iFollow: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: iFollowOrderBy,
+        per_page: iFollowPerPage,
+        page: iFollowPage,
       }),
-    ]);
+      followedBy: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'followed_by',
+        },
+        order_by: followedByOrderBy,
+        per_page: followedByPerPage,
+        page: followedByPage,
+      }),
+    });
 
     try {
       const data = await request({ query });
@@ -151,9 +175,61 @@ const api = {
     }
   },
 
+  async getUserIFollow({
+    userIdentity,
+    orderBy = LIST_ORDER_BY_RATE,
+    perPage = LIST_PER_PAGE,
+    page = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      iFollow: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: orderBy,
+        per_page: perPage,
+        page,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.iFollow;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getUserFollowedBy({
+    userIdentity,
+    orderBy = LIST_ORDER_BY_RATE,
+    perPage = LIST_PER_PAGE,
+    page = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      followedBy: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'followed_by',
+        },
+        order_by: orderBy,
+        per_page: perPage,
+        page,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.followedBy;
+    } catch (e) {
+      throw e;
+    }
+  },
+
   async getUserFollowsOrganizations({
     userIdentity,
-    orderBy = LIST_ORDER_BY,
+    orderBy = LIST_ORDER_BY_RATE,
     perPage = LIST_PER_PAGE,
     page = 1,
   }) {
@@ -178,7 +254,7 @@ const api = {
 
   async getUserTrustedBy({
     userIdentity,
-    orderBy = LIST_ORDER_BY,
+    orderBy = LIST_ORDER_BY_RATE,
     perPage = LIST_PER_PAGE,
     page = 1,
   }) {
@@ -195,12 +271,6 @@ const api = {
 
     try {
       const data = await request({ query });
-
-      // TODO: Hot fix for backend bug
-      data.data.oneUserTrustedBy.data.forEach((item) => {
-        delete item.iFollow;
-        delete item.followedBy;
-      });
 
       return data.data.oneUserTrustedBy;
     } catch (e) {
