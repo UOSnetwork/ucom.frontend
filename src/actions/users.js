@@ -1,3 +1,4 @@
+import { isNull } from 'lodash';
 import api from '../api';
 import snakes from '../utils/snakes';
 import { getToken, removeToken } from '../utils/token';
@@ -19,6 +20,16 @@ export const addUsers = (data = []) => (dispatch) => {
   let organizations = [];
 
   data.forEach((user) => {
+    // TODO: Remove when backend remove this field from response
+    if (isNull(user.followedBy)) {
+      delete user.followedBy;
+    }
+
+    // TODO: Remove when backend remove this field from response
+    if (isNull(user.iFollow)) {
+      delete user.iFollow;
+    }
+
     if (user.followedBy) {
       users = users.concat(user.followedBy);
       user.followedBy = user.followedBy.map(u => u.id);
