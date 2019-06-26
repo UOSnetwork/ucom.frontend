@@ -46,14 +46,12 @@ const EntryListPopup = props => (
   </Popup>
 );
 
-export const entryListPopupItemPropTypes = {
-  ...EntryCard.propTypes,
-  id: PropTypes.number.isRequired,
-  follow: PropTypes.bool,
-};
-
-export const entryListPopupPropTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(entryListPopupItemPropTypes)),
+EntryListPopup.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({
+    ...EntryCard.propTypes,
+    id: PropTypes.number.isRequired,
+    follow: PropTypes.bool,
+  })),
   onClickClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   metadata: PropTypes.shape({
@@ -63,8 +61,6 @@ export const entryListPopupPropTypes = {
   }),
   onChangePage: PropTypes.func,
 };
-
-EntryListPopup.propTypes = entryListPopupPropTypes;
 
 EntryListPopup.defaultProps = {
   data: [],

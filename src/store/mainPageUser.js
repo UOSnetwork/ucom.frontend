@@ -1,3 +1,5 @@
+import merge from '../utils/merge';
+
 const getInitialState = () => ({
   usersIds: [],
   topPostsIds: [],
@@ -14,18 +16,7 @@ const getInitialState = () => ({
 export default (state = getInitialState(), action) => {
   switch (action.type) {
     case 'MAIN_PAGE_USER_SET_DATA':
-      return {
-        ...state,
-        ...action.payload,
-        orgs: {
-          ...state.orgs,
-          ...action.payload.orgs,
-        },
-        orgsPopup: {
-          ...state.orgsPopup,
-          ...action.payload.orgsPopup,
-        },
-      };
+      return merge({}, state, action.payload);
 
     default:
       return state;

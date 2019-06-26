@@ -1,13 +1,15 @@
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, Fragment, memo } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import UserPick from '../UserPick/UserPick';
 import styles from './styles.css';
-import EntryListPopup, { entryListPopupItemPropTypes, entryListPopupPropTypes } from '../EntryListPopup';
+import EntryListPopup from '../EntryListPopup';
 
 const Followers = (props) => {
   const [popupVisible, setPopupVisible] = useState(false);
+  const avatarUsers = props.users.slice(0, 2);
+
   const hasUsers = () => props.users.length > 0;
 
   const showPopup = () => {
@@ -25,17 +27,15 @@ const Followers = (props) => {
     setPopupVisible(false);
   }, [props.location]);
 
-  const avatarUsers = props.users.slice(0, 2);
-
   return (
     <Fragment>
       {popupVisible &&
         <EntryListPopup
           title={props.title}
-          data={props.users}
+          data={props.popupUsers}
           metadata={props.metadata}
-          onClickClose={() => setPopupVisible(false)}
           onChangePage={props.onChangePage}
+          onClickClose={() => setPopupVisible(false)}
         />
       }
 
@@ -92,27 +92,28 @@ const Followers = (props) => {
   );
 };
 
-export const followersPropTypes = {
+Followers.propTypes = {
   title: PropTypes.string,
-  users: PropTypes.arrayOf(PropTypes.shape(entryListPopupItemPropTypes)),
+  users: EntryListPopup.propTypes.data,
+  popupUsers: EntryListPopup.propTypes.data,
   location: PropTypes.objectOf(PropTypes.any).isRequired,
   count: PropTypes.number,
-  metadata: entryListPopupPropTypes.metadata,
+  metadata: EntryListPopup.propTypes.metadata,
   onChangePage: PropTypes.func,
   onClick: PropTypes.func,
   colorLight: PropTypes.bool,
 };
 
-Followers.propTypes = followersPropTypes;
-
 Followers.defaultProps = {
   title: 'Followers',
   users: [],
+  popupUsers: [],
   count: 0,
-  metadata: null,
-  onChangePage: null,
-  onClick: null,
+  metadata: undefined,
+  onChangePage: undefined,
+  onClick: undefined,
   colorLight: false,
 };
 
-export default memo(withRouter(Followers));
+export * from './wrappers';
+export default withRouter(Followers);

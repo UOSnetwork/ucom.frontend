@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useState, Fragment } from 'react';
 import EntryCard from '../EntryCard';
 import styles from '../List/styles.css';
-import EntryListPopup, { entryListPopupPropTypes } from '../EntryListPopup';
+import EntryListPopup from '../EntryListPopup';
 import { filterURL } from '../../utils/url';
 
 export const EntryItem = (props) => {
@@ -85,7 +85,7 @@ EntryList.propTypes = {
   title: PropTypes.string.isRequired,
   onChangePage: PropTypes.func,
   popupData: PropTypes.arrayOf(PropTypes.shape(EntryItem.propTypes)),
-  popupMetadata: entryListPopupPropTypes.metadata,
+  popupMetadata: EntryListPopup.propTypes.metadata,
   onClickViewAll: PropTypes.func,
   showViewMore: PropTypes.bool,
 };

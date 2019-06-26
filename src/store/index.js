@@ -20,11 +20,13 @@ import user from './user';
 import walletSimple from './walletSimple';
 import mainPage from './mainPage';
 import mainPageUser from './mainPageUser';
+import userPage from './userPage';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
     mainPage,
     mainPageUser,
+    userPage,
     user,
     post,
     auth,

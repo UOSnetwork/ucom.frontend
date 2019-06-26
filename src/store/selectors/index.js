@@ -3,6 +3,7 @@ import { getOrganizationByIds } from '../organizations';
 import { getTagsByTitle } from '../tags';
 import { getPostByIds } from '../posts';
 
+export const selectUserById = id => state => getUserById(state.users, id);
 export const selectUsersByIds = (ids = []) => state => getUsersByIds(state.users, ids);
 export const selectOrgsByIds = (ids = []) => state => getOrganizationByIds(state.organizations, ids);
 export const selectTagsByTitles = (titles = []) => state => getTagsByTitle(state.tags, titles);

@@ -1,19 +1,10 @@
 import { Route, Switch } from 'react-router';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import UserHead from '../../components/User/UserHead/index';
 import LayoutBase from '../../components/Layout/LayoutBase';
-import { selectUser } from '../../store/selectors/user';
-import {
-  fetchUserPageData,
-  trustUser,
-  untrustUser,
-  fetchUserTrustedBy,
-  fetchUserFollowsOrganizations,
-} from '../../actions/users';
 import { postsFetch } from '../../actions/posts';
-import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
 import Feed from '../../components/Feed/FeedUser';
 import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
@@ -24,119 +15,96 @@ import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryCreatedAt from '../../components/EntryCreatedAt';
 import EntryContacts from '../../components/EntryContacts';
 import EntryAbout from '../../components/EntryAbout';
-import EntryListSection from '../../components/EntryListSection';
+import { EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
 import Trust from '../../components/Trust';
 import { getUserName, userIsOwner } from '../../utils/user';
 import { authShowPopup } from '../../actions/auth';
 import { addErrorNotification } from '../../actions/notifications';
 import { parseResponseError } from '../../utils/errors';
 import { restoreActiveKey } from '../../utils/keys';
-import { getOrganizationByIds } from '../../store/organizations';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
+import * as userPageActions from '../../actions/userPage';
+import { selectUserById, selectOwner } from '../../store/selectors';
 
 const UserPage = (props) => {
-  const userIdOrName = props.match.params.userId;
-  const [loaded, setLoaded] = useState(false);
-  const [trustedByUsersIds, setTrustedByUsersIds] = useState([]);
-  const [trustedByMetadata, setTrustedByMetadata] = useState({});
-  const [trustLoading, setTrustLoading] = useState(false);
-  const [organizationsIds, setOrganizationsIds] = useState([]);
-  const [organizationsPopupIds, setOrganizationsPopupIds] = useState([]);
-  const [organizationsMetadata, setOrganizationsMetadata] = useState({});
-  const user = getUserById(props.users, userIdOrName);
+  const userIdentity = props.match.params.userId;
+  const user = useSelector(selectUserById(userIdentity));
+  const owner = useSelector(selectOwner);
+  const state = useSelector(state => state.userPage);
+  const dispatch = useDispatch();
 
-  const fetchUserData = async () => {
+  const trustedByOnChangePage = async (page) => {
     try {
-      const data = await withLoader(props.dispatch(fetchUserPageData({
-        userIdentity: userIdOrName,
-      })));
-      const organizationsIds = data.oneUserFollowsOrganizations.data.map(i => i.id);
-
-      setTrustedByUsersIds(data.oneUserTrustedBy.data.map(i => i.id));
-      setTrustedByMetadata(data.oneUserTrustedBy.metadata);
-      setOrganizationsIds(organizationsIds);
-      setOrganizationsPopupIds(organizationsIds);
-      setOrganizationsMetadata(data.oneUserFollowsOrganizations.metadata);
-    } catch (e) {
-      const errorMessage = parseResponseError(e)[0].message;
-      props.dispatch(addErrorNotification(errorMessage));
+      await withLoader(dispatch(userPageActions.getTrustedByPopup(userIdentity, page)));
+    } catch (err) {
+      console.error(err);
+      const msg = parseResponseError(err)[0].message;
+      dispatch(addErrorNotification(msg));
     }
-    setLoaded(true);
   };
 
-  const fetchTrustedBy = async (page = 1) => {
+  const iFollowOnChangePage = async (page) => {
     try {
-      const data = await withLoader(props.dispatch(fetchUserTrustedBy({
-        userIdentity: userIdOrName,
-        page,
-      })));
-      setTrustedByUsersIds(data.data.map(i => i.id));
-      setTrustedByMetadata(data.metadata);
-    } catch (e) {
-      const errorMessage = parseResponseError(e)[0].message;
-      props.dispatch(addErrorNotification(errorMessage));
+      await withLoader(dispatch(userPageActions.getIFollowPopup(userIdentity, page)));
+    } catch (err) {
+      console.error(err);
+      const msg = parseResponseError(err)[0].message;
+      dispatch(addErrorNotification(msg));
+    }
+  };
+
+  const followedByOnChangePage = async (page) => {
+    try {
+      await withLoader(dispatch(userPageActions.getFollowedByPopup(userIdentity, page)));
+    } catch (err) {
+      console.error(err);
+      const msg = parseResponseError(err)[0].message;
+      dispatch(addErrorNotification(msg));
+    }
+  };
+
+  const orgsPopupOnChangePage = async (page) => {
+    try {
+      await withLoader(dispatch(userPageActions.getOrgsPopup(userIdentity, page)));
+    } catch (err) {
+      console.error(err);
+      const msg = parseResponseError(err)[0].message;
+      dispatch(addErrorNotification(msg));
     }
   };
 
   const submitTrust = async (isTrust) => {
-    const activeKey = restoreActiveKey();
-    if (!props.owner.id || !activeKey) {
-      props.dispatch(authShowPopup());
-      return;
-    }
-    setTrustLoading(true);
     try {
-      await withLoader(props.dispatch((isTrust ? trustUser : untrustUser)({
+      const activeKey = restoreActiveKey();
+
+      if (!owner.id || !activeKey) {
+        dispatch(authShowPopup());
+        return;
+      }
+
+      await withLoader(dispatch(userPageActions.submitTrust(userIdentity, isTrust, {
         activeKey,
         userId: user.id,
         userAccountName: user.accountName,
-        ownerAccountName: props.owner.accountName,
+        ownerAccountName: owner.accountName,
       })));
-      await fetchTrustedBy(trustedByMetadata.page);
-    } catch (e) {
-      const errorMessage = parseResponseError(e)[0].message;
-      props.dispatch(addErrorNotification(errorMessage));
-    }
-    setTrustLoading(false);
-  };
-
-  const fetchOrganizations = async (page = 1) => {
-    try {
-      const data = await withLoader(props.dispatch(fetchUserFollowsOrganizations({
-        userIdentity: userIdOrName,
-        page,
-      })));
-      setOrganizationsPopupIds(data.data.map(i => i.id));
-      setOrganizationsMetadata(data.metadata);
-    } catch (e) {
-      const errorMessage = parseResponseError(e)[0].message;
-      props.dispatch(addErrorNotification(errorMessage));
+    } catch (err) {
+      console.error(err);
+      const msg = parseResponseError(err)[0].message;
+      dispatch(addErrorNotification(msg));
     }
   };
-
-  const mapOrganizationProps = ids =>
-    getOrganizationByIds(props.organizations, ids)
-      .map(item => ({
-        id: item.id,
-        organization: true,
-        title: item.title,
-        avatarSrc: urls.getFileUrl(item.avatarFilename),
-        url: urls.getOrganizationUrl(item.id),
-        nickname: item.nickname,
-        currentRate: item.currentRate,
-      }));
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchUserData();
-  }, [userIdOrName]);
+    dispatch(userPageActions.reset());
+    withLoader(dispatch(userPageActions.getPageData(userIdentity)));
+  }, [userIdentity]);
 
-  if (loaded && !user) {
+  if (state.loaded && !user) {
     return <NotFoundPage />;
-  } else if (!user) {
-    return null;
   }
 
   return (
@@ -148,35 +116,53 @@ const UserPage = (props) => {
 
       <div className="layout layout_profile">
         <div className="layout__header">
-          <UserHead
-            userId={user.id}
-            trustedByUsersCount={trustedByMetadata.totalAmount}
-            trustedByUsersIds={trustedByUsersIds}
-            trustedByMetadata={trustedByMetadata}
-            trustedByOnChangePage={fetchTrustedBy}
-          />
-        </div>
-        <div className="layout__sidebar">
-          {organizationsIds.length > 0 &&
-            <EntryListSection
-              limit={5}
-              showViewMore={organizationsMetadata.totalAmount > organizationsIds.length}
-              title="Communities"
-              count={organizationsMetadata.totalAmount}
-              data={mapOrganizationProps(organizationsIds)}
-              popupData={mapOrganizationProps(organizationsPopupIds)}
-              popupMetadata={organizationsMetadata}
-              onChangePage={fetchOrganizations}
+          {user && user.id &&
+            <UserHead
+              userId={user.id}
+              trustedByCount={state.trustedBy.metadata.totalAmount}
+              trustedByUsersIds={state.trustedBy.ids}
+              trustedByPopupUsersIds={state.trustedByPopup.ids}
+              trustedByPopupMetadata={state.trustedByPopup.metadata}
+              trustedByOnChangePage={trustedByOnChangePage}
+              iFollowCount={state.iFollow.metadata.totalAmount}
+              iFollowUserIds={state.iFollow.ids}
+              iFollowPopupUserIds={state.iFollowPopup.ids}
+              iFollowPopupMetadata={state.iFollowPopup.metadata}
+              iFollowOnChangePage={iFollowOnChangePage}
+              followedByCount={state.followedBy.metadata.totalAmount}
+              followedByUserIds={state.followedBy.ids}
+              followedByPopupUserIds={state.followedByPopup.ids}
+              followedByPopupMetadata={state.followedByPopup.metadata}
+              followedByOnChangePage={followedByOnChangePage}
             />
           }
+        </div>
+        <div className="layout__sidebar">
+          <EntryListSectionOrgsWrapper
+            title="Communities"
+            count={state.orgs.metadata.totalAmount}
+            limit={8}
+            ids={state.orgs.ids}
+            popupIds={state.orgsPopup.ids}
+            popupMetadata={state.orgsPopup.metadata}
+            onChangePage={orgsPopupOnChangePage}
+          />
 
-          <EntryContacts site={user.personalWebsiteUrl} />
-          <EntrySocialNetworks urls={(user.usersSources || []).map(i => i.sourceUrl).filter(i => !!i)} />
-          <EntryCreatedAt date={user.createdAt} />
+          {user &&
+            <EntryContacts site={user.personalWebsiteUrl} />
+          }
 
-          {!userIsOwner(user, props.owner) && !props.ownerIsLoading &&
+          {user &&
+            <EntrySocialNetworks urls={(user.usersSources || []).map(i => i.sourceUrl).filter(i => !!i)} />
+          }
+
+          {user &&
+            <EntryCreatedAt date={user.createdAt} />
+          }
+
+          {user && !userIsOwner(user, owner) &&
             <Trust
-              loading={trustLoading}
+              loading={state.trustLoading}
               trusted={user && user.myselfData && user.myselfData.trust}
               userName={getUserName(user)}
               userAvtarUrl={urls.getFileUrl(user.avatarFilename)}
@@ -186,8 +172,17 @@ const UserPage = (props) => {
           }
         </div>
         <div className="layout__main">
-          <EntryAbout text={user.about} />
-          <Feed userId={user.id} isCurrentUser={user.id === props.user.id} feedTypeId={USER_WALL_FEED_ID} />
+          {user &&
+            <EntryAbout text={user.about} />
+          }
+
+          {user && user.id &&
+            <Feed
+              userId={user.id}
+              isCurrentUser={user.id === owner.id}
+              feedTypeId={USER_WALL_FEED_ID}
+            />
+          }
         </div>
         <div className="layout__footer">
           <Footer />
@@ -203,31 +198,10 @@ UserPage.propTypes = {
       userId: PropTypes.string,
     }),
   }).isRequired,
-  users: PropTypes.objectOf(PropTypes.any).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number,
-    accountName: PropTypes.string,
-    myselfData: PropTypes.shape({
-      trust: PropTypes.bool,
-    }),
-  }).isRequired,
-  ownerIsLoading: PropTypes.bool,
-  organizations: PropTypes.objectOf(PropTypes.any).isRequired,
-};
-
-UserPage.defaultProps = {
-  ownerIsLoading: true,
 };
 
 export const getUserPageData = (store, params) => {
-  const userPromise = store.dispatch(fetchUserPageData({
-    userIdentity: params.userId,
-  }));
+  const userPromise = store.dispatch(userPageActions.getPageData(params.userId));
   const postPromise = params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null;
   const feedPromise = store.dispatch(feedGetUserPosts({
     feedTypeId: USER_WALL_FEED_ID,
@@ -240,10 +214,4 @@ export const getUserPageData = (store, params) => {
   return Promise.all([userPromise, postPromise, feedPromise]);
 };
 
-export default connect(state => ({
-  users: state.users,
-  user: state.user.data,
-  organizations: state.organizations,
-  owner: selectUser(state),
-  ownerIsLoading: state.user.loading,
-}))(UserPage);
+export default UserPage;

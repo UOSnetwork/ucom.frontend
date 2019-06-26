@@ -1,4 +1,5 @@
 import { TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
+import merge from '../utils/merge';
 
 const getInitialState = () => ({
   activeTabId: TAB_ID_COMMUNITIES,
@@ -32,26 +33,7 @@ export default (state = getInitialState(), action) => {
       return getInitialState();
 
     case 'MAIN_PAGE_SET_DATA':
-      return {
-        ...state,
-        ...action.payload,
-        feed: {
-          ...state.feed,
-          ...action.payload.feed,
-        },
-        usersPopup: {
-          ...state.usersPopup,
-          ...action.payload.usersPopup,
-        },
-        organizationsPopup: {
-          ...state.organizationsPopup,
-          ...action.payload.organizationsPopup,
-        },
-        tagsPopup: {
-          ...state.tagsPopup,
-          ...action.payload.tagsPopup,
-        },
-      };
+      return merge({}, state, action.payload);
 
     default:
       return state;

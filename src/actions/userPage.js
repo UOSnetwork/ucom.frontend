@@ -9,11 +9,7 @@ export const setData = payload => ({ type: 'USER_PAGE_SET_DATA', payload });
 export const getPageData = userIdentity => async (dispatch) => {
   try {
     const {
-      user,
-      orgs,
-      iFollow,
-      followedBy,
-      trustedBy,
+      user, orgs, iFollow, followedBy, trustedBy,
     } = await graphql.getUserPageData({ userIdentity });
 
     dispatch(addUsers([
@@ -30,6 +26,10 @@ export const getPageData = userIdentity => async (dispatch) => {
         ids: trustedBy.data.map(i => i.id),
         metadata: trustedBy.metadata,
       },
+      trustedByPopup: {
+        ids: trustedBy.data.map(i => i.id),
+        metadata: trustedBy.metadata,
+      },
       orgs: {
         ids: orgs.data.map(i => i.id),
         metadata: orgs.metadata,
@@ -42,15 +42,26 @@ export const getPageData = userIdentity => async (dispatch) => {
         ids: iFollow.data.map(i => i.id),
         metadata: iFollow.metadata,
       },
+      iFollowPopup: {
+        ids: iFollow.data.map(i => i.id),
+        metadata: iFollow.metadata,
+      },
       followedBy: {
+        ids: followedBy.data.map(i => i.id),
+        metadata: followedBy.metadata,
+      },
+      followedByPopup: {
         ids: followedBy.data.map(i => i.id),
         metadata: followedBy.metadata,
       },
     }));
   } catch (err) {
     console.error(err);
-    throw err;
   }
+
+  dispatch(setData({
+    loaded: true,
+  }));
 };
 
 export const getTrustedBy = userIdentity => async (dispatch) => {
@@ -61,14 +72,18 @@ export const getTrustedBy = userIdentity => async (dispatch) => {
   dispatch(addUsers(data));
 
   dispatch(setData({
-    trustedBy: {
-      metadata,
+    trustedByPopup: {
       ids: data.map(i => i.id),
+      metadata,
+    },
+    trustedBy: {
+      ids: data.map(i => i.id),
+      metadata,
     },
   }));
 };
 
-export const getTrustedByPopup = (page, userIdentity) => async (dispatch) => {
+export const getTrustedByPopup = (userIdentity, page) => async (dispatch) => {
   try {
     const { data, metadata } = await graphql.getUserTrustedBy({
       userIdentity,

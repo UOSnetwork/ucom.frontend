@@ -1,3 +1,5 @@
+import merge from '../utils/merge';
+
 const getInitialState = () => ({
   loaded: false,
   trustLoading: false,
@@ -29,7 +31,7 @@ const getInitialState = () => ({
     ids: [],
     metadata: {},
   },
-  followedPopup: {
+  followedByPopup: {
     ids: [],
     metadata: {},
   },
@@ -41,42 +43,7 @@ export default (state = getInitialState(), action) => {
       return getInitialState();
 
     case 'USER_PAGE_SET_DATA':
-      return {
-        ...state,
-        ...action.payload,
-        trustedBy: {
-          ...state.trustedBy,
-          ...action.payload.trustedBy,
-        },
-        trustedByPopup: {
-          ...state.trustedBy,
-          ...action.payload.trustedBy,
-        },
-        orgs: {
-          ...state.orgs,
-          ...action.payload.orgs,
-        },
-        orgsPopup: {
-          ...state.orgsPopup,
-          ...action.payload.orgsPopup,
-        },
-        iFollow: {
-          ...state.iFollow,
-          ...action.payload.iFollow,
-        },
-        iFollowPopup: {
-          ...state.iFollowPopup,
-          ...action.payload.iFollowPopup,
-        },
-        followedBy: {
-          ...state.followedBy,
-          ...action.payload.followedBy,
-        },
-        followedByPopup: {
-          ...state.followedByPopup,
-          ...action.payload.followedByPopup,
-        },
-      };
+      return merge({}, state, action.payload);
 
     default:
       return state;
