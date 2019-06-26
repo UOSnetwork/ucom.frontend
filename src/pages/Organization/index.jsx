@@ -12,9 +12,6 @@ import { getOrganizationById } from '../../store/organizations';
 import urls from '../../utils/urls';
 import Feed from '../../components/Feed/FeedUser';
 import { ORGANIZATION_FEED_ID } from '../../utils/feed';
-import OrganizationAdmins from '../../components/Organization/OrganizationAdmins';
-import OrganizationSources from '../../components/Organization/OrganizationSources';
-import { extractHostname } from '../../utils/url';
 import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryLocation from '../../components/EntryLocation';
 import EntryCreatedAt from '../../components/EntryCreatedAt';
@@ -27,23 +24,11 @@ import { setDiscussions } from '../../actions/organization';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
+import { EntryListSectionOrgSourcesWrapper, EntryListSectionOrgAdminsWrapper } from '../../components/EntryListSection';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
-  const isExternalSource = source => source.sourceType === 'external';
   const organization = getOrganizationById(props.organizations, organizationId);
-
-  const mapSourcesProps = item => ({
-    id: item.id,
-    organization: isExternalSource(item) || (item.entityName && item.entityName.trim() === 'org'),
-    avatarSrc: urls.getFileUrl(item.avatarFilename),
-    url: urls.getSourceUrl(item),
-    title: item.title,
-    nickname: isExternalSource(item) ? extractHostname(item.sourceUrl) : item.nickname,
-    disableRate: true,
-    disableSign: isExternalSource(item),
-    isExternal: isExternalSource(item),
-  });
 
   useEffect(() => {
     withLoader(props.dispatch(getOrganization(organizationId)));
@@ -60,17 +45,18 @@ const OrganizationPage = (props) => {
         <div className="layout__header">
           <OrganizationHeader organizationId={organizationId} />
         </div>
+
         <div className="layout__sidebar">
-          <OrganizationAdmins organizationId={organizationId} />
-          {organization &&
-            <OrganizationSources
-              title="Partners"
-              sources={[
-                ...(organization.communitySources || []).map(mapSourcesProps),
-                ...(organization.partnershipSources || []).map(mapSourcesProps),
-              ]}
-            />
-          }
+          <EntryListSectionOrgAdminsWrapper
+            orgId={organizationId}
+            limit={3}
+          />
+
+          <EntryListSectionOrgSourcesWrapper
+            orgId={organizationId}
+            limit={3}
+          />
+
           {organization &&
             <EntryContacts
               phone={organization.phoneNumber}
@@ -155,9 +141,6 @@ OrganizationPage.propTypes = {
       postId: PropTypes.string,
       id: PropTypes.string,
     }),
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
   }).isRequired,
   organizations: PropTypes.objectOf(PropTypes.any).isRequired,
   dispatch: PropTypes.func.isRequired,

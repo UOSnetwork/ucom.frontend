@@ -10,7 +10,7 @@ export const FollowersWrapper = ({ usersIds, popupUsersIds, ...props }) => {
   const users = useSelector(selectUsersByIds(usersIds));
   const popupUsers = useSelector(selectUsersByIds(popupUsersIds));
 
-  const userToProps = user => ({
+  const mapProps = user => ({
     id: user.id,
     follow: true,
     avatarSrc: urls.getFileUrl(user.avatarFilename),
@@ -23,8 +23,8 @@ export const FollowersWrapper = ({ usersIds, popupUsersIds, ...props }) => {
   return (
     <Followers
       {...props}
-      users={users.map(userToProps)}
-      popupUsers={popupUsers.map(userToProps)}
+      users={users.map(mapProps)}
+      popupUsers={popupUsers.map(mapProps)}
     />
   );
 };
