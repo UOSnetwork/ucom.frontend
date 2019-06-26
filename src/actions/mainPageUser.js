@@ -14,7 +14,7 @@ export const getPageData = userIdentity => async (dispatch) => {
       topPostsParams: {
         postTypeIds: [POST_TYPE_MEDIA_ID],
         entityNamesFrom: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-        entityNamesFor: [ENTITY_NAMES_USERS],
+        entityNamesFor: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
         orderBy: '-current_rate',
         page: 1,
         perPage: 10,
