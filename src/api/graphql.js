@@ -803,6 +803,19 @@ const api = {
       throw e;
     }
   },
+
+  async getOrganizationActivity(params) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      users: GraphQLSchema.getOneOrganizationActivityQueryPart(params),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.users;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 export default api;
