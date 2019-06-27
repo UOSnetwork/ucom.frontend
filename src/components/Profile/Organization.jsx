@@ -231,7 +231,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Administraors</div>
+              <div className={profileStyles.label}>Administrators</div>
               <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
                 {data.usersTeam && data.usersTeam.map((item, index) => (
                   <div
