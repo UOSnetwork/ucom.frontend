@@ -141,7 +141,7 @@ const UserPage = (props) => {
           <EntryListSectionOrgsWrapper
             title="Communities"
             count={state.orgs.metadata.totalAmount}
-            limit={8}
+            limit={5}
             ids={state.orgs.ids}
             popupIds={state.orgsPopup.ids}
             popupMetadata={state.orgsPopup.metadata}

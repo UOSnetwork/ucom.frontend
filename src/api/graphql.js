@@ -8,7 +8,7 @@ import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
 import { LIST_ORDER_BY_RATE, LIST_PER_PAGE } from '../utils/constants';
-import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS } from '../utils/posts';
+import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS, ENTITY_NAMES_ORG } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
 
@@ -46,22 +46,6 @@ const request = async (data, extraOptions = {}) => {
 };
 
 const queryParts = {
-  getOneUserFollowsOrganizationsQueryPart({
-    userIdentity,
-    orderBy = LIST_ORDER_BY_RATE,
-    page = 1,
-    perPage = 10,
-  }) {
-    return GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
-      filters: {
-        user_identity: `${userIdentity}`,
-      },
-      order_by: orderBy,
-      per_page: perPage,
-      page,
-    });
-  },
-
   getPostsFeedQueryPart({
     postTypeIds = [POST_TYPE_MEDIA_ID],
     entityNamesFrom = [ENTITY_NAMES_USERS],
@@ -96,13 +80,37 @@ const queryParts = {
 
 const api = {
   async getUserMainPageData({
-    followsOrganizationsParams,
-    topPostsParams,
+    userIdentity,
   }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      queryParts.getOneUserFollowsOrganizationsQueryPart(followsOrganizationsParams),
-      queryParts.getPostsFeedQueryPart(topPostsParams),
-    ]);
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      posts: GraphQLSchema.getPostsFeedQueryPart({
+        filters: {
+          post_type_ids: [POST_TYPE_MEDIA_ID],
+          entity_names_from: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+          entity_names_for: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        page: 1,
+        per_page: 10,
+      }),
+      orgs: GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        per_page: 10,
+        page: 1,
+      }),
+      users: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        per_page: 10,
+        page: 1,
+      }),
+    });
 
     try {
       const data = await request({ query });
@@ -133,11 +141,13 @@ const api = {
           user_identity: `${userIdentity}`,
         },
       }),
-      orgs: queryParts.getOneUserFollowsOrganizationsQueryPart({
-        userIdentity,
-        followsOrganizationsOrderBy,
-        followsOrganizationsPerPage,
-        followsOrganizationsPage,
+      orgs: GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+        },
+        order_by: followsOrganizationsOrderBy,
+        per_page: followsOrganizationsPerPage,
+        page: followsOrganizationsPage,
       }),
       trustedBy: GraphQLSchema.getOneUserTrustedByQueryPart({
         filters: {

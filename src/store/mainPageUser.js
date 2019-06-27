@@ -11,6 +11,14 @@ const getInitialState = () => ({
     ids: [],
     metadata: {},
   },
+  users: {
+    ids: [],
+    metadata: {},
+  },
+  usersPopup: {
+    ids: [],
+    metadata: {},
+  },
 });
 
 export default (state = getInitialState(), action) => {
