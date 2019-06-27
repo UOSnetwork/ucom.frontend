@@ -5,6 +5,7 @@ import { addTags } from './tags';
 import { addUsers } from './users';
 import { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
 import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils/posts';
+import { LIST_PER_PAGE, LIST_ORDER_BY_RATE, LIST_ORDER_BY_ID } from '../utils/constants';
 
 export const setData = payload => ({ type: 'MAIN_PAGE_SET_DATA', payload });
 
@@ -22,46 +23,67 @@ export const getPageData = (activeTabId = TAB_ID_COMMUNITIES) => async (dispatch
   try {
     const result = await Promise.all([
       graphql.getMainPageData({
-        postsFeedParams: {
+        posts: {
+          filters: {
+            post_type_ids: [POST_TYPE_MEDIA_ID],
+            entity_names_from: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
+            entity_names_for: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
+          },
+          order_by: LIST_ORDER_BY_RATE,
+          per_page: LIST_PER_PAGE,
           page: 1,
-          postTypeIds: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
-          entityNamesFrom: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-          entityNamesFor: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-          orderBy: '-id',
-          commentsPage: 1,
-          commentsPerPage: 3,
         },
-      }),
-      graphql.getPostsFeed({
-        postTypeIds: [POST_TYPE_MEDIA_ID],
-        entityNamesFrom: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-        entityNamesFor: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-        orderBy: '-current_rate',
+        feed: {
+          params: {
+            filters: {
+              post_type_ids: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
+              entity_names_from: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+              entity_names_for: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
+            },
+            order_by: LIST_ORDER_BY_ID,
+            per_page: LIST_PER_PAGE,
+            page: 1,
+          },
+          include: {
+            comments: {
+              page: 1,
+              per_page: 3,
+            },
+          },
+        },
+        users: {
+          filters: {
+            overview_type: 'trending',
+          },
+          order_by: '-scaled_social_rate_delta',
+          per_page: LIST_PER_PAGE,
+          page: 1,
+        },
       }),
       activeTabId === TAB_ID_PEOPLE ? graphql.getHotOrganizations() : graphql.getTrendingOrganizations(),
       graphql.getTrendingTags(),
     ]);
 
     const [{
-      postsFeed, manyUsers,
-    }, mainPosts, { manyOrganizations }, { manyTags }] = result;
+      feed, users, posts,
+    }, { manyOrganizations }, { manyTags }] = result;
 
-    dispatch(addPostsAndComments(postsFeed.data.concat(mainPosts.data)));
-    dispatch(addUsers(manyUsers.data));
+    dispatch(addPostsAndComments(feed.data.concat(posts.data)));
+    dispatch(addUsers(users.data));
     dispatch(addOrganizations(manyOrganizations.data));
     dispatch(addTags(manyTags.data));
     dispatch(setData({
       feed: {
         page: 1,
-        hasMore: postsFeed.metadata.hasMore,
-        postsIds: postsFeed.data.map(i => i.id),
-        userIds: manyUsers.data.map(i => i.id),
+        hasMore: feed.metadata.hasMore,
+        postsIds: feed.data.map(i => i.id),
+        userIds: users.data.map(i => i.id),
         organizationsIds: manyOrganizations.data.map(i => i.id),
         tagsIds: manyTags.data.map(i => i.title),
       },
       usersPopup: {
-        ids: manyUsers.data.map(i => i.id),
-        metadata: manyUsers.metadata,
+        ids: users.data.map(i => i.id),
+        metadata: users.metadata,
       },
       organizationsPopup: {
         ids: manyOrganizations.data.map(i => i.id),
@@ -71,7 +93,7 @@ export const getPageData = (activeTabId = TAB_ID_COMMUNITIES) => async (dispatch
         ids: manyTags.data.map(i => i.title),
         metadata: manyTags.metadata,
       },
-      topPostsIds: mainPosts.data.map(post => post.id),
+      topPostsIds: posts.data.map(post => post.id),
     }));
   } catch (err) {
     console.error(err);
@@ -90,14 +112,24 @@ export const getFeed = (activeTabId, page) => async (dispatch, getState) => {
 
   try {
     const state = getState();
+
     const postsFeed = await graphql.getPostsFeed({
-      page,
-      postTypeIds: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
-      entityNamesFrom: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-      entityNamesFor: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
-      orderBy: '-id',
-      commentsPage: 1,
-      commentsPerPage: 3,
+      params: {
+        filters: {
+          post_type_ids: [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID],
+          entity_names_from: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+          entity_names_for: activeTabId === TAB_ID_PEOPLE ? [ENTITY_NAMES_USERS] : [ENTITY_NAMES_ORG],
+        },
+        order_by: LIST_ORDER_BY_ID,
+        per_page: LIST_PER_PAGE,
+        page,
+      },
+      include: {
+        comments: {
+          page: 1,
+          per_page: 3,
+        },
+      },
     });
 
     dispatch(addPostsAndComments(postsFeed.data));

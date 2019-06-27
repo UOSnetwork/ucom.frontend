@@ -45,40 +45,22 @@ const request = async (data, extraOptions = {}) => {
   }
 };
 
-const queryParts = {
-  getPostsFeedQueryPart({
-    postTypeIds = [POST_TYPE_MEDIA_ID],
-    entityNamesFrom = [ENTITY_NAMES_USERS],
-    entityNamesFor = [ENTITY_NAMES_USERS],
-    orderBy = LIST_ORDER_BY_RATE,
-    page = 1,
-    perPage = 10,
-    commentsPage,
-    commentsPerPage = 10,
-  }) {
-    const params = {
-      filters: {
-        post_type_ids: postTypeIds,
-        entity_names_from: entityNamesFrom,
-        entity_names_for: entityNamesFor,
-      },
-      order_by: orderBy,
-      page,
-      per_page: perPage,
-    };
-
-    const include = commentsPage ? {
-      comments: {
-        page: commentsPage,
-        per_page: commentsPerPage,
-      },
-    } : undefined;
-
-    return GraphQLSchema.getPostsFeedQueryPart(params, include);
-  },
-};
-
 const api = {
+  async getMainPageData(params) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      feed: GraphQLSchema.getPostsFeedQueryPart(params.feed.params, params.feed.include),
+      posts: GraphQLSchema.getPostsFeedQueryPart(params.posts),
+      users: GraphQLSchema.getManyUsersQueryPart(params.users),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
   async getUserMainPageData({
     userIdentity,
   }) {
@@ -473,7 +455,7 @@ const api = {
 
   async getPostsFeed(params) {
     const query = GraphQLSchema.getQueryMadeFromParts([
-      queryParts.getPostsFeedQueryPart(params),
+      GraphQLSchema.getPostsFeedQueryPart(params.params, params.include),
     ]);
 
     try {
@@ -575,25 +557,6 @@ const api = {
     try {
       const data = await request({ query });
       return data.data;
-    } catch (e) {
-      throw e;
-    }
-  },
-
-  async getMainPageData({
-    manyUsersParams = {},
-    postsFeedParams = {},
-  }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      api.getManyUsersQueryPart(manyUsersParams),
-      queryParts.getPostsFeedQueryPart(postsFeedParams),
-    ]);
-
-    try {
-      const result = await Promise.all([
-        request({ query }),
-      ]);
-      return result[0].data;
     } catch (e) {
       throw e;
     }
