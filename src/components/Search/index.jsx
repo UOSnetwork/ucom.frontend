@@ -70,18 +70,18 @@ const SearchPopup = (props) => {
           </div>
           <input
             autoFocus
-            onChange={(e) => {
-              setUserName(e.target.value);
-              debouncedSetSearch(e.target.value);
-            }}
+            type="text"
             className={styles.input}
             placeholder="Search for people in U°OS blockchain…"
-            type="text"
             spellCheck="false"
             onKeyUp={(e) => {
               if (props.onClickClose && e.keyCode === KEY_ESCAPE) {
                 props.onClickClose();
               }
+            }}
+            onChange={(e) => {
+              setUserName(e.target.value);
+              debouncedSetSearch(e.target.value);
             }}
           />
           <div
