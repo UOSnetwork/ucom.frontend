@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 import Popup from '../Popup';
 import styles from './styles.css';
 import debounce from '../../utils/debounce';
-import api from '../../api';
 import urls from '../../utils/urls';
-import loader from '../../utils/loader';
 import UserCardLine from '../UserCardLine';
 import { getUserName } from '../../utils/user';
 import Arrow from '../Icons/ArrowLeft';
 import IconSearch from '../Icons/Search';
 import IconClose from '../Icons/Close';
 import IconDuck from '../Icons/Socials/Duck';
+import graphql from '../../api/graphql';
+import withLoader from '../../utils/withLoader';
 
 const SearchPopup = (props) => {
   const [usersData, setUsersData] = useState({ data: [], metadata: {} });
@@ -26,16 +26,20 @@ const SearchPopup = (props) => {
   };
 
   const getData = async (params) => {
-    loader.start();
-
     try {
-      const data = await api.getUsers(params);
-      setUsersData(data);
+      const result = await withLoader(graphql.getUsers({
+        page: params.page,
+        perPage: params.perPage,
+        orderBy: params.sortBy,
+        filters: {
+          usersIdentityPattern: params.userName,
+        },
+      }));
+
+      setUsersData(result);
     } catch (e) {
       console.error(e);
     }
-
-    loader.done();
   };
 
   const onChangeSearch = (userName) => {
