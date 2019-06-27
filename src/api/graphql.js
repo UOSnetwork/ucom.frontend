@@ -479,7 +479,7 @@ const api = {
     orderBy = '-scaled_social_rate_delta',
     page = 1,
     perPage = 10,
-  }) {
+  } = {}) {
     const params = {
       filters: {
         overview_type: overviewType,
@@ -499,6 +499,20 @@ const api = {
 
     try {
       const data = await request({ query });
+      return data.data.manyUsers;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getUsers(params) {
+    try {
+      const data = await request({
+        query: GraphQLSchema.getQueryMadeFromParts([
+          GraphQLSchema.getManyUsersQueryPart(snakes(params)),
+        ]),
+      });
+
       return data.data.manyUsers;
     } catch (e) {
       throw e;

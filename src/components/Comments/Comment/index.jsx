@@ -20,6 +20,7 @@ const Comment = (props) => {
     <Fragment>
       <div className={styles.comment} depth={props.depth} id={`comment-${props.id}`}>
         <div className={styles.userCard}>
+          {/* TODO: Replace to Entry Card */}
           <UserCard
             userId={props.userId}
             isOwner={props.ownerId === props.userId}

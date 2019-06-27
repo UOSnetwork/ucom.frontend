@@ -1,28 +1,17 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import Pagination from 'rc-pagination';
-import UserCard from '../components/UserCard';
 import LayoutBase from '../components/Layout/LayoutBase';
-import api from '../api';
 import { getUserName } from '../utils/user';
 import urls from '../utils/urls';
 import IconTableTriangle from '../components/Icons/TableTriangle';
 import SearchInput from '../components/SearchInput';
-import loader from '../utils/loader';
 import { formatScaledImportance } from '../utils/rate';
-
-const { getUsersPagingUrl } = urls;
-
-const textItemRender = (current, type, element) => {
-  if (type === 'prev') {
-    return <a>Prev</a>;
-  }
-  if (type === 'next') {
-    return <a>Next</a>;
-  }
-  return element;
-};
+import graphql from '../api/graphql';
+import withLoader from '../utils/withLoader';
+import Pagination from '../components/Pagination/index';
+import EntryCard from '../components/EntryCard';
 
 const UsersPage = (props) => {
   const [usersData, setUsersData] = useState({ data: [], metadata: {} });
@@ -36,28 +25,32 @@ const UsersPage = (props) => {
     page, sortBy, perPage, userName,
   };
 
-  const onChangePage = (current) => {
-    props.history.push(getUsersPagingUrl({ ...usersParams, page: current }));
+  const onChangePage = (page) => {
+    props.history.push(urls.getUsersPagingUrl({ ...usersParams, page }));
     window.scrollTo(0, 'top');
   };
 
   const onChangeSearch = (userName) => {
-    props.history.push(getUsersPagingUrl({
+    props.history.push(urls.getUsersPagingUrl({
       ...usersParams, userName, page: 1, perPage: 20,
     }));
   };
 
   const getData = async (params) => {
-    loader.start();
-
     try {
-      const data = await api.getUsers(params);
-      setUsersData(data);
+      const result = await withLoader(graphql.getUsers({
+        page: Number(params.page),
+        perPage: Number(params.perPage),
+        orderBy: params.sortBy,
+        filters: {
+          usersIdentityPattern: params.userName,
+        },
+      }));
+
+      setUsersData(result);
     } catch (e) {
       console.error(e);
     }
-
-    loader.done();
   };
 
   useEffect(() => {
@@ -91,10 +84,6 @@ const UsersPage = (props) => {
                         name: 'account_name',
                         sortable: true,
                       }, {
-                        title: 'Date',
-                        name: 'id',
-                        sortable: true,
-                      }, {
                         title: 'Rate',
                         name: 'current_rate',
                         sortable: true,
@@ -107,7 +96,7 @@ const UsersPage = (props) => {
                             { 'list-table__cell_sortable': item.sortable },
                           )}
                         >
-                          <Link to={getUsersPagingUrl({ ...usersParams, sortBy: `${sortBy === `-${item.name}` ? '' : '-'}${item.name}` })}>
+                          <Link to={urls.getUsersPagingUrl({ ...usersParams, sortBy: `${sortBy === `-${item.name}` ? '' : '-'}${item.name}` })}>
                             <div className="list-table__title">
                               {item.title}
 
@@ -123,7 +112,6 @@ const UsersPage = (props) => {
                                 </div>
                               )}
                             </div>
-
                           </Link>
                         </td>
                       ))}
@@ -134,15 +122,14 @@ const UsersPage = (props) => {
                       <tr className="list-table__row" key={item.id}>
                         <td className="list-table__cell list-table__cell_index">{index + 1 + ((page - 1) * perPage) }</td>
                         <td className="list-table__cell list-table__cell_name" data-title="Name">
-                          <UserCard
-                            profileLink={urls.getUserUrl(item.id)}
-                            avatarUrl={urls.getFileUrl(item.avatarFilename)}
-                            userName={getUserName(item)}
-                            accountName={item.accountName}
-                            sign="@"
+                          <EntryCard
+                            avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                            url={urls.getUserUrl(item.id)}
+                            title={getUserName(item)}
+                            nickname={item.accountName}
+                            disableRate
                           />
                         </td>
-                        <td className="list-table__cell list-table__cell_date" data-title="Date" />
                         <td className="list-table__cell" data-title="Rate">
                           <span className="title title_xsmall title_light">{formatScaledImportance(item.scaledImportance)}</span>
                         </td>
@@ -155,18 +142,15 @@ const UsersPage = (props) => {
                 {hasMore && (
                   <div className="table-content__showmore">
                     <div className="button-clean button-clean_link">
-                      <Link to={getUsersPagingUrl({ ...usersParams, perPage: +perPage + 20 })}>Show More</Link>
+                      <Link to={urls.getUsersPagingUrl({ ...usersParams, perPage: +perPage + 20 })}>Show More</Link>
                     </div>
                   </div>
                 )}
-                {/* TODO Replace with components/paggination/ */}
+
                 <Pagination
-                  className="table-content__pagination"
-                  showTitle={false}
-                  total={totalAmount}
-                  pageSize={+perPage}
-                  itemRender={textItemRender}
-                  current={+page}
+                  page={Number(page)}
+                  perPage={Number(perPage)}
+                  totalAmount={Number(totalAmount)}
                   onChange={onChangePage}
                 />
               </div>
@@ -176,6 +160,15 @@ const UsersPage = (props) => {
       </div>
     </LayoutBase>
   );
+};
+
+UsersPage.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default UsersPage;
