@@ -119,6 +119,14 @@ export const restoreEncryptedActiveKey = (password) => {
   return activeKey;
 };
 
+export const removeEncryptedActiveKey = () => {
+  try {
+    localStorage.removeItem('encryptedActiveKey');
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const socialKeyIsExists = () => {
   try {
     const socialKey = localStorage.getItem('socialKey');
