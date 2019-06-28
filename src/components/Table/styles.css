@@ -1,0 +1,49 @@
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.header {
+  text-transform: uppercase;
+  font-size: 12px;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.header .cell {
+  border-bottom: 1px solid #E8ECEC;
+}
+
+.body .row:hover {
+  background: #F8F8F9;
+}
+
+.row {
+  transition: background 0.2s ease;
+}
+
+.cell {
+  padding: 20px 10px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell:first-child {
+  padding-left: 20px;
+}
+
+.cell:last-child {
+  padding-right: 20px;
+}
+
+.cell.right {
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  .cell.hideOnSmall {
+    display: none;
+  }
+}
