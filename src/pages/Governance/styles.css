@@ -1,6 +1,6 @@
 .header {
-  max-width: 1024px;
-  margin: 40px auto 0;
+  max-width: 1000px;
+  margin: 40px auto 80px;
 }
 
 .header .info {
@@ -9,6 +9,12 @@
   grid-gap: 20px;
   align-items: baseline;
   margin: 0 0 20px;
+}
+
+@media (max-width: 767px) {
+  .header .info {
+    grid-template-columns: 1fr;
+  }
 }
 
 .header .info .title {
@@ -31,14 +37,147 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, max-content);
-  grid-gap: 40px;
+  grid-column-gap: 40px;
+  grid-row-gap: 10px;
+  margin: 0 0 40px;
   font-size: 16px;
   font-weight: bold;
   line-height: 2.125;
+  color: #C4C4C4;
 }
 
 .tabs .active {
   border-bottom: 1px solid #000;
   opacity: 1;
-  color: initial;
+  color: #000;
+}
+
+@media (max-width: 767px) {
+  .tabs {
+    grid-auto-flow: row;
+    grid-auto-columns: 1fr;
+  }
+}
+
+.header .description {
+  max-width: 700px;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.58;
+}
+
+.head {
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(184, 184, 184, 0.25);
+  border-radius: 16px 16px 0 0;
+  background: #FCFDFE;
+}
+
+.head .inner {
+  display: grid;
+  grid-template-columns: max-content 1fr minmax(0, max-content);
+  grid-gap: 10px;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.head .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+  .head {
+    margin: 0 -20px;
+  }
+}
+
+.section {
+  margin: 0 -10px;
+  padding: 0 30px;
+  box-shadow: 0 0 20px rgba(184, 184, 184, 0.25);
+  background: #fff;
+}
+
+.section .inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+
+.section .title {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 5px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.section .title:hover {
+  color: #d8352f;
+}
+
+.section .title:hover .toggler {
+  stroke: #d8352f;
+}
+
+.section .title .toggler {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin: -12px 15px 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #000;
+  transition: stroke 0.2s ease;
+}
+
+.section .blurb {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: normal;
+  color: #666;
+}
+
+.section .description {
+  margin: 0 0 10px;
+  max-width: 700px;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.section .vote {
+  font-size: 14px;
+  line-height: normal;
+  text-align: right;
+}
+
+.section .vote strong {
+  font-weight: normal;
+  color: #d8352f;
+}
+
+@media (max-width: 767px) {
+  .section {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .section .title .toggler {
+    right: auto;
+    left: 100%;
+  }
 }
