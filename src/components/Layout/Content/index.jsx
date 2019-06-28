@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
 
-const LayoutClean = ({ children }) => (
-  <div className={`${styles.content} ${styles.fullHeight}`}>
+const LayoutContent = ({ children }) => (
+  <div className={styles.layoutContent}>
     {children}
   </div>
 );
 
-LayoutClean.propTypes = {
+LayoutContent.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default LayoutClean;
+export default LayoutContent;

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-// import Footer from '../components/Footer';
-import LayoutBase from '../components/Layout/LayoutBase';
-import api from '../api';
-import styles from './Statistics.css';
+import LayoutBase from '../../components/Layout/LayoutBase';
+import api from '../../api';
+import styles from './styles.css';
 
 const { ParamTypes } = require('ucom.libs.common').Stats.Dictionary;
 

@@ -1,0 +1,44 @@
+.header {
+  max-width: 1024px;
+  margin: 40px auto 0;
+}
+
+.header .info {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, max-content);
+  grid-gap: 20px;
+  align-items: baseline;
+  margin: 0 0 20px;
+}
+
+.header .info .title {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: normal;
+}
+
+.header .info .rate {
+  font-size: 16px;
+  line-height: normal;
+}
+
+.header .info .rate big {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.tabs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 2.125;
+}
+
+.tabs .active {
+  border-bottom: 1px solid #000;
+  opacity: 1;
+  color: initial;
+}

@@ -1,8 +1,7 @@
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect } from 'react';
-// import Header from '../Header/Header';
 import Header from '../HeaderSimple';
+import styles from './styles.css';
 
 const LayoutBase = (props) => {
   useEffect(() => {
@@ -11,14 +10,9 @@ const LayoutBase = (props) => {
 
   return (
     <Fragment>
-      <Header gray={props.gray} />
+      <Header />
 
-      <div
-        className={classNames({
-          'page__content': true,
-          'page__content_gray': props.gray,
-        })}
-      >
+      <div className={styles.content}>
         {props.children}
       </div>
     </Fragment>
@@ -27,11 +21,6 @@ const LayoutBase = (props) => {
 
 LayoutBase.propTypes = {
   children: PropTypes.node.isRequired,
-  gray: PropTypes.bool,
-};
-
-LayoutBase.defaultProps = {
-  gray: true,
 };
 
 export default LayoutBase;

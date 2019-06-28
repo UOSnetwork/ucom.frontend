@@ -1,0 +1,13 @@
+.content {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 50px 0 0;
+  background: #F9F9F9;
+}
+
+.content.fullHeight {
+  padding: 0;
+}
