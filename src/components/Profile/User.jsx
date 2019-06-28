@@ -107,11 +107,6 @@ const Profile = ({
         <div className={gridStyles.content}>
           <h2 className={profileStyles.title}>Your Profile</h2>
 
-          <p className={profileStyles.description}>
-            Few words about profile its how it will affect autoupdates and etc.<br />
-            Maybe some tips)
-          </p>
-
           <Element
             name="personalInfo"
             className={profileStyles.section}
