@@ -1,3 +1,5 @@
+const { Dictionary } = require('ucom-libs-wallet');
+
 export const ERROR_SERVER = 'Could not complete request, please try again later';
 
 export const NOTIFICATION_TITLE_ERROR = 'Error';
@@ -32,3 +34,11 @@ export const USERS_TEAM_STATUS_ID_DECLINED = 2;
 export const LIST_ORDER_BY_ID = '-id';
 export const LIST_ORDER_BY_RATE = '-current_rate';
 export const LIST_PER_PAGE = 10;
+
+export const BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
+export const BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
+
+export const NODES_PER_PAGE = 60;
+export const BP_STATUS_ACTIVE_ID = 1;
+export const BP_STATUS_BACKUP_ID = 2;
+export const PRODUCERS_LIMIT = 30;

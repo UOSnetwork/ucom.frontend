@@ -40,6 +40,14 @@ const urls = {
     return '/governance';
   },
 
+  getGovernanceVotingUrl(id) {
+    return `${urls.getGovernanceUrl()}/${id}`;
+  },
+
+  getGovernanceCastUrl(id) {
+    return `${urls.getGovernanceVotingUrl(id)}/cast`;
+  },
+
   getPostUrl(post) {
     if (!post || !post.id) {
       return null;

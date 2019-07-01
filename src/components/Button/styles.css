@@ -1,8 +1,17 @@
+.wrapper {
+  display: inline-block;
+}
+
+.wrapper.strech {
+  width: 100%;
+}
+
 .button {
   box-sizing: border-box;
   display: flex;
   align-items: center;
   height: 48px;
+  width: 100%;
   padding: 0 20px;
   margin: 0;
   border: 1px solid #585858;
@@ -23,16 +32,24 @@
   text-decoration: none;
 }
 
-.button.strech {
-  width: 100%;
-}
-
 .button.grayBorder {
   border-color: #ddd;
 }
 
 .button.grayBorder:hover {
   border-color: #000;
+}
+
+.button.redBorder {
+  border-color: #D8352F;
+  color: #D8352F;
+  background: #fff;
+}
+
+.button.redBorder:hover {
+  border-color: #C32924;
+  color: #C32924;
+  background: #fff;
 }
 
 .button.red {

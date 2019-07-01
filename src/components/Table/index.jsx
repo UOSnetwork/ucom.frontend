@@ -2,22 +2,42 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
+import IconTableTriangle from '../Icons/TableTriangle';
 
-const Table = ({ cols, data, template }) => (
+const Table = ({ cols, data, onSort }) => (
   <table className={styles.table}>
     <thead className={styles.header}>
       <tr className={styles.row}>
         {cols.map((col, index) => (
           <td
+            role="presentation"
             key={index}
             className={classNames({
               [styles.cell]: true,
-              [styles.hideOnSmall]: cols[index].hideOnSmall,
-              [styles.right]: cols[index].right,
+              [styles.hideOnSmall]: col.hideOnSmall,
+              [styles.right]: col.right,
+              [styles.sortable]: col.sortable,
             })}
-            style={{ width: template[index] }}
+            style={{ width: cols[index].width }}
+            onClick={() => {
+              if (col.sortable && onSort) {
+                onSort(col);
+              }
+            }}
           >
             {col.title}
+            {col.sortable && col.sorted &&
+              <span className={styles.sort}>
+                <span
+                  className={classNames({
+                    [styles.icon]: true,
+                    [styles.reverse]: col.reverse,
+                  })}
+                >
+                  <IconTableTriangle />
+                </span>
+              </span>
+            }
           </td>
         ))}
       </tr>
@@ -37,7 +57,7 @@ const Table = ({ cols, data, template }) => (
                   [styles.hideOnSmall]: cols[index].hideOnSmall,
                   [styles.right]: cols[index].right,
                 })}
-                style={{ width: template[index] }}
+                style={{ width: cols[index].width }}
               >
                 {cell}
               </td>
@@ -52,14 +72,19 @@ const Table = ({ cols, data, template }) => (
 Table.propTypes = {
   cols: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string,
+    hideOnSmall: PropTypes.bool,
+    right: PropTypes.bool,
+    width: PropTypes.string,
+    reverse: PropTypes.bool,
   })).isRequired,
   data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.any)),
-  template: PropTypes.arrayOf(PropTypes.string),
+  onSort: PropTypes.func,
 };
 
 Table.defaultProps = {
   data: [],
-  template: [],
+  onSort: undefined,
 };
 
+export * from './wrappers';
 export default Table;

@@ -96,108 +96,13 @@
   }
 }
 
-.section {
-  margin: 0 -10px;
-  padding: 0 30px;
-  box-shadow: 0 0 20px rgba(184, 184, 184, 0.25);
-  background: #fff;
-}
-
-.section .inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 50px 0;
-}
-
-.section .title {
-  position: relative;
-  display: inline-block;
-  margin: 0 0 5px;
-  font-size: 28px;
-  font-weight: bold;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.section .title:hover {
-  color: #d8352f;
-}
-
-.section .title:hover .toggler {
-  stroke: #d8352f;
-}
-
-.section .title .toggler {
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  margin: -12px 15px 0 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: #000;
-  transition: stroke 0.2s ease;
-}
-
-.section .blurb {
-  margin: 0 0 20px;
-  font-size: 14px;
-  line-height: normal;
-  color: #666;
-}
-
-.section .description {
-  margin: 0 0 10px;
-  max-width: 700px;
-  font-size: 16px;
-  line-height: 1.75;
-}
-
-.section .vote {
-  font-size: 14px;
-  line-height: normal;
-  text-align: right;
-}
-
-.section .vote strong {
-  font-weight: normal;
-  color: #d8352f;
-}
-
-.section .action {
-  margin: 40px 0;
-}
-
-@media (max-width: 767px) {
-  .section {
-    margin: 0 -20px;
-    padding: 0 20px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .section .title .toggler {
-    right: auto;
-    left: 100%;
-  }
-}
-
-.table {
-  font-size: 16px;
-  line-height: normal;
-}
-
-.table .votes {
+.votes {
   position: relative;
 }
 
-.table .votes small {
+.votes small {
   position: absolute;
   right: 0;
   font-size: 10px;
-  color: rgba(0,0,0,0.4);
+  color: rgba(0,0,0,0.6);
 }

@@ -1,0 +1,31 @@
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 280px);
+  grid-gap: 32px 24px;
+  margin: 0 0 150px;
+}
+
+.name {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+@media(max-width: 1023px) {
+  .features {
+    grid-template-columns: repeat(2, 280px);
+  }
+}
+
+@media(max-width: 767px) {
+  .features {
+    grid-template-columns: 280px;
+  }
+}

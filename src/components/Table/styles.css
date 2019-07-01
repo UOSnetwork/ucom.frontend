@@ -24,26 +24,39 @@
 }
 
 .cell {
-  padding: 20px 10px;
+  padding: 20px;
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.cell:first-child {
-  padding-left: 20px;
-}
-
-.cell:last-child {
-  padding-right: 20px;
 }
 
 .cell.right {
   text-align: right;
 }
 
+.cell.sortable {
+  cursor: pointer;
+}
+
 @media (max-width: 767px) {
   .cell.hideOnSmall {
     display: none;
   }
+}
+
+.sort {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.sort .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.sort .icon.reverse {
+  transform: rotate(180deg);
 }

@@ -120,7 +120,7 @@ export default [{
   path: '/communities/:organizationId/discussions/new',
   component: EditPostPage,
 }, {
-  exact: true,
+  exact: false,
   path: '/governance',
   component: GovernancePage,
 }, {
