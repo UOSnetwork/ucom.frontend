@@ -49,5 +49,5 @@ export const mapUserDataToFollowersProps = user => ({
   url: urls.getUserUrl(user.id),
   title: getUserName(user),
   nickname: user.accountName,
-  currentRate: user.currentRate,
+  scaledImportance: user.scaledImportance,
 });

@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
 import UserCard from '../UserCard';
-import Rate from '../Rate';
 import UserFollowButton from './UserFollowButton';
 import { selectUser } from '../../store/selectors/user';
 import { getUsersByIds } from '../../store/users';
@@ -33,10 +32,6 @@ const UserListPopup = (props) => {
                 profileLink={urls.getUserUrl(item.id)}
                 sign={props.noSign ? '' : '@'}
               />
-            </div>
-
-            <div className="entry-list__rate">
-              <Rate value={+item.currentRate} className="rate_small" />
             </div>
 
             {item.id &&

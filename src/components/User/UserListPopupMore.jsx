@@ -10,6 +10,7 @@ import urls from '../../utils/urls';
 import api from '../../api';
 import loader from '../../utils/loader';
 import LoadMore from '../Feed/LoadMore';
+import { formatScaledImportance } from '../../utils/rate';
 
 const UserListPopupMore = (props) => {
   if (!props.tagTitle) {
@@ -68,7 +69,11 @@ const UserListPopupMore = (props) => {
             </div>
 
             <div className="entry-list__rate">
-              <Rate value={+item.currentRate} className="rate_small" />
+              <Rate
+                disableRateFormat
+                value={formatScaledImportance(item.scaledImportance)}
+                className="rate_small"
+              />
             </div>
 
             {item.id &&

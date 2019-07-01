@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { formatRate } from '../../utils/rate';
+import { formatScaledImportance } from '../../utils/rate';
 import UserPick from '../UserPick/UserPick';
 import { getUserName } from '../../utils/user';
 import DropdownMenu, {
@@ -69,7 +69,7 @@ const User = ({ user, onClickOrganizationsViewAll }) => {
       items={menuItems}
     >
       <Link className={styles.user} to={urls.getUserUrl(user.id)}>
-        <span className={styles.rate}>{formatRate(user.currentRate, true)}</span>
+        <span className={styles.rate}>{formatScaledImportance(user.scaledImportance)}</span>
         <UserPick
           shadow
           size={32}
@@ -84,7 +84,7 @@ const User = ({ user, onClickOrganizationsViewAll }) => {
 User.propTypes = {
   user: PropTypes.shape({
     avatarFilename: PropTypes.string,
-    currentRate: PropTypes.number,
+    scaledImportance: PropTypes.number,
   }),
   onClickOrganizationsViewAll: PropTypes.func,
 };

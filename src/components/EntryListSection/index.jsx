@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../Section/styles.css';
-import EntryList, { EntryItem } from '../EntryList';
+import EntryList, { EntryListItem } from '../EntryList';
 
 const EntryListSection = (props) => {
   if (!props.data.length) {
@@ -29,7 +29,7 @@ const EntryListSection = (props) => {
 
 EntryListSection.propTypes = {
   title: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(PropTypes.shape(EntryItem.propTypes)),
+  data: PropTypes.arrayOf(PropTypes.shape(EntryListItem.propTypes)),
   count: PropTypes.number,
   limit: EntryList.propTypes.limit,
   popupData: EntryList.propTypes.popupData,

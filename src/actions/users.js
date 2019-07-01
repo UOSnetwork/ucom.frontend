@@ -96,16 +96,10 @@ export const fetchUser = userIdentity => async (dispatch) => {
 
 export const fetchUserPageData = ({
   userIdentity,
-  trustedByOrderBy,
-  trustedByPerPage,
-  trustedByPage,
 }) => async (dispatch) => {
   try {
     const data = await graphql.getUserPageData({
       userIdentity,
-      trustedByOrderBy,
-      trustedByPerPage,
-      trustedByPage,
     });
     const { oneUser, oneUserTrustedBy, oneUserFollowsOrganizations } = data;
 

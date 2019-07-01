@@ -1,44 +1,38 @@
 import graphql from '../api/graphql';
-import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID } from '../utils/posts';
 import { addPosts } from './posts';
 import { addOrganizations } from './organizations';
+import { addUsers } from './users';
+import { LIST_ORDER_BY_RATE, LIST_PER_PAGE } from '../utils/constants';
 
 export const setData = payload => ({ type: 'MAIN_PAGE_USER_SET_DATA', payload });
 
 export const getPageData = userIdentity => async (dispatch) => {
   try {
     const {
-      oneUserFollowsOrganizations,
-      postsFeed,
-    } = await graphql.getUserMainPageData({
-      topPostsParams: {
-        postTypeIds: [POST_TYPE_MEDIA_ID],
-        entityNamesFrom: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-        entityNamesFor: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-        orderBy: '-current_rate',
-        page: 1,
-        perPage: 10,
-      },
-      followsOrganizationsParams: {
-        userIdentity,
-        orderBy: '-current_rate',
-        page: 1,
-        perPage: 10,
-      },
-    });
+      posts, orgs, users,
+    } = await graphql.getUserMainPageData({ userIdentity });
 
-    dispatch(addPosts(postsFeed.data));
-    dispatch(addOrganizations(oneUserFollowsOrganizations.data));
+    dispatch(addPosts(posts.data));
+    dispatch(addOrganizations(orgs.data));
+    dispatch(addUsers(users.data));
     dispatch(setData({
       orgs: {
-        ids: oneUserFollowsOrganizations.data.map(org => org.id),
-        metadata: oneUserFollowsOrganizations.metadata,
+        ids: orgs.data.map(org => org.id),
+        metadata: orgs.metadata,
       },
       orgsPopup: {
-        ids: oneUserFollowsOrganizations.data.map(org => org.id),
-        metadata: oneUserFollowsOrganizations.metadata,
+        ids: orgs.data.map(org => org.id),
+        metadata: orgs.metadata,
       },
-      topPostsIds: postsFeed.data.map(post => post.id),
+      users: {
+        ids: users.data.map(org => org.id),
+        metadata: users.metadata,
+      },
+      usersPopup: {
+        ids: users.data.map(org => org.id),
+        metadata: users.metadata,
+      },
+      topPostsIds: posts.data.map(post => post.id),
     }));
   } catch (err) {
     console.error(err);
@@ -51,13 +45,35 @@ export const getOrganizations = (userIdentity, page) => async (dispatch) => {
     const result = await graphql.getUserFollowsOrganizations({
       userIdentity,
       page,
-      perPage: 10,
-      orderBy: '-current_rate',
+      perPage: LIST_PER_PAGE,
+      orderBy: LIST_ORDER_BY_RATE,
     });
 
     dispatch(addOrganizations(result.data));
     dispatch(setData({
       orgsPopup: {
+        ids: result.data.map(i => i.id),
+        metadata: result.metadata,
+      },
+    }));
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getUsers = (userIdentity, page) => async (dispatch) => {
+  try {
+    const result = await graphql.getUserIFollow({
+      userIdentity,
+      page,
+      perPage: LIST_PER_PAGE,
+      orderBy: LIST_ORDER_BY_RATE,
+    });
+
+    dispatch(addUsers(result.data));
+    dispatch(setData({
+      usersPopup: {
         ids: result.data.map(i => i.id),
         metadata: result.metadata,
       },

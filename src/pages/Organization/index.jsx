@@ -2,19 +2,15 @@ import { Route, Switch } from 'react-router';
 import { arrayMove } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
 import OrganizationHeader from '../../components/Organization/OrganizationHeader';
 import { getOrganization, addOrganizations } from '../../actions/organizations';
-import { selectUser } from '../../store/selectors';
+import { selectOwner, selectOrgById } from '../../store/selectors';
 import LayoutBase from '../../components/Layout/LayoutBase';
-import { getOrganizationById } from '../../store/organizations';
 import urls from '../../utils/urls';
 import Feed from '../../components/Feed/FeedUser';
 import { ORGANIZATION_FEED_ID } from '../../utils/feed';
-import OrganizationAdmins from '../../components/Organization/OrganizationAdmins';
-import OrganizationSources from '../../components/Organization/OrganizationSources';
-import { extractHostname } from '../../utils/url';
 import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryLocation from '../../components/EntryLocation';
 import EntryCreatedAt from '../../components/EntryCreatedAt';
@@ -27,26 +23,33 @@ import { setDiscussions } from '../../actions/organization';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
+import { EntryListSectionOrgSourcesWrapper, EntryListSectionOrgAdminsWrapper } from '../../components/EntryListSection';
+import * as orgPageActions from '../../actions/orgPage';
+import { addErrorNotification } from '../../actions/notifications';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
-  const isExternalSource = source => source.sourceType === 'external';
-  const organization = getOrganizationById(props.organizations, organizationId);
+  const organization = useSelector(selectOrgById(organizationId));
+  const owner = useSelector(selectOwner);
+  const state = useSelector(state => state.orgPage);
+  const dispatch = useDispatch();
 
-  const mapSourcesProps = item => ({
-    id: item.id,
-    organization: isExternalSource(item) || (item.entityName && item.entityName.trim() === 'org'),
-    avatarSrc: urls.getFileUrl(item.avatarFilename),
-    url: urls.getSourceUrl(item),
-    title: item.title,
-    nickname: isExternalSource(item) ? extractHostname(item.sourceUrl) : item.nickname,
-    disableRate: true,
-    disableSign: isExternalSource(item),
-    isExternal: isExternalSource(item),
-  });
+  const getFollowedByPopup = async (page) => {
+    try {
+      await withLoader(dispatch(orgPageActions.getFollowedByPopup(organizationId, page)));
+    } catch (err) {
+      console.error(err);
+      dispatch(addErrorNotification(err.message));
+    }
+  };
 
   useEffect(() => {
-    withLoader(props.dispatch(getOrganization(organizationId)));
+    withLoader(dispatch(getOrganization(organizationId)));
+    withLoader(dispatch(orgPageActions.getPageData(organizationId)));
+
+    return () => {
+      dispatch(orgPageActions.reset());
+    };
   }, [organizationId]);
 
   return (
@@ -58,19 +61,27 @@ const OrganizationPage = (props) => {
 
       <div className="layout layout_profile">
         <div className="layout__header">
-          <OrganizationHeader organizationId={organizationId} />
+          <OrganizationHeader
+            organizationId={organizationId}
+            followedByCount={state.followedBy.metadata.totalAmount}
+            followedByUserIds={state.followedBy.ids}
+            followedByPopupUserIds={state.followedByPopup.ids}
+            followedByPopupMetadata={state.followedByPopup.metadata}
+            followedByOnChangePage={getFollowedByPopup}
+          />
         </div>
+
         <div className="layout__sidebar">
-          <OrganizationAdmins organizationId={organizationId} />
-          {organization &&
-            <OrganizationSources
-              title="Partners"
-              sources={[
-                ...(organization.communitySources || []).map(mapSourcesProps),
-                ...(organization.partnershipSources || []).map(mapSourcesProps),
-              ]}
-            />
-          }
+          <EntryListSectionOrgAdminsWrapper
+            orgId={organizationId}
+            limit={3}
+          />
+
+          <EntryListSectionOrgSourcesWrapper
+            orgId={organizationId}
+            limit={3}
+          />
+
           {organization &&
             <EntryContacts
               phone={organization.phoneNumber}
@@ -99,24 +110,24 @@ const OrganizationPage = (props) => {
 
           {organization && organization.discussions &&
             <Discussions
-              editable={userIsTeam(props.user, organization)}
+              editable={userIsTeam(owner, organization)}
               placeholder={`Link to ${organization.title} Article`}
               validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
               newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
               onSubmit={async (postId) => {
-                await withLoader(props.dispatch(setDiscussions({
+                await withLoader(dispatch(setDiscussions({
                   organizationId,
                   discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
                 })));
-                await withLoader(props.dispatch(getOrganization(organizationId)));
+                await withLoader(dispatch(getOrganization(organizationId)));
               }}
               onSortEnd={async (e) => {
                 const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
-                props.dispatch(addOrganizations([{
+                dispatch(addOrganizations([{
                   id: organizationId,
                   discussions,
                 }]));
-                await withLoader(props.dispatch(setDiscussions({
+                await withLoader(dispatch(setDiscussions({
                   organizationId,
                   discussions: discussions.map(i => ({ id: i.id })),
                 })));
@@ -129,11 +140,11 @@ const OrganizationPage = (props) => {
                 authorUrl: urls.getUserUrl(item.user.id),
                 commentCount: item.commentsCount,
                 onClickRemove: async (id) => {
-                  await withLoader(props.dispatch(setDiscussions({
+                  await withLoader(dispatch(setDiscussions({
                     organizationId,
                     discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
                   })));
-                  await withLoader(props.dispatch(getOrganization(organizationId)));
+                  await withLoader(dispatch(getOrganization(organizationId)));
                 },
               }))}
             />
@@ -156,18 +167,6 @@ OrganizationPage.propTypes = {
       id: PropTypes.string,
     }),
   }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  organizations: PropTypes.objectOf(PropTypes.any).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  user: PropTypes.shape({
-    id: PropTypes.number,
-  }).isRequired,
 };
 
-export default connect(state => ({
-  user: selectUser(state),
-  organizations: state.organizations,
-  posts: state.posts,
-}))(OrganizationPage);
+export default OrganizationPage;

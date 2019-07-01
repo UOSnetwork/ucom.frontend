@@ -1,12 +1,14 @@
+import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import EntryListSection from './index';
-import { sortByRate } from '../../utils/list';
-import { selectUsersByIds, selectOrgsByIds, selectTagsByTitles } from '../../store/selectors';
+import { selectUsersByIds, selectOrgsByIds, selectTagsByTitles, selectOrgById } from '../../store/selectors';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
+import { SOURCE_TYPE_EXTERNAL, USERS_TEAM_STATUS_ID_CONFIRMED } from '../../utils/constants';
+import { extractHostname } from '../../utils/url';
 
 export const EntryListSectionUsersWrapper = (props) => {
   const users = useSelector(selectUsersByIds(props.ids));
@@ -16,20 +18,19 @@ export const EntryListSectionUsersWrapper = (props) => {
     popupUsers = useSelector(selectUsersByIds(props.popupIds));
   }
 
-
   const mapProps = user => ({
     id: user.id,
     avatarSrc: urls.getFileUrl(user.avatarFilename),
     url: urls.getUserUrl(user.id),
     title: getUserName(user),
     nickname: user.accountName,
-    currentRate: user.currentRate,
+    scaledImportance: user.scaledImportance,
   });
 
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(users).map(mapProps)}
+      data={sortBy(users, ['scaledImportance']).reverse().map(mapProps)}
       popupData={popupUsers ? popupUsers.map(mapProps) : undefined}
     />
   );
@@ -66,7 +67,7 @@ export const EntryListSectionOrgsWrapper = (props) => {
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(orgs).map(mapProps)}
+      data={sortBy(orgs, ['currentRate']).reverse().map(mapProps)}
       popupData={popupOrgs ? popupOrgs.map(mapProps) : undefined}
     />
   );
@@ -103,7 +104,7 @@ export const EntryListSectionTagsWrapper = (props) => {
   return (
     <EntryListSection
       {...props}
-      data={sortByRate(tags).map(mapProps)}
+      data={sortBy(tags, ['currentRate']).reverse().map(mapProps)}
       popupData={popupTags ? popupTags.map(mapProps) : []}
     />
   );
@@ -117,4 +118,71 @@ EntryListSectionTagsWrapper.propTypes = {
 EntryListSectionTagsWrapper.defaultProps = {
   titles: [],
   popupTitles: undefined,
+};
+
+export const EntryListSectionOrgSourcesWrapper = ({ orgId, ...props }) => {
+  const org = useSelector(selectOrgById(orgId)) || {};
+  const sources = [
+    ...(org.communitySources || []),
+    ...(org.partnershipSources || []),
+  ];
+
+  const isExternalSource = source => source.sourceType === SOURCE_TYPE_EXTERNAL;
+
+  const mapProps = item => ({
+    id: item.id,
+    organization: isExternalSource(item) || (item.entityName && item.entityName.trim() === 'org'),
+    avatarSrc: urls.getFileUrl(item.avatarFilename),
+    url: urls.getSourceUrl(item),
+    title: item.title,
+    nickname: isExternalSource(item) ? extractHostname(item.sourceUrl) : item.nickname,
+    disableRate: true,
+    disableSign: isExternalSource(item),
+    isExternal: isExternalSource(item),
+  });
+
+  return (
+    <EntryListSection
+      {...props}
+      title="Partners"
+      count={sources.length}
+      data={sources.map(mapProps)}
+    />
+  );
+};
+
+EntryListSectionOrgSourcesWrapper.propTypes = {
+  orgId: PropTypes.number.isRequired,
+};
+
+export const EntryListSectionOrgAdminsWrapper = ({ orgId, ...props }) => {
+  const org = useSelector(selectOrgById(orgId)) || {};
+
+  const users = [
+    ...(org.user ? [org.user] : []),
+    ...(org.usersTeam || []).filter(i => i.usersTeamStatus === USERS_TEAM_STATUS_ID_CONFIRMED),
+  ];
+
+  const mapProps = item => ({
+    id: item.id,
+    avatarSrc: urls.getFileUrl(item.avatarFilename),
+    url: urls.getUserUrl(item.id),
+    title: getUserName(item),
+    nickname: item.accountName,
+    scaledImportance: item.scaledImportance,
+    follow: true,
+  });
+
+  return (
+    <EntryListSection
+      {...props}
+      title="Administrators"
+      count={users.length}
+      data={users.map(mapProps)}
+    />
+  );
+};
+
+EntryListSectionOrgAdminsWrapper.propTypes = {
+  orgId: PropTypes.number.isRequired,
 };

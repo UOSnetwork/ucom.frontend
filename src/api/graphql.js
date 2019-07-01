@@ -7,8 +7,8 @@ import { getToken } from '../utils/token';
 import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
 import { NODES_PER_PAGE } from '../utils/governance';
-import { LIST_ORDER_BY, LIST_PER_PAGE } from '../utils/list';
-import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS } from '../utils/posts';
+import { LIST_ORDER_BY_RATE, LIST_PER_PAGE } from '../utils/constants';
+import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS, ENTITY_NAMES_ORG } from '../utils/posts';
 
 const { Dictionary } = require('ucom-libs-wallet');
 
@@ -45,64 +45,54 @@ const request = async (data, extraOptions = {}) => {
   }
 };
 
-const queryParts = {
-  getOneUserFollowsOrganizationsQueryPart({
-    userIdentity,
-    orderBy = '-current_rate',
-    page = 1,
-    perPage = 10,
-  }) {
-    return GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
-      filters: {
-        user_identity: `${userIdentity}`,
-      },
-      order_by: orderBy,
-      per_page: perPage,
-      page,
-    });
-  },
-
-  getPostsFeedQueryPart({
-    postTypeIds = [POST_TYPE_MEDIA_ID],
-    entityNamesFrom = [ENTITY_NAMES_USERS],
-    entityNamesFor = [ENTITY_NAMES_USERS],
-    orderBy = '-current_rate',
-    page = 1,
-    perPage = 10,
-    commentsPage,
-    commentsPerPage = 10,
-  }) {
-    const params = {
-      filters: {
-        post_type_ids: postTypeIds,
-        entity_names_from: entityNamesFrom,
-        entity_names_for: entityNamesFor,
-      },
-      order_by: orderBy,
-      page,
-      per_page: perPage,
-    };
-
-    const include = commentsPage ? {
-      comments: {
-        page: commentsPage,
-        per_page: commentsPerPage,
-      },
-    } : undefined;
-
-    return GraphQLSchema.getPostsFeedQueryPart(params, include);
-  },
-};
-
 const api = {
+  async getMainPageData(params) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      feed: GraphQLSchema.getPostsFeedQueryPart(params.feed.params, params.feed.include),
+      posts: GraphQLSchema.getPostsFeedQueryPart(params.posts),
+      users: GraphQLSchema.getManyUsersQueryPart(params.users),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
   async getUserMainPageData({
-    followsOrganizationsParams,
-    topPostsParams,
+    userIdentity,
   }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      queryParts.getOneUserFollowsOrganizationsQueryPart(followsOrganizationsParams),
-      queryParts.getPostsFeedQueryPart(topPostsParams),
-    ]);
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      posts: GraphQLSchema.getPostsFeedQueryPart({
+        filters: {
+          post_type_ids: [POST_TYPE_MEDIA_ID],
+          entity_names_from: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+          entity_names_for: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        page: 1,
+        per_page: 10,
+      }),
+      orgs: GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        per_page: 10,
+        page: 1,
+      }),
+      users: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        per_page: 10,
+        page: 1,
+      }),
+    });
 
     try {
       const data = await request({ query });
@@ -114,20 +104,34 @@ const api = {
 
   async getUserPageData({
     userIdentity,
-    trustedByOrderBy = LIST_ORDER_BY,
+    trustedByOrderBy = LIST_ORDER_BY_RATE,
     trustedByPerPage = LIST_PER_PAGE,
     trustedByPage = 1,
-    followsOrganizationsOrderBy = LIST_ORDER_BY,
+    followsOrganizationsOrderBy = LIST_ORDER_BY_RATE,
     followsOrganizationsPerPage = LIST_PER_PAGE,
     followsOrganizationsPage = 1,
-  }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      GraphQLSchema.getOneUserQueryPart({
+    iFollowOrderBy = LIST_ORDER_BY_RATE,
+    iFollowPerPage = LIST_PER_PAGE,
+    iFollowPage = 1,
+    followedByOrderBy = LIST_ORDER_BY_RATE,
+    followedByPerPage = LIST_PER_PAGE,
+    followedByPage = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      user: GraphQLSchema.getOneUserQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
         },
       }),
-      GraphQLSchema.getOneUserTrustedByQueryPart({
+      orgs: GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+        },
+        order_by: followsOrganizationsOrderBy,
+        per_page: followsOrganizationsPerPage,
+        page: followsOrganizationsPage,
+      }),
+      trustedBy: GraphQLSchema.getOneUserTrustedByQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
         },
@@ -135,13 +139,25 @@ const api = {
         per_page: trustedByPerPage,
         page: trustedByPage,
       }),
-      queryParts.getOneUserFollowsOrganizationsQueryPart({
-        userIdentity,
-        followsOrganizationsOrderBy,
-        followsOrganizationsPerPage,
-        followsOrganizationsPage,
+      iFollow: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: iFollowOrderBy,
+        per_page: iFollowPerPage,
+        page: iFollowPage,
       }),
-    ]);
+      followedBy: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'followed_by',
+        },
+        order_by: followedByOrderBy,
+        per_page: followedByPerPage,
+        page: followedByPage,
+      }),
+    });
 
     try {
       const data = await request({ query });
@@ -151,9 +167,61 @@ const api = {
     }
   },
 
+  async getUserIFollow({
+    userIdentity,
+    orderBy = LIST_ORDER_BY_RATE,
+    perPage = LIST_PER_PAGE,
+    page = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      iFollow: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'I_follow',
+        },
+        order_by: orderBy,
+        per_page: perPage,
+        page,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.iFollow;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getUserFollowedBy({
+    userIdentity,
+    orderBy = LIST_ORDER_BY_RATE,
+    perPage = LIST_PER_PAGE,
+    page = 1,
+  } = {}) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      followedBy: GraphQLSchema.getOneUserActivityQueryPart({
+        filters: {
+          user_identity: `${userIdentity}`,
+          activity: 'followed_by',
+        },
+        order_by: orderBy,
+        per_page: perPage,
+        page,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.followedBy;
+    } catch (e) {
+      throw e;
+    }
+  },
+
   async getUserFollowsOrganizations({
     userIdentity,
-    orderBy = LIST_ORDER_BY,
+    orderBy = LIST_ORDER_BY_RATE,
     perPage = LIST_PER_PAGE,
     page = 1,
   }) {
@@ -178,7 +246,7 @@ const api = {
 
   async getUserTrustedBy({
     userIdentity,
-    orderBy = LIST_ORDER_BY,
+    orderBy = LIST_ORDER_BY_RATE,
     perPage = LIST_PER_PAGE,
     page = 1,
   }) {
@@ -195,12 +263,6 @@ const api = {
 
     try {
       const data = await request({ query });
-
-      // TODO: Hot fix for backend bug
-      data.data.oneUserTrustedBy.data.forEach((item) => {
-        delete item.iFollow;
-        delete item.followedBy;
-      });
 
       return data.data.oneUserTrustedBy;
     } catch (e) {
@@ -393,7 +455,7 @@ const api = {
 
   async getPostsFeed(params) {
     const query = GraphQLSchema.getQueryMadeFromParts([
-      queryParts.getPostsFeedQueryPart(params),
+      GraphQLSchema.getPostsFeedQueryPart(params.params, params.include),
     ]);
 
     try {
@@ -409,7 +471,7 @@ const api = {
     orderBy = '-scaled_social_rate_delta',
     page = 1,
     perPage = 10,
-  }) {
+  } = {}) {
     const params = {
       filters: {
         overview_type: overviewType,
@@ -429,6 +491,20 @@ const api = {
 
     try {
       const data = await request({ query });
+      return data.data.manyUsers;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getUsers(params) {
+    try {
+      const data = await request({
+        query: GraphQLSchema.getQueryMadeFromParts([
+          GraphQLSchema.getManyUsersQueryPart(snakes(params)),
+        ]),
+      });
+
       return data.data.manyUsers;
     } catch (e) {
       throw e;
@@ -481,25 +557,6 @@ const api = {
     try {
       const data = await request({ query });
       return data.data;
-    } catch (e) {
-      throw e;
-    }
-  },
-
-  async getMainPageData({
-    manyUsersParams = {},
-    postsFeedParams = {},
-  }) {
-    const query = GraphQLSchema.getQueryMadeFromParts([
-      api.getManyUsersQueryPart(manyUsersParams),
-      queryParts.getPostsFeedQueryPart(postsFeedParams),
-    ]);
-
-    try {
-      const result = await Promise.all([
-        request({ query }),
-      ]);
-      return result[0].data;
     } catch (e) {
       throw e;
     }
@@ -742,6 +799,19 @@ const api = {
     try {
       const data = await request({ query });
       return data.data.manyUsers;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async getOrganizationActivity(params) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      users: GraphQLSchema.getOneOrganizationActivityQueryPart(params),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.users;
     } catch (e) {
       throw e;
     }

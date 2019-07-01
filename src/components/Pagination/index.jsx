@@ -3,7 +3,6 @@ import Pagination from 'rc-pagination';
 import React from 'react';
 import styles from './styles.css';
 
-// TODO: Remove ../Pagination.jsx old styles and replace on users.jsx
 const PaginationWrapper = props => (
   <Pagination
     hideOnSinglePage
@@ -34,10 +33,10 @@ PaginationWrapper.propTypes = {
 };
 
 PaginationWrapper.defaultProps = {
-  page: null,
-  perPage: null,
-  totalAmount: null,
-  onChange: null,
+  page: undefined,
+  perPage: undefined,
+  totalAmount: undefined,
+  onChange: undefined,
 };
 
 export default PaginationWrapper;

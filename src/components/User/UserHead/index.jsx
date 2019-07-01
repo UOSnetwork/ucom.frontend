@@ -1,21 +1,23 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../../EntryHeader/styles.css';
-import { getUserById, getUsersByIds } from '../../../store/users';
 import Avatar from '../../EntryHeader/Avatar';
 import urls from '../../../utils/urls';
 import { updateUser, addUsers } from '../../../actions/users';
-import { getUserName, userIsOwner, mapUserDataToFollowersProps } from '../../../utils/user';
+import { getUserName, userIsOwner } from '../../../utils/user';
 import UserStatus from '../UserStatus';
-import { formatRate } from '../../../utils/rate';
+import { formatScaledImportance } from '../../../utils/rate';
 import UserFollowButton from '../UserFollowButton';
-import Followers, { followersPropTypes } from '../../Followers';
+import { FollowersWrapper } from '../../Followers';
 import ButtonEdit from '../../ButtonEdit';
 import Menu from '../../EntryHeader/Menu';
+import { selectUserById, selectOwner } from '../../../store/selectors';
 
 const UserHead = (props) => {
-  const user = getUserById(props.users, props.userId);
+  const user = useSelector(selectUserById(props.userId));
+  const owner = useSelector(selectOwner);
+  const dispatch = useDispatch();
 
   if (!user) {
     return null;
@@ -23,7 +25,7 @@ const UserHead = (props) => {
 
   return (
     <div className={styles.entryHead}>
-      {userIsOwner(user, props.owner) &&
+      {userIsOwner(user, owner) &&
         <div className={styles.edit}>
           <ButtonEdit strech url={urls.getUserEditProfileUrl(user.id)} />
         </div>
@@ -35,14 +37,13 @@ const UserHead = (props) => {
         <div className={styles.avatar}>
           <Avatar
             src={urls.getFileUrl(user.avatarFilename)}
-            changeEnabled={userIsOwner(user, props.owner)}
+            changeEnabled={userIsOwner(user, owner)}
             onChange={async (file) => {
-              props.dispatch(addUsers([{
-                id: +props.owner.id,
+              dispatch(addUsers([{
+                id: owner.id,
                 avatarFilename: file.preview,
               }]));
-
-              props.dispatch(updateUser({
+              dispatch(updateUser({
                 avatarFilename: file,
               }));
             }}
@@ -57,48 +58,49 @@ const UserHead = (props) => {
           </div>
         </div>
 
-        <div className={styles.rate}>{formatRate(user.currentRate)}°</div>
+        <div className={styles.rate}>{formatScaledImportance(user.scaledImportance)}</div>
       </div>
 
       <div className={styles.side}>
-        {!userIsOwner(user, props.owner) &&
+        {!userIsOwner(user, owner) &&
           <div className={styles.followButton}>
-            <UserFollowButton userId={+user.id} />
+            <UserFollowButton userId={user.id} />
           </div>
         }
 
         <div className={styles.usersLists}>
-          {user.followedBy &&
-            <div>
-              <Followers
-                title="Followers"
-                count={user.followedBy.length}
-                users={getUsersByIds(props.users, user.followedBy)
-                  .map(mapUserDataToFollowersProps)}
-              />
-            </div>
-          }
-          {user.iFollow &&
-            <div>
-              <Followers
-                title="Following"
-                count={user.iFollow.length}
-                users={getUsersByIds(props.users, user.iFollow)
-                  .map(mapUserDataToFollowersProps)}
-              />
-            </div>
-          }
-          {user.followedBy &&
-            <div>
-              <Followers
-                title="Trusted by"
-                count={props.trustedByUsersCount}
-                users={getUsersByIds(props.users, props.trustedByUsersIds).map(mapUserDataToFollowersProps)}
-                metadata={props.trustedByMetadata}
-                onChangePage={props.trustedByOnChangePage}
-              />
-            </div>
-          }
+          <div>
+            <FollowersWrapper
+              title="Followers"
+              count={props.followedByCount}
+              usersIds={props.followedByUserIds}
+              popupUsersIds={props.followedByPopupUserIds}
+              metadata={props.followedByPopupMetadata}
+              onChangePage={props.followedByOnChangePage}
+            />
+          </div>
+
+          <div>
+            <FollowersWrapper
+              title="Following"
+              count={props.iFollowCount}
+              usersIds={props.iFollowUserIds}
+              popupUsersIds={props.iFollowPopupUserIds}
+              metadata={props.iFollowPopupMetadata}
+              onChangePage={props.iFollowOnChangePage}
+            />
+          </div>
+
+          <div>
+            <FollowersWrapper
+              title="Trusted by"
+              count={props.trustedByCount}
+              usersIds={props.trustedByUsersIds}
+              metadata={props.trustedByPopupMetadata}
+              popupUsersIds={props.trustedByPopupUsersIds}
+              onChangePage={props.trustedByOnChangePage}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -106,26 +108,37 @@ const UserHead = (props) => {
 };
 
 UserHead.propTypes = {
-  users: PropTypes.objectOf(PropTypes.any).isRequired,
   userId: PropTypes.number.isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  trustedByUsersCount: PropTypes.number,
+  trustedByCount: PropTypes.number,
   trustedByUsersIds: PropTypes.arrayOf(PropTypes.number),
-  trustedByMetadata: followersPropTypes.metadata,
-  trustedByOnChangePage: PropTypes.func,
+  trustedByPopupUsersIds: PropTypes.arrayOf(PropTypes.number),
+  trustedByPopupMetadata: PropTypes.objectOf(PropTypes.any),
+  trustedByOnChangePage: PropTypes.func.isRequired,
+  iFollowCount: PropTypes.number,
+  iFollowUserIds: PropTypes.arrayOf(PropTypes.number),
+  iFollowPopupUserIds: PropTypes.arrayOf(PropTypes.number),
+  iFollowPopupMetadata: PropTypes.objectOf(PropTypes.any),
+  iFollowOnChangePage: PropTypes.func.isRequired,
+  followedByCount: PropTypes.number,
+  followedByUserIds: PropTypes.arrayOf(PropTypes.number),
+  followedByPopupUserIds: PropTypes.arrayOf(PropTypes.number),
+  followedByPopupMetadata: PropTypes.objectOf(PropTypes.any),
+  followedByOnChangePage: PropTypes.func.isRequired,
 };
 
 UserHead.defaultProps = {
-  trustedByUsersCount: 0,
+  trustedByCount: 0,
   trustedByUsersIds: [],
-  trustedByMetadata: null,
-  trustedByOnChangePage: null,
+  trustedByPopupUsersIds: [],
+  trustedByPopupMetadata: {},
+  iFollowCount: 0,
+  iFollowUserIds: [],
+  iFollowPopupUserIds: [],
+  iFollowPopupMetadata: {},
+  followedByCount: 0,
+  followedByUserIds: [],
+  followedByPopupUserIds: [],
+  followedByPopupMetadata: {},
 };
 
-export default connect(state => ({
-  users: state.users,
-  owner: state.user.data,
-}))(UserHead);
+export default UserHead;

@@ -1,21 +1,11 @@
 import merge from '../utils/merge';
 
 const getInitialState = () => ({
-  usersIds: [],
-  topPostsIds: [],
-  orgs: {
+  followedBy: {
     ids: [],
     metadata: {},
   },
-  orgsPopup: {
-    ids: [],
-    metadata: {},
-  },
-  users: {
-    ids: [],
-    metadata: {},
-  },
-  usersPopup: {
+  followedByPopup: {
     ids: [],
     metadata: {},
   },
@@ -23,7 +13,10 @@ const getInitialState = () => ({
 
 export default (state = getInitialState(), action) => {
   switch (action.type) {
-    case 'MAIN_PAGE_USER_SET_DATA':
+    case 'ORG_PAGE_RESET':
+      return getInitialState();
+
+    case 'ORG_PAGE_SET_DATA':
       return merge({}, state, action.payload);
 
     default:

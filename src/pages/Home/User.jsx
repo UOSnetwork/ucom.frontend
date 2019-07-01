@@ -37,6 +37,15 @@ const HomeUserPage = () => {
     }
   };
 
+  const getUsers = async (page) => {
+    try {
+      await withLoader(dispatch(mainPageUserActions.getUsers(owner.id, page)));
+    } catch (err) {
+      console.error(err);
+      dispatch(addErrorNotification(err.message));
+    }
+  };
+
   useEffect(() => {
     if (owner.id) {
       getPageData(owner.id);
@@ -58,14 +67,15 @@ const HomeUserPage = () => {
 
             <div className="grid__item grid__item_side">
               <div className="sidebar sidebar_main">
-                {owner && owner.iFollow &&
-                  <EntryListSectionUsersWrapper
-                    title="People"
-                    limit={8}
-                    count={owner.iFollow.length}
-                    ids={owner.iFollow}
-                  />
-                }
+                <EntryListSectionUsersWrapper
+                  title="People"
+                  limit={8}
+                  count={state.users.metadata.totalAmount}
+                  ids={state.users.ids}
+                  popupIds={state.usersPopup.ids}
+                  popupMetadata={state.usersPopup.metadata}
+                  onChangePage={getUsers}
+                />
 
                 <EntryListSectionOrgsWrapper
                   title="Communities"
