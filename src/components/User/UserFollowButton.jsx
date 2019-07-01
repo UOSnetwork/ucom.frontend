@@ -24,12 +24,9 @@ const UserFollowButton = (props) => {
     return null;
   }
 
-  const userIsFollowing = user.myselfData ? user.myselfData.follow : owner && owner.iFollow && owner.iFollow.length > 0 ? // eslint-disable-line
-    owner.iFollow.some(id => id === Number(props.userId)) :
-    false;
-
+  const isFollow = user.myselfData && user.myselfData.follow;
   const userIsOwner = owner && Number(owner.id) === Number(user.id);
-  const text = (userIsFollowing || userIsOwner) ? 'Following' : 'Follow';
+  const text = (isFollow || userIsOwner) ? 'Following' : 'Follow';
 
   const followOrUnfollow = async () => {
     const activeKey = restoreActiveKey();
@@ -39,7 +36,7 @@ const UserFollowButton = (props) => {
     }
     loader.start();
     try {
-      await (userIsFollowing ? props.unfollowUser : props.followUser)({ user, owner, activeKey });
+      await (isFollow ? props.unfollowUser : props.followUser)({ user, owner, activeKey });
     } catch (e) {
       props.addServerErrorNotification(e);
     }
@@ -52,7 +49,7 @@ const UserFollowButton = (props) => {
       onClick={followOrUnfollow}
     >
       {text}
-      {(userIsFollowing || userIsOwner) && <IconCheck />}
+      {(isFollow || userIsOwner) && <IconCheck />}
     </button>
   ) : (
     <Button
@@ -60,7 +57,7 @@ const UserFollowButton = (props) => {
       isDisabled={userIsOwner}
       size="medium"
       theme="transparent"
-      withCheckedIcon={userIsFollowing || userIsOwner}
+      withCheckedIcon={isFollow || userIsOwner}
       text={text}
       onClick={followOrUnfollow}
     />

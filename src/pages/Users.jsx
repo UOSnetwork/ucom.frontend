@@ -7,7 +7,7 @@ import { getUserName } from '../utils/user';
 import urls from '../utils/urls';
 import IconTableTriangle from '../components/Icons/TableTriangle';
 import SearchInput from '../components/SearchInput';
-import { formatScaledImportance } from '../utils/rate';
+import { formatScaledImportance, formatRate } from '../utils/rate';
 import graphql from '../api/graphql';
 import withLoader from '../utils/withLoader';
 import Pagination from '../components/Pagination/index';
@@ -17,7 +17,7 @@ const UsersPage = (props) => {
   const [usersData, setUsersData] = useState({ data: [], metadata: {} });
   const urlParams = new URLSearchParams(props.location.search);
   const page = urlParams.get('page') || 1;
-  const sortBy = urlParams.get('sortBy') || '-scaled_importance';
+  const sortBy = urlParams.get('sortBy') || '-current_rate';
   const perPage = urlParams.get('perPage') || 20;
   const userName = urlParams.get('userName') || '';
 
@@ -84,7 +84,11 @@ const UsersPage = (props) => {
                         name: 'account_name',
                         sortable: true,
                       }, {
-                        title: 'Rate',
+                        title: 'Social activity',
+                        name: 'current_rate',
+                        sortable: true,
+                      }, {
+                        title: 'Importance°',
                         name: 'scaled_importance',
                         sortable: true,
                       }].map(item => (
@@ -130,7 +134,10 @@ const UsersPage = (props) => {
                             disableRate
                           />
                         </td>
-                        <td className="list-table__cell" data-title="Rate">
+                        <td className="list-table__cell" data-title="Social activity">
+                          <span className="title title_xsmall title_light">{formatRate(item.currentRate, true)}</span>
+                        </td>
+                        <td className="list-table__cell" data-title="Importance°">
                           <span className="title title_xsmall title_light">{formatScaledImportance(item.scaledImportance)}</span>
                         </td>
                       </tr>
