@@ -17,7 +17,7 @@ const UsersPage = (props) => {
   const [usersData, setUsersData] = useState({ data: [], metadata: {} });
   const urlParams = new URLSearchParams(props.location.search);
   const page = urlParams.get('page') || 1;
-  const sortBy = urlParams.get('sortBy') || '-current_rate';
+  const sortBy = urlParams.get('sortBy') || '-scaled_importance';
   const perPage = urlParams.get('perPage') || 20;
   const userName = urlParams.get('userName') || '';
 
@@ -85,7 +85,7 @@ const UsersPage = (props) => {
                         sortable: true,
                       }, {
                         title: 'Rate',
-                        name: 'current_rate',
+                        name: 'scaled_importance',
                         sortable: true,
                       }].map(item => (
                         <td
