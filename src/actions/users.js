@@ -30,6 +30,11 @@ export const addUsers = (data = []) => (dispatch) => {
       delete user.iFollow;
     }
 
+    // TODO: Remove when backend remove this field from response
+    if (isNull(user.myselfData)) {
+      delete user.myselfData;
+    }
+
     if (user.followedBy) {
       users = users.concat(user.followedBy);
       user.followedBy = user.followedBy.map(u => u.id);
