@@ -32,12 +32,6 @@ export default class EmbedService {
       separator: ' ',
     });
 
-    const replaceSymbols = (str) => {
-      let result = str.replace(/@/g, '@&zwnj;');
-      result = result.replace(/#/g, '#&zwnj;');
-      return result;
-    };
-
     try {
       let videoUrl;
       let videoAspectRatio;
@@ -83,8 +77,8 @@ export default class EmbedService {
         videoAspectRatio,
         imageUrl,
         url: meta.canonical,
-        title: replaceSymbols(truncateContent(meta.title)),
-        description: replaceSymbols(truncateContent(meta.description)),
+        title: truncateContent(meta.title),
+        description: truncateContent(meta.description),
       };
     } catch (err) {
       throw err;
