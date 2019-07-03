@@ -33,6 +33,7 @@
 .input.error {
   border-color: #d8352f;
   padding-right: 48px;
+  text-align: left;
 }
 
 .icon {
