@@ -1,23 +1,24 @@
 import PropTypes from 'prop-types';
-import { pick, isEqual, cloneDeep } from 'lodash';
-import { connect } from 'react-redux';
-import React, { useState, useEffect, memo } from 'react';
+import { pick, cloneDeep } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Element } from 'react-scroll';
 import profileStyles from './styles.css';
-import gridStyles from '../Grid/styles.css';
+import gridStyles from '../Grid/styles.css'; // TODO: Move to ./styles.css
 import DropzoneWrapper from '../DropzoneWrapper';
 import IconUser from '../Icons/User';
+import IconCover from '../Icons/Cover';
 import TextInput from '../TextInput';
 import Textarea from '../TextareaAutosize';
 import Button from '../Button/index';
 import IconRemove from '../Icons/Remove';
 import UserPick from '../UserPick/UserPick';
-import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
 import Validate from '../../utils/validate';
 import { updateUser } from '../../actions/users';
 import { addValidationErrorNotification, addSuccessNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
+import * as selectors from '../../store/selectors';
 import Menu from './Menu';
 
 const USER_EDITABLE_PROPS = [
@@ -28,14 +29,14 @@ const USER_EDITABLE_PROPS = [
   'personalWebsiteUrl',
 ];
 
-const Profile = ({
-  user, updateUser, addValidationErrorNotification, addSuccessNotification, onSuccess,
-}) => {
+const Profile = ({ onSuccess }) => {
+  const user = useSelector(selectors.selectOwner);
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [submited, setSubmited] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(undefined);
+  const dispatch = useDispatch();
 
   const validate = (data) => {
     const { errors, isValid } = Validate.validateUser(data);
@@ -56,7 +57,7 @@ const Profile = ({
     setSubmited(true);
 
     if (!isValid) {
-      addValidationErrorNotification();
+      dispatch(addValidationErrorNotification());
     }
 
     if (!isValid || loading) {
@@ -66,12 +67,12 @@ const Profile = ({
     setLoading(true);
 
     try {
-      await withLoader(updateUser(data));
-      addSuccessNotification('Profile has been updated');
+      await withLoader(dispatch(updateUser(data)));
+      dispatch(addSuccessNotification('Profile has been updated'));
       setTimeout(onSuccess, 0);
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
-      addValidationErrorNotification();
+      dispatch(addValidationErrorNotification());
     }
 
     setLoading(false);
@@ -112,6 +113,22 @@ const Profile = ({
             className={profileStyles.section}
           >
             <h3 className={profileStyles.subTitle}>Personal Info</h3>
+
+            <div className={profileStyles.field}>
+              <div className={profileStyles.label}>Cover</div>
+              <div className={profileStyles.data}>
+                <DropzoneWrapper
+                  className={profileStyles.cover}
+                  accept="image/jpeg, image/png"
+                >
+                  {false ? (
+                    <img src="https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg" alt="" />
+                  ) : (
+                    <IconCover />
+                  )}
+                </DropzoneWrapper>
+              </div>
+            </div>
 
             <div className={`${profileStyles.field} ${profileStyles.fieldUpload}`}>
               <div className={profileStyles.label}>Photo</div>
@@ -246,23 +263,7 @@ const Profile = ({
 };
 
 Profile.propTypes = {
-  user: PropTypes.objectOf(PropTypes.any),
-  updateUser: PropTypes.func.isRequired,
-  addValidationErrorNotification: PropTypes.func.isRequired,
-  addSuccessNotification: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
 };
 
-Profile.defaultProps = {
-  user: undefined,
-};
-
-export default connect(state => ({
-  user: getUserById(state.users, state.user.data.id),
-}), {
-  updateUser,
-  addValidationErrorNotification,
-  addSuccessNotification,
-})(memo(Profile, (prev, next) => (
-  isEqual(pick(prev.user, USER_EDITABLE_PROPS), pick(next.user, USER_EDITABLE_PROPS))
-)));
+export default Profile;

@@ -7,6 +7,7 @@
   padding: 0 40px;
   box-sizing: border-box;
   transition: box-shadow 0.2s ease-in-out, background 0.2s ease-in-out;
+  background: #F9F9F9;
 }
 
 .inner {

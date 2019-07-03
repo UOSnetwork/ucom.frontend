@@ -3,6 +3,8 @@ import classNames from 'classnames';
 import React, { Fragment } from 'react';
 import { sanitizeCommentText, checkMentionTag, checkHashTag } from '../utils/text';
 
+// TODO: To css modules
+// TODO: Add wrapper like panelwrapper
 const MinimizedText = props => (
   <div
     className={classNames({
@@ -16,7 +18,8 @@ const MinimizedText = props => (
         { 'text__content_minimized': props.enabled && props.minimized },
       )}
     >
-      <p dangerouslySetInnerHTML={{
+      <p
+        dangerouslySetInnerHTML={{
           __html: sanitizeCommentText(checkMentionTag(checkHashTag(props.text))),
         }}
       />

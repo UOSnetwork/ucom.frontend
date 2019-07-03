@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import CloseIcon from './Icons/Close';
 import { getClassNames } from '../utils/bem';
 
+// TODO: (Refactoring) Remove and replace this with Popup/Content
 export default (props) => {
   const el = useRef(null);
 

@@ -7,7 +7,6 @@ import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
-// TODO: Remove and replace another cards
 const EntryCard = (props) => {
   let LinkTag;
 

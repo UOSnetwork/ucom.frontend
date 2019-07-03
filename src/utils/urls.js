@@ -40,21 +40,26 @@ const urls = {
     return '/governance';
   },
 
-  getPostUrl(post) {
-    if (!post || !post.id) {
+  getPostUrl({
+    id,
+    postTypeId,
+    entityNameFor,
+    entityIdFor,
+  }) {
+    if (!id) {
       return null;
     }
 
-    if (post.postTypeId === POST_TYPE_MEDIA_ID) {
-      return `/posts/${post.id}`;
+    if (postTypeId === POST_TYPE_MEDIA_ID) {
+      return `/posts/${id}`;
     }
 
-    if (post.entityNameFor && post.entityNameFor.trim() === 'org') {
-      return `/communities/${post.entityIdFor}/${post.id}`;
+    if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
+      return `/communities/${entityIdFor}/${id}`;
     }
 
-    if (post.entityIdFor) {
-      return `/user/${post.entityIdFor}/${post.id}`;
+    if (entityIdFor) {
+      return `/user/${entityIdFor}/${id}`;
     }
 
     return null;

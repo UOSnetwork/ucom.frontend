@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Route, Switch } from 'react-router';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
@@ -25,6 +26,7 @@ import { restoreActiveKey } from '../../utils/keys';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
+import Cover from '../../components/Cover';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
 
@@ -35,10 +37,13 @@ const UserPage = (props) => {
   const state = useSelector(state => state.userPage);
   const dispatch = useDispatch();
 
+  const testSrc = 'https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg';
+
   const trustedByOnChangePage = async (page) => {
     try {
       await withLoader(dispatch(userPageActions.getTrustedByPopup(userIdentity, page)));
     } catch (err) {
+      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
       console.error(err);
       const msg = parseResponseError(err)[0].message;
       dispatch(addErrorNotification(msg));
@@ -49,6 +54,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getIFollowPopup(userIdentity, page)));
     } catch (err) {
+      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
       console.error(err);
       const msg = parseResponseError(err)[0].message;
       dispatch(addErrorNotification(msg));
@@ -59,6 +65,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getFollowedByPopup(userIdentity, page)));
     } catch (err) {
+      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
       console.error(err);
       const msg = parseResponseError(err)[0].message;
       dispatch(addErrorNotification(msg));
@@ -69,6 +76,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getOrgsPopup(userIdentity, page)));
     } catch (err) {
+      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
       console.error(err);
       const msg = parseResponseError(err)[0].message;
       dispatch(addErrorNotification(msg));
@@ -91,6 +99,7 @@ const UserPage = (props) => {
         ownerAccountName: owner.accountName,
       })));
     } catch (err) {
+      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
       console.error(err);
       const msg = parseResponseError(err)[0].message;
       dispatch(addErrorNotification(msg));
@@ -110,11 +119,20 @@ const UserPage = (props) => {
   return (
     <LayoutBase gray>
       <Switch>
-        <Route path="/user/:userId/profile" component={ProfilePopup} />
-        <Route path="/user/:userId/:postId" component={PostPopup} />
+        <Route path={urls.getUserEditProfileUrl(':userId')} component={ProfilePopup} />
+        <Route path={urls.getPostUrl({ id: ':postId', entityIdFor: ':userId' })} component={PostPopup} />
       </Switch>
 
-      <div className="layout layout_profile">
+      <Cover src={testSrc} />
+
+      {/* TODO: Refactoring Layout/Content when governance refactoring is done */}
+      <div
+        className={classNames({
+          'layout': true,
+          'layout_profile': true,
+          'layout_cover': Boolean(testSrc),
+        })}
+      >
         <div className="layout__header">
           {user && user.id &&
             <UserHead

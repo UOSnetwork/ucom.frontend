@@ -10,6 +10,7 @@ import urls from '../../utils/urls';
 import styles from './styles.css';
 import { formatScaledImportance } from '../../utils/rate';
 
+// Rename UserCard/UserCard.jsx to // UserCard/index.jsx
 export const MyUserCard = (props) => {
   const LinkTag = props.url ? Link : 'span';
 
@@ -44,6 +45,7 @@ MyUserCard.defaultProps = {
   isOwner: false,
 };
 
+// TODO: Refactoring
 export default connect(memoize((state, props) => {
   const user = getUserById(state.users, props.userId);
 
