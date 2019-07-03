@@ -169,4 +169,23 @@ OrganizationPage.propTypes = {
   }).isRequired,
 };
 
+export const getOrganizationPageData = async (store, params) => {
+  try {
+    const [org] = await Promise.all([
+      store.dispatch(getOrganization(params.id)),
+      store.dispatch(orgPageActions.getPageData(params.id)),
+    ]);
+
+    return {
+      contentMetaTags: {
+        title: org.title,
+        description: org.about,
+        image: '',
+      },
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default OrganizationPage;

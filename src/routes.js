@@ -8,7 +8,7 @@ import Offer2, { getPostOfferData_2 } from './pages/Offer2';
 import UsersPage from './pages/Users';
 import AboutPage from './pages/About';
 import OrganizationsPage from './pages/Organizations';
-import OrganizationPage from './pages/Organization';
+import OrganizationPage, { getOrganizationPageData } from './pages/Organization';
 import NotFoundPage from './pages/NotFoundPage';
 import RegistrationPage from './components/Registration/Registration';
 import GovernancePage from './components/Governance/Governance';
@@ -107,17 +107,20 @@ export default [{
   exact: false,
   path: '/communities/:id',
   component: OrganizationPage,
+  getData: getOrganizationPageData,
 }, {
   exact: true,
   path: '/communities/:id/:postId',
   component: OrganizationPage,
+  getData: getOrganizationPageData,
 }, {
   exact: true,
   path: '/communities/:id/profile',
   component: OrganizationPage,
+  getData: getOrganizationPageData,
 }, {
   exact: true,
-  path: '/communities/:organizationId/discussions/new',
+  path: '/communities/:organizationId/discussions/new', // TODO: Change url /posts/new?orgId=123
   component: EditPostPage,
 }, {
   exact: true,
