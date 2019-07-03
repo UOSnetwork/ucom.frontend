@@ -64,7 +64,6 @@ const Post = ({
 };
 
 Post.propTypes = {
-  posts: PropTypes.objectOf(PropTypes.any).isRequired,
   id: PropTypes.number.isRequired,
   commentsContainerId: PropTypes.number,
 };

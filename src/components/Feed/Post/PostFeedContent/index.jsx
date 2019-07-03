@@ -79,7 +79,6 @@ PostFeedContent.propTypes = {
   postId: PropTypes.number.isRequired,
   formIsVisible: PropTypes.bool.isRequired,
   updatePost: PropTypes.func.isRequired,
-  posts: PropTypes.objectOf(PropTypes.object).isRequired,
   postTypeId: PropTypes.number.isRequired,
   hideForm: PropTypes.func.isRequired,
 };
