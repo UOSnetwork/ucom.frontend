@@ -562,4 +562,5 @@ class Api {
   }
 }
 
+export { default as graphql } from './graphql';
 export default new Api();

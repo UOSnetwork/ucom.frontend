@@ -22,9 +22,12 @@ import mainPage from './mainPage';
 import mainPageUser from './mainPageUser';
 import userPage from './userPage';
 import orgPage from './orgPage';
+import nodes from './nodes';
+import pages from './pages';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    pages,
     mainPage,
     mainPageUser,
     userPage,
@@ -46,6 +49,7 @@ export const createStore = () => {
     communityFeed,
     tagsFeed,
     walletSimple,
+    nodes,
   });
   const middlewares = [thunk];
   let preloadedState;

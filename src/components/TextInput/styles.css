@@ -6,6 +6,7 @@
 
 .label {
   margin: 0 0 12px;
+  text-align: left;
 }
 
 .input {
@@ -32,6 +33,7 @@
 .input.error {
   border-color: #d8352f;
   padding-right: 48px;
+  text-align: left;
 }
 
 .icon {

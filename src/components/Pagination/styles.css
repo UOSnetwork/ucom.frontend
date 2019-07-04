@@ -1,5 +1,6 @@
-:local(.pagination) {
+.pagination {
   display: flex;
+  justify-content: center;
   margin: 46px 0 0;
   padding: 0;
   list-style: none;
@@ -7,33 +8,40 @@
   font-weight: bold;
 }
 
-:local(.pagination li) {
+.pagination li {
   margin: 0 12px;
   outline: none;
 }
 
-:local(.pagination) :global(li.rc-pagination-item-active) {
+.pagination :global(li.rc-pagination-item-active) {
   color: #D8352F;
 }
 
-:local(.pagination) :global(li.rc-pagination-disabled) {
+.pagination :global(li.rc-pagination-disabled) {
   color: #c4c4c4;
 }
 
-:local(.pagination) :global(li.rc-pagination-disabled a) {
+.pagination :global(li.rc-pagination-disabled a) {
   cursor: default;
 }
 
-:local(.pagination) :global(li.rc-pagination-disabled a:hover) {
+.pagination :global(li.rc-pagination-disabled a:hover) {
   text-decoration: none;
 }
 
-:local(.pagination li:first-child) {
+.pagination li:first-child {
   margin-right: auto;
   margin-left: 0;
 }
 
-:local(.pagination li:last-child) {
+.pagination li:last-child {
   margin-left: auto;
   margin-right: 0;
+}
+
+@media (max-width: 767px) {
+  .pagination li:first-child,
+  .pagination li:last-child {
+    display: none;
+  }
 }

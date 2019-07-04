@@ -1,0 +1,105 @@
+.voteSection {
+  margin: 0 -10px;
+  padding: 0 30px;
+  box-shadow: 0 0 20px rgba(184, 184, 184, 0.25);
+  background: #fff;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 0;
+}
+
+.title {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 5px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.title:hover {
+  color: #d8352f;
+}
+
+.title:hover .toggler {
+  stroke: #d8352f;
+}
+
+.title .toggler {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin: -12px 15px 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #000;
+  transition: stroke 0.2s ease;
+}
+
+.title .toggler.active {
+  transform: rotate(180deg);
+}
+
+.blurb {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: normal;
+  color: #666;
+}
+
+.description {
+  margin: 0 0 10px;
+  max-width: 700px;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.vote {
+  font-size: 14px;
+  line-height: normal;
+  text-align: right;
+}
+
+.vote strong {
+  font-weight: normal;
+  color: #d8352f;
+}
+
+.action {
+  margin: 40px 0;
+}
+
+@media (max-width: 767px) {
+  .voteSection {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .title .toggler {
+    right: auto;
+    left: 100%;
+  }
+}
+
+.table {
+  font-size: 16px;
+  line-height: normal;
+}
+
+@media (max-width: 767px) {
+  .table {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+}

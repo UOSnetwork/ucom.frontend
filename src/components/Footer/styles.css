@@ -1,33 +1,33 @@
-:local(.footer) {
+.footer {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 32px;
   grid-row-gap: 32px;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 32px;
+  margin: 32px 0;
   font-size: 16px;
   font-weight: bold;
   line-height: 1.5;
 }
 
 @media (max-width: 767px) {
-  :local(.footer) {
+  .footer {
     grid-template-columns: 1fr;
   }
 }
 
-:local(.side) {
+.side {
   justify-self: flex-end;
 }
 
 @media (max-width: 767px) {
-  :local(.side) {
+  .side {
     justify-self: flex-start;
   }
 }
 
-:local(.list) {
+.list {
   display: grid;
   grid-auto-flow: column;
   grid-column-gap: 26px;
@@ -37,17 +37,17 @@
   list-style: none;
 }
 
-:local(.telegramTitle) {
+.telegramTitle {
   margin: 0 20px 0 0;
   font-weight: normal;
 }
 
-:local(.telegram a) {
+.telegram a {
   display: inline;
   white-space: nowrap;
 }
 
-:local(.telegram svg) {
+.telegram svg {
   display: inline;
   margin: 0 6px 0 0;
 }

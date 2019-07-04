@@ -11,7 +11,7 @@ import OrganizationsPage from './pages/Organizations';
 import OrganizationPage from './pages/Organization';
 import NotFoundPage from './pages/NotFoundPage';
 import RegistrationPage from './components/Registration/Registration';
-import GovernancePage from './components/Governance/Governance';
+import GovernancePage from './pages/Governance';
 import Tag from './pages/Tag';
 import Faq from './pages/Faq';
 import Statistics from './pages/Statistics';
@@ -120,7 +120,7 @@ export default [{
   path: '/communities/:organizationId/discussions/new',
   component: EditPostPage,
 }, {
-  exact: true,
+  exact: false,
   path: '/governance',
   component: GovernancePage,
 }, {

@@ -1,0 +1,96 @@
+.content {
+  box-sizing: border-box;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 64px 40px;
+}
+
+@media (max-width: 767px) {
+  .content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.title {
+  margin: 0 0 64px;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.125;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  grid-gap: 30px;
+  align-items: center;
+  margin: 0 0 20px;
+}
+
+@media(max-width: 1023px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tabs {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 30px;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+.tabs .item {
+  color: rgba(0,0,0,0.2);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border 0.2s ease;
+  cursor: pointer;
+}
+
+.tabs .item.active,
+.tabs .item:hover {
+  border-bottom-color: #000;
+  color: #000;
+}
+
+@media(max-width: 767px) {
+  .tabs {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 767px) {
+  .table {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+}
+
+.voteTitle {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap: 20px;
+  align-items: center;
+  margin: 50px 0 25px 0;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: normal;
+}
+
+.submit {
+  text-align: center;
+}
+
+.panel {
+  margin: 25px 0 50px 0;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 1.75;
+}

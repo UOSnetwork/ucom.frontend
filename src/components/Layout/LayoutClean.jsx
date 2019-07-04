@@ -1,9 +1,15 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import styles from './styles.css';
 
-const LayoutClean = props => (
-  <div className="page__content page__content_full-height">
-    {props.children}
+const LayoutClean = ({ children }) => (
+  <div className={`${styles.content} ${styles.fullHeight}`}>
+    {children}
   </div>
 );
+
+LayoutClean.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default LayoutClean;
