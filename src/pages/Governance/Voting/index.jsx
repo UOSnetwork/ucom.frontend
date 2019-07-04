@@ -17,9 +17,9 @@ const Voting = ({ match }) => {
   const nodeTypeId = Number(match.params.nodeTypeId);
   const dispatch = useDispatch();
 
-  const getNodes = (page, orderBy) => {
+  const getNodes = async (page, orderBy) => {
     try {
-      withLoader(dispatch(governancePageActions.votingGetNodes(nodeTypeId, page, orderBy)));
+      await withLoader(dispatch(governancePageActions.votingGetNodes(nodeTypeId, page, orderBy)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
