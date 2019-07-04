@@ -24,21 +24,23 @@ class RegistrationStepThird extends PureComponent {
       brainkeyVerificationIsComplete: false,
       brainkeyVerificationIsValid: false,
       termsAccepted: false,
-      recaptchaValid: false,
+      recaptchaValid: !this.props.recaptcha,
     };
   }
 
   componentDidMount() {
-    grecaptcha.ready(() => {
-      grecaptcha.render('recaptcha', {
-        sitekey: getGrecaptchaSitekey(),
-        callback: () => {
-          this.setState({
-            recaptchaValid: true,
-          });
-        },
+    if (this.props.recaptcha) {
+      grecaptcha.ready(() => {
+        grecaptcha.render('recaptcha', {
+          sitekey: getGrecaptchaSitekey(),
+          callback: () => {
+            this.setState({
+              recaptchaValid: true,
+            });
+          },
+        });
       });
-    });
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -81,7 +83,9 @@ class RegistrationStepThird extends PureComponent {
             onComplete={isComplete => this.setState({ brainkeyVerificationIsComplete: isComplete })}
           />
 
-          <div id="recaptcha" />
+          {this.props.recaptcha &&
+            <div id="recaptcha" />
+          }
 
           <div className="registration-terms">
             <div className="registration-terms__item">

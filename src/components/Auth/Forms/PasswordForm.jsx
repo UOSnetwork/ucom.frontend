@@ -72,7 +72,7 @@ const Password = (props) => {
           cap
           strech
           type="submit"
-          disabled={!password || !passwordRepeat || formError}
+          disabled={Boolean(!password || !passwordRepeat || formError)}
         >
           Set Password
         </Button>

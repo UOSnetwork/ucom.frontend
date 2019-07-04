@@ -8,6 +8,7 @@ const STATIC_VERSION = (new Date()).getTime();
 const xss = require('xss');
 const path = require('path');
 const ejs = require('ejs');
+const { isString, isFunction } = require('lodash');
 const express = require('express');
 const renderStatic = require('./src/renderStatic').default;
 const routes = require('./src/routes').default;
@@ -20,36 +21,52 @@ app.use(express.static('public'));
 
 routes.forEach((route) => {
   app.get(route.path, async (req, res) => {
-    const store = createStore();
-    let contentMetaTags;
     let state;
+    const store = createStore();
+    const contentMetaTags = {
+      type: 'website',
+      title: 'U°Community',
+      description: 'Social platform with a transparent dynamic reputation system',
+      url: `${req.protocol}://${req.hostname}${req.originalUrl}`,
+      image: `${req.protocol}://${req.hostname}/u.png`,
+      imageWidth: '512',
+      imageHeight: '512',
+    };
 
-    if (typeof route.getData === 'function') {
+    if (isFunction(route.getData)) {
       try {
         const data = await route.getData(store, req.params);
 
-        // TODO: Refactoring contentMetaTags, get every prop separately
         if (data && data.contentMetaTags) {
-          contentMetaTags = JSON.parse(xss(JSON.stringify(data.contentMetaTags)));
-          if (contentMetaTags.path) {
-            contentMetaTags.url = `${req.protocol}://${req.hostname}${contentMetaTags.path}`;
+          if (isString(data.contentMetaTags.title)) {
+            contentMetaTags.title = xss(data.contentMetaTags.title);
+          }
+
+          if (isString(data.contentMetaTags.description)) {
+            contentMetaTags.description = xss(data.contentMetaTags.description);
+          }
+
+          if (isString(data.contentMetaTags.image)) {
+            contentMetaTags.image = xss(data.contentMetaTags.image);
+            contentMetaTags.imageWidth = undefined;
+            contentMetaTags.imageHeight = undefined;
+          }
+
+          if (isString(data.contentMetaTags.imageWidth)) {
+            contentMetaTags.imageWidth = xss(data.contentMetaTags.imageWidth);
+          }
+
+          if (isString(data.contentMetaTags.imageHeight)) {
+            contentMetaTags.imageHeight = xss(data.contentMetaTags.imageHeight);
+          }
+
+          if (isString(data.contentMetaTags.path)) {
+            contentMetaTags.url = xss(`${req.protocol}://${req.hostname}${data.contentMetaTags.path}`);
           }
         }
       } catch (e) {
         console.error(e);
       }
-    }
-
-    if (!contentMetaTags) {
-      contentMetaTags = {
-        type: 'website',
-        title: 'U°Community',
-        description: 'Social platform with a transparent dynamic reputation system',
-        url: `${req.protocol}://${req.hostname}${req.originalUrl}`,
-        image: `${req.protocol}://${req.hostname}/u.png`,
-        imageWidth: '512',
-        imageHeight: '512',
-      };
     }
 
     try {
@@ -60,9 +77,9 @@ routes.forEach((route) => {
 
     const templateData = {
       contentMetaTags,
-      content: renderStatic(store, req.url),
-      staticVersion: STATIC_VERSION,
       state: state || {},
+      staticVersion: STATIC_VERSION,
+      content: renderStatic(store, req.url),
     };
 
     try {

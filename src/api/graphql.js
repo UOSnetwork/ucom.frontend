@@ -6,11 +6,13 @@ import { getBackendConfig } from '../utils/config';
 import { getToken } from '../utils/token';
 import { COMMENTS_PER_PAGE } from '../utils/comments';
 import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
-import { NODES_PER_PAGE } from '../utils/governance';
-import { LIST_ORDER_BY_RATE, LIST_PER_PAGE } from '../utils/constants';
+import {
+  LIST_ORDER_BY_RATE,
+  LIST_PER_PAGE,
+  BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
+  BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
+} from '../utils/constants';
 import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS, ENTITY_NAMES_ORG } from '../utils/posts';
-
-const { Dictionary } = require('ucom-libs-wallet');
 
 const request = async (data, extraOptions = {}) => {
   let options = {
@@ -645,96 +647,53 @@ const api = {
     }
   },
 
-  async getNodesSelected(
-    userId,
-    orderBy = 'bp_status',
-    page = 1,
-    perPage = NODES_PER_PAGE,
-  ) {
-    const commonParams = { orderBy, page, perPage };
-    const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
-    const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
-
-    const isVotedBlockProducers = GraphQLSchema.getManyBlockchainNodesQueryPart(snakes({
-      ...commonParams,
-      filters: {
-        myselfVotesOnly: true,
-        userId,
-        blockchainNodesType: BLOCK_PRODUCERS,
-      },
-    }));
-
-    const isVotedCalculatorsNodes = GraphQLSchema.getManyBlockchainNodesQueryPart(snakes({
-      ...commonParams,
-      filters: {
-        myselfVotesOnly: true,
-        userId,
-        blockchainNodesType: CALCULATOR_NODES,
-      },
-    }));
-
-    const partsWithAliases = {
-      isVotedBlockProducers, isVotedCalculatorsNodes,
-    };
-
-    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases(partsWithAliases);
+  async getNodes(params) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      nodes: GraphQLSchema.getManyBlockchainNodesQueryPart(params),
+    });
 
     try {
       const data = await request({ query });
-      return {
-        selectedNodes: {
-          [BLOCK_PRODUCERS]: data.data.isVotedBlockProducers,
-          [CALCULATOR_NODES]: data.data.isVotedCalculatorsNodes,
-        },
-      };
+      return data.data.nodes;
     } catch (e) {
       throw e;
     }
   },
-  async getAllNodes(
-    orderBy = 'bp_status',
-    page = 1,
-    perPage = NODES_PER_PAGE,
-  ) {
-    const commonParams = { orderBy, page, perPage };
-    const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
-    const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
 
-    const blockProducers = GraphQLSchema.getManyBlockchainNodesQueryPart(snakes({
-      ...commonParams,
-      filters: {
-        myselfVotesOnly: false,
-        blockchainNodesType: BLOCK_PRODUCERS,
-      },
-    }));
-
-    const calculatorsNodes = GraphQLSchema.getManyBlockchainNodesQueryPart(snakes({
-      ...commonParams,
-      filters: {
-        myselfVotesOnly: false,
-        blockchainNodesType: CALCULATOR_NODES,
-      },
-    }));
-
-
-    const partsWithAliases = {
-      blockProducers, calculatorsNodes,
+  async getSelectedNodes(userId) {
+    const params = {
+      page: 1,
+      per_page: 100,
+      order_by: 'bp_status',
     };
 
-    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases(partsWithAliases);
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      blockProducers: GraphQLSchema.getManyBlockchainNodesQueryPart({
+        ...params,
+        filters: {
+          myself_votes_only: true,
+          blockchain_nodes_type: BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
+          user_id: userId,
+        },
+      }),
+      calculatorsNodes: GraphQLSchema.getManyBlockchainNodesQueryPart({
+        ...params,
+        filters: {
+          myself_votes_only: true,
+          blockchain_nodes_type: BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
+          user_id: userId,
+        },
+      }),
+    });
 
     try {
-      const data = await request({ query });
-      return {
-        nodes: {
-          [BLOCK_PRODUCERS]: data.data.blockProducers,
-          [CALCULATOR_NODES]: data.data.calculatorsNodes,
-        },
-      };
+      const { data } = await request({ query });
+      return data;
     } catch (e) {
       throw e;
     }
   },
+
   async getOnePostOffer({
     postId,
     commentsQuery = {

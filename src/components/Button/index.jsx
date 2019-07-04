@@ -17,31 +17,41 @@ const Button = (props) => {
   }
 
   return (
-    <Tag
-      type={props.type}
-      to={props.url}
-      href={filterURL(props.url)}
-      target={props.external ? '_blank' : undefined}
-      onClick={props.onClick}
-      disabled={props.disabled}
+    <span
       className={classNames({
-        [styles.button]: true,
+        [styles.wrapper]: true,
         [styles.strech]: props.strech,
-        [styles.grayBorder]: props.grayBorder,
-        [styles.red]: props.red,
-        [styles.transparent]: props.transparent,
-        [styles.large]: props.large,
-        [styles.big]: props.big,
-        [styles.small]: props.small,
-        [styles.medium]: props.big,
-        [styles.cap]: props.cap,
-        [styles.disabled]: props.disabled,
       })}
     >
-      <div className={styles.inner}>
-        {props.children}
-      </div>
-    </Tag>
+      <Tag
+        type={!props.url ? props.type : undefined}
+        to={props.url}
+        href={filterURL(props.url)}
+        target={props.external ? '_blank' : undefined}
+        onClick={props.onClick}
+        disabled={props.disabled}
+        className={classNames({
+          [styles.button]: true,
+          [styles.grayBorder]: props.grayBorder,
+          [styles.red]: props.red,
+          [styles.redBorder]: props.redBorder,
+          [styles.transparent]: props.transparent,
+          [styles.large]: props.large,
+          [styles.big]: props.big,
+          [styles.small]: props.small,
+          [styles.medium]: props.big,
+          [styles.cap]: props.cap,
+          [styles.disabled]: props.disabled,
+        })}
+        style={{
+          minWidth: props.width ? `${props.width}px` : undefined,
+        }}
+      >
+        <span className={styles.inner}>
+          {props.children}
+        </span>
+      </Tag>
+    </span>
   );
 };
 
@@ -59,6 +69,9 @@ Button.propTypes = {
   cap: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.string,
+  large: PropTypes.bool,
+  redBorder: PropTypes.bool,
+  width: PropTypes.number,
 };
 
 Button.defaultProps = {
@@ -74,6 +87,9 @@ Button.defaultProps = {
   cap: false,
   disabled: false,
   type: 'button',
+  redBorder: false,
+  large: false,
+  width: undefined,
 };
 
 export default Button;

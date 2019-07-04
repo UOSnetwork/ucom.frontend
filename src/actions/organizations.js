@@ -12,6 +12,7 @@ export const getOrganization = id => async (dispatch) => {
     const data = humps(await api.getOrganization(id));
     dispatch(addUsers([data.data.user].concat(data.data.followedBy, data.data.usersTeam)));
     dispatch(addOrganizations([data.data]));
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;

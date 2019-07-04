@@ -11,6 +11,8 @@ import LayoutClean from '../Layout/LayoutClean';
 import { registrationReset } from '../../actions/registration';
 import Close from '../Close';
 
+// TODO: Refactoring registartion
+
 class Registration extends PureComponent {
   constructor(props) {
     super(props);
@@ -44,7 +46,9 @@ class Registration extends PureComponent {
                 <RegistrationStepIntro />
                 <RegistrationStepFirst />
                 <RegistrationStepSecond />
-                <RegistrationStepThird prevPath={this.props.location && this.props.location.state ? this.props.location.state.prevPath : null} />
+                <RegistrationStepThird
+                  prevPath={this.props.location && this.props.location.state ? this.props.location.state.prevPath : null}
+                />
               </div>
             </div>
           </div>
