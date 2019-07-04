@@ -1,38 +1,36 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import React from 'react';
 import Popup, { Content } from '../../components/Popup';
-import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
 import Profile from '../../components/Profile/User';
 
-const ProfilePopup = ({ history, user }) => (
+const ProfilePopup = ({ history, match }) => (
   <Popup
     id="profile-popup"
     paddingBottom="70vh"
-    onClickClose={() => history.push(urls.getUserUrl(user.id))}
+    onClickClose={() => history.push(urls.getUserUrl(match.params.userId))}
   >
     <Content
       fixWidth
-      onClickClose={() => history.push(urls.getUserUrl(user.id))}
+      onClickClose={() => history.push(urls.getUserUrl(match.params.userId))}
     >
       <Profile
-        userId={user.id}
-        onSuccess={() => history.push(urls.getUserUrl(user.id))}
+        userId={match.params.userId}
+        onSuccess={() => history.push(urls.getUserUrl(match.params.userId))}
       />
     </Content>
   </Popup>
 );
 
 ProfilePopup.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      userId: PropTypes.string.isRequired,
+    }),
   }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
 };
 
-export default connect((state, props) => ({
-  user: getUserById(state.users, props.match.params.userId),
-}))(ProfilePopup);
+export default ProfilePopup;
