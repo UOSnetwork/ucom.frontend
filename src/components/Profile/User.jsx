@@ -3,8 +3,6 @@ import { pick, cloneDeep } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import { Element } from 'react-scroll';
-import profileStyles from './styles.css';
-import gridStyles from '../Grid/styles.css'; // TODO: Move to ./styles.css
 import DropzoneWrapper from '../DropzoneWrapper';
 import IconUser from '../Icons/User';
 import IconCover from '../Icons/Cover';
@@ -20,6 +18,7 @@ import { addValidationErrorNotification, addSuccessNotification } from '../../ac
 import withLoader from '../../utils/withLoader';
 import * as selectors from '../../store/selectors';
 import Menu from './Menu';
+import styles from './styles.css';
 
 const USER_EDITABLE_PROPS = [
   'avatarFilename',
@@ -95,8 +94,8 @@ const Profile = ({ onSuccess }) => {
         submit(data);
       }}
     >
-      <div className={`${gridStyles.grid} ${gridStyles.profile}`}>
-        <div className={gridStyles.sidebar}>
+      <div className={styles.grid}>
+        <div className={styles.sidebar}>
           <Menu
             sections={[
               { title: 'Personal Info', name: 'personalInfo' },
@@ -105,20 +104,20 @@ const Profile = ({ onSuccess }) => {
             ]}
           />
         </div>
-        <div className={gridStyles.content}>
-          <h2 className={profileStyles.title}>Your Profile</h2>
+        <div className={styles.content}>
+          <h2 className={styles.title}>Your Profile</h2>
 
           <Element
             name="personalInfo"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Personal Info</h3>
+            <h3 className={styles.subTitle}>Personal Info</h3>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Cover</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Cover</div>
+              <div className={styles.data}>
                 <DropzoneWrapper
-                  className={profileStyles.cover}
+                  className={styles.cover}
                   accept="image/jpeg, image/png"
                 >
                   {false ? (
@@ -130,34 +129,34 @@ const Profile = ({ onSuccess }) => {
               </div>
             </div>
 
-            <div className={`${profileStyles.field} ${profileStyles.fieldUpload}`}>
-              <div className={profileStyles.label}>Photo</div>
-              <div className={profileStyles.data}>
+            <div className={`${styles.field} ${styles.fieldUpload}`}>
+              <div className={styles.label}>Photo</div>
+              <div className={styles.data}>
                 <DropzoneWrapper
-                  className={profileStyles.upload}
+                  className={styles.upload}
                   accept="image/jpeg, image/png, image/gif"
                   onChange={(avatarFilename) => {
                     setAvatarPreview(URL.createObjectURL(avatarFilename));
                     setDataAndValidate({ ...data, avatarFilename });
                   }}
                 >
-                  <div className={profileStyles.uploadIcon}>
+                  <div className={styles.uploadIcon}>
                     {avatarPreview || data.avatarFilename ? (
                       <UserPick src={avatarPreview || urls.getFileUrl(data.avatarFilename)} size={100} shadow />
                     ) : (
                       <IconUser />
                     )}
                   </div>
-                  <div className={profileStyles.uploadText}>
+                  <div className={styles.uploadText}>
                     Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.
                   </div>
                 </DropzoneWrapper>
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Displayed Name</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Displayed Name</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   placeholder="Nickname or name, maybe emoji…"
@@ -173,14 +172,14 @@ const Profile = ({ onSuccess }) => {
 
           <Element
             name="aboutMe"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>About Me</h3>
+            <h3 className={styles.subTitle}>About Me</h3>
             <Textarea
               rows={5}
               submited={submited}
               placeholder="Your story, what passions you — something you want others to know about you"
-              className={profileStyles.textarea}
+              className={styles.textarea}
               value={data.about}
               error={errors && errors.about}
               onChange={(about) => {
@@ -191,13 +190,13 @@ const Profile = ({ onSuccess }) => {
 
           <Element
             name="links"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Links</h3>
+            <h3 className={styles.subTitle}>Links</h3>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>My Website</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>My Website</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   placeholder="https://site.com"
@@ -210,11 +209,11 @@ const Profile = ({ onSuccess }) => {
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Social Networks</div>
-              <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+            <div className={styles.field}>
+              <div className={styles.label}>Social Networks</div>
+              <div className={`${styles.data} ${styles.entrys}`}>
                 {data.usersSources && data.usersSources.map((item, index) => (
-                  <div className={`${profileStyles.entry} ${profileStyles.input}`} key={index}>
+                  <div className={`${styles.entry} ${styles.input}`} key={index}>
                     <TextInput
                       submited={submited}
                       placeholder="http://example.com"
@@ -228,7 +227,7 @@ const Profile = ({ onSuccess }) => {
                     />
                     <span
                       role="presentation"
-                      className={profileStyles.remove}
+                      className={styles.remove}
                       onClick={() => {
                         const { usersSources } = data;
                         usersSources.splice(index, 1);

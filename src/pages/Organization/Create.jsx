@@ -1,14 +1,16 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Profile from '../../components/Profile/Organization';
 import Popup, { Content } from '../../components/Popup';
 import urls from '../../utils/urls';
-import { getUserById } from '../../store/users';
+import { selectOwner } from '../../store/selectors';
 
-const CreatePopup = ({ history, owner }) => {
-  const onClickClose = () => {
+const CreatePopup = ({ history }) => {
+  const owner = useSelector(selectOwner);
+
+  const close = () => {
     window.location.hash = '';
   };
 
@@ -16,11 +18,11 @@ const CreatePopup = ({ history, owner }) => {
     <Popup
       id="profile-popup"
       paddingBottom="70vh"
-      onClickClose={onClickClose}
+      onClickClose={close}
     >
       <Content
         fixWidth
-        onClickClose={onClickClose}
+        onClickClose={close}
       >
         <Profile
           owner={owner}
@@ -37,13 +39,6 @@ CreatePopup.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  owner: PropTypes.objectOf(PropTypes.any),
 };
 
-CreatePopup.defaultProps = {
-  owner: undefined,
-};
-
-export default withRouter(connect(state => ({
-  owner: getUserById(state.users, state.user.data.id),
-}))(CreatePopup));
+export default withRouter(CreatePopup);

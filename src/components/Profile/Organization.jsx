@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 import { Element } from 'react-scroll';
-import { isEqual, pick, cloneDeep, uniqBy } from 'lodash';
-import { connect } from 'react-redux';
-import React, { memo, useState, useEffect } from 'react';
-import gridStyles from '../Grid/styles.css';
-import profileStyles from './styles.css';
+import { pick, cloneDeep, uniqBy } from 'lodash';
+import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import Menu from './Menu';
 import DropzoneWrapper from '../DropzoneWrapper';
 import IconOrganization from '../Icons/Organization';
 import IconRemove from '../Icons/Remove';
+import IconCover from '../Icons/Cover';
 import TextInput from '../TextInput';
 import Textarea from '../TextareaAutosize';
 import EntryCard from '../EntryCard';
@@ -26,6 +25,7 @@ import { addSuccessNotification, addValidationErrorNotification } from '../../ac
 import { updateOrganization, createOrganization } from '../../actions/organizations';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
 import EmbedService from '../../utils/embedService';
+import styles from './styles.css';
 
 const defaultOrg = {
   title: '',
@@ -44,21 +44,11 @@ const defaultOrg = {
 };
 
 const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
-const OWNER_PROPS = [
-  'id',
-  'avatarFilename',
-  'accountName',
-  'firstName',
-];
 
 const OrganizationProfile = ({
   owner,
   organization,
   onSuccess,
-  addSuccessNotification,
-  addValidationErrorNotification,
-  updateOrganization,
-  createOrganization,
 }) => {
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -67,6 +57,7 @@ const OrganizationProfile = ({
   const [avatarPreview, setAvatarPreview] = useState(undefined);
   const [adminSearchVisible, setAdminSearchVisible] = useState(false);
   const [partnersSearchVisible, setPartnersSearchVisible] = useState(false);
+  const dispatch = useDispatch();
 
   const validate = (data) => {
     const { errors, isValid } = Validate.validateOrganization(data);
@@ -87,7 +78,7 @@ const OrganizationProfile = ({
     setSubmited(true);
 
     if (!isValid) {
-      addValidationErrorNotification();
+      dispatch(addValidationErrorNotification());
     }
 
     if (!isValid || loading) {
@@ -97,12 +88,12 @@ const OrganizationProfile = ({
     setLoading(true);
 
     try {
-      const result = await withLoader(data.id ? updateOrganization(data) : createOrganization(data));
-      addSuccessNotification(data.id ? 'Community has been saved' : 'Community has been created');
+      const result = await withLoader(data.id ? dispatch(updateOrganization(data)) : dispatch(createOrganization(data)));
+      dispatch(addSuccessNotification(data.id ? 'Community has been saved' : 'Community has been created'));
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
-      addValidationErrorNotification();
+      dispatch(addValidationErrorNotification());
     }
 
     setLoading(false);
@@ -129,8 +120,8 @@ const OrganizationProfile = ({
         submit(data);
       }}
     >
-      <div className={`${gridStyles.grid} ${gridStyles.profile}`}>
-        <div className={gridStyles.sidebar}>
+      <div className={styles.grid}>
+        <div className={styles.sidebar}>
           <Menu
             create={!data.id}
             sections={[
@@ -143,43 +134,59 @@ const OrganizationProfile = ({
             ]}
           />
         </div>
-        <div className={gridStyles.content}>
-          <h2 className={profileStyles.title}>{data.id ? 'Edit Community Profile' : 'New Community'}</h2>
+        <div className={styles.content}>
+          <h2 className={styles.title}>{data.id ? 'Edit Community Profile' : 'New Community'}</h2>
 
           <Element
             name="general"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>General</h3>
+            <h3 className={styles.subTitle}>General</h3>
 
-            <div className={`${profileStyles.field} ${profileStyles.block}`}>
-              <div className={profileStyles.label}>Emblem</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Cover</div>
+              <div className={styles.data}>
                 <DropzoneWrapper
-                  className={profileStyles.upload}
+                  className={styles.cover}
+                  accept="image/jpeg, image/png"
+                >
+                  {false ? (
+                    <img src="https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg" alt="" />
+                  ) : (
+                    <IconCover />
+                  )}
+                </DropzoneWrapper>
+              </div>
+            </div>
+
+            <div className={`${styles.field} ${styles.block}`}>
+              <div className={styles.label}>Emblem</div>
+              <div className={styles.data}>
+                <DropzoneWrapper
+                  className={styles.upload}
                   accept="image/jpeg, image/png, image/gif"
                   onChange={(avatarFilename) => {
                     setAvatarPreview(URL.createObjectURL(avatarFilename));
                     setDataAndValidate({ ...data, avatarFilename });
                   }}
                 >
-                  <div className={`${profileStyles.uploadIcon} ${profileStyles.org}`}>
+                  <div className={`${styles.uploadIcon} ${styles.org}`}>
                     {avatarPreview || data.avatarFilename ? (
                       <UserPick src={avatarPreview || urls.getFileUrl(data.avatarFilename)} size={100} shadow organization />
                     ) : (
                       <IconOrganization />
                     )}
                   </div>
-                  <div className={profileStyles.uploadText}>
+                  <div className={styles.uploadText}>
                     Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.
                   </div>
                 </DropzoneWrapper>
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Community Name</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Community Name</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   placeholder="Choose Nice Name"
@@ -192,9 +199,9 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Community Link</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Community Link</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   placeholder="datalightsus"
@@ -211,13 +218,13 @@ const OrganizationProfile = ({
 
           <Element
             name="board"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Board</h3>
+            <h3 className={styles.subTitle}>Board</h3>
 
-            <div className={`${profileStyles.field} ${profileStyles.block}`}>
-              <div className={profileStyles.label}>Owner</div>
-              <div className={profileStyles.data}>
+            <div className={`${styles.field} ${styles.block}`}>
+              <div className={styles.label}>Owner</div>
+              <div className={styles.data}>
                 {owner &&
                   <EntryCard
                     disableRate
@@ -230,13 +237,13 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Administrators</div>
-              <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+            <div className={styles.field}>
+              <div className={styles.label}>Administrators</div>
+              <div className={`${styles.data} ${styles.entrys}`}>
                 {data.usersTeam && data.usersTeam.map((item, index) => (
                   <div
                     key={index}
-                    className={profileStyles.entry}
+                    className={styles.entry}
                   >
                     <EntryCard
                       disableRate
@@ -245,10 +252,10 @@ const OrganizationProfile = ({
                       title={getUserName(item)}
                       nickname={item.accountName}
                     />
-                    <span className={profileStyles.adminStatus}>{getUsersTeamStatusById(item.usersTeamStatus)}</span>
+                    <span className={styles.adminStatus}>{getUsersTeamStatusById(item.usersTeamStatus)}</span>
                     <span
                       role="presentation"
-                      className={`${profileStyles.remove} ${profileStyles.medium}`}
+                      className={`${styles.remove} ${styles.medium}`}
                       onClick={() => {
                         const { usersTeam } = data;
                         usersTeam.splice(index, 1);
@@ -287,15 +294,15 @@ const OrganizationProfile = ({
 
           <Element
             name="about"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>About</h3>
+            <h3 className={styles.subTitle}>About</h3>
 
             <Textarea
               rows={5}
               submited={submited}
               placeholder="Main idea — something you want others to know about this community…"
-              className={profileStyles.textarea}
+              className={styles.textarea}
               value={data.about}
               error={errors && errors.about}
               onChange={(about) => {
@@ -306,13 +313,13 @@ const OrganizationProfile = ({
 
           <Element
             name="contacts"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Contacts</h3>
+            <h3 className={styles.subTitle}>Contacts</h3>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Email</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Email</div>
+              <div className={styles.data}>
                 <TextInput
                   type="email"
                   submited={submited}
@@ -326,9 +333,9 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Phone Number</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Phone Number</div>
+              <div className={styles.data}>
                 <TextInput
                   type="tel"
                   submited={submited}
@@ -345,13 +352,13 @@ const OrganizationProfile = ({
 
           <Element
             name="links"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Links</h3>
+            <h3 className={styles.subTitle}>Links</h3>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Community Website</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Community Website</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   placeholder="http://example.com"
@@ -364,11 +371,11 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Social Networks</div>
-              <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+            <div className={styles.field}>
+              <div className={styles.label}>Social Networks</div>
+              <div className={`${styles.data} ${styles.entrys}`}>
                 {data.socialNetworks && data.socialNetworks.map((item, index) => (
-                  <div className={`${profileStyles.entry} ${profileStyles.input}`} key={index}>
+                  <div className={`${styles.entry} ${styles.input}`} key={index}>
                     <TextInput
                       submited={submited}
                       placeholder="http://example.com"
@@ -382,7 +389,7 @@ const OrganizationProfile = ({
                     />
                     <span
                       role="presentation"
-                      className={profileStyles.remove}
+                      className={styles.remove}
                       onClick={() => {
                         const { socialNetworks } = data;
                         socialNetworks.splice(index, 1);
@@ -413,13 +420,13 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Partners</div>
-              <div className={`${profileStyles.data} ${profileStyles.entrys}`}>
+            <div className={styles.field}>
+              <div className={styles.label}>Partners</div>
+              <div className={`${styles.data} ${styles.entrys}`}>
                 {data.communitySources && data.communitySources.map((item, index) => (
                   <div
                     key={index}
-                    className={profileStyles.entry}
+                    className={styles.entry}
                   >
                     <EntryCard
                       disableRate
@@ -433,7 +440,7 @@ const OrganizationProfile = ({
                     />
                     <span
                       role="presentation"
-                      className={`${profileStyles.remove} ${profileStyles.medium}`}
+                      className={`${styles.remove} ${styles.medium}`}
                       onClick={() => {
                         const { communitySources } = data;
                         communitySources.splice(index, 1);
@@ -448,7 +455,7 @@ const OrganizationProfile = ({
                 {data.partnershipSources && data.partnershipSources.map((item, index) => (
                   <div
                     key={index}
-                    className={profileStyles.entry}
+                    className={styles.entry}
                   >
                     <EntryCard
                       disableRate
@@ -462,7 +469,7 @@ const OrganizationProfile = ({
                     />
                     <span
                       role="presentation"
-                      className={`${profileStyles.remove} ${profileStyles.medium}`}
+                      className={`${styles.remove} ${styles.medium}`}
                       onClick={() => {
                         const { partnershipSources } = data;
                         partnershipSources.splice(index, 1);
@@ -534,13 +541,13 @@ const OrganizationProfile = ({
 
           <Element
             name="cocation"
-            className={profileStyles.section}
+            className={styles.section}
           >
-            <h3 className={profileStyles.subTitle}>Location</h3>
+            <h3 className={styles.subTitle}>Location</h3>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>Country</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>Country</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   value={data.country}
@@ -552,9 +559,9 @@ const OrganizationProfile = ({
               </div>
             </div>
 
-            <div className={profileStyles.field}>
-              <div className={profileStyles.label}>City</div>
-              <div className={profileStyles.data}>
+            <div className={styles.field}>
+              <div className={styles.label}>City</div>
+              <div className={styles.data}>
                 <TextInput
                   submited={submited}
                   value={data.city}
@@ -576,22 +583,10 @@ OrganizationProfile.propTypes = {
   owner: PropTypes.objectOf(PropTypes.any),
   organization: PropTypes.objectOf(PropTypes.any).isRequired,
   onSuccess: PropTypes.func.isRequired,
-  addSuccessNotification: PropTypes.func.isRequired,
-  addValidationErrorNotification: PropTypes.func.isRequired,
-  updateOrganization: PropTypes.func.isRequired,
-  createOrganization: PropTypes.func.isRequired,
 };
 
 OrganizationProfile.defaultProps = {
   owner: undefined,
 };
 
-export default connect(null, {
-  createOrganization,
-  updateOrganization,
-  addSuccessNotification,
-  addValidationErrorNotification,
-})(memo(OrganizationProfile, (prev, next) => (
-  isEqual(pick(prev.organization, ORG_EDITABLE_PROPS), pick(next.organization, ORG_EDITABLE_PROPS)) &&
-  isEqual(pick(prev.owner, OWNER_PROPS), pick(next.owner, OWNER_PROPS))
-)));
+export default OrganizationProfile;

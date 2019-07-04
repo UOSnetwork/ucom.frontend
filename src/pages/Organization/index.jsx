@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
 import OrganizationHeader from '../../components/Organization/OrganizationHeader';
-import { getOrganization, addOrganizations } from '../../actions/organizations';
 import { selectOwner, selectOrgById } from '../../store/selectors';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import urls from '../../utils/urls';
@@ -25,7 +24,8 @@ import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
 import { EntryListSectionOrgSourcesWrapper, EntryListSectionOrgAdminsWrapper } from '../../components/EntryListSection';
 import * as orgPageActions from '../../actions/orgPage';
-import { addErrorNotification } from '../../actions/notifications';
+import * as orgsActions from '../../actions/organizations';
+import { addErrorNotificationFromResponse } from '../../actions/notifications';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
@@ -34,18 +34,33 @@ const OrganizationPage = (props) => {
   const state = useSelector(state => state.orgPage);
   const dispatch = useDispatch();
 
+  const getPageData = async () => {
+    try {
+      await withLoader(dispatch(orgPageActions.getPageData(organizationId)));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
+  const getOrganization = async () => {
+    try {
+      await withLoader(dispatch(orgsActions.getOrganization(organizationId)));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
   const getFollowedByPopup = async (page) => {
     try {
       await withLoader(dispatch(orgPageActions.getFollowedByPopup(organizationId, page)));
     } catch (err) {
-      console.error(err);
-      dispatch(addErrorNotification(err.message));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
   useEffect(() => {
-    withLoader(dispatch(getOrganization(organizationId)));
-    withLoader(dispatch(orgPageActions.getPageData(organizationId)));
+    getOrganization();
+    getPageData();
 
     return () => {
       dispatch(orgPageActions.reset());
@@ -115,22 +130,30 @@ const OrganizationPage = (props) => {
               validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
               newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
               onSubmit={async (postId) => {
-                await withLoader(dispatch(setDiscussions({
-                  organizationId,
-                  discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
-                })));
-                await withLoader(dispatch(getOrganization(organizationId)));
+                try {
+                  await withLoader(dispatch(setDiscussions({
+                    organizationId,
+                    discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
+                  })));
+                  await withLoader(dispatch(orgsActions.getOrganization(organizationId)));
+                } catch (err) {
+                  dispatch(addErrorNotificationFromResponse(err));
+                }
               }}
               onSortEnd={async (e) => {
-                const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
-                dispatch(addOrganizations([{
-                  id: organizationId,
-                  discussions,
-                }]));
-                await withLoader(dispatch(setDiscussions({
-                  organizationId,
-                  discussions: discussions.map(i => ({ id: i.id })),
-                })));
+                try {
+                  const discussions = arrayMove(organization.discussions, e.oldIndex, e.newIndex);
+                  dispatch(orgsActions.addOrganizations([{
+                    id: organizationId,
+                    discussions,
+                  }]));
+                  await withLoader(dispatch(setDiscussions({
+                    organizationId,
+                    discussions: discussions.map(i => ({ id: i.id })),
+                  })));
+                } catch (err) {
+                  dispatch(addErrorNotificationFromResponse(err));
+                }
               }}
               items={organization.discussions.map(item => ({
                 id: item.id,
@@ -140,11 +163,15 @@ const OrganizationPage = (props) => {
                 authorUrl: urls.getUserUrl(item.user.id),
                 commentCount: item.commentsCount,
                 onClickRemove: async (id) => {
-                  await withLoader(dispatch(setDiscussions({
-                    organizationId,
-                    discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
-                  })));
-                  await withLoader(dispatch(getOrganization(organizationId)));
+                  try {
+                    await withLoader(dispatch(setDiscussions({
+                      organizationId,
+                      discussions: organization.discussions.filter(i => +i.id !== +id).map(i => ({ id: i.id })),
+                    })));
+                    await withLoader(dispatch(orgsActions.getOrganization(organizationId)));
+                  } catch (err) {
+                    dispatch(addErrorNotificationFromResponse(err));
+                  }
                 },
               }))}
             />
@@ -172,7 +199,7 @@ OrganizationPage.propTypes = {
 export const getOrganizationPageData = async (store, params) => {
   try {
     const [org] = await Promise.all([
-      store.dispatch(getOrganization(params.id)),
+      store.dispatch(orgsActions.getOrganization(params.id)),
       store.dispatch(orgPageActions.getPageData(params.id)),
     ]);
 

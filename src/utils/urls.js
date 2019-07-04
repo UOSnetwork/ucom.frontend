@@ -102,7 +102,7 @@ const urls = {
   },
 
   getOrganizationCrerateUrl() {
-    return '#community-new';
+    return '#new-community';
   },
 
   getOrganizationEditUrl(id) {
