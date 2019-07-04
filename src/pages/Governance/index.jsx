@@ -1,3 +1,4 @@
+import { Tooltip } from 'react-tippy';
 import { Link } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 import React, { useEffect, Fragment } from 'react';
@@ -90,10 +91,10 @@ const GovernancePage = () => {
 
             <div className={styles.tabs}>
               <div className={styles.active}>Network</div>
-              <div>My Projects</div>
-              <div>Ideas</div>
-              <div>Projects</div>
-              <div>Results</div>
+              <div><Tooltip arrow position="bottom" title="Coming Soon">My Projects</Tooltip></div>
+              <div><Tooltip arrow position="bottom" title="Coming Soon">Ideas</Tooltip></div>
+              <div><Tooltip arrow position="bottom" title="Coming Soon">Projects</Tooltip></div>
+              <div><Tooltip arrow position="bottom" title="Coming Soon">Results</Tooltip></div>
             </div>
 
             <div className={styles.description}>

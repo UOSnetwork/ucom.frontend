@@ -10,7 +10,6 @@ import users from './users';
 import comments from './comments';
 import organizations from './organizations';
 import menuPopup from './menuPopup';
-import governance from './governance/index';
 import registration from './registration';
 import feed from './feed';
 import tags from './tags';
@@ -42,7 +41,6 @@ export const createStore = () => {
     comments,
     organizations,
     menuPopup,
-    governance,
     registration,
     feed,
     tags,
