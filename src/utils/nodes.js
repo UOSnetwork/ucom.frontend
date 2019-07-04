@@ -1,6 +1,4 @@
-export const BP_STATUS_ACTIVE_ID = 1;
-export const BP_STATUS_BACKUP_ID = 2;
-export const LIMITER_OF_PRODUCERS = 30;
+import { BP_STATUS_ACTIVE_ID, BP_STATUS_BACKUP_ID } from './constants';
 
 export const getBpStatusById = (id) => {
   switch (id) {
