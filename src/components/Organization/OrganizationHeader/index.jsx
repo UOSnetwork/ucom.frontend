@@ -25,6 +25,7 @@ const OrganizationHeader = (props) => {
   }
 
   return (
+    // TOOD: Add component EntrySubHeader/Wrapper
     <div className={subHeaderStyles.wrapper}>
       {organization.user &&
         <EntrySubHeader
@@ -37,7 +38,12 @@ const OrganizationHeader = (props) => {
         />
       }
 
+
       <div className={`${styles.entryHead} ${styles.organization}`}>
+        <div className={styles.cover}>
+          <img src="https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg" alt="" />
+        </div>
+
         {userIsAdmin(owner, organization) &&
           <div className={styles.edit}>
             <ButtonEdit strech url={urls.getOrganizationEditUrl(organization.id)} />
