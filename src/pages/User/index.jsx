@@ -200,7 +200,7 @@ UserPage.propTypes = {
   }).isRequired,
 };
 
-export const getUserPageData = (store, params) => {
+export const getUserPageData = async (store, params) => {
   const userPromise = store.dispatch(userPageActions.getPageData(params.userId));
   const postPromise = params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null;
   const feedPromise = store.dispatch(feedGetUserPosts({
@@ -211,7 +211,19 @@ export const getUserPageData = (store, params) => {
     userIdentity: params.userId,
   }));
 
-  return Promise.all([userPromise, postPromise, feedPromise]);
+  try {
+    const [{ user }] = await Promise.all([userPromise, postPromise, feedPromise]);
+
+    return {
+      contentMetaTags: {
+        title: getUserName(user),
+        description: user.about,
+        image: '',
+      },
+    };
+  } catch (err) {
+    throw err;
+  }
 };
 
 export default UserPage;

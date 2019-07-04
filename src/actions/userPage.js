@@ -8,9 +8,10 @@ export const setData = payload => ({ type: 'USER_PAGE_SET_DATA', payload });
 
 export const getPageData = userIdentity => async (dispatch) => {
   try {
+    const result = await graphql.getUserPageData({ userIdentity });
     const {
       user, orgs, iFollow, followedBy, trustedBy,
-    } = await graphql.getUserPageData({ userIdentity });
+    } = result;
 
     dispatch(addUsers([
       user,
@@ -54,14 +55,19 @@ export const getPageData = userIdentity => async (dispatch) => {
         ids: followedBy.data.map(i => i.id),
         metadata: followedBy.metadata,
       },
+      loaded: true,
     }));
+
+    return result;
   } catch (err) {
     console.error(err);
-  }
 
-  dispatch(setData({
-    loaded: true,
-  }));
+    dispatch(setData({
+      loaded: true,
+
+    }));
+    throw err;
+  }
 };
 
 export const getTrustedBy = userIdentity => async (dispatch) => {

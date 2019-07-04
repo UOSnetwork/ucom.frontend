@@ -152,8 +152,8 @@ const Form = (props) => {
           <Embed
             {...embed}
             onClickRemove={() => {
-            setEntityImages(entityImagesRemoveEmbed(entityImages, index));
-          }}
+              setEntityImages(entityImagesRemoveEmbed(entityImages, index));
+            }}
           />
         </div>
       ))}
