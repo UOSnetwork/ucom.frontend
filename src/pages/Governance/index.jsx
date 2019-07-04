@@ -29,7 +29,7 @@ const GovernancePage = () => {
 
   const getOrg = async () => {
     try {
-      withLoader(dispatch(getOrganization(getUosGroupId())));
+      await withLoader(dispatch(getOrganization(getUosGroupId())));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -37,7 +37,7 @@ const GovernancePage = () => {
 
   const getNodes = async (nodeType, page, orderBy) => {
     try {
-      withLoader(dispatch(governancePageActions.getNodes(nodeType, page, orderBy)));
+      await withLoader(dispatch(governancePageActions.getNodes(nodeType, page, orderBy)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -45,7 +45,7 @@ const GovernancePage = () => {
 
   const getSelectedNodes = async (userId) => {
     try {
-      withLoader(dispatch(governancePageActions.getSelectedNodes(userId)));
+      await withLoader(dispatch(governancePageActions.getSelectedNodes(userId)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }

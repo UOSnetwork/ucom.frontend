@@ -27,9 +27,9 @@ const Voting = ({ history, match }) => {
     history.push(urls.getGovernanceUrl());
   };
 
-  const getNodes = (page, orderBy) => {
+  const getNodes = async (page, orderBy) => {
     try {
-      withLoader(dispatch(governancePageActions.votingGetNodes(nodeTypeId, page, orderBy)));
+      await withLoader(dispatch(governancePageActions.votingGetNodes(nodeTypeId, page, orderBy)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
