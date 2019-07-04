@@ -64,7 +64,6 @@ export const getPageData = userIdentity => async (dispatch) => {
 
     dispatch(setData({
       loaded: true,
-
     }));
     throw err;
   }

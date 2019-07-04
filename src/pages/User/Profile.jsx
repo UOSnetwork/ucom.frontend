@@ -5,7 +5,9 @@ import urls from '../../utils/urls';
 import Profile from '../../components/Profile/User';
 
 const ProfilePopup = ({ match, history }) => {
-  const close = () => history.push(urls.getUserUrl(match.params.userId));
+  const close = () => {
+    history.push(urls.getUserUrl(match.params.userId));
+  };
 
   return (
     <Popup

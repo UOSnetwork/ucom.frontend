@@ -1,31 +1,34 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
 import Popup, { Content } from '../../components/Popup';
-import { getOrganizationById } from '../../store/organizations';
-import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
 import Profile from '../../components/Profile/Organization';
+import { selectOrgById, selectUserById } from '../../store/selectors';
 
-const ProfilePopup = ({ history, organization, owner }) => {
-  const onClickClose = () => {
-    history.push(urls.getOrganizationUrl(organization.id));
+const ProfilePopup = ({ match, history }) => {
+  const orgId = Number(match.params.organizationId);
+  const org = useSelector(selectOrgById(orgId));
+  const owner = org ? useSelector(selectUserById(org.userId)) : undefined;
+
+  const close = () => {
+    history.push(urls.getOrganizationUrl(orgId));
   };
 
   return (
     <Popup
       id="profile-popup"
       paddingBottom="70vh"
-      onClickClose={onClickClose}
+      onClickClose={close}
     >
       <Content
         fixWidth
-        onClickClose={onClickClose}
+        onClickClose={close}
       >
         <Profile
           owner={owner}
-          organization={organization}
-          onSuccess={onClickClose}
+          organization={org}
+          onSuccess={close}
         />
       </Content>
     </Popup>
@@ -33,21 +36,14 @@ const ProfilePopup = ({ history, organization, owner }) => {
 };
 
 ProfilePopup.propTypes = {
-  owner: PropTypes.objectOf(PropTypes.any).isRequired,
-  organization: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      organizationId: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 };
 
-export default connect((state, props) => {
-  const organization = getOrganizationById(state.organizations, props.match.params.organizationId);
-  let owner;
-
-  if (organization) {
-    owner = getUserById(state.users, organization.userId);
-  }
-  return { organization, owner };
-})(ProfilePopup);
+export default ProfilePopup;

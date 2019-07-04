@@ -20,8 +20,7 @@ import { EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
 import Trust from '../../components/Trust';
 import { getUserName, userIsOwner } from '../../utils/user';
 import { authShowPopup } from '../../actions/auth';
-import { addErrorNotification } from '../../actions/notifications';
-import { parseResponseError } from '../../utils/errors';
+import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { restoreActiveKey } from '../../utils/keys';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
@@ -39,14 +38,19 @@ const UserPage = (props) => {
 
   const testSrc = 'https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg';
 
+  const getPageData = async () => {
+    try {
+      await withLoader(dispatch(userPageActions.getPageData(userIdentity)));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
   const trustedByOnChangePage = async (page) => {
     try {
       await withLoader(dispatch(userPageActions.getTrustedByPopup(userIdentity, page)));
     } catch (err) {
-      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
-      console.error(err);
-      const msg = parseResponseError(err)[0].message;
-      dispatch(addErrorNotification(msg));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
@@ -54,10 +58,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getIFollowPopup(userIdentity, page)));
     } catch (err) {
-      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
-      console.error(err);
-      const msg = parseResponseError(err)[0].message;
-      dispatch(addErrorNotification(msg));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
@@ -65,10 +66,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getFollowedByPopup(userIdentity, page)));
     } catch (err) {
-      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
-      console.error(err);
-      const msg = parseResponseError(err)[0].message;
-      dispatch(addErrorNotification(msg));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
@@ -76,10 +74,7 @@ const UserPage = (props) => {
     try {
       await withLoader(dispatch(userPageActions.getOrgsPopup(userIdentity, page)));
     } catch (err) {
-      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
-      console.error(err);
-      const msg = parseResponseError(err)[0].message;
-      dispatch(addErrorNotification(msg));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
@@ -99,17 +94,14 @@ const UserPage = (props) => {
         ownerAccountName: owner.accountName,
       })));
     } catch (err) {
-      // TODO: Replace addErrorNotificationFromReponse when governance refactoring is done
-      console.error(err);
-      const msg = parseResponseError(err)[0].message;
-      dispatch(addErrorNotification(msg));
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(userPageActions.reset());
-    withLoader(dispatch(userPageActions.getPageData(userIdentity)));
+    getPageData();
   }, [userIdentity]);
 
   if (state.loaded && !user) {
