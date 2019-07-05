@@ -123,7 +123,7 @@ const UserPage = (props) => {
         className={classNames({
           'layout': true,
           'layout_profile': true,
-          'layout_cover': entityHasCover(user.entityImages),
+          'layout_cover': user && entityHasCover(user.entityImages),
         })}
       >
         <div className="layout__header">

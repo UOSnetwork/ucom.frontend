@@ -206,9 +206,14 @@ export const entityAddCover = (entityImages, data) => {
     throw new Error('Data not valid');
   }
 
-  entityImages.cover = data;
+  const result = {
+    ...entityImages,
+    cover: [
+      pick(data, 'url'),
+    ],
+  };
 
-  return entityImages;
+  return result;
 };
 
 export const entityRemoveCover = (entityImages) => {
@@ -216,14 +221,16 @@ export const entityRemoveCover = (entityImages) => {
     throw new Error('EntityImages not valid');
   }
 
-  delete entityImages.cover;
+  const result = { ...entityImages };
 
-  return entityImages;
+  delete result.cover;
+
+  return result;
 };
 
 export const entityHasCover = (entityImages) => {
   try {
-    const { url } = entityImages.cover;
+    const { url } = entityImages.cover[0];
 
     return isString(url) && validUrl(url);
   } catch (err) {
@@ -233,7 +240,7 @@ export const entityHasCover = (entityImages) => {
 
 export const entityGetCoverUrl = (entityImages) => {
   try {
-    return entityImages.cover.url;
+    return entityImages.cover[0].url;
   } catch (err) {
     return null;
   }

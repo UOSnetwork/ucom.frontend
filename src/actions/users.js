@@ -158,7 +158,13 @@ export const fetchUserFollowsOrganizations = ({
 
 export const updateUser = userData => async (dispatch) => {
   try {
-    const data = await api.patchMyself(snakes(userData));
+    const dataToSave = {
+      ...userData,
+      entityImages: JSON.stringify(userData.entityImages),
+    };
+
+    const data = await api.patchMyself(snakes(dataToSave));
+
     dispatch(fetchUser(data.id));
   } catch (err) {
     console.error(err);

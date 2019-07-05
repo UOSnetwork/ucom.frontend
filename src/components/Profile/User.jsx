@@ -14,7 +14,12 @@ import UserPick from '../UserPick/UserPick';
 import urls from '../../utils/urls';
 import Validate from '../../utils/validate';
 import { updateUser } from '../../actions/users';
-import { addValidationErrorNotification, addSuccessNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
+import {
+  addValidationErrorNotification,
+  addSuccessNotification,
+  addErrorNotificationFromResponse,
+  addErrorNotification,
+} from '../../actions/notifications';
 import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import api from '../../api';
 import withLoader from '../../utils/withLoader';
@@ -80,7 +85,30 @@ const Profile = ({ onSuccess }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
+  const uploadAndSetCover = async (file) => {
+    let result;
+
+    setLoading(true);
+
+    try {
+      result = await withLoader(api.uploadOneImage(file));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+
+    if (result) {
+      try {
+        const entityImages = entityAddCover(data.entityImages, result.files[0]);
+        setDataAndValidate({ ...data, entityImages });
+      } catch (err) {
+        dispatch(addErrorNotification(err.message));
+      }
+    }
+
+    setLoading(false);
+  };
+
+  const getDataFromUser = () => {
     const data = cloneDeep(pick(user, USER_EDITABLE_PROPS));
 
     if (data.usersSources) {
@@ -88,6 +116,10 @@ const Profile = ({ onSuccess }) => {
     }
 
     setData(data);
+  };
+
+  useEffect(() => {
+    getDataFromUser();
   }, [user]);
 
   return (
@@ -105,6 +137,7 @@ const Profile = ({ onSuccess }) => {
               { title: 'About Me', name: 'aboutMe' },
               { title: 'Links', name: 'links' },
             ]}
+            submitDisabled={loading}
           />
         </div>
         <div className={styles.content}>
@@ -122,14 +155,7 @@ const Profile = ({ onSuccess }) => {
                 <DropzoneWrapper
                   className={styles.cover}
                   accept="image/jpeg, image/png"
-                  onChange={async (file) => {
-                    try {
-                      const data = await api.uploadOneImage(file);
-                      console.log(data);
-                    } catch (err) {
-                      dispatch(addErrorNotificationFromResponse(err));
-                    }
-                  }}
+                  onChange={uploadAndSetCover}
                 >
                   {entityHasCover(data.entityImages) ? (
                     <img src={entityGetCoverUrl(data.entityImages)} alt="" />

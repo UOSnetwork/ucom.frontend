@@ -21,7 +21,8 @@ const DropzoneWrapper = ({
         }
 
         try {
-          const compressedFiles = await Promise.all(files.map(file => compressUploadedImage(file)));
+          const compressedFiles = await Promise.all(files.map(compressUploadedImage));
+
           onChange(multiple ? compressedFiles : compressedFiles[0]);
         } catch (err) {
           dispatch(addErrorNotification(err.message));
@@ -34,7 +35,6 @@ const DropzoneWrapper = ({
 };
 
 DropzoneWrapper.propTypes = {
-  addErrorNotification: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   children: PropTypes.node,
   multiple: PropTypes.bool,

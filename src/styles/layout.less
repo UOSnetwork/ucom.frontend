@@ -54,6 +54,10 @@
     grid-template-rows: auto 1fr auto;
   }
 
+  @media (max-width: 767px) {
+    margin-top: 20px;
+  }
+
   .layout__header {
     @media (min-width: 1024px) {
       grid-column-start: 1;
@@ -86,5 +90,7 @@
 }
 
 .layout_profile.layout_cover {
-  padding-top: 355px;
+  @media (min-width: 768px) {
+    padding-top: 355px;
+  }
 }

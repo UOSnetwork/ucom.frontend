@@ -7,6 +7,12 @@
   background: rgba(0,0,0,0.05);
 }
 
+@media (max-width: 767px) {
+  .cover {
+    height: 300px;
+  }
+}
+
 .cover img {
   display: block;
   width: 100%;

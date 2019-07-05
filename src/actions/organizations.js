@@ -21,7 +21,13 @@ export const getOrganization = id => async (dispatch) => {
 
 export const createOrganization = data => async (dispatch) => {
   try {
-    const result = await api.createOrganization(data);
+    const dataToSave = {
+      ...data,
+      entityImages: JSON.stringify(data.entityImages),
+    };
+
+    const result = await api.createOrganization(dataToSave);
+
     dispatch(addOrganizations([{
       ...result,
       ...data,
@@ -35,7 +41,13 @@ export const createOrganization = data => async (dispatch) => {
 
 export const updateOrganization = data => async (dispatch) => {
   try {
-    const result = await api.updateOrganization(data);
+    const dataToSave = {
+      ...data,
+      entityImages: JSON.stringify(data.entityImages),
+    };
+
+    const result = await api.updateOrganization(dataToSave);
+
     dispatch(getOrganization(data.id));
     return result;
   } catch (err) {

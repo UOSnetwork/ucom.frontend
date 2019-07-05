@@ -21,9 +21,15 @@ import { getUsersTeamStatusById } from '../../utils/organization';
 import api from '../../api';
 import { validUrl, extractSitename } from '../../utils/url';
 import withLoader from '../../utils/withLoader';
-import { addSuccessNotification, addValidationErrorNotification } from '../../actions/notifications';
+import {
+  addSuccessNotification,
+  addValidationErrorNotification,
+  addErrorNotification,
+  addErrorNotificationFromResponse,
+} from '../../actions/notifications';
 import { updateOrganization, createOrganization } from '../../actions/organizations';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
+import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import EmbedService from '../../utils/embedService';
 import styles from './styles.css';
 
@@ -41,6 +47,7 @@ const defaultOrg = {
   usersTeam: [],
   partnershipSources: [],
   communitySources: [],
+  entityImages: {},
 };
 
 const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
@@ -99,7 +106,30 @@ const OrganizationProfile = ({
     setLoading(false);
   };
 
-  useEffect(() => {
+  const uploadAndSetCover = async (file) => {
+    let result;
+
+    setLoading(true);
+
+    try {
+      result = await withLoader(api.uploadOneImage(file));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+
+    if (result) {
+      try {
+        const entityImages = entityAddCover(data.entityImages, result.files[0]);
+        setDataAndValidate({ ...data, entityImages });
+      } catch (err) {
+        dispatch(addErrorNotification(err.message));
+      }
+    }
+
+    setLoading(false);
+  };
+
+  const getDataFromOrg = () => {
     const data = {
       ...defaultOrg,
       ...cloneDeep(pick(organization, ORG_EDITABLE_PROPS)),
@@ -110,6 +140,10 @@ const OrganizationProfile = ({
     }
 
     setData(data);
+  };
+
+  useEffect(() => {
+    getDataFromOrg();
   }, [organization]);
 
   return (
@@ -132,6 +166,7 @@ const OrganizationProfile = ({
               { title: 'Links', name: 'links' },
               { title: 'Location', name: 'cocation' },
             ]}
+            submitDisabled={loading}
           />
         </div>
         <div className={styles.content}>
@@ -149,9 +184,10 @@ const OrganizationProfile = ({
                 <DropzoneWrapper
                   className={styles.cover}
                   accept="image/jpeg, image/png"
+                  onChange={uploadAndSetCover}
                 >
-                  {false ? (
-                    <img src="https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg" alt="" />
+                  {entityHasCover(data.entityImages) ? (
+                    <img src={entityGetCoverUrl(data.entityImages)} alt="" />
                   ) : (
                     <IconCover />
                   )}

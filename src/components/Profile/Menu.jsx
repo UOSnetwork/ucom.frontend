@@ -4,7 +4,7 @@ import profileStyles from './styles.css';
 import VerticalMenu from '../VerticalMenu';
 import Button from '../Button/index';
 
-const Sidebar = ({ sections, create }) => (
+const Sidebar = ({ sections, create, submitDisabled }) => (
   <Fragment>
     <div className={profileStyles.menu}>
       <VerticalMenu
@@ -23,6 +23,7 @@ const Sidebar = ({ sections, create }) => (
       strech
       red={create}
       type="submit"
+      disabled={submitDisabled}
     >
       {create ? 'Create' : 'Save Changes'}
     </Button>
@@ -35,10 +36,12 @@ Sidebar.propTypes = {
     name: PropTypes.string.isRequired,
   })).isRequired,
   create: PropTypes.bool,
+  submitDisabled: PropTypes.bool,
 };
 
 Sidebar.defaultProps = {
   create: false,
+  submitDisabled: false,
 };
 
 export default Sidebar;
