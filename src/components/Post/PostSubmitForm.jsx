@@ -51,7 +51,7 @@ const PostSubmitForm = (props) => {
               setLoadingCover(true);
 
               try {
-                const data = await api.uploadPostImage(await compressUploadedImage(file));
+                const data = await api.uploadOneImage(await compressUploadedImage(file));
                 const { url } = data.files[0];
                 props.setDataToStoreToLS({ entityImages: changeCoverImageUrl(entityImages, url) });
               } catch (e) {

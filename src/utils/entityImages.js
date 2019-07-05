@@ -1,4 +1,7 @@
+// TODO: Refactoring (functions to class)
+
 import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find, cloneDeep } from 'lodash';
+import { validUrl } from './url';
 
 export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
 export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
@@ -192,4 +195,46 @@ export const filterEmbedsByUrls = (entityImages, urls) => {
     .filter(embed => urls.includes(embed.url));
 
   return newEntityImages;
+};
+
+export const entityAddCover = (entityImages, data) => {
+  if (!isObject(entityImages)) {
+    throw new Error('EntityImages not valid');
+  }
+
+  if (!isObject(data) || !isString(data.url) || !validUrl(data.url)) {
+    throw new Error('Data not valid');
+  }
+
+  entityImages.cover = data;
+
+  return entityImages;
+};
+
+export const entityRemoveCover = (entityImages) => {
+  if (!isObject(entityImages)) {
+    throw new Error('EntityImages not valid');
+  }
+
+  delete entityImages.cover;
+
+  return entityImages;
+};
+
+export const entityHasCover = (entityImages) => {
+  try {
+    const { url } = entityImages.cover;
+
+    return isString(url) && validUrl(url);
+  } catch (err) {
+    return false;
+  }
+};
+
+export const entityGetCoverUrl = (entityImages) => {
+  try {
+    return entityImages.cover.url;
+  } catch (err) {
+    return null;
+  }
 };

@@ -26,6 +26,7 @@ import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
+import { entityHasCover, entityGetCoverUrl } from '../../utils/entityImages';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
 
@@ -35,8 +36,6 @@ const UserPage = (props) => {
   const owner = useSelector(selectOwner);
   const state = useSelector(state => state.userPage);
   const dispatch = useDispatch();
-
-  const testSrc = 'https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg';
 
   const getPageData = async () => {
     try {
@@ -115,14 +114,16 @@ const UserPage = (props) => {
         <Route path={urls.getPostUrl({ id: ':postId', entityIdFor: ':userId' })} component={PostPopup} />
       </Switch>
 
-      <Cover src={testSrc} />
+      {user && entityHasCover(user.entityImages) &&
+        <Cover src={entityGetCoverUrl(user.entityImages)} />
+      }
 
       {/* TODO: Refactoring Layout/Content when governance refactoring is done */}
       <div
         className={classNames({
           'layout': true,
           'layout_profile': true,
-          'layout_cover': Boolean(testSrc),
+          'layout_cover': entityHasCover(user.entityImages),
         })}
       >
         <div className="layout__header">

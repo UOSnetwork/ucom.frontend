@@ -235,7 +235,7 @@ export default class MediumUpload extends MediumEditor.Extension {
     }
 
     try {
-      const data = await api.uploadPostImage(compressedImage);
+      const data = await api.uploadOneImage(compressedImage);
       img.src = data.files[0].url;
       this.base.checkContentChanged(this.base.origElements);
     } catch (e) {

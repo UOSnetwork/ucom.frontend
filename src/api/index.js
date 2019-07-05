@@ -515,7 +515,7 @@ class Api {
     return humps(response.data);
   }
 
-  async uploadPostImage(file) {
+  async uploadOneImage(file) {
     const response = await this.uploaderActions.post('/api/v1/images/one-image', { one_image: file });
 
     return humps(response.data);

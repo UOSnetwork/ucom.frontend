@@ -1,32 +1,37 @@
+import { isFunction } from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { addErrorNotification } from '../actions/notifications';
 import { compressUploadedImage } from '../utils/upload';
 
 const DropzoneWrapper = ({
-  addErrorNotification, children, onChange, multiple, ...props
-}) => (
-  <Dropzone
-    {...props}
-    multiple={multiple}
-    onDropAccepted={async (files) => {
-      if (!onChange) {
-        return;
-      }
+  children, onChange, multiple, ...props
+}) => {
+  const dispatch = useDispatch();
 
-      try {
-        const compressedFiles = await Promise.all(files.map(file => compressUploadedImage(file)));
-        onChange(multiple ? compressedFiles : compressedFiles[0]);
-      } catch (err) {
-        addErrorNotification(err.message);
-      }
-    }}
-  >
-    {children}
-  </Dropzone>
-);
+  return (
+    <Dropzone
+      {...props}
+      multiple={multiple}
+      onDropAccepted={async (files) => {
+        if (!isFunction(onChange)) {
+          return;
+        }
+
+        try {
+          const compressedFiles = await Promise.all(files.map(file => compressUploadedImage(file)));
+          onChange(multiple ? compressedFiles : compressedFiles[0]);
+        } catch (err) {
+          dispatch(addErrorNotification(err.message));
+        }
+      }}
+    >
+      {children}
+    </Dropzone>
+  );
+};
 
 DropzoneWrapper.propTypes = {
   addErrorNotification: PropTypes.func.isRequired,
@@ -40,6 +45,4 @@ DropzoneWrapper.defaultProps = {
   children: undefined,
 };
 
-export default connect(null, {
-  addErrorNotification,
-})(DropzoneWrapper);
+export default DropzoneWrapper;

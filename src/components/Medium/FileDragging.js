@@ -97,7 +97,7 @@ export default MediumEditor.extensions.fileDragging.extend({
 
     try {
       const compressedFile = await compressUploadedImage(file);
-      const data = await api.uploadPostImage(compressedFile);
+      const data = await api.uploadOneImage(compressedFile);
       const imgUrl = data.files[0].url;
       const imgEl = this.document.getElementById(imgId);
       if (imgEl) {

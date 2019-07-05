@@ -93,7 +93,7 @@ const Form = (props) => {
   const onMultipleImages = async (files) => {
     const savedEntityImages = entityImages;
     setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
-    const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadPostImage(url)));
+    const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadOneImage(url)));
     const urls = data.map(item => item.files[0]);
     setEntityImages(addGalleryImages(savedEntityImages, urls));
   };

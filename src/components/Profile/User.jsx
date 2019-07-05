@@ -14,7 +14,9 @@ import UserPick from '../UserPick/UserPick';
 import urls from '../../utils/urls';
 import Validate from '../../utils/validate';
 import { updateUser } from '../../actions/users';
-import { addValidationErrorNotification, addSuccessNotification } from '../../actions/notifications';
+import { addValidationErrorNotification, addSuccessNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
+import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
+import api from '../../api';
 import withLoader from '../../utils/withLoader';
 import * as selectors from '../../store/selectors';
 import Menu from './Menu';
@@ -26,6 +28,7 @@ const USER_EDITABLE_PROPS = [
   'about',
   'usersSources',
   'personalWebsiteUrl',
+  'entityImages',
 ];
 
 const Profile = ({ onSuccess }) => {
@@ -119,9 +122,17 @@ const Profile = ({ onSuccess }) => {
                 <DropzoneWrapper
                   className={styles.cover}
                   accept="image/jpeg, image/png"
+                  onChange={async (file) => {
+                    try {
+                      const data = await api.uploadOneImage(file);
+                      console.log(data);
+                    } catch (err) {
+                      dispatch(addErrorNotificationFromResponse(err));
+                    }
+                  }}
                 >
-                  {false ? (
-                    <img src="https://cdn-images-1.medium.com/max/2600/1*Udttv_M-zfA2gmDrCLkMpA.jpeg" alt="" />
+                  {entityHasCover(data.entityImages) ? (
+                    <img src={entityGetCoverUrl(data.entityImages)} alt="" />
                   ) : (
                     <IconCover />
                   )}
