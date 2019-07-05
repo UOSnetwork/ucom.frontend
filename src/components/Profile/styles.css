@@ -6,7 +6,7 @@
   grid-template-rows: max-content;
   grid-column-gap: 100px;
   grid-row-gap: 40px;
-  align-items: baseline;
+  align-items: flex-start;
   max-width: 1080px;
   margin: 0 auto;
   padding: 86px 40px 59px;
@@ -18,7 +18,8 @@
   grid-column-start: 1;
   grid-column-end: 2;
   position: sticky;
-  top: 86px;
+  top: 53px;
+  padding-top: 33px;
 }
 
 @media (max-width: 1023px) {
