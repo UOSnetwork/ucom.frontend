@@ -42,3 +42,12 @@ export const NODES_PER_PAGE = 60;
 export const BP_STATUS_ACTIVE_ID = 1;
 export const BP_STATUS_BACKUP_ID = 2;
 export const PRODUCERS_LIMIT = 30;
+
+export const USER_EDITABLE_PROPS = [
+  'avatarFilename',
+  'firstName',
+  'about',
+  'usersSources',
+  'personalWebsiteUrl',
+  'entityImages',
+];

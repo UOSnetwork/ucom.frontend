@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -13,6 +14,7 @@ import { FollowersWrapper } from '../../Followers';
 import ButtonEdit from '../../ButtonEdit';
 import Menu from '../../EntryHeader/Menu';
 import { selectUserById, selectOwner } from '../../../store/selectors';
+import { USER_EDITABLE_PROPS } from '../../../utils/constants';
 
 const UserHead = (props) => {
   const user = useSelector(selectUserById(props.userId));
@@ -44,6 +46,7 @@ const UserHead = (props) => {
                 avatarFilename: file.preview,
               }]));
               dispatch(updateUser({
+                ...pick(user, USER_EDITABLE_PROPS),
                 avatarFilename: file,
               }));
             }}

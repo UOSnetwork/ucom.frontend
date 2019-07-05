@@ -25,16 +25,8 @@ import api from '../../api';
 import withLoader from '../../utils/withLoader';
 import * as selectors from '../../store/selectors';
 import Menu from './Menu';
+import { USER_EDITABLE_PROPS } from '../../utils/constants';
 import styles from './styles.css';
-
-const USER_EDITABLE_PROPS = [
-  'avatarFilename',
-  'firstName',
-  'about',
-  'usersSources',
-  'personalWebsiteUrl',
-  'entityImages',
-];
 
 const Profile = ({ onSuccess }) => {
   const user = useSelector(selectors.selectOwner);
