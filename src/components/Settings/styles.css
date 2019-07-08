@@ -13,6 +13,21 @@
   line-height: 28px;
 }
 
+.content {
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.footer {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+}
+
+.sidebar {
+  padding-top: 34px;
+}
+
 .settings p {
   margin: 0 0 35px;
 }
@@ -36,17 +51,6 @@ h4.title {
   line-height: 24px;
   font-size: 18px;
   font-weight: bold;
-}
-
-.content {
-  grid-row-start: 1;
-  grid-row-end: 3;
-}
-
-.footer {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 2;
 }
 
 .section {
@@ -174,5 +178,11 @@ h4.title {
 
   .action.withLabel {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width:  1023px) {
+  .sidebar {
+    display: none;
   }
 }

@@ -57,7 +57,6 @@ const Settings = (props) => {
   }, []);
 
   return (
-    // TODO: Use Grid/styles.css for profile grid
     <Fragment>
       <Popup
         id="settings-popup"

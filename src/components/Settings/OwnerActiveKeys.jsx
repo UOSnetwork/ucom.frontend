@@ -35,7 +35,7 @@ const OwnerActiveKeys = () => {
       <p>Here you can generate your keys from Brainkey.</p>
 
       {keys.ownerKey && keys.ownerPublicKey && keys.activeKey && keys.activePublicKey ? (
-        <Fragment>
+        <div className="ym-hide-conten">
           <h4 className={styles.title}>Active</h4>
           <p>You need your Active Key to sign financial transactions</p>
           <div className={styles.copy}>
@@ -64,7 +64,7 @@ const OwnerActiveKeys = () => {
               value={keys.ownerPublicKey}
             />
           </div>
-        </Fragment>
+        </div>
       ) : (
         <Fragment>
           {formActive ? (
@@ -104,6 +104,7 @@ const OwnerActiveKeys = () => {
               <TextInput
                 autoFocus
                 touched
+                ymDisableKeys
                 placeholder="Brainkey"
                 value={brainkey}
                 onChange={(value) => {

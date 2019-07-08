@@ -28,7 +28,7 @@ const KeyForm = (props) => {
       <div className={styles.field}>
         <input
           autoFocus
-          className={styles.input}
+          className={`${styles.input} ym-disable-keys`}
           placeholder={props.placeholder}
           value={value}
           onChange={(e) => {

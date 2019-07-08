@@ -37,7 +37,7 @@ const BrainkeyForm = (props) => {
       <div className={styles.field}>
         <input
           autoFocus
-          className={styles.input}
+          className={`${styles.input} ym-disable-keys`}
           placeholder="Enter your 12-word Brainkey"
           value={brainkey}
           onChange={(e) => {

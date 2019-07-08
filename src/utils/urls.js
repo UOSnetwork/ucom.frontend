@@ -166,8 +166,8 @@ const urls = {
     return urls.getOrganizationUrl(source.entityId);
   },
 
-  getSettingsUrl() {
-    return '#settings';
+  getSettingsUrl(prefix = '') {
+    return `${prefix}#settings`;
   },
 };
 

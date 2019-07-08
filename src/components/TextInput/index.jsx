@@ -5,7 +5,7 @@ import IconError from '../Icons/InputError';
 import styles from './styles.css';
 
 const TextInput = ({
-  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix,
+  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix, ymDisableKeys,
 }) => {
   const [dirty, setDirty] = useState(false);
 
@@ -39,6 +39,7 @@ const TextInput = ({
             className={classNames({
               [styles.input]: true,
               [styles.error]: error && dirty,
+              'ym-disable-keys': ymDisableKeys,
             })}
             onChange={(e) => {
               setDirty(true);
@@ -71,6 +72,8 @@ TextInput.propTypes = {
   disabled: PropTypes.bool,
   placeholder: PropTypes.string,
   error: PropTypes.string,
+  prefix: PropTypes.string,
+  ymDisableKeys: PropTypes.bool,
 };
 
 TextInput.defaultProps = {
@@ -82,6 +85,8 @@ TextInput.defaultProps = {
   disabled: false,
   placeholder: undefined,
   error: undefined,
+  prefix: '',
+  ymDisableKeys: false,
 };
 
 export default TextInput;
