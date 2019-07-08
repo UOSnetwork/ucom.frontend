@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 import React, { useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { LayoutBase, LayoutContent } from '../../components/Layout';
+import { LayoutBase, Content } from '../../components/Layout';
 import UserPick from '../../components/UserPick/UserPick';
 import Footer from '../../components/Footer';
 import {
@@ -78,7 +78,7 @@ const GovernancePage = () => {
       </Switch>
 
       <LayoutBase>
-        <LayoutContent>
+        <Content>
           <div className={styles.header}>
             <div className={styles.info}>
               <h1 className={styles.title}>Governance</h1>
@@ -181,7 +181,7 @@ const GovernancePage = () => {
           />
 
           <Footer />
-        </LayoutContent>
+        </Content>
       </LayoutBase>
     </Fragment>
   );

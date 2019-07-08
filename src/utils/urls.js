@@ -147,7 +147,7 @@ const urls = {
   },
 
   getUsersPagingUrl(params) {
-    return `/users?page=${params.page}&sortBy=${params.sortBy}&perPage=${params.perPage}&userName=${params.userName}`;
+    return `/users?page=${params.page}&orderBy=${params.orderBy}&perPage=${params.perPage}&userName=${params.userName}`;
   },
 
   getSourceUrl(source) {

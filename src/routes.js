@@ -5,7 +5,7 @@ import PostPage, { PostEosPage, getPostPageData, getPostEosPageData } from './pa
 import OverviewPage, { getPageData } from './pages/Overview';
 import Offer, { getPostOfferData } from './pages/Offer';
 import Offer2, { getPostOfferData_2 } from './pages/Offer2';
-import UsersPage from './pages/Users';
+import UsersPage from './pages/Users/index';
 import AboutPage from './pages/About';
 import OrganizationsPage from './pages/Organizations';
 import OrganizationPage, { getOrganizationPageData } from './pages/Organization';

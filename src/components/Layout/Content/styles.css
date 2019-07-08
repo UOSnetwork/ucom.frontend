@@ -1,4 +1,4 @@
-.layoutContent {
+.content {
   box-sizing: border-box;
   width: 100%;
   max-width: 1280px;
@@ -7,7 +7,7 @@
 }
 
 @media (max-width: 767px) {
-  .layoutContent {
+  .content {
     padding: 0 20px;
   }
 }

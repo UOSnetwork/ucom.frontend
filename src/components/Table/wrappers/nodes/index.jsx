@@ -2,18 +2,19 @@ import { endsWith } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Table from './index';
-import Badge from '../Badge';
-import IconDone from '../Icons/Done';
-import UserPickWithIcon from '../UserPickWithIcon';
-import Checkbox from '../Checkbox';
-import { selectNodesByIds, selectOwner } from '../../store/selectors';
-import { formatScaledImportance } from '../../utils/rate';
-import { getBpStatusById } from '../../utils/nodes';
-import { BP_STATUS_ACTIVE_ID, PRODUCERS_LIMIT } from '../../utils/constants';
-import urls from '../../utils/urls';
+import Table from '../../index';
+import Badge from '../../../Badge';
+import IconDone from '../../../Icons/Done';
+import UserPickWithIcon from '../../../UserPickWithIcon';
+import Checkbox from '../../../Checkbox';
+import { selectNodesByIds, selectOwner } from '../../../../store/selectors';
+import { formatScaledImportance } from '../../../../utils/rate';
+import { getBpStatusById } from '../../../../utils/nodes';
+import { BP_STATUS_ACTIVE_ID, PRODUCERS_LIMIT } from '../../../../utils/constants';
+import urls from '../../../../utils/urls';
+import styles from './styles.css';
 
-export const TableNodes = ({
+const TableNodes = ({
   nodesIds, selectedNodesIds, orderBy, disableSorting, onSelect, ...props
 }) => {
   const nodes = useSelector(selectNodesByIds(nodesIds));
@@ -26,13 +27,16 @@ export const TableNodes = ({
       cols={[
         ...(onSelect ? [{
           width: '24px',
+          minWidth: '24px',
         }] : hasSelected ? [{
           width: '32px',
+          minWidth: '32px',
         }] : []),
 
         ...[{
           title: 'Organization',
           width: 'auto',
+          minWidth: '150px',
           name: 'title',
           sortable: !disableSorting,
           sorted: endsWith(orderBy, 'title'),
@@ -41,6 +45,7 @@ export const TableNodes = ({
           title: 'Votes',
           right: true,
           width: '60px',
+          minWidth: '60px',
           name: 'votes_count',
           sortable: !disableSorting,
           sorted: endsWith(orderBy, 'votes_count'),
@@ -50,6 +55,7 @@ export const TableNodes = ({
           hideOnSmall: true,
           right: true,
           width: '120px',
+          minWidth: '120px',
           name: 'votes_amount',
           sortable: !disableSorting,
           sorted: endsWith(orderBy, 'votes_amount'),
@@ -58,6 +64,7 @@ export const TableNodes = ({
           title: 'State',
           right: true,
           width: '70px',
+          minWidth: '70px',
           name: 'bp_status',
           sortable: !disableSorting,
           sorted: endsWith(orderBy, 'bp_status'),
@@ -86,7 +93,7 @@ export const TableNodes = ({
 
         ...[
           <nobr><strong>{node.title}</strong></nobr>,
-          <nobr>{node.votesCount}<br /><small>{node.votesPercentage}%</small></nobr>,
+          <nobr>{node.votesCount}<br /><small className={styles.percentage}>{node.votesPercentage}%</small></nobr>,
           <nobr>{formatScaledImportance(node.scaledImportanceAmount, false)}</nobr>,
           <Badge
             strech
@@ -115,3 +122,5 @@ TableNodes.defaultProps = {
   disableSorting: false,
   orderBy: 'bp_status',
 };
+
+export default TableNodes;

@@ -1,6 +1,9 @@
+.wrapper {
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
 }
 
@@ -28,6 +31,7 @@
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 0;
 }
 
 .cell.right {
