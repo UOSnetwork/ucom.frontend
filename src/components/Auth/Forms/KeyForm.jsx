@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import styles from '../styles.css';
 import Button from '../../Button/index';
 import IconInputError from '../../Icons/InputError';
@@ -83,4 +83,4 @@ KeyForm.defaultProps = {
   submitText: 'Enter',
 };
 
-export default memo(KeyForm);
+export default KeyForm;

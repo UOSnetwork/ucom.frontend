@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash';
+import { camelCase, isArray } from 'lodash';
 import { ERROR_SERVER } from './constants';
 
 export const getError = (errors, fieldName) => {
@@ -45,6 +45,10 @@ export const parseErrors = (error) => {
 
 // TODO: Make one functions for all server errors and remove parseErrors
 export const parseResponseError = (error) => {
+  if (error.response && error.response.data && isArray(error.response.data.errors)) {
+    return error.response.data.errors;
+  }
+
   try {
     const { message } = error;
     const data = JSON.parse(message);
