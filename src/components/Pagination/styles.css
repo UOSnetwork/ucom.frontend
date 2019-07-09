@@ -46,6 +46,13 @@
   }
 }
 
+:global(.rc-pagination-jump-prev a:after),
+:global(.rc-pagination-jump-next a:after) {
+  content: '\2022\2022\2022';
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
 .showMore {
   margin: 46px 0 0;
   text-align: center;

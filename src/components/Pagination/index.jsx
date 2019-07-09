@@ -57,9 +57,9 @@ PaginationWrapper.propTypes = {
 
 PaginationWrapper.defaultProps = {
   hasMore: false,
-  onClickShowMore: undefined,
   page: 1,
   perPage: LIST_PER_PAGE,
+  onClickShowMore: undefined,
   onChange: undefined,
   totalAmount: 0,
 };
