@@ -89,47 +89,12 @@ h4 {
   margin: 0;
 }
 
-.only-desktop {
-  @media (max-width: 1023px) {
-    display: none !important;
-  }
-}
-
-.else-desktop {
+.else-desktop { // TODO: Remove this
   @media (min-width: 1024px) {
     display: none !important;
   }
 }
 
-.only-pad {
-  @media (max-width: 767px) {
-    display: none !important;
-  }
-}
-
-.only-phone {
-  @media (max-width: 440px) {
-    display: none !important;
-  }
-}
-
-
-.else-pad {
-  @media (min-width: 768px) {
-    display: none;
-  }
-}
-
 .mention_link {
   color: #d8352f;
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
 }

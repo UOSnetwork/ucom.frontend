@@ -81,7 +81,6 @@
 
 
 .image {
-  composes: noselect from global;
   position: absolute;
   top: 0;
   left: 0;
@@ -91,6 +90,7 @@
   display: block;
   max-width: 100%;
   max-height: 100%;
+  user-select: none;
 }
 
 .pointer {
@@ -142,13 +142,13 @@
 }
 
 .thumbWrapper {
-  composes: noselect from global;
   position: relative;
   z-index: 0;
   width: 64px;
   height: 64px;
   cursor: pointer;
   transition: all 0.2s linear;
+  user-select: none;
 }
 
 .thumbWrapper:after {
