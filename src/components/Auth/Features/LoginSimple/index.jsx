@@ -10,6 +10,7 @@ import Validate from '../../../../utils/validate';
 import { USER_ACCOUNT_LENGTH } from '../../../../utils/constants';
 import withLoader from '../../../../utils/withLoader';
 import urls from '../../../../utils/urls';
+import { removeMultipleSpaces } from '../../../../utils/text';
 import styles from './styles.css';
 
 const LoginSimple = ({ location }) => {
@@ -100,7 +101,8 @@ const LoginSimple = ({ location }) => {
                 submited={submited}
                 value={data.brainkey}
                 error={errors && errors.brainkey}
-                onChange={(brainkey) => {
+                onChange={(value) => {
+                  const brainkey = removeMultipleSpaces(value);
                   setDataAndValidate({ ...data, brainkey });
                 }}
               />
