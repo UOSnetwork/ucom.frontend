@@ -9,6 +9,9 @@ const Brainkey = props => (
       <BrainkeyForm
         title={props.title}
         description={props.description}
+        error={props.error}
+        loading={props.loading}
+        onChange={props.onChange}
         onSubmit={props.onSubmit}
       />
     </div>
@@ -25,15 +28,13 @@ const Brainkey = props => (
 );
 
 Brainkey.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: BrainkeyForm.propTypes.description,
+  ...BrainkeyForm.propTypes,
   backText: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   onClickBack: PropTypes.func.isRequired,
 };
 
 Brainkey.defaultProps = {
-  description: BrainkeyForm.defaultProps.description,
+  ...BrainkeyForm.defaultProps,
 };
 
 export default Brainkey;

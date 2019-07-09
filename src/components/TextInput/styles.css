@@ -32,8 +32,11 @@
 
 .input.error {
   border-color: #d8352f;
-  padding-right: 48px;
   text-align: left;
+}
+
+.input.withIcon {
+  padding-right: 48px;
 }
 
 .icon {
@@ -45,6 +48,10 @@
   justify-content: center;
   height: 48px;
   width: 48px;
+}
+
+.icon.active {
+  cursor: pointer;
 }
 
 .errorMessage {

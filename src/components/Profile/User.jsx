@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { pick, cloneDeep } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
@@ -131,6 +132,10 @@ const Profile = ({ onSuccess }) => {
             ]}
             submitDisabled={loading}
           />
+        </div>
+        <div className={styles.footer}>
+          Go to&nbsp;
+          <Link className="link red" to={urls.getSettingsUrl(urls.getUserUrl(user.id))}>Settings</Link>
         </div>
         <div className={styles.content}>
           <h2 className={styles.title}>Your Profile</h2>

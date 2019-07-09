@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
+import React from 'react';
 import profileStyles from './styles.css';
 import VerticalMenu from '../VerticalMenu';
 import Button from '../Button/index';
 
 const Sidebar = ({ sections, create, submitDisabled }) => (
-  <Fragment>
+  <div className={profileStyles.menuWrapper}>
     <div className={profileStyles.menu}>
       <VerticalMenu
         sections={sections}
@@ -27,7 +27,7 @@ const Sidebar = ({ sections, create, submitDisabled }) => (
     >
       {create ? 'Create' : 'Save Changes'}
     </Button>
-  </Fragment>
+  </div>
 );
 
 Sidebar.propTypes = {

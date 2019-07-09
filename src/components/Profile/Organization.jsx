@@ -155,7 +155,7 @@ const OrganizationProfile = ({
       }}
     >
       <div className={styles.grid}>
-        <div className={styles.sidebar}>
+        <div className={`${styles.sidebar} ${styles.organization}`}>
           <Menu
             create={!data.id}
             sections={[

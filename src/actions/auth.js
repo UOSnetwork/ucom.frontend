@@ -4,6 +4,7 @@ import { parseErrors } from '../utils/errors';
 import { saveToken } from '../utils/token';
 import { saveActiveKey, getActivePrivateKey } from '../utils/keys';
 import withLoader from '../utils/withLoader';
+import { selectOwner } from '../store/selectors';
 
 export const authReset = () => ({ type: 'AUTH_RESET' });
 export const authSetData = payload => ({ type: 'AUTH_SET_DATA', payload });
@@ -43,4 +44,20 @@ export const authLogin = () => async (dispatch, getState) => {
       }));
     }
   }, 0);
+};
+
+export const checkBrainkey = brainkey => async (dispatch, getState) => {
+  const state = getState();
+  const owner = selectOwner(state);
+  const { accountName } = owner;
+
+  try {
+    const data = await api.login(snakes({ brainkey, accountName }));
+    saveToken(data.token);
+    saveActiveKey(getActivePrivateKey(brainkey));
+    return true;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };

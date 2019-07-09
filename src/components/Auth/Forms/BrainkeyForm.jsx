@@ -37,7 +37,7 @@ const BrainkeyForm = (props) => {
       <div className={styles.field}>
         <input
           autoFocus
-          className={styles.input}
+          className={`${styles.input} ym-disable-keys`}
           placeholder="Enter your 12-word Brainkey"
           value={brainkey}
           onChange={(e) => {
@@ -53,10 +53,10 @@ const BrainkeyForm = (props) => {
             }
           }}
         />
-        {formError &&
+        {(formError || props.error) &&
           <div className={styles.error}>
             <IconInputError />
-            <span className={styles.text}>{formError}</span>
+            <span className={styles.text}>{formError || props.error}</span>
           </div>
         }
       </div>
@@ -67,7 +67,7 @@ const BrainkeyForm = (props) => {
           cap
           strech
           type="submit"
-          disabled={!!formError}
+          disabled={props.loading || Boolean(props.error) || Boolean(formError)}
         >
           Proceed
         </Button>
@@ -79,12 +79,16 @@ const BrainkeyForm = (props) => {
 BrainkeyForm.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
+  error: PropTypes.string,
+  loading: PropTypes.bool,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
 };
 
 BrainkeyForm.defaultProps = {
   description: undefined,
+  error: '',
+  loading: false,
   onChange: undefined,
   onSubmit: undefined,
 };

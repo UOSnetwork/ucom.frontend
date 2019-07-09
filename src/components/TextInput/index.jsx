@@ -5,7 +5,7 @@ import IconError from '../Icons/InputError';
 import styles from './styles.css';
 
 const TextInput = ({
-  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix,
+  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix, ymDisableKeys, icon, onClickIcon,
 }) => {
   const [dirty, setDirty] = useState(false);
 
@@ -39,17 +39,31 @@ const TextInput = ({
             className={classNames({
               [styles.input]: true,
               [styles.error]: error && dirty,
+              [styles.withIcon]: (error && dirty) || Boolean(icon),
+              'ym-disable-keys': ymDisableKeys,
             })}
             onChange={(e) => {
               setDirty(true);
               onChange(e.target.value);
             }}
           />
-          {error && dirty &&
+
+          {error && dirty ? (
             <span className={styles.icon}>
               <IconError />
             </span>
-          }
+          ) : (icon ? (
+            <span
+              role="presentation"
+              className={classNames({
+                [styles.icon]: true,
+                [styles.active]: onClickIcon,
+              })}
+              onClick={onClickIcon}
+            >
+              {icon}
+            </span>
+          ) : null)}
         </div>
         {error && dirty &&
           <div className={styles.errorMessage}>
@@ -71,6 +85,10 @@ TextInput.propTypes = {
   disabled: PropTypes.bool,
   placeholder: PropTypes.string,
   error: PropTypes.string,
+  prefix: PropTypes.string,
+  ymDisableKeys: PropTypes.bool,
+  icon: PropTypes.node,
+  onClickIcon: PropTypes.func,
 };
 
 TextInput.defaultProps = {
@@ -82,6 +100,10 @@ TextInput.defaultProps = {
   disabled: false,
   placeholder: undefined,
   error: undefined,
+  prefix: '',
+  ymDisableKeys: false,
+  icon: undefined,
+  onClickIcon: undefined,
 };
 
 export default TextInput;

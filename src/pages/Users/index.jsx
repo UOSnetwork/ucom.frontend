@@ -1,6 +1,6 @@
-import { endsWith, clamp } from 'lodash';
+import { endsWith, clamp, debounce } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import TextInput from '../../components/TextInput';
@@ -10,6 +10,8 @@ import withLoader from '../../utils/withLoader';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import Pagination from '../../components/Pagination';
 import Footer from '../../components/Footer';
+import IconSearch from '../../components/Icons/Search';
+import IconClose from '../../components/Icons/Close';
 import urls from '../../utils/urls';
 import styles from './styles.css';
 
@@ -18,7 +20,7 @@ const Users = ({ location, history }) => {
   const page = urlParams.get('page') || 1;
   const perPage = clamp(urlParams.get('perPage') || 20, 50);
   const orderBy = urlParams.get('orderBy') || '-current_rate';
-  const userName = urlParams.get('userName') || '';
+  const [userName, setUserName] = useState(urlParams.get('userName') || '');
   const state = useSelector(state => state.pages.users);
   const dispatch = useDispatch();
 
@@ -35,6 +37,8 @@ const Users = ({ location, history }) => {
       page, perPage, orderBy, userName,
     }));
   };
+
+  const changePageDebounce = useMemo(() => debounce(changePage, 500), []);
 
   useEffect(() => {
     getData(page, perPage, orderBy, userName);
@@ -55,6 +59,26 @@ const Users = ({ location, history }) => {
           <div className={styles.search}>
             <TextInput
               placeholder="Search"
+              icon={userName ? <IconClose /> : <IconSearch />}
+              value={userName}
+              onChange={(value) => {
+                setUserName(value);
+                changePageDebounce(
+                  1,
+                  perPage,
+                  orderBy,
+                  value,
+                );
+              }}
+              onClickIcon={userName ? () => {
+                setUserName('');
+                changePage(
+                  1,
+                  perPage,
+                  orderBy,
+                  '',
+                );
+              } : undefined}
             />
           </div>
         </div>

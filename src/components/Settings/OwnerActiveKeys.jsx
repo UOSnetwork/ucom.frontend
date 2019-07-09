@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import React, { useState, Fragment } from 'react';
 import styles from './styles.css';
 import Button from '../Button/index';
@@ -9,6 +10,8 @@ import {
   ERROR_WRONG_BRAINKEY,
 } from '../../utils/brainkey';
 import { removeMultipleSpaces } from '../../utils/text';
+import { parseResponseError } from '../../utils/errors';
+import { checkBrainkey } from '../../actions/auth';
 import IconInputError from '../Icons/InputError';
 import {
   getOwnerPrivateKey,
@@ -17,12 +20,14 @@ import {
   getActivePublicKeyByBrainkey,
 } from '../../utils/keys';
 import CopyPanel from '../CopyPanel';
+import withLoader from '../../utils/withLoader';
 
 const OwnerActiveKeys = () => {
   const [brainkey, setBrainkey] = useState('');
   const [keys, setKeys] = useState({});
   const [formActive, setFormActive] = useState(false);
   const [formError, setFormError] = useState('');
+  const dispatch = useDispatch();
 
   return (
     <Fragment>
@@ -30,7 +35,7 @@ const OwnerActiveKeys = () => {
       <p>Here you can generate your keys from Brainkey.</p>
 
       {keys.ownerKey && keys.ownerPublicKey && keys.activeKey && keys.activePublicKey ? (
-        <Fragment>
+        <div className="ym-hide-conten">
           <h4 className={styles.title}>Active</h4>
           <p>You need your Active Key to sign financial transactions</p>
           <div className={styles.copy}>
@@ -59,19 +64,29 @@ const OwnerActiveKeys = () => {
               value={keys.ownerPublicKey}
             />
           </div>
-        </Fragment>
+        </div>
       ) : (
         <Fragment>
           {formActive ? (
             <form
               className={styles.brainkeyForm}
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
+
                 const trimedBrainkey = brainkey.trim();
                 if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
                   setFormError(ERROR_WRONG_BRAINKEY);
                   return;
                 }
+
+                try {
+                  await withLoader(dispatch(checkBrainkey(trimedBrainkey)));
+                } catch (err) {
+                  const { message } = parseResponseError(err)[0];
+                  setFormError(message);
+                  return;
+                }
+
                 setFormError('');
                 try {
                   setKeys({
@@ -89,6 +104,7 @@ const OwnerActiveKeys = () => {
               <TextInput
                 autoFocus
                 touched
+                ymDisableKeys
                 placeholder="Brainkey"
                 value={brainkey}
                 onChange={(value) => {
