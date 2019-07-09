@@ -5,6 +5,7 @@
   padding-right: calc((109% - 700px) / 2);
   box-shadow: 0px 0px 20px rgba(184, 184, 184, 0.25);
   outline: none;
+  background: #fff;
 }
 
 @media (max-width: 1023px) {
