@@ -7,8 +7,8 @@ import IconEnter from '../Icons/Enter';
 import {
   isBrainkeySymbolsValid,
   isBrainkeyLengthValid,
-  ERROR_WRONG_BRAINKEY,
 } from '../../utils/brainkey';
+import { ERROR_WRONG_BRAINKEY } from '../../utils/constants';
 import { removeMultipleSpaces } from '../../utils/text';
 import { parseResponseError } from '../../utils/errors';
 import { checkBrainkey } from '../../actions/auth';

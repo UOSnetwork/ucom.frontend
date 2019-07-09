@@ -1,9 +1,6 @@
 import crypto from 'crypto';
 import wordsDict from './wordsDict';
-
-export const BRAINKEY_SYMBOLS_REGEXP = /^[a-zA-Z_ ]*$/;
-export const BRAINKEY_LENGTH = 12;
-export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
+import { BRAINKEY_SYMBOLS_REGEXP, BRAINKEY_LENGTH } from './constants';
 
 export const generateBrainkey = () => {
   const words = wordsDict.en.split(',');

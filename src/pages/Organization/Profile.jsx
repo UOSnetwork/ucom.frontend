@@ -21,10 +21,7 @@ const ProfilePopup = ({ match, history }) => {
       paddingBottom="70vh"
       onClickClose={close}
     >
-      <Content
-        fixWidth
-        onClickClose={close}
-      >
+      <Content onClickClose={close}>
         <Profile
           owner={owner}
           organization={org}

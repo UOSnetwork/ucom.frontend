@@ -2,10 +2,6 @@ import { memoize } from 'lodash';
 import humps from 'lodash-humps';
 import urls from './urls';
 
-export const USER_ACCOUNT_LENGTH = 12;
-export const USER_ACCOUNT_NAME_REG_EXP = /^[a-z1-5]{12}$/;
-export const USER_ACCOUNT_NAME_SYMBOLS_REG_EXP = /^[a-z1-5]+$/;
-
 export const getYearOfDate = memoize((date) => {
   if (!date) {
     return null;

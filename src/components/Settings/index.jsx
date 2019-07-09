@@ -64,7 +64,6 @@ const Settings = (props) => {
         paddingBottom="70vh"
       >
         <Content
-          fixWidth
           onClickClose={onClickClose}
         >
           <div className={styles.settings}>

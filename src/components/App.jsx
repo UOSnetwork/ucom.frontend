@@ -4,8 +4,8 @@ import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { initNotificationsListeners, siteNotificationsSetUnreadAmount } from '../actions/siteNotifications';
 import { fetchMyself } from '../actions/users';
-import Page from './Page';
-import Auth from './Auth';
+import { Page } from './Layout';
+import Auth from './Auth/Features/LoginSimple';
 import Notifications from './Notifications';
 import socket from '../api/socket';
 import config from '../../package.json';
@@ -67,8 +67,9 @@ const App = ({ addMaintenanceNotification, ...props }) => {
         <Switch>
           {routes.map(route => <Route {...route} key={route.path} />)}
         </Switch>
-        <Auth />
       </Page>
+
+      <Auth />
 
       {props.wallet.buyRamVisible && <BuyRam />}
       {props.wallet.sellRamVisible && <SellRam />}

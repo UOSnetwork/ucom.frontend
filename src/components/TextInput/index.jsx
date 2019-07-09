@@ -5,7 +5,7 @@ import IconError from '../Icons/InputError';
 import styles from './styles.css';
 
 const TextInput = ({
-  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix, ymDisableKeys, icon, onClickIcon,
+  label, value, submited, onChange, maxLength, type, disabled, placeholder, error, prefix, ymDisableKeys, icon, onClickIcon, ...props
 }) => {
   const [dirty, setDirty] = useState(false);
 
@@ -31,6 +31,7 @@ const TextInput = ({
             <span className={styles.prefix}>{prefix}</span>
           }
           <input
+            {...props}
             type={type}
             value={value || ''}
             disabled={disabled}

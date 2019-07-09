@@ -11,7 +11,7 @@ import loader from '../../../../utils/loader';
 import { getUserById } from '../../../../store/users';
 import urls from '../../../../utils/urls';
 import { getUserName } from '../../../../utils/user';
-import { authHidePopup } from '../../../../actions/auth';
+import * as authActions from '../../../../actions/auth';
 
 const STEP_ACCOUNT = 1;
 const STEP_SOCIAL_KEY = 2;
@@ -33,10 +33,10 @@ const Auth = (props) => {
   const user = getUserById(props.users, userId);
 
   return (
-    <Popup onClickClose={() => props.dispatch(authHidePopup())}>
+    <Popup onClickClose={() => props.dispatch(authActions.hidePopup())}>
       <Content
         fullHeight
-        onClickClose={() => props.dispatch(authHidePopup())}
+        onClickClose={() => props.dispatch(authActions.hidePopup())}
       >
         {(() => {
           switch (currentStep) {

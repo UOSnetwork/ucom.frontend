@@ -1,6 +1,7 @@
 const { Dictionary } = require('ucom-libs-wallet');
 
 export const ERROR_SERVER = 'Could not complete request, please try again later';
+export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
 
 export const NOTIFICATION_TITLE_ERROR = 'Error';
 export const NOTIFICATION_TITLE_SUCCESS = 'Success';
@@ -15,6 +16,7 @@ export const VALIDATION_TEXTAREA_MAX_LENGTH_ERROR = 'Field is too long (maximum 
 export const VALIDATION_REQUIRED_ERROR = 'Field can\'t be blank';
 export const VALIDATION_URL_ERROR = 'Field is not a valid url';
 export const VALIDATION_EMAIL_ERROR = 'Field is not a valid email';
+export const VALIDATION_ACCOUNT_NAME_ERROR = 'Field is not a valid account name';
 
 export const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -51,3 +53,10 @@ export const USER_EDITABLE_PROPS = [
   'personalWebsiteUrl',
   'entityImages',
 ];
+
+export const BRAINKEY_SYMBOLS_REGEXP = /^[a-zA-Z_ ]*$/;
+export const BRAINKEY_LENGTH = 12;
+
+export const USER_ACCOUNT_LENGTH = 12;
+export const USER_ACCOUNT_NAME_REG_EXP = /^[a-z1-5]{12}$/;
+export const USER_ACCOUNT_NAME_SYMBOLS_REG_EXP = /^[a-z1-5]+$/;

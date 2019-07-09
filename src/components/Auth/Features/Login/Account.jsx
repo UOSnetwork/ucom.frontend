@@ -6,7 +6,7 @@ import IconInputError from '../../../Icons/InputError';
 import {
   USER_ACCOUNT_NAME_SYMBOLS_REG_EXP,
   USER_ACCOUNT_NAME_REG_EXP,
-} from '../../../../utils/user';
+} from '../../../../utils/constants';
 
 const ERROR_WRONG_ACCOUNT_NAME = 'Wrong Account Name format';
 

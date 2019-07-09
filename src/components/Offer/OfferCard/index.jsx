@@ -61,7 +61,6 @@ const OfferCard = (props) => {
         <Popup onClickClose={() => setPopupVisible(false)}>
           <Content
             mod="airdrop"
-            fixWidth
             onClickClose={() => {
               setPopupVisible(false);
             }}

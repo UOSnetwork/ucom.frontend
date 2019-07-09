@@ -1,0 +1,47 @@
+.auth {
+  box-sizing: border-box;
+  width: 600px;
+  padding: 64px 40px 0;
+}
+
+@media (max-width: 767px) {
+  .auth {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.title {
+  margin: 0 0 64px;
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 1.125;
+  text-align: center;
+}
+
+.content {
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+.field {
+  margin: 0 0 24px;
+}
+
+.action {
+  margin: 40px 0;
+}
+
+.footer {
+  margin: 0 -40px;
+  padding: 25px 0;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+@media (max-width: 767px) {
+  .footer {
+    margin: 0 -20px;
+  }
+}

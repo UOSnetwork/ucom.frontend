@@ -59,6 +59,10 @@
   color: #d8352f;
 }
 
+.data {
+  position: relative;
+}
+
 .data.withPrefix {
   display: grid;
   align-items: center;

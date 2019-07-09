@@ -1,49 +1,47 @@
 import api from '../api';
 import snakes from '../utils/snakes';
-import { parseErrors } from '../utils/errors';
 import { saveToken } from '../utils/token';
 import { saveActiveKey, getActivePrivateKey } from '../utils/keys';
-import withLoader from '../utils/withLoader';
 import { selectOwner } from '../store/selectors';
 
-export const authReset = () => ({ type: 'AUTH_RESET' });
-export const authSetData = payload => ({ type: 'AUTH_SET_DATA', payload });
-export const authSetForm = payload => ({ type: 'AUTH_SET_FORM', payload });
-export const authSetVisibility = visibility => dispatch => dispatch(authSetData({ visibility }));
+export const reset = () => ({ type: 'AUTH_RESET' });
+export const setData = payload => ({ type: 'AUTH_SET_DATA', payload });
 
+// TODO: Rename to showPopup
 export const authShowPopup = redirectUrl => (dispatch) => {
-  dispatch(authReset());
-  dispatch(authSetData({ redirectUrl }));
-  dispatch(authSetVisibility(true));
+  dispatch(reset());
+  dispatch(setData({
+    redirectUrl,
+    visibility: true,
+  }));
 };
 
-export const authHidePopup = () => (dispatch) => {
-  dispatch(authSetVisibility(false));
+export const hidePopup = () => (dispatch) => {
+  dispatch(setData({
+    redirectUrl: undefined,
+    visibility: false,
+  }));
 };
 
-export const authLogin = () => async (dispatch, getState) => {
+export const login = (brainkey, accountName) => async (dispatch, getState) => {
   const state = getState();
   const { redirectUrl } = state.auth;
 
-  dispatch(authSetData({ loading: true }));
+  try {
+    const data = await api.login(snakes({ brainkey, accountName }));
 
-  setTimeout(async () => {
-    try {
-      const data = await withLoader(api.login(snakes(state.auth.form)));
-      saveToken(data.token);
-      saveActiveKey(getActivePrivateKey(state.auth.form.brainkey));
-      if (redirectUrl) {
-        window.location.replace(redirectUrl);
-      } else {
-        window.location.reload();
-      }
-    } catch (e) {
-      dispatch(authSetData({
-        serverErrors: parseErrors(e),
-        loading: false,
-      }));
+    saveToken(data.token);
+    saveActiveKey(getActivePrivateKey(brainkey));
+
+    if (redirectUrl) {
+      window.location.replace(redirectUrl);
+    } else {
+      window.location.reload();
     }
-  }, 0);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 export const checkBrainkey = brainkey => async (dispatch, getState) => {

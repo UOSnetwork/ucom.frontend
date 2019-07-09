@@ -1,5 +1,7 @@
+import humps from 'lodash-humps';
 import { isObject, isArray } from 'lodash';
 import { validUrl } from './url';
+import { isBrainkeySymbolsValid, isBrainkeyLengthValid } from './brainkey';
 import {
   VALIDATION_INPUT_MAX_LENGTH,
   VALIDATION_TEXTAREA_MAX_LENGTH,
@@ -9,6 +11,9 @@ import {
   VALIDATION_URL_ERROR,
   REGEX_EMAIL,
   VALIDATION_EMAIL_ERROR,
+  ERROR_WRONG_BRAINKEY,
+  USER_ACCOUNT_NAME_REG_EXP,
+  VALIDATION_ACCOUNT_NAME_ERROR,
 } from './constants';
 
 export default class Validate {
@@ -103,6 +108,18 @@ export default class Validate {
         }
         return null;
       },
+      brainkey: (val) => {
+        if (val) {
+          return !isBrainkeySymbolsValid(val) || !isBrainkeyLengthValid(val) ? ERROR_WRONG_BRAINKEY : null;
+        }
+        return null;
+      },
+      accountName: (val) => {
+        if (val) {
+          return !USER_ACCOUNT_NAME_REG_EXP.test(val) ? VALIDATION_ACCOUNT_NAME_ERROR : null;
+        }
+        return null;
+      },
     };
   }
 
@@ -141,14 +158,25 @@ export default class Validate {
     });
   }
 
+  static validateLogin(data) {
+    const {
+      reuqired, brainkey, accountName,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      accountName: [reuqired, accountName],
+      brainkey: [reuqired, brainkey],
+    });
+  }
+
   static parseResponseError(response) {
     if (!isObject(response) || !isObject(response.data) || !isArray(response.data.errors)) {
       return {};
     }
 
-    return response.data.errors.reduce((obj, item) => ({
+    return humps(response.data.errors.reduce((obj, item) => ({
       ...obj,
       [item.field]: item.message,
-    }), {});
+    }), {}));
   }
 }

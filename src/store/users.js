@@ -1,5 +1,5 @@
 import { compact, uniq } from 'lodash';
-import { USER_ACCOUNT_LENGTH } from '../utils/user';
+import { USER_ACCOUNT_LENGTH } from '../utils/constants';
 
 const getInitialState = () => ({
   data: {},

@@ -6,8 +6,8 @@ import IconInputError from '../../Icons/InputError';
 import {
   isBrainkeySymbolsValid,
   isBrainkeyLengthValid,
-  ERROR_WRONG_BRAINKEY,
 } from '../../../utils/brainkey';
+import { ERROR_WRONG_BRAINKEY } from '../../../utils/constants';
 import { removeMultipleSpaces } from '../../../utils/text';
 
 const BrainkeyForm = (props) => {
