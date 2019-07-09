@@ -30,6 +30,7 @@ const ActiveKey = (props) => {
         <TextInput
           autoFocus
           touched
+          ymDisableKeys
           label="Active Private Key"
           value={value}
           onChange={(value) => {
