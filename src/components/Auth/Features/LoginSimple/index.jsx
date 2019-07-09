@@ -49,7 +49,7 @@ const LoginSimple = ({ location }) => {
     setLoading(true);
 
     try {
-      await withLoader(dispatch(authActions.login(data.brainkey, data.accountName)));
+      await withLoader(dispatch(authActions.login(data.brainkey.trim(), data.accountName)));
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
     }
@@ -97,6 +97,7 @@ const LoginSimple = ({ location }) => {
             <div className={styles.field}>
               <TextInput
                 ymDisableKeys
+                type="password"
                 label="Brainkey"
                 submited={submited}
                 value={data.brainkey}

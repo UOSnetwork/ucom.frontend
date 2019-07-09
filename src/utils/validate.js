@@ -110,7 +110,7 @@ export default class Validate {
       },
       brainkey: (val) => {
         if (val) {
-          return !isBrainkeySymbolsValid(val) || !isBrainkeyLengthValid(val) ? ERROR_WRONG_BRAINKEY : null;
+          return !isBrainkeySymbolsValid(val.trim()) || !isBrainkeyLengthValid(val.trim()) ? ERROR_WRONG_BRAINKEY : null;
         }
         return null;
       },
