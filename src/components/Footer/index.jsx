@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
+import urls from '../../utils/urls';
 import styles from './styles.css';
 
 export default () => (
@@ -22,7 +24,7 @@ export default () => (
 
     <div className={styles.side}>
       <div className={styles.list}>
-        <a href="/faq">FAQ</a>
+        <Link to={urls.getFaqUrl()}>FAQ</Link>
         <a href="https://uos.network/" target="_blank" rel="noopener noreferrer">About</a>
       </div>
     </div>

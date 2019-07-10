@@ -169,6 +169,10 @@ const urls = {
   getSettingsUrl(prefix = '') {
     return `${prefix}#settings`;
   },
+
+  getFaqUrl() {
+    return '/faq';
+  },
 };
 
 export default urls;

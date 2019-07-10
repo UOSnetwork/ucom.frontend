@@ -6,13 +6,12 @@ import OverviewPage, { getPageData } from './pages/Overview';
 import Offer, { getPostOfferData } from './pages/Offer';
 import Offer2, { getPostOfferData_2 } from './pages/Offer2';
 import UsersPage from './pages/Users/index';
-import AboutPage from './pages/About';
 import OrganizationPage, { getOrganizationPageData } from './pages/Organization';
 import NotFoundPage from './pages/NotFoundPage';
 import RegistrationPage from './components/Registration/Registration';
 import GovernancePage from './pages/Governance';
 import Tag from './pages/Tag';
-import Faq from './pages/Faq';
+import Faq from './pages/Faq/index';
 import Statistics from './pages/Statistics';
 import { getAirdropOfferId_1, getAirdropOfferId_2 } from './utils/airdrop';
 
@@ -90,14 +89,6 @@ export default [{
   exact: true,
   path: '/users',
   component: UsersPage,
-}, {
-  exact: true,
-  path: '/about',
-  component: AboutPage,
-}, {
-  exact: true,
-  path: '/about/:page',
-  component: AboutPage,
 }, {
   exact: false,
   path: '/communities/:id',

@@ -44,4 +44,5 @@ Panel.defaultProps = {
 };
 
 export { default as PanelWrapper } from './PanelWrapper';
+export { default as PanelHashWrapper } from './HashWrapper';
 export default Panel;

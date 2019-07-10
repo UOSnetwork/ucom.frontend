@@ -1,8 +1,7 @@
 import classNames from 'classnames';
 import { throttle } from 'lodash';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import React, { Fragment, useState, useEffect } from 'react';
 import styles from './styles.css';
 import Logo from '../Logo/Logo';
@@ -19,9 +18,11 @@ import SiteNotificationsTooltip from '../SiteNotificationsTooltip';
 import Counter from '../Counter';
 import Search from '../Search';
 import Menu from '../Menu';
-import { getUserById } from '../../store/users';
+import { selectOwner } from '../../store/selectors';
 
-const Header = ({ location, owner, dispatch }) => {
+const Header = ({ location }) => {
+  const dispatch = useDispatch();
+  const owner = useSelector(selectOwner);
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const [isScroll, setIsScroll] = useState(false);
@@ -93,6 +94,7 @@ const Header = ({ location, owner, dispatch }) => {
                       onClick={toggleTooltip}
                     >
                       <IconBell />
+
                       {unreadNotifications > 0 &&
                         <div className={styles.counter}>
                           <Counter>{unreadNotifications}</Counter>
@@ -154,20 +156,4 @@ const Header = ({ location, owner, dispatch }) => {
   );
 };
 
-Header.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number,
-  }),
-  dispatch: PropTypes.func.isRequired,
-};
-
-Header.defaultProps = {
-  owner: {},
-};
-
-export default withRouter(connect(state => ({
-  owner: getUserById(state.users, state.user.data.id),
-}))(Header));
+export default withRouter(Header);

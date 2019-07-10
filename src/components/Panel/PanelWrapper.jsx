@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import Panel from './Panel';
 
 const PanelWrapper = (props) => {
-  const [active, toggleActive] = useState(false);
+  const [active, setActive] = useState(false);
 
   return (
     <Panel
       title={props.title}
       active={active}
-      onClickToggler={() => toggleActive(!active)}
+      onClickToggler={() => setActive(!active)}
     >
       {props.children}
     </Panel>
