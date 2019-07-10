@@ -44,7 +44,7 @@ export default connect(
     });
   }, (state, props) => {
     const commentsData = getCommentsByContainer(state, props.containerId, props.postId);
-    return `${props.containerId}.${props.postId}.${JSON.stringify(commentsData)}`;
+    return `${JSON.stringify(state.user.data)}.${props.containerId}.${props.postId}.${JSON.stringify(commentsData)}`;
   }),
 
   dispatch => ({
