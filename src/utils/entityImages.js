@@ -1,4 +1,5 @@
-// TODO: Refactoring (functions to class)
+// TODO: Refactoring gallery images
+// TODO: Refactoring to class
 
 import { isString, isObject, isNumber, pick, omitBy, isUndefined, size, find, cloneDeep } from 'lodash';
 import { validUrl } from './url';

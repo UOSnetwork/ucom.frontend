@@ -1,12 +1,14 @@
+// TODO: Refactoring and refactoring tribute wrapper
+
+import autosize from 'autosize';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import React, { useState, useRef, useEffect } from 'react';
 import Avatar from '../Avatar';
 import IconEnter from '../Icons/Enter';
-import { selectUser } from '../../store/selectors/user';
-import { getUserById } from '../../store/users';
+import { selectOwner } from '../../store/selectors';
 import { addErrorNotification } from '../../actions/notifications';
 import { initDragAndDropListeners } from '../../utils/dragAndDrop';
 import {
@@ -28,16 +30,21 @@ import EmbedService from '../../utils/embedService';
 import loader from '../../utils/loader';
 
 const FeedForm = (props) => {
+  const dispatch = useDispatch();
   const fieldEl = useRef(null);
   const initialText = props.initialText ? `#${props.initialText} ` : false;
-  const user = getUserById(props.users, props.user.id);
+  const user = useSelector(selectOwner);
   const [message, setMessage] = useState(props.message || initialText || '');
   const [entityImages, setEntityImages] = useState(props.entityImages || {});
   const [dropOnForm, setDropOnForm] = useState(false);
   const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
   const galleryImages = getGalleryImages({ entityImages });
   const isExistGalleryImages = !!galleryImages.length;
-  const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
+  const textareaEl = useRef(null);
+
+  const addGalleryImages = addGalleryImagesWithCatch((msg) => {
+    dispatch(addErrorNotification(msg));
+  });
 
   const postHasContent = () => (
     message.trim().length !== 0 ||
@@ -102,6 +109,8 @@ const FeedForm = (props) => {
     if (!embedUrlsFromMessage.includes(lastUrl)) {
       setEmbedUrlsFromMessage(embedUrlsFromMessage.concat(lastUrl));
     }
+
+    autosize.update(textareaEl.current);
   }, [message]);
 
   useEffect(() => {
@@ -115,14 +124,19 @@ const FeedForm = (props) => {
       },
     );
 
+    autosize(textareaEl.current);
+
     return () => {
       removeInitDragAndDropListeners();
+
+      autosize.destroy(textareaEl.current);
     };
   }, []);
 
   if (!user) {
     return null;
   }
+
   return (
     <form
       className={classNames({
@@ -170,6 +184,7 @@ const FeedForm = (props) => {
             >
               <textarea
                 autoFocus
+                ref={textareaEl}
                 rows="4"
                 className="feed-form__textarea"
                 placeholder="Leave a comment"
@@ -223,7 +238,6 @@ const FeedForm = (props) => {
 FeedForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  users: PropTypes.objectOf(PropTypes.object).isRequired,
   message: PropTypes.string,
   entityImages: PropTypes.objectOf(PropTypes.array),
   initialText: PropTypes.string,
@@ -237,9 +251,4 @@ FeedForm.defaultProps = {
   formIsVisible: false,
 };
 
-export default connect(state => ({
-  users: state.users,
-  user: selectUser(state),
-}), {
-  addErrorNotification,
-})(FeedForm);
+export default FeedForm;

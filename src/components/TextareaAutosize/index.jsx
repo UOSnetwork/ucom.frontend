@@ -21,7 +21,7 @@ const TextareaAutosize = ({
     autosize(textareaEl.current);
 
     return () => {
-      autosize.destroy(textareaEl);
+      autosize.destroy(textareaEl.current);
     };
   }, []);
 
@@ -61,12 +61,14 @@ TextareaAutosize.propTypes = {
   error: PropTypes.string,
   submited: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
+  className: PropTypes.string,
 };
 
 TextareaAutosize.defaultProps = {
   value: undefined,
   error: undefined,
   submited: false,
+  className: undefined,
 };
 
 export default TextareaAutosize;
