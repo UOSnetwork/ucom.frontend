@@ -13,6 +13,7 @@ const express = require('express');
 const renderStatic = require('./src/renderStatic').default;
 const routes = require('./src/routes').default;
 const { createStore } = require('./src/store');
+const { escapeHtml } = require('./src/utils/text');
 
 const app = express();
 
@@ -39,25 +40,25 @@ routes.forEach((route) => {
 
         if (data && data.contentMetaTags) {
           if (isString(data.contentMetaTags.title)) {
-            contentMetaTags.title = xss(data.contentMetaTags.title);
+            contentMetaTags.title = escapeHtml(xss(data.contentMetaTags.title));
           }
 
           if (isString(data.contentMetaTags.description)) {
-            contentMetaTags.description = xss(data.contentMetaTags.description);
+            contentMetaTags.description = escapeHtml(xss(data.contentMetaTags.description));
           }
 
           if (isString(data.contentMetaTags.image)) {
-            contentMetaTags.image = xss(data.contentMetaTags.image);
+            contentMetaTags.image = escapeHtml(xss(data.contentMetaTags.image));
             contentMetaTags.imageWidth = undefined;
             contentMetaTags.imageHeight = undefined;
           }
 
           if (isString(data.contentMetaTags.imageWidth)) {
-            contentMetaTags.imageWidth = xss(data.contentMetaTags.imageWidth);
+            contentMetaTags.imageWidth = escapeHtml(xss(data.contentMetaTags.imageWidth));
           }
 
           if (isString(data.contentMetaTags.imageHeight)) {
-            contentMetaTags.imageHeight = xss(data.contentMetaTags.imageHeight);
+            contentMetaTags.imageHeight = escapeHtml(xss(data.contentMetaTags.imageHeight));
           }
 
           if (isString(data.contentMetaTags.path)) {

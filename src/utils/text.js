@@ -18,6 +18,15 @@ export const getKeyByValue = (object, value) => Object.keys(object).find(key => 
 
 export const getPercent = (left, total) => Math.floor((left / total) * 100);
 
+export const escapeHtml = str => (
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+);
+
 export const removeMultipleSpaces = memoize((str = '') => str.replace(/ +(?= )/g, ''));
 
 export const removeMultipleLineBreaks = memoize((str = '') => str.replace(/(\r\n|\r|\n){2,}/g, '$1\n'));
@@ -155,4 +164,5 @@ export const sanitizeEmbedContent = memoize(html => sanitizeHtml(html, {
 export const sanitizeCommentText = html => sanitizeCommentTexWithoutLink(makeLink(html));
 
 export const sanitizePostTitle = memoize(text => sanitizeHtml(text));
+
 export const capitalizeFirstLetter = string => string.charAt(0).toUpperCase() + string.slice(1);
