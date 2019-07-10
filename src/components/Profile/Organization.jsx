@@ -61,6 +61,7 @@ const OrganizationProfile = ({
   const [errors, setErrors] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [submited, setSubmited] = useState(false);
+  const [edited, setEdited] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(undefined);
   const [adminSearchVisible, setAdminSearchVisible] = useState(false);
   const [partnersSearchVisible, setPartnersSearchVisible] = useState(false);
@@ -75,6 +76,7 @@ const OrganizationProfile = ({
   };
 
   const setDataAndValidate = (data) => {
+    setEdited(true);
     setData(data);
     validate(data);
   };
@@ -167,6 +169,7 @@ const OrganizationProfile = ({
               { title: 'Location', name: 'cocation' },
             ]}
             submitDisabled={loading}
+            submitVisible={edited}
           />
         </div>
         <div className={styles.content}>
