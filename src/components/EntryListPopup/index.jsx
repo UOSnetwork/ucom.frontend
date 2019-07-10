@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
@@ -15,7 +16,13 @@ const EntryListPopup = props => (
         <h2 className={styles.title}>{props.title}</h2>
         <div className={styles.list}>
           {props.data.map(item => (
-            <div key={item.id} className={styles.item}>
+            <div
+              key={item.id}
+              className={classNames({
+                [styles.item]: true,
+                [styles.follow]: item.follow,
+              })}
+            >
               <div className={styles.card}>
                 <EntryCard {...{ ...item }} />
               </div>
