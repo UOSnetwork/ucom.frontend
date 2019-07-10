@@ -107,7 +107,6 @@
     "eosjs": "^20.0.0-beta2",
     "eosjs-ecc": "^4.0.4",
     "express": "^4.16.4",
-    "he": "^1.2.0",
     "history": "^4.7.2",
     "imports-loader": "^0.8.0",
     "jquery-param": "^1.0.1",

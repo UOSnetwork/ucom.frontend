@@ -1,4 +1,3 @@
-import he from 'he';
 import { memoize } from 'lodash';
 import sanitizeHtml from 'sanitize-html';
 import urls from './urls';
@@ -11,8 +10,6 @@ export const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-
 export const IMG_URL_REGEXP = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/i;
 
 export const sanitizeText = memoize(str => sanitizeHtml(str));
-
-export const decodeText = memoize(str => he.decode(str));
 
 export const getKeyByValue = (object, value) => Object.keys(object).find(key => object[key] === value);
 
