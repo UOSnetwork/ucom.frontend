@@ -114,6 +114,7 @@ class RegistrationStepThird extends PureComponent {
 
           <div className="registration-footer">
             <div className="registration-footer__action">
+              {/* TODO: Show error notification if error */}
               <Button
                 isStretched
                 isUpper
