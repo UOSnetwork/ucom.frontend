@@ -1,7 +1,6 @@
 import { isNull, isEqual } from 'lodash';
 import { ContentApi } from 'ucom-libs-wallet';
 import api from '../api';
-import snakes from '../utils/snakes';
 import { getToken, removeToken } from '../utils/token';
 import loader from '../utils/loader';
 import { setUser, setUserLoading } from './';
