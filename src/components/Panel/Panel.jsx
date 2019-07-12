@@ -2,35 +2,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import IconPlus from '../Icons/Plus';
 import IconMinus from '../Icons/Minus';
+import styles from './styles.css';
 
-// TODO: Replace to css modules
 const Panel = props => (
-  <div className="panel" >
-    {props.id &&
-      <div className="anchor" id={props.id} />
-    }
-
+  <div>
     <div
       role="presentation"
-      className="panel__header"
+      className={styles.header}
       onClick={props.onClickToggler}
     >
-      <div className="panel__title">{props.title}</div>
-      <div className="panel__toggler">
-        {props.active ? <IconMinus /> : <IconPlus /> }
-      </div>
+      <div className={styles.title}>{props.title}</div>
+      <div>{props.active ? <IconMinus /> : <IconPlus /> }</div>
     </div>
 
-    {props.active &&
-      <div className="panel__content">
-        {props.children}
-      </div>
-    }
+    {props.active && <div>{props.children}</div>}
   </div>
 );
 
 Panel.propTypes = {
-  id: PropTypes.string,
   onClickToggler: PropTypes.func,
   title: PropTypes.string.isRequired,
   active: PropTypes.bool,
@@ -38,10 +27,10 @@ Panel.propTypes = {
 };
 
 Panel.defaultProps = {
-  id: undefined,
   onClickToggler: undefined,
   active: false,
 };
 
 export { default as PanelWrapper } from './PanelWrapper';
+export { default as PanelHashWrapper } from './HashWrapper';
 export default Panel;
