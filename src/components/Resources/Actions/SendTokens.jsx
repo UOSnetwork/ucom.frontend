@@ -7,10 +7,10 @@ import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
-import UserSearchInput from '../../UserSearchInput';
+import SearchInput from '../../SearchInput';
 import { addSuccessNotification } from '../../../actions/notifications';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
 
@@ -30,9 +30,8 @@ const SendTokens = (props) => {
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
         try {
-          await props.dispatch(walletSendTokens(props.owner.accountName, user.accountName, +amount, memo, privateKey));
+          await withLoader(props.dispatch(walletSendTokens(props.owner.accountName, user.accountName, +amount, memo, privateKey)));
           setFormError(null);
           props.dispatch(addSuccessNotification('Successfully sent tokens'));
           setTimeout(() => {
@@ -43,7 +42,6 @@ const SendTokens = (props) => {
           setFormError(errors[0].message);
         }
         setLoading(false);
-        loader.done();
       }}
     >
       {requestActiveKey => (
@@ -76,21 +74,15 @@ const SendTokens = (props) => {
               </div>
               <label className={styles.field}>
                 <div className={styles.label}>Destination Account</div>
-                <UserSearchInput
+                <SearchInput
                   isMulti={false}
                   loadOptions={async (q) => {
-                    loader.start();
-                    setLoading(true);
-                    let result = [];
                     try {
-                      const data = await api.searchUsers(q);
-                      result = data.filter(i => i.id !== props.owner.id);
-                    } catch (e) {
-                      result = [];
+                      const data = await withLoader(api.searchUsers(q));
+                      return data.slice(0, 20).filter(i => i.id !== props.owner.id);
+                    } catch (err) {
+                      return [];
                     }
-                    loader.done();
-                    setLoading(false);
-                    return result;
                   }}
                   value={user}
                   onChange={user => setUser(user)}

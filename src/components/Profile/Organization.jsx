@@ -14,7 +14,7 @@ import EntryCard from '../EntryCard';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import Button from '../Button/index';
-import UserSearchInput from '../UserSearchInput';
+import SearchInput from '../SearchInput';
 import Validate from '../../utils/validate';
 import UserPick from '../UserPick/UserPick';
 import { getUsersTeamStatusById } from '../../utils/organization';
@@ -306,7 +306,7 @@ const OrganizationProfile = ({
                   </div>
                 ))}
                 {adminSearchVisible &&
-                  <UserSearchInput
+                  <SearchInput
                     autoFocus
                     value={[]}
                     onChange={(users) => {
@@ -521,7 +521,7 @@ const OrganizationProfile = ({
                 ))}
 
                 {partnersSearchVisible &&
-                  <UserSearchInput
+                  <SearchInput
                     autoFocus
                     organization
                     value={[]}
