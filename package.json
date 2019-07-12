@@ -146,7 +146,7 @@
     "tributejs": "git+https://github.com/UOSnetwork/tribute.git",
     "ucom-libs-graphql-schemas": "^1.23.0",
     "ucom-libs-social-transactions": "^1.2.0",
-    "ucom-libs-wallet": "^2.6.4",
+    "ucom-libs-wallet": "^2.9.0",
     "ucom.libs.common": "^1.15.1",
     "uuid": "^3.3.2",
     "validate.js": "^0.12.0",

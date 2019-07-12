@@ -73,8 +73,12 @@ const Profile = ({ onSuccess }) => {
       dispatch(addSuccessNotification('Profile has been updated'));
       setTimeout(onSuccess, 0);
     } catch (err) {
-      setErrors(Validate.parseResponseError(err.response));
-      dispatch(addValidationErrorNotification());
+      if (Validate.isResponseErrors(err.response)) {
+        setErrors(Validate.parseResponseError(err.response));
+        dispatch(addValidationErrorNotification());
+      } else {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
     }
 
     setLoading(false);

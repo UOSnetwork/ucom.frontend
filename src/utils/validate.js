@@ -169,8 +169,12 @@ export default class Validate {
     });
   }
 
+  static isResponseErrors(response) {
+    return isObject(response) && isObject(response.data) && isArray(response.data.errors);
+  }
+
   static parseResponseError(response) {
-    if (!isObject(response) || !isObject(response.data) || !isArray(response.data.errors)) {
+    if (!Validate.isResponseErrors(response)) {
       return {};
     }
 

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Validator from '../utils/validator';
 import api from '../api';
 import { generateBrainkey } from '../utils/brainkey';
@@ -7,7 +8,7 @@ import { saveActiveKey, getActivePrivateKey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
-const { SocialApi } = require('ucom-libs-wallet');
+const { SocialApi, ContentApi } = require('ucom-libs-wallet');
 
 export const registrationReset = payload => ({ type: 'REGISTRATION_RESET', payload });
 export const registrationSetStep = payload => ({ type: 'REGISTRATION_SET_STEP', payload });
@@ -67,15 +68,22 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     }
 
     try {
-      registrationData = await api.register(
-        brainkey,
-        accountName,
-        isTrackingAllowed,
-      );
+      registrationData = await api.register(brainkey, accountName, isTrackingAllowed);
       saveToken(registrationData.token);
       saveActiveKey(activePrivateKey);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+
+    try {
+      const userCreatedAt = moment().utc().format();
+      const signedTransaction = await ContentApi.createProfileAfterRegistration(accountName, activePrivateKey, isTrackingAllowed, userCreatedAt);
+      const signedTransactionAsJson = JSON.stringify(signedTransaction);
+
+      await api.registrationProfile(signedTransactionAsJson, userCreatedAt);
+    } catch (err) {
+      console.error(err);
     }
 
     if (

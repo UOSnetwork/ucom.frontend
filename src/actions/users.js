@@ -1,14 +1,16 @@
-import { isNull } from 'lodash';
+import { isNull, isEqual } from 'lodash';
+import { ContentApi } from 'ucom-libs-wallet';
 import api from '../api';
-import snakes from '../utils/snakes';
 import { getToken, removeToken } from '../utils/token';
 import loader from '../utils/loader';
-// import { enableGtm } from '../utils/gtm';
 import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
 import { walletGetAccount } from './walletSimple';
+import { restoreActiveKey } from '../utils/keys';
+import { USER_EDITABLE_PROPS } from '../utils/constants';
+// import { enableGtm } from '../utils/gtm';
 
 export const usersAddIFollow = payload => ({ type: 'USERS_ADD_I_FOLLOW', payload });
 export const usersRemoveIFollow = payload => ({ type: 'USERS_REMOVE_I_FOLLOW', payload });
@@ -157,15 +159,34 @@ export const fetchUserFollowsOrganizations = ({
 };
 
 export const updateUser = userData => async (dispatch) => {
+  let dataAsJson;
+  const activeKey = restoreActiveKey();
+
+  if (!activeKey) {
+    throw new Error('Active key is required');
+  }
+
+  if (!isEqual(Object.keys(userData), USER_EDITABLE_PROPS)) {
+    throw new Error('UserData must contain all editable props');
+  }
+
   try {
-    const dataToSave = {
+    dataAsJson = JSON.stringify(userData);
+  } catch (err) {
+    throw new Error('UserData object is not valid');
+  }
+
+  try {
+    const signedTransaction = await ContentApi.updateProfile(userData.accountName, activeKey, dataAsJson);
+
+    const dataForApi = {
       ...userData,
       entityImages: JSON.stringify(userData.entityImages),
+      signedTransaction: JSON.stringify(signedTransaction),
     };
 
-    const data = await api.patchMyself(snakes(dataToSave));
-
-    dispatch(fetchUser(data.id));
+    await api.patchMyself(dataForApi);
+    dispatch(fetchUser(userData.id));
   } catch (err) {
     console.error(err);
     throw err;

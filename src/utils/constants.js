@@ -46,12 +46,19 @@ export const BP_STATUS_BACKUP_ID = 2;
 export const PRODUCERS_LIMIT = 30;
 
 export const USER_EDITABLE_PROPS = [
-  'avatarFilename',
+  'id',
+  'accountName',
+  'lastName',
   'firstName',
-  'about',
-  'usersSources',
-  'personalWebsiteUrl',
   'entityImages',
+  'avatarFilename',
+  'about',
+  'moodMessage',
+  'createdAt',
+  'updatedAt',
+  'personalWebsiteUrl',
+  'isTrackingAllowed',
+  'usersSources',
 ];
 
 export const BRAINKEY_SYMBOLS_REGEXP = /^[a-zA-Z_ ]*$/;
