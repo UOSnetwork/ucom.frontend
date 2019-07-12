@@ -79,7 +79,9 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     try {
       const userCreatedAt = moment().utc().format();
       const signedTransaction = await ContentApi.createProfileAfterRegistration(accountName, activePrivateKey, isTrackingAllowed, userCreatedAt);
-      await api.registrationProfile(signedTransaction, userCreatedAt);
+      const signedTransactionAsJson = JSON.stringify(signedTransaction);
+
+      await api.registrationProfile(signedTransactionAsJson, userCreatedAt);
     } catch (err) {
       console.error(err);
     }
