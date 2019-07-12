@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-import { Route, Switch, withRouter } from 'react-router';
+import { Route, Switch } from 'react-router';
 import React, { useEffect, Fragment } from 'react';
-import { connect } from 'react-redux';
-import { initNotificationsListeners, siteNotificationsSetUnreadAmount } from '../actions/siteNotifications';
+import { useDispatch, useSelector } from 'react-redux';
+import { initNotificationsListeners } from '../actions/siteNotifications';
 import { fetchMyself } from '../actions/users';
 import { Page } from './Layout';
 import Auth from './Auth/Features/LoginSimple';
@@ -22,14 +21,17 @@ import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
 import urls from '../utils/urls';
 
-const App = ({ addMaintenanceNotification, ...props }) => {
+const App = () => {
+  const dispatch = useDispatch();
+  const wallet = useSelector(state => state.walletSimple);
+
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') {
       enableGtm();
     }
 
-    props.fetchMyself();
-    props.initNotificationsListeners();
+    dispatch(fetchMyself());
+    dispatch(initNotificationsListeners());
 
     const removeInitDragAndDropListeners = initDragAndDropListeners(document, () => {
       document.body.classList.add('dragenter');
@@ -42,7 +44,7 @@ const App = ({ addMaintenanceNotification, ...props }) => {
     }
 
     if (config.maintenanceMode) {
-      addMaintenanceNotification();
+      dispatch(addMaintenanceNotification());
     }
 
     return removeInitDragAndDropListeners;
@@ -71,36 +73,14 @@ const App = ({ addMaintenanceNotification, ...props }) => {
 
       <Auth />
 
-      {props.wallet.buyRamVisible && <BuyRam />}
-      {props.wallet.sellRamVisible && <SellRam />}
-      {props.wallet.editStakeVisible && <EditStake />}
-      {props.wallet.sendTokensVisibility && <SendTokens />}
+      {wallet.buyRamVisible && <BuyRam />}
+      {wallet.sellRamVisible && <SellRam />}
+      {wallet.editStakeVisible && <EditStake />}
+      {wallet.sendTokensVisibility && <SendTokens />}
+
       <Notifications />
     </Fragment>
   );
 };
 
-App.propTypes = {
-  fetchMyself: PropTypes.func.isRequired,
-  initNotificationsListeners: PropTypes.func.isRequired,
-  wallet: PropTypes.shape({
-    buyRamVisible: PropTypes.bool.isRequired,
-    sellRamVisible: PropTypes.bool.isRequired,
-    editStakeVisible: PropTypes.bool.isRequired,
-    sendTokensVisibility: PropTypes.bool.isRequired,
-  }).isRequired,
-  addMaintenanceNotification: PropTypes.func.isRequired,
-};
-
-export default withRouter(connect(
-  state => ({
-    auth: state.auth,
-    wallet: state.walletSimple,
-  }),
-  {
-    fetchMyself,
-    initNotificationsListeners,
-    siteNotificationsSetUnreadAmount,
-    addMaintenanceNotification,
-  },
-)(App));
+export default App;

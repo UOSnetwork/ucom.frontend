@@ -1,6 +1,9 @@
-import { connect } from 'react-redux';
-import React from 'react';
-import DefaultNotification from './DefaultNotification';
+import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import IconBell from '../Icons/BellOutlined';
+import IconClose from '../Icons/Close';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
@@ -8,22 +11,61 @@ import {
 import { closeNotification } from '../../actions/notifications';
 
 const Notification = (props) => {
-  switch (props.type) {
-    case NOTIFICATION_TYPE_ERROR:
-    case NOTIFICATION_TYPE_SUCCESS:
-      return (
-        <DefaultNotification
-          {...props}
-          typeId={props.type}
-          onClose={() => props.closeNotification(props.id)}
-        />
-      );
+  const dispatch = useDispatch();
 
-    default:
-      return null;
-  }
+  const close = () => {
+    dispatch(dispatch(closeNotification(props.id)));
+  };
+
+  useEffect(() => {
+    if (props.autoClose) {
+      setTimeout(close, 5000);
+    }
+  }, []);
+
+  return (
+    <div
+      className={classNames(
+        'notification',
+        { 'notification_error': props.type === NOTIFICATION_TYPE_ERROR },
+        { 'notification_success': props.type === NOTIFICATION_TYPE_SUCCESS },
+      )}
+    >
+      <div
+        role="presentation"
+        className="notification__close"
+        onClick={close}
+      >
+        <IconClose />
+      </div>
+      <div className="notification__header">
+        <div className="inline inline_medium">
+          <div className="inline__item">
+            <div className="notification__icon">
+              <IconBell />
+            </div>
+          </div>
+          <div className="inline__item">
+            <div className="notification__title">{props.title}</div>
+          </div>
+        </div>
+      </div>
+      <div className="notification__content">{props.message}</div>
+    </div>
+  );
 };
 
-export default connect(null, {
-  closeNotification,
-})(Notification);
+Notification.propTypes = {
+  id: PropTypes.number.isRequired,
+  title: PropTypes.string,
+  message: PropTypes.string.isRequired,
+  type: PropTypes.number.isRequired,
+  autoClose: PropTypes.bool,
+};
+
+Notification.defaultProps = {
+  title: 'Error',
+  autoClose: true,
+};
+
+export default Notification;
