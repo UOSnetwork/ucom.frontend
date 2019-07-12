@@ -227,6 +227,15 @@
   color: #585858;
 }
 
+.submit {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.submit.active {
+  opacity: 1;
+}
+
 @media (max-width: 1023px) {
   .menu {
     display: none;

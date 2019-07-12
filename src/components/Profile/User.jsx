@@ -35,6 +35,7 @@ const Profile = ({ onSuccess }) => {
   const [errors, setErrors] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [submited, setSubmited] = useState(false);
+  const [edited, setEdited] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(undefined);
   const dispatch = useDispatch();
 
@@ -47,6 +48,7 @@ const Profile = ({ onSuccess }) => {
   };
 
   const setDataAndValidate = (data) => {
+    setEdited(true);
     setData(data);
     validate(data);
   };
@@ -131,6 +133,7 @@ const Profile = ({ onSuccess }) => {
               { title: 'Links', name: 'links' },
             ]}
             submitDisabled={loading}
+            submitVisible={edited}
           />
         </div>
         <div className={styles.footer}>
