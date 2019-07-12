@@ -1,4 +1,4 @@
-.panel__header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -7,7 +7,7 @@
   cursor: pointer;
 }
 
-.panel__title {
+.title {
   padding: 0 40px 0 0;
   font-size: 16px;
   line-height: 28px;

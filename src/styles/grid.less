@@ -13,21 +13,6 @@
   }
 }
 
-.grid_post {
-  padding: 0 60px 0 160px;
-  grid-template-columns: 7fr 2fr;
-  grid-column-gap: 0;
-  grid-row-gap: 40px;
-
-  @media (max-width: 1271px) {
-    padding: 0;
-  }
-
-  @media (max-width: 1023px) {
-    grid-template-columns: 1fr;
-  }
-}
-
 .grid_content {
   grid-column-gap: 0;
   grid-template-columns: repeat(12, 1fr);
@@ -66,31 +51,6 @@
   }
 }
 
-.grid_user {
-  grid-column-gap: 100px;
-  grid-template-columns: 6fr 3fr;
-
-  @media (max-width: 1023px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.grid__item_info {
-  @media (max-width: 1023px) {
-    grid-row-start: 1;
-    grid-row-end: 2;
-  }
-}
-
-.grid_organization {
-  grid-column-gap: 100px;
-  grid-template-columns: 7fr 2fr;
-
-  @media (max-width: 1023px) {
-    grid-template-columns: 1fr;
-  }
-}
-
 .grid_main-post {
   .grid__item {
     padding-bottom: 20px;
@@ -116,36 +76,5 @@
         border-bottom-color: #eee;
       }
     }
-  }
-}
-
-.grid_profile {
-  grid-template-columns: 1fr 3fr;
-
-  @media (max-width: 1023px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.grid_settings {
-  grid-column-gap: 0;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-areas: 'a b b c d d d d d d d e';
-
-  @media (max-width: 1199px) {
-    grid-template-areas: 'b b b d d d d d d d d d';
-  }
-
-  @media (max-width: 1023px) {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'b' 'd';
-  }
-
-  .grid__item_main {
-    grid-area: d;
-  }
-
-  .grid__item_side {
-    grid-area: b;
   }
 }
