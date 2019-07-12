@@ -1,4 +1,4 @@
-:local(.userCard) {
+.userCard {
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: 1fr 1fr;
@@ -6,19 +6,19 @@
   align-items: center;
 }
 
-:local(.avatar) {
+.avatar {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 3;
 }
 
-:local(.name) {
+.name {
   font-size: 16px;
   font-weight: bold;
 }
 
-:local(.rate) {
+.rate {
   font-size: 12px;
   font-weight: bold;
   opacity: 0.4;
