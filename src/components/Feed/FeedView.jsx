@@ -6,7 +6,7 @@ import LoadMore from './LoadMore';
 
 const FeedView = props => (
   <div className={`feed ${props.isMobile ? 'feed-mobile' : ''}`}>
-    {props.onSubmitPostForm && props.isCurrentUser &&
+    {props.onSubmitPostForm &&
       <FeedInput
         onSubmit={props.onSubmitPostForm}
         initialText={props.feedInputInitialText}
@@ -52,7 +52,6 @@ FeedView.propTypes = {
   onClickLoadMore: PropTypes.func.isRequired,
   filter: PropTypes.func,
   isMobile: PropTypes.bool,
-  isCurrentUser: PropTypes.bool,
 };
 
 FeedView.defaultProps = {
@@ -61,7 +60,6 @@ FeedView.defaultProps = {
   feedInputInitialText: null,
   filter: null,
   isMobile: false,
-  isCurrentUser: true,
 };
 
 export default FeedView;

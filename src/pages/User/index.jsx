@@ -190,7 +190,6 @@ const UserPage = (props) => {
           {user && user.id &&
             <Feed
               userId={user.id}
-              isCurrentUser={user.id === owner.id}
               feedTypeId={USER_WALL_FEED_ID}
             />
           }

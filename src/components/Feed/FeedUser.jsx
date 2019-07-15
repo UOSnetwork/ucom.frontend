@@ -66,7 +66,6 @@ const FeedUser = (props) => {
       onSubmitPostForm={onSubmitPostForm}
       filter={props.filter}
       feedTypeId={props.feedTypeId}
-      isCurrentUser={props.isCurrentUser}
     />
   );
 };
@@ -84,7 +83,6 @@ FeedUser.propTypes = {
   feedInputInitialText: PropTypes.string,
   filter: PropTypes.func,
   callbackOnSubmit: PropTypes.func,
-  isCurrentUser: PropTypes.bool,
 };
 
 FeedUser.defaultProps = {
@@ -93,7 +91,6 @@ FeedUser.defaultProps = {
   tagIdentity: null,
   feedInputInitialText: null,
   filter: null,
-  isCurrentUser: undefined,
   callbackOnSubmit: null,
 };
 
