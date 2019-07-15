@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import withLoader from '../../../utils/withLoader';
 import Election from './Election';
 import Cast from './Cast';
-import * as governancePageActions from '../../../actions/governancePage';
+import * as governancePageActions from '../../../actions/pages/governance';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 import { BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../../../utils/constants';
 import urls from '../../../utils/urls';

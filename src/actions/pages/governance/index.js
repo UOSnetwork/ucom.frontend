@@ -1,7 +1,7 @@
 import { without } from 'lodash';
-import api, { graphql } from '../api';
-import * as nodesActions from './nodes';
-import { NODES_PER_PAGE, BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../utils/constants';
+import api, { graphql } from '../../../api';
+import * as nodesActions from '../../nodes';
+import { NODES_PER_PAGE, BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../../../utils/constants';
 
 export const reset = () => ({ type: 'GOVERNANCE_PAGE_RESET' });
 

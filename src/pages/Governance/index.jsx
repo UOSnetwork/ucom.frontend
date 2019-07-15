@@ -10,7 +10,7 @@ import {
   BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
   BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
 } from '../../utils/constants';
-import * as governancePageActions from '../../actions/governancePage';
+import * as governancePageActions from '../../actions/pages/governance';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import VoteSection from './VoteSection';
 import Voting from './Voting';

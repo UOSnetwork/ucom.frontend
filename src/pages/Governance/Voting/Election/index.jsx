@@ -11,7 +11,7 @@ import urls from '../../../../utils/urls';
 import { formatScaledImportance } from '../../../../utils/rate';
 import withLoader from '../../../../utils/withLoader';
 import { selectOwner } from '../../../../store/selectors';
-import * as governancePageActions from '../../../../actions/governancePage';
+import * as governancePageActions from '../../../../actions/pages/governance';
 import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
 import { BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, PRODUCERS_LIMIT } from '../../../../utils/constants';
 import styles from '../styles.css';

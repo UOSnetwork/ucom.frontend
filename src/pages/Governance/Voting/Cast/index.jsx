@@ -16,7 +16,7 @@ import { addErrorNotificationFromResponse, addSuccessNotification } from '../../
 import { authShowPopup } from '../../../../actions/auth';
 import withLoader from '../../../../utils/withLoader';
 import { getUserName } from '../../../../utils/user';
-import * as governancePageActions from '../../../../actions/governancePage';
+import * as governancePageActions from '../../../../actions/pages/governance';
 import styles from '../styles.css';
 
 const Cast = ({ history, match }) => {
