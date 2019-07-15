@@ -1,0 +1,9 @@
+.searchPopup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.searchPopup.active {
+  min-height: 100%;
+}

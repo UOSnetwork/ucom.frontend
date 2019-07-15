@@ -1,0 +1,38 @@
+.footer {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 10px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  height: 64px;
+  padding: 0 40px;
+  font-weight: bold;
+  border-top: 1px solid #E8ECEC;
+  background: #fff;
+  transition: background 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+  color: #B1B1B1;
+  opacity: 0;
+}
+
+.footer.active {
+  opacity: 1;
+}
+
+.footer:hover {
+  text-decoration: none;
+  background: #F8F8F9;
+}
+
+.text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.footer svg {
+  fill: #B1B1B1;
+}

@@ -13,7 +13,9 @@ const EntryListPopup = props => (
   <Popup onClickClose={props.onClickClose}>
     <Content onClickClose={props.onClickClose}>
       <div className={styles.container}>
-        <h2 className={styles.title}>{props.title}</h2>
+        {props.title &&
+          <h2 className={styles.title}>{props.title}</h2>
+        }
         <div className={styles.list}>
           {props.data.map(item => (
             <div
@@ -54,25 +56,26 @@ const EntryListPopup = props => (
 );
 
 EntryListPopup.propTypes = {
+  title: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     ...EntryCard.propTypes,
     id: PropTypes.number.isRequired,
     follow: PropTypes.bool,
   })),
-  onClickClose: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
   metadata: PropTypes.shape({
     page: PropTypes.number,
     perPage: PropTypes.number,
     totalAmount: PropTypes.number,
   }),
+  onClickClose: PropTypes.func.isRequired,
   onChangePage: PropTypes.func,
 };
 
 EntryListPopup.defaultProps = {
+  title: undefined,
   data: [],
-  metadata: null,
-  onChangePage: null,
+  metadata: undefined,
+  onChangePage: undefined,
 };
 
 export default EntryListPopup;

@@ -10,13 +10,13 @@ import IconWallet from '../Icons/Wallet';
 import IconBell from '../Icons/Bell';
 import User from './User';
 import { authShowPopup } from '../../actions/auth';
+import * as searchPopupActions from '../../actions/searchPopup';
 import EntryListPopup from '../EntryListPopup';
 import IconSearch from '../Icons/Search';
 import Wallet from '../Wallet';
 import IconClose from '../Icons/Close';
 import SiteNotificationsTooltip from '../SiteNotificationsTooltip';
 import Counter from '../Counter';
-import Search from '../Search';
 import Menu from '../Menu';
 import { selectOwner } from '../../store/selectors';
 
@@ -24,7 +24,6 @@ const Header = ({ location }) => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
-  const [searchVisible, setSearchVisible] = useState(false);
   const [isScroll, setIsScroll] = useState(false);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
 
@@ -72,7 +71,7 @@ const Header = ({ location }) => {
             <div
               role="presentation"
               className={`${styles.icon} ${styles.search}`}
-              onClick={() => setSearchVisible(true)}
+              onClick={() => dispatch(searchPopupActions.show())}
             >
               <IconSearch />
             </div>
@@ -147,10 +146,6 @@ const Header = ({ location }) => {
 
       {walletPopupVisible &&
         <Wallet onClickClose={() => setWalletPopupVisible(false)} />
-      }
-
-      {searchVisible &&
-        <Search onClickClose={() => setSearchVisible(false)} />
       }
     </Fragment>
   );

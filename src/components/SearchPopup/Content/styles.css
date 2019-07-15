@@ -1,0 +1,12 @@
+.content {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.content.active {
+  opacity: 1;
+}

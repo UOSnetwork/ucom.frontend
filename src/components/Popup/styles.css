@@ -18,6 +18,10 @@
   background: transparent;
 }
 
+.popup.alignTop {
+  align-items: flex-start;
+}
+
 .popup:global(.wallet) {
   z-index: 2;
   margin-top: 50px;
@@ -26,12 +30,6 @@
 
 .popup:global(.dark) {
   background: rgba(23, 25, 27, 0.75);
-}
-
-.popup:global(.search) {
-  position: relative;
-  background: #fff;
-  align-items: flex-start;
 }
 
 .close {
