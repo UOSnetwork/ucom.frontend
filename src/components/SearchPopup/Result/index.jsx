@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { UsersEntryList } from '../../../EntryList';
-import IconArrowRight from '../../../Icons/ArrowRight';
+import { UsersEntryList } from '../../EntryList';
+import IconArrowRight from '../../Icons/ArrowRight';
 import styles from './styles.css';
 
 const Result = () => {

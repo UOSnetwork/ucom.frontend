@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import IconArrowRight from '../../../Icons/ArrowRight';
-import IconDuck from '../../../Icons/Socials/Duck';
+import IconArrowRight from '../../Icons/ArrowRight';
+import IconDuck from '../../Icons/Socials/Duck';
 import styles from './styles.css';
 
 const Footer = () => {

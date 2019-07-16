@@ -7,6 +7,7 @@ import UserHead from '../../components/User/UserHead/index';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
+import { validUrl } from '../../utils/url';
 import Feed from '../../components/Feed/FeedUser';
 import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
 import { feedGetUserPosts } from '../../actions/feed';
@@ -164,7 +165,7 @@ const UserPage = (props) => {
           }
 
           {user &&
-            <EntrySocialNetworks urls={(user.usersSources || []).map(i => i.sourceUrl).filter(i => !!i)} />
+            <EntrySocialNetworks urls={(user.usersSources || []).map(i => i.sourceUrl).filter(validUrl)} />
           }
 
           {user &&
