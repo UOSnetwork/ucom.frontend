@@ -1,9 +1,12 @@
+// TODO: Refactoring separate tribute and paste event, and functional component
+
 import { isObject } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { defaultTributeConfig } from '../utils/tribute';
-import { getImageFromPasteEvent } from '../utils/upload';
-import { IMG_URL_REGEXP } from '../utils/text';
+import { defaultTributeConfig } from '../../utils/tribute';
+import { getImageFromPasteEvent } from '../../utils/upload';
+import { IMG_URL_REGEXP } from '../../utils/text';
+import './styles.css';
 
 const VISUAL_DELAY = 1000;
 
