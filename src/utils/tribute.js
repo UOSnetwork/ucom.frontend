@@ -1,7 +1,8 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import api from '../api';
-import urls from '../utils/urls';
-import { getUserName } from '../utils/user';
+import urls from './urls';
+import withLoader from './withLoader';
+import { getUserName } from './user';
 import EntryCard from '../components/EntryCard';
 
 export const defaultTributeConfig = {
@@ -17,7 +18,7 @@ export const defaultTributeConfig = {
     }
 
     try {
-      const data = await api.searchUsers(text.toLocaleLowerCase());
+      const data = await withLoader(api.searchUsers(text.toLocaleLowerCase()));
       cb(data.slice(0, 20));
     } catch (err) {
       console.error(err);
