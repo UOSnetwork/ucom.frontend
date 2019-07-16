@@ -7,6 +7,8 @@ import Avatar from '../../EntryHeader/Avatar';
 import urls from '../../../utils/urls';
 import { updateUser, addUsers } from '../../../actions/users';
 import { getUserName, userIsOwner } from '../../../utils/user';
+import withLoader from '../../../utils/withLoader';
+import { getFilePreview } from '../../../utils/upload';
 import UserStatus from '../UserStatus';
 import { formatScaledImportance } from '../../../utils/rate';
 import UserFollowButton from '../UserFollowButton';
@@ -15,6 +17,7 @@ import ButtonEdit from '../../ButtonEdit';
 import Menu from '../../EntryHeader/Menu';
 import { selectUserById, selectOwner } from '../../../store/selectors';
 import { USER_EDITABLE_PROPS } from '../../../utils/constants';
+import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 
 const UserHead = (props) => {
   const user = useSelector(selectUserById(props.userId));
@@ -41,14 +44,24 @@ const UserHead = (props) => {
             src={urls.getFileUrl(user.avatarFilename)}
             changeEnabled={userIsOwner(user, owner)}
             onChange={async (file) => {
-              dispatch(addUsers([{
-                id: owner.id,
-                avatarFilename: file.preview,
-              }]));
-              dispatch(updateUser({
-                ...pick(user, USER_EDITABLE_PROPS),
-                avatarFilename: file,
-              }));
+              const oldAvatarFilename = user.avatarFilename;
+
+              try {
+                dispatch(addUsers([{
+                  id: owner.id,
+                  avatarFilename: getFilePreview(file),
+                }]));
+                withLoader(dispatch(updateUser({
+                  ...pick(user, USER_EDITABLE_PROPS),
+                  avatarFilename: file,
+                })));
+              } catch (err) {
+                dispatch(addUsers([{
+                  id: owner.id,
+                  avatarFilename: oldAvatarFilename,
+                }]));
+                dispatch(addErrorNotificationFromResponse(err));
+              }
             }}
           />
         </div>

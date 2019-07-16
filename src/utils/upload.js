@@ -136,7 +136,10 @@ export const compressImageAndRotate = (file, maxWidth, maxHeight, type = 'image/
             default: break;
           }
 
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
+
           const newFileName = `${fileName.substr(0, fileName.lastIndexOf('.'))}.jpg`;
           ctx.canvas.toBlob((blob) => {
             const file = new File([blob], newFileName, {
@@ -184,3 +187,7 @@ export const uploadDropState = {
   IS_DROP: 1,
   IS_DROP_ON_FORM: 2,
 };
+
+export const getFilePreview = file => (
+  URL.createObjectURL(file)
+);
