@@ -76,8 +76,8 @@ const OfferContent = props => (
     </div>
 
     <div className={styles.section}>
-      <a href="/tags/uos" className="tag_link" target="_blank">#uos</a>
-      <a href="/tags/airdrop" className="tag_link" target="_blank"> #airdrop</a>
+      <a href="/tags/uos" className="link red" target="_blank">#uos</a>
+      <a href="/tags/airdrop" className="link red" target="_blank"> #airdrop</a>
     </div>
 
     <div className={styles.commentsCount}>Comments {props.commentsCount !== 0 ? props.commentsCount : ''}</div>

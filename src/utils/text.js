@@ -48,9 +48,9 @@ const makeActiveLink = (trigger, makeRoute, className) => (...args) => {
   return result;
 };
 
-export const makeLinkTag = makeActiveLink('#', urls.getTagUrl, 'tag_link');
+export const makeLinkTag = makeActiveLink('#', urls.getTagUrl, 'link red');
 
-export const makeLinkMention = makeActiveLink('@', urls.getUserUrl, 'mention_link');
+export const makeLinkMention = makeActiveLink('@', urls.getUserUrl, 'link red');
 
 export const checkHashTag = memoize((text = '') => text.replace(/(^|\s|>)#[a-zA-Z]\w*/gm, makeLinkTag));
 
@@ -77,7 +77,7 @@ export const existMentionTag = (text, tag) => {
   return false;
 };
 
-export const makeLink = memoize((text = '') => text.replace(URL_REGEX, url => `<a target="_blank" href="${url}">${url}</a>`));
+export const makeLink = memoize((text = '') => text.replace(URL_REGEX, url => `<a target="_blank" class="link red" href="${url}">${url}</a>`));
 
 export const getTextContent = memoize((content) => {
   const text = document.createElement('div');
@@ -120,8 +120,8 @@ export const sanitizePostText = memoize(html => sanitizeHtml(html, {
       'medium-embed-link',
     ],
     a: [
-      'tag_link',
-      'mention_link',
+      'link',
+      'red',
       'js-embed',
     ],
     iframe: [
