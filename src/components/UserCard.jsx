@@ -6,7 +6,7 @@ import Avatar from './Avatar';
 import AvatarFromFile from './AvatarFromFile';
 import { filterURL } from '../utils/url';
 
-// TODO: Remove this and replace everywhere UserCard/UserCard.jsx
+// TODO: Remove this and replace everywhere SimpleCard.jsx
 const UserCard = (props) => {
   const avatar = props.avatarUrl && typeof props.avatarUrl === 'object' ?
     <AvatarFromFile BlankIcon={props.BlankIcon} square={props.squareAvatar} rounded={props.roundedAvatar} size={props.avatarSize} file={props.avatarUrl} /> :

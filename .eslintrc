@@ -10,7 +10,7 @@
   "rules": {
     "react/require-default-props": "warn",
     "react/prop-types": [1, {
-      "ignore": ["location", "children"]
+      "ignore": ["location", "children", "match"]
     }],
     "react/no-array-index-key": "off",
     "react/no-danger": "off",

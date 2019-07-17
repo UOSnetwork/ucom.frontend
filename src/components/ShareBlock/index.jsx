@@ -11,7 +11,8 @@ import IconFacebook from '../Icons/Socials/Share/Facebook';
 import IconTwitter from '../Icons/Socials/Share/Twitter';
 import IconTelegram from '../Icons/Socials/Share/Telegram';
 import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
-import { copyToClipboard, COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/text';
+import { copyToClipboard } from '../../utils/text';
+import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
 import { addSuccessNotification } from '../../actions/notifications';
 
 class ShareBlock extends PureComponent {

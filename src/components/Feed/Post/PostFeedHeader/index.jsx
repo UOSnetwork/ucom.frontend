@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import React, { Fragment, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import UserCard from '../../../UserCard/UserCard';
+import { UserCard } from '../../../SimpleCard';
 import DropdownMenu from '../../../DropdownMenu';
 import urls from '../../../../utils/urls';
 import { addSuccessNotification } from '../../../../actions/notifications';

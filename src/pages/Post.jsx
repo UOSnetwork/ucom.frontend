@@ -6,7 +6,7 @@ import LayoutBase from '../components/Layout/LayoutBase';
 import { postsFetch } from '../actions/posts';
 import { getPostById } from '../store/posts';
 import { getUserById } from '../store/users';
-import UserCard from '../components/UserCard/UserCard';
+import { UserCard } from '../components/SimpleCard';
 import UserFollowButton from '../components/User/UserFollowButton';
 import urls from '../utils/urls';
 import ButtonEdit from '../components/ButtonEdit';

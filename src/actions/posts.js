@@ -5,7 +5,7 @@ import { addUsers } from './users';
 import { addOrganizations } from './organizations';
 import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/posts';
 import { addServerErrorNotification } from './notifications';
-import { addComments, commentsAddContainerData } from './comments';
+import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import snakes from '../utils/snakes';
 import loader from '../utils/loader';
@@ -40,25 +40,11 @@ export const addPosts = (postsData = []) => (dispatch) => {
   dispatch({ type: 'ADD_POSTS', payload: posts });
 };
 
-export const fetchPost = postId => async (dispatch) => {
-  try {
-    const data = await api.getPost(postId);
-    dispatch(addComments(humps(data.comments)));
-    dispatch(addPosts([data]));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
 export const postsFetch = ({
   postId,
 }) => async (dispatch) => {
   try {
-    const data = await graphql.getOnePost({
-      postId,
-    });
+    const data = await graphql.getOnePost({ postId });
     dispatch(commentsAddContainerData({
       containerId: COMMENTS_CONTAINER_ID_POST,
       entryId: postId,
@@ -69,9 +55,9 @@ export const postsFetch = ({
     delete data.comments;
     dispatch(addPosts([data]));
     return data;
-  } catch (e) {
-    console.error(e);
-    throw e;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };
 
@@ -87,13 +73,12 @@ export const updatePost = payload => (dispatch) => {
     .then(() => loader.done());
 };
 
-export const addRepost = postId => (dispatch) => {
-  loader.start();
-  api.repostPost(postId)
-    .catch((error) => {
-      dispatch(addServerErrorNotification(error));
-    })
-    .then(() => loader.done());
+export const addRepost = postId => async () => {
+  try {
+    await api.repostPost(postId);
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const postVote = payload => (dispatch) => {

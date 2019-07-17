@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import LayoutBase from '../components/Layout/LayoutBase';
-import { fetchPost, postsFetch, getOnePostOffer, getOnePostOfferWithUserAirdrop } from '../actions/posts';
+import { postsFetch, getOnePostOffer, getOnePostOfferWithUserAirdrop } from '../actions/posts';
 import { getPostById } from '../store/posts';
 import OfferCard from '../components/Offer/OfferCard';
 import { getPostCover, getContentMetaTags } from '../utils/posts';
@@ -226,7 +226,6 @@ export default connect(
     user: selectUser(state),
   }),
   dispatch => bindActionCreators({
-    fetchPost,
     postsFetch,
     commentsResetContainerDataByEntryId,
     getOnePostOffer,

@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import { copyToClipboard, COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/text';
+import { copyToClipboard } from '../../utils/text';
+import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
 import { addSuccessNotification } from '../../actions/notifications';
 
 const CopyPanel = props => (

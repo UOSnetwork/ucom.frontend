@@ -2,6 +2,7 @@ const { Dictionary } = require('ucom-libs-wallet');
 
 export const ERROR_SERVER = 'Could not complete request, please try again later';
 export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
+export const COPY_TO_CLIPBOARD_SUCCESS_MESSAGE = 'Link copied to clipboard';
 
 export const NOTIFICATION_TITLE_ERROR = 'Error';
 export const NOTIFICATION_TITLE_SUCCESS = 'Success';

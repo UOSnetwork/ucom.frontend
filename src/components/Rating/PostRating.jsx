@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import Rating from './Rating';
 import { postVote } from '../../actions/posts';
-import { getPostById } from '../../store/posts';
-import { selectUser } from '../../store/selectors/user';
+import { selectPostById, selectOwner } from '../../store/selectors';
 
 const PostRating = (props) => {
-  const post = getPostById(props.posts, props.postId);
+  const dispatch = useDispatch();
+  const post = useSelector(selectPostById(props.postId));
+  const owner = useSelector(selectOwner);
 
   if (!post) {
     return null;
@@ -16,26 +16,17 @@ const PostRating = (props) => {
 
   return (
     <Rating
-      disabled={post.userId === props.user.id}
+      disabled={post.userId === owner.id}
       currentVote={post.currentVote}
       myselfVote={post.myselfData && post.myselfData.myselfVote}
-      onClickVoteDown={() => props.postVote({ postId: props.postId, isUp: false })}
-      onClickVoteUp={() => props.postVote({ postId: props.postId, isUp: true })}
+      onClickVoteDown={() => dispatch(postVote({ postId: props.postId, isUp: false }))}
+      onClickVoteUp={() => dispatch(postVote({ postId: props.postId, isUp: true }))}
     />
   );
 };
 
 PostRating.propTypes = {
-  postVote: PropTypes.func,
-  postId: PropTypes.number,
+  postId: PropTypes.number.isRequired,
 };
 
-export default connect(
-  state => ({
-    posts: state.posts,
-    user: selectUser(state),
-  }),
-  dispatch => bindActionCreators({
-    postVote,
-  }, dispatch),
-)(PostRating);
+export default PostRating;

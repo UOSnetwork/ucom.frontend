@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState, Fragment } from 'react';
 import styles from './styles.css';
-import UserCard from '../../UserCard/UserCard';
+import { UserCard } from '../../SimpleCard';
 import Gallery from '../../Gallery';
 import Form from '../Form';
 import ShowReplies from '../ShowReplies';
@@ -20,7 +20,6 @@ const Comment = (props) => {
     <Fragment>
       <div className={styles.comment} depth={props.depth} id={`comment-${props.id}`}>
         <div className={styles.userCard}>
-          {/* TODO: Replace to Entry Card */}
           <UserCard
             userId={props.userId}
             isOwner={props.ownerId === props.userId}
@@ -194,6 +193,7 @@ Comment.propTypes = {
     page: PropTypes.number,
     perPage: PropTypes.number,
   })).isRequired,
+  entityImages: PropTypes.objectOf(PropTypes.any),
 };
 
 Comment.defaultProps = {
@@ -205,6 +205,7 @@ Comment.defaultProps = {
   ownerName: null,
   nextDepthTotalAmount: 0,
   onClickReply: null,
+  entityImages: {},
 };
 
 export default Comment;

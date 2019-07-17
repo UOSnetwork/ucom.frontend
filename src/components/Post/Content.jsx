@@ -13,7 +13,7 @@ const PostContent = ({ post }) => {
         EmbedService.renderEmbeds(el.current, post.entityImages);
       }
     }, 0);
-  }, []);
+  }, [post]);
 
   return (
     <div

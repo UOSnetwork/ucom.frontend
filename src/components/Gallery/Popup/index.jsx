@@ -5,7 +5,7 @@ import styles from './styles.css';
 import Popup from '../../Popup';
 import IconClose from '../../Icons/Close';
 import ArrowRight from '../../Icons/GalleryArrowRight';
-import UserCard from '../../UserCard/UserCard';
+import { UserCard } from '../../SimpleCard';
 import { isRightArrowKey, isLeftArrowKey } from '../../../utils/keyboard';
 
 const GalleryPopup = (props) => {

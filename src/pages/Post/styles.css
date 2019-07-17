@@ -1,0 +1,153 @@
+.header {
+  margin: 40px 0 0;
+  padding: 20px;
+  border-radius: 12px 12px 0 0;
+  background: #EDF1F1;
+}
+
+.header .inner {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .header .inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.content {
+  margin: 0 -10px;
+  padding: 40px 20px;
+  box-shadow: 0 0 20px rgba(184, 184, 184, 0.25);
+  background: #fff;
+}
+
+.content .inner {
+  display: grid;
+  grid-template-columns: 1fr 7fr 2fr;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.aside {
+  grid-column-start: 1;
+  grid-column-end: 2;
+}
+
+.bside {
+  grid-column-start: 3;
+  grid-column-end: 4;
+}
+
+.main {
+  grid-row-start: 1;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+@media (max-width: 1023px) {
+  .content .inner {
+    grid-template-columns: 8fr 2fr;
+  }
+
+  .main {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+
+  .aside {
+    display: none;
+  }
+
+  .bside {
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+
+}
+
+@media (max-width: 767px) {
+  .content {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+
+  .content .inner {
+    grid-template-columns: 1fr;
+  }
+
+  .main {
+    grid-row-start: 2;
+  }
+
+  .bside {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+}
+
+.post {
+  margin: 0 0 32px;
+}
+
+.comments {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #E7ECEC;
+  border-width: 0 1px 1px;
+}
+
+.rate {
+  text-align: right;
+}
+
+.rate .value {
+  margin: 0 0 3px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 29px;
+}
+
+.rate .label {
+  padding: 0 10px 0 0;
+  text-transform: uppercase;
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(0,0,0,0.6);
+}
+
+.rating {
+  justify-self: flex-end;
+}
+
+.actions {
+  display: grid;
+  grid-gap: 20px;
+  justify-content: flex-end;
+  margin: 0 0 32px;
+}
+
+@media (max-width: 767px) {
+  .actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rate {
+    text-align: left;
+  }
+
+  .share {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .share [data-tooltipped] {
+    width: 100%;
+  }
+}

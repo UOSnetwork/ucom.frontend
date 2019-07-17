@@ -1,0 +1,64 @@
+.share {
+  box-sizing: border-box;
+  width: 320px;
+  padding: 20px;
+}
+
+.title {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-gap: 10px;
+  align-items: center;
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: normal;
+}
+
+.title.action {
+  cursor: pointer;
+  transition: color 0.2s ease, fill 0.2s ease;
+}
+
+.title.action:hover {
+  color: #D8352F;
+  fill: #D8352F;
+}
+
+.line {
+  margin: 16px 0;
+  border: none;
+  border-bottom: 1px solid #E1E1E1;
+}
+
+.icons {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-gap: 10px;
+}
+
+.copy {
+  display: grid;
+  grid-gap: 10px;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  grid-template-columns: 1fr max-content;
+}
+
+.copy .text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #D8352F;
+}
+
+.copy .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}

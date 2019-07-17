@@ -1,7 +1,8 @@
 import HomePage, { getHomePageData } from './pages/Home';
 import UserPage, { getUserPageData } from './pages/User/index';
 import EditPostPage from './pages/EditPost';
-import PostPage, { PostEosPage, getPostPageData, getPostEosPageData } from './pages/Post';
+import { PostEosPage, getPostPageData, getPostEosPageData } from './pages/Post';
+import { DefaultPost as PostPage } from './pages/Post/index';
 import OverviewPage, { getPageData } from './pages/Overview';
 import Offer, { getPostOfferData } from './pages/Offer';
 import Offer2, { getPostOfferData_2 } from './pages/Offer2';
