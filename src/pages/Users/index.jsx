@@ -16,13 +16,23 @@ import urls from '../../utils/urls';
 import styles from './styles.css';
 
 const Users = ({ location, history }) => {
-  const urlParams = new URLSearchParams(location.search);
-  const page = urlParams.get('page') || 1;
-  const perPage = clamp(urlParams.get('perPage') || 20, 50);
-  const orderBy = urlParams.get('orderBy') || '-current_rate';
-  const [userName, setUserName] = useState(urlParams.get('userName') || '');
+  const getUrlParams = () => {
+    const urlParams = new URLSearchParams(location.search);
+
+    return {
+      page: urlParams.get('page') || 1,
+      perPage: clamp(urlParams.get('perPage') || 20, 50),
+      orderBy: urlParams.get('orderBy') || '-current_rate',
+      userName: urlParams.get('userName') || '',
+    };
+  };
+
+  const urlParams = getUrlParams();
+  const { page, perPage, orderBy } = urlParams;
+  const [userName, setUserName] = useState(urlParams.userName);
   const state = useSelector(state => state.pages.users);
   const dispatch = useDispatch();
+
 
   const getData = async (page, perPage, orderBy, userName, append) => {
     try {
@@ -41,9 +51,11 @@ const Users = ({ location, history }) => {
   const changePageDebounce = useMemo(() => debounce(changePage, 500), []);
 
   useEffect(() => {
-    getData(page, perPage, orderBy, userName);
+    const urlParams = getUrlParams();
+    getData(urlParams.page, urlParams.perPage, urlParams.orderBy, urlParams.userName);
+    setUserName(urlParams.userName);
     window.scrollTo(0, 0);
-  }, [location.search]);
+  }, [location]);
 
   useEffect(() => (
     () => {

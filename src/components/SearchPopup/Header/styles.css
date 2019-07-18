@@ -1,0 +1,53 @@
+.header {
+  box-sizing: border-box;
+  padding: 0 40px;
+  background: #fff;
+}
+
+@media (max-width: 767px) {
+  .header {
+    padding: 0 20px;
+  }
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-column-gap: 20px;
+  align-items: center;
+  height: 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.icon.close {
+  cursor: pointer;
+}
+
+.field {
+  height: 50px;
+}
+
+.field input {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  text-align: center;
+  outline: none;
+}
+
+.field input::placeholder {
+  opacity: 1;
+  color: #C1C1C1;
+}

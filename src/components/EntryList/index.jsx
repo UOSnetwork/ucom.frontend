@@ -53,7 +53,7 @@ const EntryList = (props) => {
 EntryList.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(EntryListItem.propTypes)),
   limit: PropTypes.number,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   onChangePage: PropTypes.func,
   popupData: PropTypes.arrayOf(PropTypes.shape(EntryListItem.propTypes)),
   popupMetadata: EntryListPopup.propTypes.metadata,
@@ -64,12 +64,14 @@ EntryList.propTypes = {
 EntryList.defaultProps = {
   data: [],
   limit: 3,
-  onChangePage: null,
+  title: undefined,
   popupData: undefined,
   popupMetadata: undefined,
   showViewMore: undefined,
+  onChangePage: null,
   onClickViewAll: undefined,
 };
 
 export { default as EntryListItem } from './Item';
+export * from './wrappers';
 export default EntryList;

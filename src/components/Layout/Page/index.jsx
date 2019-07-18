@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import React, { useEffect } from 'react';
 import * as authActions from '../../../actions/auth';
 import { hideNotificationTooltip } from '../../../actions/siteNotifications';
+import * as searchPopupActions from '../../../actions/searchPopup';
 import styles from './styles.css';
 
 const Page = ({ location, children }) => {
@@ -10,8 +11,9 @@ const Page = ({ location, children }) => {
 
   useEffect(() => {
     dispatch(authActions.hidePopup());
+    dispatch(searchPopupActions.hide());
     dispatch(hideNotificationTooltip());
-  }, [location.pathname]);
+  }, [location]);
 
   return (
     <div className={styles.page}>
