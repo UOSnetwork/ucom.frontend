@@ -13,10 +13,6 @@ export const defaultTributeConfig = {
   ),
 
   values: async (text, cb) => {
-    if (text.length < 3) {
-      return;
-    }
-
     try {
       const data = await withLoader(api.searchUsers(text.toLocaleLowerCase()));
       cb(data.slice(0, 20));
