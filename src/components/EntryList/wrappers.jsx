@@ -25,6 +25,10 @@ export const UsersEntryList = ({ ids }) => {
   );
 };
 
+UsersEntryList.propTypes = {
+  ids: PropTypes.arrayOf(PropTypes.number).isRequired,
+};
+
 export const OrgsEntryList = ({ ids }) => {
   const orgs = useSelector(selectOrgsByIds(ids));
 
