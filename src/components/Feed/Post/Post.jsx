@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import Direct from './Direct';
 import Repost from './Repost';
 import Media from './Media';
@@ -13,9 +13,6 @@ import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 const Post = ({
   post, user, owner, commentsContainerId, ...props
 }) => {
-  const [sharePopup, setSharePopup] = useState(false);
-  const toggleShare = () => setSharePopup(!sharePopup);
-
   if (!post || !user) {
     return null;
   }
@@ -28,8 +25,6 @@ const Post = ({
           user={user}
           owner={owner}
           id={props.id}
-          sharePopup={sharePopup}
-          toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
         />
@@ -41,8 +36,6 @@ const Post = ({
           user={user}
           owner={owner}
           id={props.id}
-          sharePopup={sharePopup}
-          toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
         />
@@ -54,8 +47,6 @@ const Post = ({
           user={user}
           owner={owner}
           id={props.id}
-          sharePopup={sharePopup}
-          toggleShare={toggleShare}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
         />

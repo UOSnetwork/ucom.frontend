@@ -12,7 +12,7 @@ import DoneSmall from '../../Icons/Airdrop/DoneSmall';
 import Dots from '../../Icons/Airdrop/Dots';
 import Error from '../../Icons/Airdrop/Error';
 import IconShareCircle from '../../Icons/ShareCircle';
-import ShareBlock from '../../ShareBlock';
+import Share from '../../Share';
 import styles from './styles.css';
 import { authShowPopup } from '../../../actions/auth';
 import Telegram from '../../Icons/Socials/TelegramBlack';
@@ -24,13 +24,8 @@ import IconTelegram from '../../Icons/Socials/Share/Telegram';
 const { AirdropStatuses } = require('ucom.libs.common').Airdrop.Dictionary;
 
 const OfferSidebar = (props) => {
-  const [sharePopupVisibility, setSharePopupVisibility] = useState(false);
   const [shareStatus, setShareStatus] = useState(false);
   const [originLink, setOriginLink] = useState(false);
-
-  const toggleShare = () => {
-    setSharePopupVisibility(!sharePopupVisibility);
-  };
 
   const saveShare = () => {
     localStorage.setItem('ShareAirdrop', true);
@@ -189,26 +184,18 @@ const OfferSidebar = (props) => {
         </div>
       </div>
       <div className={styles.created}>Created <span>{props.createdAt}</span></div>
-      <div
-        role="presentation"
-        className={styles.share}
-        onClick={() => toggleShare()}
-      >
-        <IconShareCircle />
-        <span>Share</span>
 
-        {sharePopupVisibility ? (
-          <div className="post-body__share-popup">
-            <ShareBlock
-              link={props.link}
-              postId={props.postId}
-              onClickClose={toggleShare}
-              repostAvailable={props.repostAvailable}
-              postTypeId={props.postTypeId}
-            />
-          </div>
-        ) : null }
-      </div>
+      <Share
+        socialEnable
+        postId={props.postId}
+        link={props.link}
+        repostEnable={props.repostAvailable}
+      >
+        <div className={styles.share}>
+          <IconShareCircle />
+          <span>Share</span>
+        </div>
+      </Share>
     </Fragment>
   );
 };
@@ -235,7 +222,6 @@ OfferSidebar.propTypes = {
   finishedAt: PropTypes.string,
   link: PropTypes.string.isRequired,
   repostAvailable: PropTypes.bool,
-  postTypeId: PropTypes.number,
   cookie: PropTypes.string,
   gitHubAuthLink: PropTypes.string,
   organizationId: PropTypes.number,
@@ -246,7 +232,6 @@ OfferSidebar.defaultProps = {
   repostAvailable: false,
   cookie: null,
   conditions: null,
-  postTypeId: 1,
   gitHubAuthLink: '',
   startedAt: '',
   createdAt: '',

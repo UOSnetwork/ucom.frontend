@@ -104,7 +104,7 @@ const Post = ({ postId }) => {
 };
 
 Post.propTypes = {
-  postId: PropTypes.string.isRequired,
+  postId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export * from './wrappers';

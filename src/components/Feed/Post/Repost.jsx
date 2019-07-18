@@ -78,7 +78,6 @@ const Repost = ({
         post={post}
         postTypeId={post.postTypeId}
         sharePopup={props.sharePopup}
-        toggleShare={props.toggleShare}
         commentsContainerId={commentsContainerId}
       />
     </div>
@@ -88,7 +87,6 @@ const Repost = ({
 Repost.propTypes = {
   id: PropTypes.number.isRequired,
   sharePopup: PropTypes.bool.isRequired,
-  toggleShare: PropTypes.func.isRequired,
   feedTypeId: PropTypes.number.isRequired,
   postTypeId: PropTypes.number,
   post: PropTypes.objectOf(PropTypes.any).isRequired,

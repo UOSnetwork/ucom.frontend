@@ -46,7 +46,6 @@ const Media = ({
         commentsCount={post.commentsCount}
         postTypeId={post.postTypeId}
         sharePopup={props.sharePopup}
-        toggleShare={props.toggleShare}
         commentsContainerId={commentsContainerId}
       />
     </div>
@@ -57,7 +56,6 @@ Media.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
   sharePopup: PropTypes.bool.isRequired,
-  toggleShare: PropTypes.func.isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,

@@ -55,7 +55,6 @@ const Direct = ({
               commentsCount={post.commentsCount}
               postTypeId={post.postTypeId}
               sharePopup={props.sharePopup}
-              toggleShare={props.toggleShare}
             />
           </div>
         </Fragment>
@@ -84,7 +83,6 @@ const Direct = ({
             post={post}
             postTypeId={post.postTypeId}
             sharePopup={props.sharePopup}
-            toggleShare={props.toggleShare}
             commentsContainerId={commentsContainerId}
           />
         </div>
@@ -97,7 +95,6 @@ Direct.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
   sharePopup: PropTypes.bool.isRequired,
-  toggleShare: PropTypes.func.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   owner: PropTypes.objectOf(PropTypes.any).isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,

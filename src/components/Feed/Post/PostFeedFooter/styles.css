@@ -27,9 +27,10 @@
   fill: #C4C4C4;
   cursor: pointer;
   position: relative;
+  transition: color 0.2s ease, fill 0.2s ease,;
 }
 
-.shareActive {
+:global(.active) > .share {
   color: #000;
   fill: #000;
 }
