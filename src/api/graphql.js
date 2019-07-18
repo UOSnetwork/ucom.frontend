@@ -775,6 +775,46 @@ const api = {
       throw e;
     }
   },
+
+  async searchEntities(
+    searchQuery,
+    params = {},
+    commonParams = {
+      page: 1,
+      perPage: 7,
+    },
+  ) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      users: GraphQLSchema.getManyUsersQueryPart({
+        filters: {
+          users_identity_pattern: searchQuery,
+        },
+        order_by: '-scaled_importance',
+        ...snakes(params.users || commonParams),
+      }),
+      orgs: GraphQLSchema.getManyOrganizationQueryPart({
+        filters: {
+          organizations_identity_pattern: searchQuery,
+        },
+        order_by: '-current_rate',
+        ...snakes(params.orgs || commonParams),
+      }),
+      tags: GraphQLSchema.getManyTagsQueryPart({
+        filters: {
+          tags_identity_pattern: searchQuery,
+        },
+        order_by: '-current_rate',
+        ...snakes(params.tags || commonParams),
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 export default api;

@@ -1,0 +1,23 @@
+.searchPopup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+}
+
+.content {
+  position: relative;
+  left: -100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  opacity: 0;
+  transition: opacity 0.5s ease, left 0s ease 0.5s;
+}
+
+.content.active {
+  opacity: 1;
+  left: 0;
+  transition: opacity 0.5s ease, left 0s ease 0s;
+}

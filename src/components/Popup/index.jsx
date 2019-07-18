@@ -47,6 +47,7 @@ const Popup = (props) => {
       className={classNames({
         [styles.popup]: true,
         [styles.transparent]: props.transparent,
+        [styles.alignTop]: props.alignTop,
         [props.mod]: !!props.mod,
       })}
       style={{
@@ -75,20 +76,22 @@ const Popup = (props) => {
 Popup.propTypes = {
   id: PropTypes.string,
   mod: PropTypes.string,
-  onClickClose: PropTypes.func,
   children: PropTypes.node.isRequired,
   showCloseIcon: PropTypes.bool,
   paddingBottom: PropTypes.string,
   transparent: PropTypes.bool,
+  alignTop: PropTypes.bool,
+  onClickClose: PropTypes.func,
 };
 
 Popup.defaultProps = {
   id: undefined,
   mod: undefined,
-  onClickClose: null,
   showCloseIcon: false,
   paddingBottom: undefined,
   transparent: false,
+  alignTop: false,
+  onClickClose: null,
 };
 
 export { default as Content } from './Content';

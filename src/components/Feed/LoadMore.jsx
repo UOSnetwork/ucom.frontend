@@ -9,21 +9,22 @@ class LoadMore extends PureComponent {
     super(props);
 
     this.onScroll = throttle(() => {
-      if (!this.el) {
+      if (!this.el || this.hasBottom) {
         return;
       }
 
       const rect = this.el.getBoundingClientRect();
 
+      const factor = rect.top - window.innerHeight;
 
-      if (rect.top - window.innerHeight > 800) {
+      if (factor < 0 || factor > 800) {
         return;
       }
 
       if (this.props.onClick) {
         this.props.onClick();
       }
-    }, 100);
+    }, 500);
   }
 
   componentDidMount() {
@@ -66,12 +67,6 @@ LoadMore.propTypes = {
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   url: PropTypes.string,
-};
-
-LoadMore.defaultProps = {
-  url: null,
-  disabled: false,
-  onClick: null,
 };
 
 LoadMore.defaultProps = {

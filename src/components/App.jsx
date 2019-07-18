@@ -19,6 +19,7 @@ import SendTokens from '../components/Resources/Actions/SendTokens';
 import { addMaintenanceNotification } from '../actions/notifications';
 import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
+import SearchPopup from '../components/SearchPopup';
 import urls from '../utils/urls';
 
 const App = () => {
@@ -71,6 +72,7 @@ const App = () => {
         </Switch>
       </Page>
 
+      <SearchPopup />
       <Auth />
 
       {wallet.buyRamVisible && <BuyRam />}
