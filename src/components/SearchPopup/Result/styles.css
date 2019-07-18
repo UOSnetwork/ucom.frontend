@@ -13,9 +13,16 @@
 .inner {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 70px;
+  grid-column-gap: 70px;
+  grid-row-gap: 40px;
   max-width: 1000px;
   margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
 }
 
 .title {

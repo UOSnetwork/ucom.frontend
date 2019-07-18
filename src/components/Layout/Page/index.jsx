@@ -13,7 +13,7 @@ const Page = ({ location, children }) => {
     dispatch(authActions.hidePopup());
     dispatch(searchPopupActions.hide());
     dispatch(hideNotificationTooltip());
-  }, [location.pathname]);
+  }, [location]);
 
   return (
     <div className={styles.page}>

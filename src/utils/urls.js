@@ -147,7 +147,18 @@ const urls = {
   },
 
   getUsersPagingUrl(params) {
-    return `/users?page=${params.page}&orderBy=${params.orderBy}&perPage=${params.perPage}&userName=${params.userName}`;
+    const defaultParams = {
+      page: 1,
+      orderBy: '-current_rate',
+      perPage: 20,
+    };
+
+    const mergedParams = {
+      ...defaultParams,
+      ...params,
+    };
+
+    return `/users?page=${mergedParams.page}&orderBy=${mergedParams.orderBy}&perPage=${mergedParams.perPage}&userName=${mergedParams.userName}`;
   },
 
   getSourceUrl(source) {

@@ -11,9 +11,11 @@ const getInitialState = () => ({
     },
     orgs: {
       ids: [],
+      hasMore: false,
     },
     tags: {
-      ids: [],
+      titles: [],
+      hasMore: false,
     },
   },
 });
