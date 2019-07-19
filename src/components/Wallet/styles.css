@@ -1,8 +1,8 @@
 .wallet {
   box-sizing: border-box;
-  padding: 92px 40px 0;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1280px;
+  padding: 92px 40px 0;
   margin: 0 auto;
 }
 
@@ -15,11 +15,21 @@
 }
 
 .section {
-  margin: 0 0 69px;
+  max-width: 1000px;
+  margin: 0 auto 69px;
 }
 
 .section:last-child {
   margin-bottom: 0;
+}
+
+.section {
+  max-width: 1000px;
+  margin: 0 auto 69px;
+}
+
+.section.wide {
+  max-width: 1200px;
 }
 
 @media (max-width: 767px) {

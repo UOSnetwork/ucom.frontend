@@ -1,4 +1,3 @@
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import React from 'react';
@@ -7,13 +6,11 @@ import Transfers from '../Resources/Transfers';
 import styles from './styles.css';
 import urls from '../../utils/urls';
 import Menu from '../Menu';
+import ReferralBanner from '../ReferralBanner';
 import { logout } from '../../utils/auth';
 import Popup, { Content } from '../Popup';
 
-// TODO: remove menu-wallet.less nad fix dependencies
-const Wallet = ({
-  location, onClickClose,
-}) => (
+const Wallet = ({ location, onClickClose }) => (
   <Popup
     transparent
     mod="wallet"
@@ -53,6 +50,9 @@ const Wallet = ({
           <h2 className={styles.title}>Wallet</h2>
           <Tokens />
         </div>
+        <div className={`${styles.section} ${styles.wide}`}>
+          <ReferralBanner />
+        </div>
         <div className={styles.section}>
           <h2 className={styles.title}>Transfers</h2>
           <Transfers />
@@ -63,12 +63,7 @@ const Wallet = ({
 );
 
 Wallet.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
   onClickClose: PropTypes.func.isRequired,
 };
 
-export default withRouter(connect(state => ({
-  settings: state.settings,
-}))(Wallet));
+export default withRouter(Wallet);

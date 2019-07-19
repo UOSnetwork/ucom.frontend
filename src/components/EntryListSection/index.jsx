@@ -10,7 +10,9 @@ const EntryListSection = (props) => {
 
   return (
     <div className={styles.section}>
-      <div className={styles.title}>{props.title} {props.count}</div>
+      {props.titleEnabled &&
+        <div className={styles.title}>{props.title} {props.count}</div>
+      }
       <div className={styles.content}>
         <EntryList
           title={props.title}
@@ -29,6 +31,7 @@ const EntryListSection = (props) => {
 
 EntryListSection.propTypes = {
   title: PropTypes.string.isRequired,
+  titleEnabled: PropTypes.bool,
   data: PropTypes.arrayOf(PropTypes.shape(EntryListItem.propTypes)),
   count: PropTypes.number,
   limit: EntryList.propTypes.limit,
@@ -40,6 +43,7 @@ EntryListSection.propTypes = {
 };
 
 EntryListSection.defaultProps = {
+  titleEnabled: true,
   data: [],
   count: null,
   limit: undefined,

@@ -8,7 +8,7 @@
   width: 100%;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 86px 40px 128px;
+  padding: 86px 40px 60px;
   font-size: 16px;
   line-height: 28px;
 }
@@ -145,6 +145,10 @@ h4.title {
 
 .brainkeyForm .error .text {
   vertical-align: middle;
+}
+
+.refferals {
+  max-width: 400px;
 }
 
 @media (max-width: 1023px) {

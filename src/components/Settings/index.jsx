@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Element } from 'react-scroll';
-import PropTypes from 'prop-types';
 import React, { useState, Fragment, useEffect } from 'react';
 import Popup, { Content } from '../Popup';
 import styles from './styles.css';
 import CopyPanel from '../CopyPanel';
 import Button from '../Button/index';
 import VerticalMenu from '../VerticalMenu/index';
+import { EntryListSectionUsersWrapper } from '../EntryListSection';
 import Resources from '../Resources';
 import ChangePassword from '../Auth/Features/ChangePassword';
 import GenerateSocialKey from '../Auth/Features/GenerateSocialKey';
@@ -18,11 +18,17 @@ import {
   encryptedActiveKeyIsExists,
 } from '../../utils/keys';
 import OwnerActiveKeys from './OwnerActiveKeys';
-import { addErrorNotification } from '../../actions/notifications';
+import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
+import * as settingsActions from '../../actions/settings';
 import IconInputComplete from '../Icons/InputComplete';
 import urls from '../../utils/urls';
+import withLoader from '../../utils/withLoader';
+import { selectOwner } from '../../store/selectors';
 
-const Settings = (props) => {
+const Settings = () => {
+  const dispatch = useDispatch();
+  const owner = useSelector(selectOwner);
+  const state = useSelector(state => state.settings);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
   const [generateSocialKeyVisible, setGenerateSocialKeyVisible] = useState(false);
   const [passwordIsSet, setPasswordIsSet] = useState(encryptedActiveKeyIsExists());
@@ -33,7 +39,7 @@ const Settings = (props) => {
     { title: 'Keys', name: 'Keys' },
   ];
 
-  if (props.owner.affiliates && props.owner.affiliates.referralRedirectUrl) {
+  if (owner.affiliates && owner.affiliates.referralRedirectUrl) {
     sections.push({ title: 'Referral Link', name: 'Referral' });
   }
 
@@ -41,7 +47,15 @@ const Settings = (props) => {
     window.location.hash = '';
   };
 
-  useEffect(() => {
+  const getReferrals = async (page) => {
+    try {
+      await withLoader(dispatch(settingsActions.getReferrals(owner.id, page)));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
+  const restoreKeys = () => {
     try {
       if (socialKeyIsExists()) {
         const socialKey = restoreSocialKey();
@@ -51,10 +65,24 @@ const Settings = (props) => {
           socialPublicKey: getPublicKeyByPrivateKey(socialKey),
         });
       }
-    } catch (e) {
-      props.dispatch(addErrorNotification(e.message));
+    } catch (err) {
+      dispatch(addErrorNotification(err.message));
     }
+  };
+
+  useEffect(() => {
+    restoreKeys();
+
+    return () => {
+      dispatch(settingsActions.reset());
+    };
   }, []);
+
+  useEffect(() => {
+    if (owner.id) {
+      getReferrals(1);
+    }
+  }, [owner.id]);
 
   return (
     <Fragment>
@@ -166,23 +194,41 @@ const Settings = (props) => {
                 </div>
               </Element>
 
-              {props.owner.affiliates && props.owner.affiliates.referralRedirectUrl &&
+              {owner.affiliates && owner.affiliates.referralRedirectUrl &&
                 <Element
                   name="Referral"
                   className={styles.section}
                 >
                   <h3 className={styles.title}>Referral Link</h3>
+
                   <div className={styles.subSection}>
+                    <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get half the importance they acquire.</p>
+                    <div className={styles.copy}>
+                      <CopyPanel
+                        label="Your referral link"
+                        value={owner.affiliates.referralRedirectUrl}
+                      />
+                    </div>
+                  </div>
+
+                  {state.refferals.ids.length > 0 &&
                     <div className={styles.subSection}>
-                      <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get half the importance they acquire.</p>
-                      <div className={styles.copy}>
-                        <CopyPanel
-                          label="Your referral link"
-                          value={props.owner.affiliates.referralRedirectUrl}
+                      <h4 className={styles.title}>Your Refferals</h4>
+                      <div className={styles.refferals}>
+                        <EntryListSectionUsersWrapper
+                          titleEnabled={false}
+                          title="Your Refferals"
+                          limit={3}
+                          showViewMore={state.refferals.metadata.totalAmount > state.refferals.ids.length}
+                          count={state.refferals.metadata.totalAmount}
+                          ids={state.refferals.ids}
+                          popupIds={state.refferals.popupIds}
+                          popupMetadata={state.refferals.metadata}
+                          onChangePage={getReferrals}
                         />
                       </div>
                     </div>
-                  </div>
+                  }
                 </Element>
               }
             </div>
@@ -191,7 +237,7 @@ const Settings = (props) => {
               Go to&nbsp;
               <Link
                 className="link red"
-                to={urls.getUserEditProfileUrl(props.owner.id)}
+                to={urls.getUserEditProfileUrl(owner.id)}
               >
                 Profile Edit
               </Link>
@@ -224,7 +270,7 @@ const Settings = (props) => {
                 socialPublicKey: getPublicKeyByPrivateKey(socialKey),
               });
             } catch (e) {
-              props.dispatch(addErrorNotification(e.message));
+              dispatch(addErrorNotification(e.message));
             }
           }}
         />
@@ -233,16 +279,4 @@ const Settings = (props) => {
   );
 };
 
-Settings.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  owner: PropTypes.shape({
-    id: PropTypes.number,
-    affiliates: PropTypes.shape({
-      referralRedirectUrl: PropTypes.string,
-    }),
-  }).isRequired,
-};
-
-export default connect(state => ({
-  owner: state.user.data,
-}))(Settings);
+export default Settings;

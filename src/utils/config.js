@@ -1,33 +1,21 @@
 import config from '../../package.json';
 
-export const getBackendConfig = () => {
-  let conf = config.backend.staging;
+export const getBackendConfig = () => (
+  process.env.NODE_ENV === 'production' ? config.backend.production : config.backend.staging
+);
 
-  if (process.env.NODE_ENV === 'production') {
-    conf = config.backend.production;
-  }
+export const getUosGroupId = () => (
+  process.env.NODE_ENV === 'production' ? config.uosGroupId.production : config.uosGroupId.staging
+);
 
-  return conf;
-};
+export const getEosPostId = () => (
+  process.env.NODE_ENV === 'production' ? config.eosPostId.production : config.eosPostId.staging
+);
 
-export const getUosGroupId = () => {
-  let id = config.uosGroupId.staging;
+export const getReferralPostId = () => (
+  process.env.NODE_ENV === 'production' ? config.referralPostId.production : config.referralPostId.staging
+);
 
-  if (process.env.NODE_ENV === 'production') {
-    id = config.uosGroupId.production;
-  }
-
-  return id;
-};
-
-export const getGrecaptchaSitekey = () => config.grecaptchaSitekey;
-
-export const getEosPostId = () => {
-  let id = config.eosPostId.staging;
-
-  if (process.env.NODE_ENV === 'production') {
-    id = config.eosPostId.production;
-  }
-
-  return id;
-};
+export const getGrecaptchaSitekey = () => (
+  config.grecaptchaSitekey
+);

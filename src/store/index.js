@@ -22,10 +22,12 @@ import userPage from './userPage';
 import orgPage from './orgPage';
 import nodes from './nodes';
 import pages from './pages';
+import settings from './settings';
 import searchPopup from './searchPopup';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    settings,
     searchPopup,
     pages,
     mainPage,
