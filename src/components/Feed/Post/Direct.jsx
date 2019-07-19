@@ -54,7 +54,6 @@ const Direct = ({
               formIsVisible={formIsVisible}
               commentsCount={post.commentsCount}
               postTypeId={post.postTypeId}
-              sharePopup={props.sharePopup}
             />
           </div>
         </Fragment>
@@ -82,7 +81,6 @@ const Direct = ({
             commentsCount={post.commentsCount}
             post={post}
             postTypeId={post.postTypeId}
-            sharePopup={props.sharePopup}
             commentsContainerId={commentsContainerId}
           />
         </div>
@@ -94,7 +92,6 @@ const Direct = ({
 Direct.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
-  sharePopup: PropTypes.bool.isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   owner: PropTypes.objectOf(PropTypes.any).isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -108,6 +105,5 @@ Direct.defaultProps = {
 export default memo(Direct, (prev, next) => (
   prev.owner.id === next.owner.id &&
   prev.post.description === next.post.description &&
-  prev.sharePopup === next.sharePopup &&
   isEqual(prev.post.entityImages, next.post.entityImages)
 ));

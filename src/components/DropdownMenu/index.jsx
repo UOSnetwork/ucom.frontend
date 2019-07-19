@@ -88,7 +88,7 @@ const DropdownMenu = (props) => {
 DropdownMenu.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     url: PropTypes.string,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
     onClick: PropTypes.func,
     disabled: PropTypes.bool,
     type: PropTypes.oneOf([

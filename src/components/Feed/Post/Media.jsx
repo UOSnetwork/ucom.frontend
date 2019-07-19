@@ -45,7 +45,6 @@ const Media = ({
         post={post}
         commentsCount={post.commentsCount}
         postTypeId={post.postTypeId}
-        sharePopup={props.sharePopup}
         commentsContainerId={commentsContainerId}
       />
     </div>
@@ -55,7 +54,6 @@ const Media = ({
 Media.propTypes = {
   id: PropTypes.number.isRequired,
   feedTypeId: PropTypes.number.isRequired,
-  sharePopup: PropTypes.bool.isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,
@@ -65,6 +63,4 @@ Media.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
-export default memo(Media, (prev, next) => (
-  prev.sharePopup === next.sharePopup
-));
+export default memo(Media);

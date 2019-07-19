@@ -76,6 +76,5 @@ export default connect((state, props) => {
   next.post &&
   prev.owner.id === next.owner.id &&
   prev.post.description === next.post.description &&
-  prev.sharePopup === next.sharePopup &&
   isEqual(prev.post.entityImages, next.post.entityImages)
 )));

@@ -77,7 +77,6 @@ const Repost = ({
         commentsCount={post.commentsCount}
         post={post}
         postTypeId={post.postTypeId}
-        sharePopup={props.sharePopup}
         commentsContainerId={commentsContainerId}
       />
     </div>
@@ -86,7 +85,6 @@ const Repost = ({
 
 Repost.propTypes = {
   id: PropTypes.number.isRequired,
-  sharePopup: PropTypes.bool.isRequired,
   feedTypeId: PropTypes.number.isRequired,
   postTypeId: PropTypes.number,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -99,6 +97,4 @@ Repost.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
 };
 
-export default memo(Repost, (prev, next) => (
-  prev.sharePopup === next.sharePopup
-));
+export default memo(Repost);

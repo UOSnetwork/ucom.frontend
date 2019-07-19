@@ -39,7 +39,7 @@ const PostFeedHeader = ({ post, ...props }) => {
         props.addSuccessNotification('Link copied to clipboard');
       },
     },
-  ];
+  ].filter(i => Boolean(i));
 
   return (
     <Fragment>
@@ -72,9 +72,9 @@ const PostFeedHeader = ({ post, ...props }) => {
         {!props.formIsVisible &&
           <div className={styles.dropdown}>
             <DropdownMenu
-              onClickButton={onClickDropdownButton}
-              items={items.filter(e => e)}
+              items={items}
               position="bottom-end"
+              onClickButton={onClickDropdownButton}
             />
           </div>
         }
