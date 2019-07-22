@@ -56,7 +56,7 @@ const Notification = (props) => {
 };
 
 Notification.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   title: PropTypes.string,
   message: PropTypes.string.isRequired,
   type: PropTypes.number.isRequired,

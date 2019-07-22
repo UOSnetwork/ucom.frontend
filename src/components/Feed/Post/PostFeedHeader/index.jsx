@@ -9,7 +9,7 @@ import urls from '../../../../utils/urls';
 import { addSuccessNotification } from '../../../../actions/notifications';
 import styles from './styles.css';
 import UserPick from '../../../UserPick/UserPick';
-import { POST_TYPE_MEDIA_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
+import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
 import { copyToClipboard } from '../../../../utils/text';
 import fromNow from '../../../../utils/fromNow';
 
@@ -19,27 +19,32 @@ const PostFeedHeader = ({ post, ...props }) => {
   }
 
   const [leftTime, setLeftTime] = useState(0);
-  const isEditable = postIsEditable(post.createdAt, POST_EDIT_TIME_LIMIT);
+
   const onClickDropdownButton = () => {
     setLeftTime(15 - moment().diff(post.createdAt, 'm'));
   };
 
-  const items = [
-    post.userId === props.userId ? {
-      title: isEditable
-        ? <span>Edit <span className={styles.leftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
-        : <span className={styles.limit}>Can only edit in first 15 min </span>,
+  const items = [{
+    title: 'Copy Link',
+    onClick: () => {
+      copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`);
+      props.addSuccessNotification('Link copied to clipboard');
+    },
+  }];
+
+  if (props.user && props.user.id === post.userId && post.postTypeId !== POST_TYPE_REPOST_ID) {
+    const isEditable = postIsEditable(post.createdAt, POST_EDIT_TIME_LIMIT);
+
+    items.unshift({
+      title: isEditable ? (
+        <span>Edit <span className={styles.leftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
+      ) : (
+        <span className={styles.limit}>Can only edit in first 15 min </span>
+      ),
       onClick: isEditable ? props.showForm : undefined,
       disabled: !isEditable,
-    } : null,
-    {
-      title: 'Copy Link',
-      onClick: () => {
-        copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`);
-        props.addSuccessNotification('Link copied to clipboard');
-      },
-    },
-  ].filter(i => Boolean(i));
+    });
+  }
 
   return (
     <Fragment>
