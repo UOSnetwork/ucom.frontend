@@ -78,7 +78,8 @@ const SendTokens = (props) => {
                   isMulti={false}
                   loadOptions={async (q) => {
                     try {
-                      const data = await withLoader(api.searchUsers(q));
+                      const query = q[0] === '@' ? q.substr(1) : q;
+                      const data = await withLoader(api.searchUsers(query));
                       return data.slice(0, 20).filter(i => i.id !== props.owner.id);
                     } catch (err) {
                       return [];
