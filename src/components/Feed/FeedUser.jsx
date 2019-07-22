@@ -1,32 +1,33 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, memo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { feedReset, feedGetUserPosts, feedCreatePost } from '../../actions/feed';
 import { FEED_PER_PAGE } from '../../utils/feed';
 import { POST_TYPE_DIRECT_ID } from '../../utils/posts';
 import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
-import loader from '../../utils/loader';
 import withLoader from '../../utils/withLoader';
 
 const FeedUser = (props) => {
+  const dispatch = useDispatch();
+  const feed = useSelector(state => state.feed, isEqual);
+
   const onClickLoadMore = async () => {
-    loader.start();
-    await props.feedGetUserPosts({
+    await withLoader(dispatch(feedGetUserPosts({
       feedTypeId: props.feedTypeId,
-      page: props.feed.metadata.page + 1,
+      page: feed.metadata.page + 1,
       perPage: FEED_PER_PAGE,
       userId: props.userId,
       organizationId: props.organizationId,
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
-    });
-    loader.done();
+    })));
   };
 
   const onSubmitPostForm = (description, entityImages) => {
-    withLoader(props.feedCreatePost(props.feedTypeId, {
+    withLoader(dispatch(feedCreatePost(props.feedTypeId, {
       organizationId: props.organizationId,
       userId: props.userId,
       data: {
@@ -34,18 +35,18 @@ const FeedUser = (props) => {
         entityImages,
         postTypeId: POST_TYPE_DIRECT_ID,
       },
-    }));
+    })));
     if (props.callbackOnSubmit) {
       props.callbackOnSubmit();
     }
   };
 
   useEffect(() => {
-    props.feedReset();
-    props.commentsResetContainerDataById({
+    dispatch(feedReset());
+    dispatch(commentsResetContainerDataById({
       containerId: COMMENTS_CONTAINER_ID_FEED_POST,
-    });
-    props.feedGetUserPosts({
+    }));
+    dispatch(feedGetUserPosts({
       feedTypeId: props.feedTypeId,
       page: 1,
       perPage: FEED_PER_PAGE,
@@ -53,14 +54,14 @@ const FeedUser = (props) => {
       organizationId: props.organizationId,
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
-    });
+    }));
   }, [props.userId, props.organizationId, props.tagIdentity]);
 
   return (
     <FeedView
-      hasMore={props.feed.metadata.hasMore}
-      postIds={props.feed.postIds}
-      loading={props.feed.loading}
+      hasMore={feed.metadata.hasMore}
+      postIds={feed.postIds}
+      loading={feed.loading}
       feedInputInitialText={props.feedInputInitialText}
       onClickLoadMore={onClickLoadMore}
       onSubmitPostForm={onSubmitPostForm}
@@ -71,15 +72,10 @@ const FeedUser = (props) => {
 };
 
 FeedUser.propTypes = {
-  feed: PropTypes.objectOf(PropTypes.any).isRequired,
   feedTypeId: PropTypes.number.isRequired,
   userId: PropTypes.number,
   organizationId: PropTypes.number,
   tagIdentity: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  feedReset: PropTypes.func.isRequired,
-  commentsResetContainerDataById: PropTypes.func.isRequired,
-  feedGetUserPosts: PropTypes.func.isRequired,
-  feedCreatePost: PropTypes.func.isRequired,
   feedInputInitialText: PropTypes.string,
   filter: PropTypes.func,
   callbackOnSubmit: PropTypes.func,
@@ -94,15 +90,4 @@ FeedUser.defaultProps = {
   callbackOnSubmit: null,
 };
 
-export default connect(
-  state => ({
-    feed: state.feed,
-    user: state.user.data,
-  }),
-  {
-    feedReset,
-    feedGetUserPosts,
-    feedCreatePost,
-    commentsResetContainerDataById,
-  },
-)(FeedUser);
+export default memo(FeedUser);
