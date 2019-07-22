@@ -15,14 +15,18 @@ import { addRepost } from '../../actions/posts';
 import styles from './styles.css';
 
 const Share = ({
-  children, link, postId, repostEnable, socialEnable,
+  children, link, directUrl, postId, repostEnable, socialEnable,
 }) => {
   const dispatch = useDispatch();
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    setUrl(`${window.location.origin}${link}`);
-  }, []);
+    if (directUrl) {
+      setUrl(directUrl);
+    } else if (link) {
+      setUrl(`${window.location.origin}${link}`);
+    }
+  }, [link, directUrl]);
 
   return (
     <Tooltip
@@ -126,13 +130,16 @@ const Share = ({
 };
 
 Share.propTypes = {
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string,
+  directUrl: PropTypes.string,
   postId: PropTypes.number,
   repostEnable: PropTypes.bool,
   socialEnable: PropTypes.bool,
 };
 
 Share.defaultProps = {
+  link: undefined,
+  directUrl: undefined,
   postId: undefined,
   repostEnable: false,
   socialEnable: false,

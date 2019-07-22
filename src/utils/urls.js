@@ -58,7 +58,7 @@ const urls = {
       return null;
     }
 
-    if (postTypeId === POST_TYPE_MEDIA_ID) {
+    if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
       return `/posts/${id}`;
     }
 

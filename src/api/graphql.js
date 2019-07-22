@@ -815,6 +815,31 @@ const api = {
       throw e;
     }
   },
+
+  async getUserReferrals(
+    userId,
+    page = 1,
+    perPage = 10,
+    orderBy = '-account_name',
+  ) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      users: GraphQLSchema.getOneUserReferralsQueryPart({
+        filters: {
+          user_id: userId,
+        },
+        order_by: orderBy,
+        page,
+        per_page: perPage,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (e) {
+      throw e;
+    }
+  },
 };
 
 export default api;

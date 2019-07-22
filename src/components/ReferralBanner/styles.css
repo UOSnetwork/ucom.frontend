@@ -1,0 +1,42 @@
+.referralBanner {
+  box-shadow: 0px 1px 4px rgba(35, 40, 43, 0.13);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 41px;
+  background: url('./banner.svg') 100% calc(100% + 10px) no-repeat;
+}
+
+.title {
+  margin: 0 0 18px;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.text {
+  margin: 0 0 1em;
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 680px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  align-items: center;
+  grid-column-gap: 40px;
+  grid-row-gap: 30px;
+  font-size: 16px;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}
