@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -7,8 +8,8 @@ import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 
 export const FollowersWrapper = ({ usersIds, popupUsersIds, ...props }) => {
-  const users = useSelector(selectUsersByIds(usersIds));
-  const popupUsers = useSelector(selectUsersByIds(popupUsersIds));
+  const users = useSelector(selectUsersByIds(usersIds), isEqual);
+  const popupUsers = useSelector(selectUsersByIds(popupUsersIds), isEqual);
 
   const mapProps = user => ({
     id: user.id,

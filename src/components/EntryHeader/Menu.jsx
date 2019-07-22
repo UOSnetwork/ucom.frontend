@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { copyToClipboard } from '../../utils/text';
 import styles from './styles.css';
 import DropdownMenu from '../DropdownMenu';
@@ -14,4 +14,4 @@ const Menu = () => (
   </div>
 );
 
-export default Menu;
+export default memo(Menu);

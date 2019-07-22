@@ -1,7 +1,7 @@
-import { pick } from 'lodash';
+import { pick, isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from '../../EntryHeader/styles.css';
 import Avatar from '../../EntryHeader/Avatar';
 import urls from '../../../utils/urls';
@@ -20,9 +20,30 @@ import { USER_EDITABLE_PROPS } from '../../../utils/constants';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 
 const UserHead = (props) => {
-  const user = useSelector(selectUserById(props.userId));
-  const owner = useSelector(selectOwner);
+  const user = useSelector(selectUserById(props.userId), isEqual);
+  const owner = useSelector(selectOwner, isEqual);
   const dispatch = useDispatch();
+
+  const onChangeAvatar = useCallback(async (file) => {
+    const oldAvatarFilename = user.avatarFilename;
+
+    try {
+      dispatch(addUsers([{
+        id: owner.id,
+        avatarFilename: getFilePreview(file),
+      }]));
+      withLoader(dispatch(updateUser({
+        ...pick(user, USER_EDITABLE_PROPS),
+        avatarFilename: file,
+      })));
+    } catch (err) {
+      dispatch(addUsers([{
+        id: owner.id,
+        avatarFilename: oldAvatarFilename,
+      }]));
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  }, [user, owner]);
 
   if (!user) {
     return null;
@@ -43,26 +64,7 @@ const UserHead = (props) => {
           <Avatar
             src={urls.getFileUrl(user.avatarFilename)}
             changeEnabled={userIsOwner(user, owner)}
-            onChange={async (file) => {
-              const oldAvatarFilename = user.avatarFilename;
-
-              try {
-                dispatch(addUsers([{
-                  id: owner.id,
-                  avatarFilename: getFilePreview(file),
-                }]));
-                withLoader(dispatch(updateUser({
-                  ...pick(user, USER_EDITABLE_PROPS),
-                  avatarFilename: file,
-                })));
-              } catch (err) {
-                dispatch(addUsers([{
-                  id: owner.id,
-                  avatarFilename: oldAvatarFilename,
-                }]));
-                dispatch(addErrorNotificationFromResponse(err));
-              }
-            }}
+            onChange={onChangeAvatar}
           />
         </div>
 

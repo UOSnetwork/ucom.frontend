@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash';
+import { sortBy, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import pluralize from 'pluralize';
 import React from 'react';
@@ -11,11 +11,11 @@ import { SOURCE_TYPE_EXTERNAL, USERS_TEAM_STATUS_ID_CONFIRMED } from '../../util
 import { extractHostname } from '../../utils/url';
 
 export const EntryListSectionUsersWrapper = (props) => {
-  const users = useSelector(selectUsersByIds(props.ids));
+  const users = useSelector(selectUsersByIds(props.ids), isEqual);
   let popupUsers;
 
   if (props.popupIds) {
-    popupUsers = useSelector(selectUsersByIds(props.popupIds));
+    popupUsers = useSelector(selectUsersByIds(props.popupIds), isEqual);
   }
 
   const mapProps = user => ({
@@ -47,11 +47,11 @@ EntryListSectionUsersWrapper.defaultProps = {
 };
 
 export const EntryListSectionOrgsWrapper = (props) => {
-  const orgs = useSelector(selectOrgsByIds(props.ids));
+  const orgs = useSelector(selectOrgsByIds(props.ids), isEqual);
   let popupOrgs;
 
   if (props.popupIds) {
-    popupOrgs = useSelector(selectOrgsByIds(props.popupIds));
+    popupOrgs = useSelector(selectOrgsByIds(props.popupIds), isEqual);
   }
 
   const mapProps = org => ({
@@ -84,11 +84,11 @@ EntryListSectionOrgsWrapper.defaultProps = {
 };
 
 export const EntryListSectionTagsWrapper = (props) => {
-  const tags = useSelector(selectTagsByTitles(props.titles));
+  const tags = useSelector(selectTagsByTitles(props.titles), isEqual);
   let popupTags;
 
   if (props.popupTitles) {
-    popupTags = useSelector(selectTagsByTitles(props.popupTitles));
+    popupTags = useSelector(selectTagsByTitles(props.popupTitles), isEqual);
   }
 
   const mapProps = tag => ({
@@ -121,7 +121,7 @@ EntryListSectionTagsWrapper.defaultProps = {
 };
 
 export const EntryListSectionOrgSourcesWrapper = ({ orgId, ...props }) => {
-  const org = useSelector(selectOrgById(orgId)) || {};
+  const org = useSelector(selectOrgById(orgId), isEqual) || {};
   const sources = [
     ...(org.communitySources || []),
     ...(org.partnershipSources || []),
@@ -156,7 +156,7 @@ EntryListSectionOrgSourcesWrapper.propTypes = {
 };
 
 export const EntryListSectionOrgAdminsWrapper = ({ orgId, ...props }) => {
-  const org = useSelector(selectOrgById(orgId)) || {};
+  const org = useSelector(selectOrgById(orgId), isEqual) || {};
 
   const users = [
     ...(org.user ? [org.user] : []),

@@ -1,7 +1,7 @@
+import { isEqual } from 'lodash';
 import classNames from 'classnames';
 import { Route, Switch } from 'react-router';
-import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import UserHead from '../../components/User/UserHead/index';
 import LayoutBase from '../../components/Layout/LayoutBase';
@@ -33,9 +33,9 @@ import { selectUserById, selectOwner } from '../../store/selectors';
 
 const UserPage = (props) => {
   const userIdentity = props.match.params.userId;
-  const user = useSelector(selectUserById(userIdentity));
-  const owner = useSelector(selectOwner);
-  const state = useSelector(state => state.userPage);
+  const user = useSelector(selectUserById(userIdentity), isEqual);
+  const owner = useSelector(selectOwner, isEqual);
+  const state = useSelector(state => state.userPage, isEqual);
   const dispatch = useDispatch();
 
   const getPageData = async () => {
@@ -100,8 +100,11 @@ const UserPage = (props) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    dispatch(userPageActions.reset());
     getPageData();
+
+    return () => {
+      dispatch(userPageActions.reset());
+    };
   }, [userIdentity]);
 
   if (state.loaded && !user) {
@@ -203,13 +206,7 @@ const UserPage = (props) => {
   );
 };
 
-UserPage.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      userId: PropTypes.string,
-    }),
-  }).isRequired,
-};
+export default memo(UserPage, isEqual);
 
 export const getUserPageData = async (store, params) => {
   const userPromise = store.dispatch(userPageActions.getPageData(params.userId));
@@ -236,5 +233,3 @@ export const getUserPageData = async (store, params) => {
     throw err;
   }
 };
-
-export default UserPage;

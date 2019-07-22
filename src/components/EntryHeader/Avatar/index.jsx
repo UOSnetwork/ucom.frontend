@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import styles from './styles.css';
 import IconUpload from './IconUpload';
 import UserPick from '../../UserPick/UserPick';
@@ -62,4 +62,4 @@ Avatar.defaultProps = {
   onChange: null,
 };
 
-export default Avatar;
+export default memo(Avatar);

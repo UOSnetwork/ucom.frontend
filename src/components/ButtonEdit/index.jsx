@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { memo } from 'react';
 import IconEdit from '../Icons/Edit';
 import styles from './styles.css';
 
@@ -26,4 +26,4 @@ ButtonEdit.defaultProps = {
   strech: false,
 };
 
-export default ButtonEdit;
+export default memo(ButtonEdit);
