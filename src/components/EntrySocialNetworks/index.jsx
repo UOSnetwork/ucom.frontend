@@ -1,5 +1,6 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import Links from '../Links';
 import styles from '../Section/styles.css';
 
@@ -26,4 +27,4 @@ EntrySocialNetworks.defaultProps = {
   urls: [],
 };
 
-export default EntrySocialNetworks;
+export default memo(EntrySocialNetworks, isEqual);

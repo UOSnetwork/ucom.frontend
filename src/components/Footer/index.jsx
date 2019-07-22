@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { memo } from 'react';
 import urls from '../../utils/urls';
 import styles from './styles.css';
 
-export default () => (
+export default memo(() => (
   <nav className={styles.footer}>
     <div className={styles.main}>
       <div className={styles.list}>
@@ -29,4 +29,4 @@ export default () => (
       </div>
     </div>
   </nav>
-);
+));

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import sectionStyles from '../Section/styles.css';
 import styles from './styles.css';
 
@@ -28,4 +28,4 @@ EntryCreatedAt.defaultProps = {
   date: null,
 };
 
-export default EntryCreatedAt;
+export default memo(EntryCreatedAt);

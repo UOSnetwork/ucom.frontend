@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import MinimizedText from '../MinimizedText';
 import styles from '../Section/styles.css';
 
@@ -36,4 +36,4 @@ UserAbout.defaultProps = {
   text: null,
 };
 
-export default UserAbout;
+export default memo(UserAbout);

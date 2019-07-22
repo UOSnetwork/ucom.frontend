@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, memo } from 'react';
 import styles from './styles.css';
 import Logo from '../Logo/Logo';
 import urls from '../../utils/urls';
@@ -20,9 +20,11 @@ import Counter from '../Counter';
 import Menu from '../Menu';
 import { selectOwner } from '../../store/selectors';
 
+// TODO: Make header sticky, not fixed
+
 const Header = ({ location }) => {
   const dispatch = useDispatch();
-  const owner = useSelector(selectOwner);
+  const owner = useSelector(selectOwner, isEqual);
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
   const [isScroll, setIsScroll] = useState(false);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
@@ -151,4 +153,4 @@ const Header = ({ location }) => {
   );
 };
 
-export default withRouter(Header);
+export default memo(withRouter(Header));

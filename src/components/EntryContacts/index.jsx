@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import styles from '../Section/styles.css';
 import { extractHostname, validUrl } from '../../utils/url';
 
@@ -38,4 +38,4 @@ EntryContacts.defaultProps = {
   site: null,
 };
 
-export default EntryContacts;
+export default memo(EntryContacts);
