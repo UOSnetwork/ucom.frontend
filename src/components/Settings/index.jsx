@@ -202,7 +202,7 @@ const Settings = () => {
                   <h3 className={styles.title}>Referral Link</h3>
 
                   <div className={styles.subSection}>
-                    <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get half the importance they acquire.</p>
+                    <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get 10% of the importance they acquire.</p>
                     <div className={styles.copy}>
                       <CopyPanel
                         label="Your referral link"
