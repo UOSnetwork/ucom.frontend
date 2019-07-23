@@ -17,7 +17,7 @@ const ShowNext = ({
         page: page + 1,
       })}
     >
-      Show next {count} comments
+      {count ? `Show next ${count} comments` : 'Show more comments'}
     </div>
   </div>
 );
