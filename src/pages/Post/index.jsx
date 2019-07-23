@@ -79,6 +79,8 @@ const Post = ({ postId }) => {
                   <div className={styles.share}>
                     <Share
                       socialEnable
+                      repostEnable={post.myselfData && post.myselfData.repostAvailable}
+                      postId={postId}
                       link={urls.getPostUrl({ id: postId, postTypeId: POST_TYPE_MEDIA_ID })}
                     >
                       <Button strech>Share</Button>

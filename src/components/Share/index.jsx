@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Tooltip } from 'react-tippy';
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import IconFacebook from '../Icons/Socials/Share/Facebook';
 import IconTwitter from '../Icons/Socials/Share/Twitter';
@@ -19,6 +19,7 @@ const Share = ({
 }) => {
   const dispatch = useDispatch();
   const [url, setUrl] = useState('');
+  const tooltipRef = useRef();
 
   useEffect(() => {
     if (directUrl) {
@@ -30,6 +31,7 @@ const Share = ({
 
   return (
     <Tooltip
+      ref={tooltipRef}
       arrow
       useContext
       interactive
@@ -49,6 +51,10 @@ const Share = ({
                 onClick={async () => {
                   try {
                     await withLoader(dispatch(addRepost(postId)));
+                    if (tooltipRef.current) {
+                      tooltipRef.current.hideTooltip();
+                    }
+                    dispatch(addSuccessNotification('Repost is successful'));
                   } catch (err) {
                     dispatch(addErrorNotificationFromResponse(err));
                   }
@@ -132,7 +138,7 @@ const Share = ({
 Share.propTypes = {
   link: PropTypes.string,
   directUrl: PropTypes.string,
-  postId: PropTypes.number,
+  postId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   repostEnable: PropTypes.bool,
   socialEnable: PropTypes.bool,
 };
