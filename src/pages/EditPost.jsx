@@ -1,3 +1,5 @@
+// TODO: Refactoring (css modules, refactoring dependencies)
+
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router';
 import humps from 'lodash-humps';

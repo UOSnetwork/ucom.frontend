@@ -10,6 +10,11 @@ import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import snakes from '../utils/snakes';
 import loader from '../utils/loader';
 
+// const { PublicationsApi } = require('ucom-libs-wallet').Content;
+
+// console.log(PublicationsApi);
+
+
 export const setPostVote = payload => ({ type: 'SET_POST_VOTE', payload });
 export const setPostCommentCount = payload => ({ type: 'SET_POST_COMMENT_COUNT', payload });
 
@@ -156,4 +161,12 @@ export const getOnePostOfferWithUserAirdrop = ({
     console.error(e);
     throw e;
   }
+};
+
+export const createMediaPost = () => async (dispatch) => {
+
+};
+
+export const updateMediaPost = () => async (dispatch) => {
+
 };
