@@ -67,6 +67,7 @@ const FeedUser = (props) => {
       onSubmitPostForm={onSubmitPostForm}
       filter={props.filter}
       feedTypeId={props.feedTypeId}
+      originEnabled={props.originEnabled}
     />
   );
 };
@@ -79,6 +80,7 @@ FeedUser.propTypes = {
   feedInputInitialText: PropTypes.string,
   filter: PropTypes.func,
   callbackOnSubmit: PropTypes.func,
+  originEnabled: PropTypes.bool,
 };
 
 FeedUser.defaultProps = {
@@ -88,6 +90,7 @@ FeedUser.defaultProps = {
   feedInputInitialText: null,
   filter: null,
   callbackOnSubmit: null,
+  originEnabled: true,
 };
 
 export default memo(FeedUser);

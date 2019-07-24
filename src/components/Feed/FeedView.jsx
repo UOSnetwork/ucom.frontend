@@ -20,6 +20,7 @@ const FeedView = props => (
             <Post
               id={id}
               feedTypeId={props.feedTypeId}
+              originEnabled={props.originEnabled}
             />
           </div>
         ))}
@@ -52,6 +53,7 @@ FeedView.propTypes = {
   onClickLoadMore: PropTypes.func.isRequired,
   filter: PropTypes.func,
   isMobile: PropTypes.bool,
+  originEnabled: PropTypes.bool,
 };
 
 FeedView.defaultProps = {
@@ -60,6 +62,7 @@ FeedView.defaultProps = {
   feedInputInitialText: null,
   filter: null,
   isMobile: false,
+  originEnabled: true,
 };
 
 export default FeedView;

@@ -195,6 +195,7 @@ const UserPage = (props) => {
             <Feed
               userId={user.id}
               feedTypeId={USER_WALL_FEED_ID}
+              originEnabled={false}
             />
           }
         </div>

@@ -27,6 +27,7 @@ const Post = ({
           id={props.id}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
+          originEnabled={props.originEnabled}
         />
       );
     case POST_TYPE_MEDIA_ID:
@@ -38,6 +39,7 @@ const Post = ({
           id={props.id}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
+          originEnabled={props.originEnabled}
         />
       );
     default:
@@ -49,6 +51,7 @@ const Post = ({
           id={props.id}
           feedTypeId={props.feedTypeId}
           commentsContainerId={commentsContainerId}
+          originEnabled={props.originEnabled}
         />
       );
   }
@@ -57,10 +60,12 @@ const Post = ({
 Post.propTypes = {
   id: PropTypes.number.isRequired,
   commentsContainerId: PropTypes.number,
+  originEnabled: PropTypes.bool,
 };
 
 Post.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
+  originEnabled: true,
 };
 
 export default connect((state, props) => {

@@ -30,6 +30,7 @@ const Repost = ({
         userName={getUserName(user)}
         accountName={user.accountName}
         profileLink={urls.getUserUrl(user.id)}
+        originEnabled={props.originEnabled}
       />
 
       <div className={styles.repost} id={`post-${post.post.id}`}>
@@ -90,11 +91,13 @@ Repost.propTypes = {
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,
+  originEnabled: PropTypes.bool,
 };
 
 Repost.defaultProps = {
   postTypeId: undefined,
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
+  originEnabled: true,
 };
 
 export default memo(Repost);

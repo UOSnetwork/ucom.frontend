@@ -25,6 +25,7 @@ const Media = ({
         postId={post.id}
         feedTypeId={props.feedTypeId}
         createdAt={moment(post.createdAt).fromNow()}
+        originEnabled={props.originEnabled}
       />
 
       <PostCard
@@ -57,10 +58,12 @@ Media.propTypes = {
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,
+  originEnabled: PropTypes.bool,
 };
 
 Media.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
+  originEnabled: true,
 };
 
 export default memo(Media);

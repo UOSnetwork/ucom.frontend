@@ -36,6 +36,7 @@ const Direct = ({
                 userId={owner.id}
                 formIsVisible={formIsVisible}
                 showForm={() => setFormIsVisible(true)}
+                originEnabled={props.originEnabled}
               />
               <PostFeedContent
                 post={post}
@@ -67,6 +68,7 @@ const Direct = ({
             formIsVisible={formIsVisible}
             feedTypeId={props.feedTypeId}
             showForm={() => setFormIsVisible(true)}
+            originEnabled={props.originEnabled}
           />
           <PostFeedContent
             post={post}
@@ -96,10 +98,12 @@ Direct.propTypes = {
   owner: PropTypes.objectOf(PropTypes.any).isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,
+  originEnabled: PropTypes.bool,
 };
 
 Direct.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
+  originEnabled: true,
 };
 
 export default memo(Direct, (prev, next) => (

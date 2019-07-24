@@ -50,27 +50,30 @@ const PostFeedHeader = ({ post, ...props }) => {
     <Fragment>
       <div className={styles.header}>
         <div className={styles.info}>
-          <Link to={urls.getFeedPostUrl(post)} className={styles.date}>{fromNow(post.createdAt)}</Link>
+          <Link to={urls.getFeedPostUrl(post)}>{fromNow(post.createdAt)}</Link>
 
-          {props.formIsVisible &&
+          {props.originEnabled &&
             <Fragment>
-              <span>|</span>
-              <span className={styles.edit}>Edit post</span>
-            </Fragment>
-          }
+              {post.entityNameFor.trim() === 'org' &&
+                <div className={styles.org}>
+                  <UserPick
+                    shadow
+                    size={24}
+                    organization
+                    url={urls.getOrganizationUrl(post.entityForCard.id)}
+                    src={urls.getFileUrl(post.entityForCard.avatarFilename)}
+                    alt={post.entityForCard.title}
+                  />
+                  <Link to={urls.getOrganizationUrl(post.entityForCard.id)}>{post.entityForCard.title}</Link>
+                </div>
+              }
 
-          {post.entityNameFor.trim() === 'org' &&
-            <div className={styles.org}>
-              <UserPick
-                shadow
-                size={24}
-                organization
-                url={urls.getOrganizationUrl(post.entityForCard.id)}
-                src={urls.getFileUrl(post.entityForCard.avatarFilename)}
-                alt={post.entityForCard.title}
-              />
-              <Link to={urls.getOrganizationUrl(post.entityForCard.id)}>{post.entityForCard.title}</Link>
-            </div>
+              {post.entityNameFor.trim() === 'users' &&
+                <span>
+                  <Link to={urls.getUserUrl(post.entityForCard.id)}>@{post.entityForCard.accountName}</Link>
+                </span>
+              }
+            </Fragment>
           }
         </div>
 
@@ -95,6 +98,7 @@ const PostFeedHeader = ({ post, ...props }) => {
 };
 
 PostFeedHeader.propTypes = {
+  originEnabled: PropTypes.bool,
   showForm: PropTypes.func,
   addSuccessNotification: PropTypes.func.isRequired,
   formIsVisible: PropTypes.bool,
@@ -104,6 +108,7 @@ PostFeedHeader.propTypes = {
 };
 
 PostFeedHeader.defaultProps = {
+  originEnabled: true,
   userId: null,
   showForm: null,
   formIsVisible: false,
