@@ -1,0 +1,59 @@
+.voting {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  grid-gap: 15px;
+  align-items: center;
+  padding: 13px 17px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  transition: background 0.2s ease;
+}
+
+.voting:hover {
+  background: rgba(80, 80, 80, 0.03);
+}
+
+.voteBtn {
+  fill: #C4C4C4;
+  cursor: pointer;
+}
+
+.value {
+  color: #585858;
+  cursor: pointer;
+  text-align: center;
+}
+
+.rate,
+.count {
+  display: block;
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+
+.rate {
+  opacity: 0;
+  margin: -1em 0 0;
+}
+
+.voting:hover .rate {
+  opacity: 1;
+}
+
+.voting:hover .count {
+  opacity: 0;
+}
+
+.up {
+  color: #7ABE5A;
+  fill: #7ABE5A;
+}
+
+.down {
+  color: #D8352F;
+  fill: #D8352F;
+}

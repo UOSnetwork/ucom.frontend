@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { memo, useState, useEffect, Fragment } from 'react';
 import styles from './styles.css';
 import Button from '../Button/index';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import DropdownMenu from '../DropdownMenu';
 import Popup from '../Popup';
 

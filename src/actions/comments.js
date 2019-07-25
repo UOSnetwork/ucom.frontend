@@ -1,7 +1,7 @@
 import api from '../api';
 import graphql from '../api/graphql';
 import loader from '../utils/loader';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/posts';
+import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/constants';
 import { addServerErrorNotification } from './notifications';
 import { addUsers } from './users';
 

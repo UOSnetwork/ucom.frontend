@@ -4,7 +4,7 @@ import { last } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './styles.css';
-import UserPick from '../../UserPick/UserPick';
+import UserPick from '../../UserPick';
 import DragAndDrop from '../../DragAndDrop';
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import TributeWrapper from '../../TributeWrapper';

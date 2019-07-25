@@ -7,10 +7,6 @@ const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
 
 // TODO: Move all constants to utils/constants.js
 
-export const UPVOTE_STATUS = 'upvote';
-export const DOWNVOTE_STATUS = 'downvote';
-export const NOVOTE_STATUS = 'no_vote';
-
 export const ENTITY_NAMES_USERS = EntityNames.USERS;
 export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
 

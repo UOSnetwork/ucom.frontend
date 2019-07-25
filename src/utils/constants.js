@@ -68,3 +68,7 @@ export const BRAINKEY_LENGTH = 12;
 export const USER_ACCOUNT_LENGTH = 12;
 export const USER_ACCOUNT_NAME_REG_EXP = /^[a-z1-5]{12}$/;
 export const USER_ACCOUNT_NAME_SYMBOLS_REG_EXP = /^[a-z1-5]+$/;
+
+export const UPVOTE_STATUS = 'upvote';
+export const DOWNVOTE_STATUS = 'downvote';
+export const NOVOTE_STATUS = 'no_vote';

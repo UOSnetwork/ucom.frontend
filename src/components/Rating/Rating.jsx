@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classNames from 'classnames';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS, NOVOTE_STATUS } from '../../utils/posts';
+import { UPVOTE_STATUS, DOWNVOTE_STATUS, NOVOTE_STATUS } from '../../utils/constants';
 import styles from './styles.css';
 
 const Rating = props => (

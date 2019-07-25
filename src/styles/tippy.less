@@ -1,13 +1,37 @@
 .tippy-popper[x-placement^=bottom] {
-  .dropdown-theme, .user-theme {
-    .tippy-arrow {
-      border-bottom-color: #fff;
+  .tippy-tooltip.dropdown-theme {
+    [x-arrow] {
+      border-bottom-color: #e8ecec !important;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 1px;
+        border-bottom: 6px solid #fff;
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+      }
     }
   }
 }
 
-.tippy-popper {
-  transition-duration: 0ms !important;
+.tippy-popper[x-placement^=top] {
+  .tippy-tooltip.dropdown-theme {
+    [x-arrow] {
+      border-top-color: #e8ecec !important;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: -6px;
+        bottom: 1px;
+        border-top: 6px solid #fff;
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+      }
+    }
+  }
 }
 
 .tippy-tooltip.dropdown-theme {
@@ -17,22 +41,49 @@
   box-shadow: 0px 4px 20px rgba(53, 68, 85, 0.1);
   background: #fff;
   color: #000;
+}
 
-  @media (max-width: 787px) {
-    width: 100%;
-  }
+.tippy-popper[x-placement^=bottom] {
+  .tippy-tooltip.dropdown-dark-theme {
+    [x-arrow] {
+      border-bottom-color: #202020 !important;
 
-  .arrow-regular {
-    border-bottom-color: #e8ecec !important;
-
-    &:after {
-      content: '';
-      position: absolute;
-      left: -6px;
-      top: 1px;
-      border-bottom: 6px solid #fff;
-      border-right: 6px solid transparent;
-      border-left: 6px solid transparent;
+      &:after {
+        content: '';
+        position: absolute;
+        left: -6px;
+        top: 1px;
+        border-bottom: 6px solid #202020;
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+      }
     }
   }
+}
+
+.tippy-popper[x-placement^=top] {
+  .tippy-tooltip.dropdown-dark-theme {
+    [x-arrow] {
+      border-top-color: #202020 !important;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: -6px;
+        bottom: 1px;
+        border-top: 6px solid #202020;
+        border-right: 6px solid transparent;
+        border-left: 6px solid transparent;
+      }
+    }
+  }
+}
+
+.tippy-tooltip.dropdown-dark-theme {
+  padding: 0;
+  text-align: initial;
+  border: 1px solid #202020;
+  box-shadow: 0px 4px 20px rgba(53, 68, 85, 0.1);
+  background: #202020;
+  color: #fff;
 }

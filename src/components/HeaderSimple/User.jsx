@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { formatScaledImportance } from '../../utils/rate';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import { getUserName } from '../../utils/user';
 import DropdownMenu, {
   DROPDOWN_MENU_ITEM_TYPE_TITLE,

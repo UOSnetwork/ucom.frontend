@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';

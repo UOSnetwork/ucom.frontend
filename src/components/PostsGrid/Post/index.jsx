@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../styles.css';
 import { formatRate } from '../../../utils/rate';
-import UserPick from '../../UserPick/UserPick';
+import UserPick from '../../UserPick';
 import { getUserName } from '../../../utils/user';
 import urls from '../../../utils/urls';
 import IconComment from '../../Icons/Comment';

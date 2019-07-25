@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import classNames from 'classnames';
 import styles from './styles.css';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import UserFollowButton from '../User/UserFollowButton';
 import OrganizationFollowButton from '../Organization/OrganizationFollowButton';
 import { formatScaledImportance, formatRate } from '../../utils/rate';

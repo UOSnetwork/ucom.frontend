@@ -3,7 +3,7 @@ import api from '../api';
 import graphql from '../api/graphql';
 import { addUsers } from './users';
 import { addOrganizations } from './organizations';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/posts';
+import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/constants';
 import { addServerErrorNotification } from './notifications';
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
