@@ -52,6 +52,10 @@ export const makeLinkMention = makeActiveLink('@', urls.getUserUrl, 'link red');
 
 export const checkHashTag = memoize((text = '') => text.replace(/(^|\s|>)#[a-zA-Z]\w*/gm, makeLinkTag));
 
+export const searchTags = str =>
+  (str.match(/(^|\s|>)#[a-zA-Z]\w*/gm) || [])
+    .map(i => i.substr(i.indexOf('#') + 1, i.length));
+
 export const existHashTag = memoize((text, tag) => {
   if (!text || !tag) {
     return false;
