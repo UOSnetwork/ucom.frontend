@@ -53,7 +53,7 @@ const PostFeedContent = ({ post, ...props }) => {
             <div className={styles.gallery}>
               <Gallery
                 images={post.entityImages.gallery}
-                userId={props.userId}
+                userId={post.userId}
                 date={moment(post.createdAt).fromNow()}
               />
             </div>
