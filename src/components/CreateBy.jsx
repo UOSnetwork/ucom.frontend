@@ -13,7 +13,7 @@ const CreateBy = (props) => {
   }
 
   const organization = (props.user.organizations || [])
-    .find(i => +i.id === +props.post.data.organization_id);
+    .find(i => +i.id === +props.post.data.organizationId);
 
   return (
     <div className="inline inline_small">
@@ -28,8 +28,8 @@ const CreateBy = (props) => {
       </div>
       <div className="inline__item">
         <OrganizationsDropdown
-          onSelect={(organization_id) => {
-            props.setPostData({ organization_id });
+          onSelect={(organizationId) => {
+            props.setPostData({ organizationId });
           }}
         />
       </div>

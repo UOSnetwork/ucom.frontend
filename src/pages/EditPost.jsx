@@ -20,11 +20,14 @@ import { parseMediumContent, mediumHasContent, POSTS_DRAFT_LOCALSTORAGE_KEY } fr
 import Popup from '../components/Popup';
 import ModalContent from '../components/ModalContent';
 import PostSubmitForm from '../components/Post/PostSubmitForm';
-import { addServerErrorNotification, addErrorNotification } from '../actions/notifications';
+import { addErrorNotification, addErrorNotificationFromResponse } from '../actions/notifications';
 import { setDiscussions } from '../actions/organization';
 import { getOrganization } from '../actions/organizations';
+import { createMediaPost, updateMediaPost } from '../actions/posts';
 import { getOrganizationById } from '../store/organizations';
 import { addEmbed, filterEmbedsByUrls, ENTITY_IMAGES_SYMBOLS_LIMIT, ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR } from '../utils/entityImages';
+import withLoader from '../utils/withLoader';
+import { restoreActiveKey } from '../utils/keys';
 
 const EditPost = (props) => {
   const postId = props.match.params.id;
@@ -36,18 +39,16 @@ const EditPost = (props) => {
   const organization = getOrganizationById(props.organizations, organizationId);
 
   const getPost = async () => {
-    loader.start();
     setLoading(true);
 
     try {
-      const data = await api.getPost(props.match.params.id);
+      const data = await withLoader(api.getPost(props.match.params.id));
       props.dispatch(setPostData(data));
-    } catch (e) {
-      props.dispatch(addServerErrorNotification(e));
-      console.error(e);
+    } catch (err) {
+      props.dispatch(addErrorNotificationFromResponse(err));
+      console.error(err);
     }
 
-    loader.done();
     setLoaded(true);
     setLoading(false);
   };
@@ -63,16 +64,19 @@ const EditPost = (props) => {
       return;
     }
 
-    const saveFn = (postId ? api.updatePost : api.createPost).bind(api);
-    loader.start();
+    const saveFn = postId ? updateMediaPost : createMediaPost;
     setLoading(true);
 
     try {
+      const privateKey = restoreActiveKey();
+      const { accountName } = props.user;
+      // TODO: Add post tags
+      // TODO: Add all editbale field to transactions (all fields which send to api)
       const postData = {
         ...props.post.data,
         entityImages: JSON.stringify(props.post.data.entityImages || {}),
       };
-      const data = await saveFn(postData, props.match.params.id);
+      const data = await withLoader(props.dispatch(saveFn(postData, accountName, privateKey)));
       const postId = data.id || data.postId;
 
       props.dispatch(postSetSaved(true));
@@ -84,13 +88,11 @@ const EditPost = (props) => {
           discussions: [{ id: postId }].concat(organization.discussions.map(i => ({ id: i.id }))),
         }));
       }
-    } catch (e) {
-      console.error(e);
-      props.dispatch(addServerErrorNotification(e));
+    } catch (err) {
+      console.error(err);
+      props.dispatch(addErrorNotificationFromResponse(err));
       setLoading(false);
     }
-
-    loader.done();
   };
 
   useEffect(() => {
@@ -107,7 +109,7 @@ const EditPost = (props) => {
       props.dispatch(getOrganization(organizationId));
     }
 
-    props.dispatch(setPostData({ organization_id: organizationId }));
+    props.dispatch(setPostData({ organizationId }));
 
     return () => {
       props.dispatch(resetPost());

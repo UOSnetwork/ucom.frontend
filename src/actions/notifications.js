@@ -28,8 +28,6 @@ export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
 export const addErrorNotificationFromResponse = payload => (dispatch) => {
   const { message } = parseResponseError(payload)[0];
 
-  console.log(message);
-
   dispatch(addErrorNotification(message));
 };
 
