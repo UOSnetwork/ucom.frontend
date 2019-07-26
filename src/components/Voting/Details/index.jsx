@@ -1,61 +1,85 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo, useEffect } from 'react';
 import IconVoteUp from '../../Icons/VoteUp';
 import IconVoteDown from '../../Icons/VoteDown';
 import UserPicks from './UserPicks';
+import Spinner from '../../Spinner';
 import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../../utils/constants';
 import styles from './styles.css';
 
 const Details = ({
-  upCount, downCount, selfVote, onClickMore,
-}) => (
-  <div className={styles.details}>
-    <span
-      className={classNames({
-        [styles.icon]: true,
-        [styles.up]: selfVote === UPVOTE_STATUS,
-      })}
-    >
-      <IconVoteUp />
-    </span>
+  upCount, downCount, upUserPicks, downUserPicks, selfVote, onShow, loading, onClick,
+}) => {
+  useEffect(() => {
+    if (onShow) {
+      onShow();
+    }
+  }, []);
 
-    <span className={styles.value}>{upCount}</span>
+  return (
+    <div className={styles.details}>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className={styles.data}>
+          <span
+            className={classNames({
+              [styles.icon]: true,
+              [styles.up]: selfVote === UPVOTE_STATUS,
+            })}
+          >
+            <IconVoteUp />
+          </span>
 
-    <UserPicks
-      userPicks={[{ src: 'https://avatars2.githubusercontent.com/u/1903474?s=40&v=4' }]}
-      onClickMore={onClickMore}
-    />
+          <span className={styles.value}>{upCount}</span>
 
-    <span
-      className={classNames({
-        [styles.icon]: true,
-        [styles.down]: selfVote === DOWNVOTE_STATUS,
-      })}
-    >
-      <IconVoteDown />
-    </span>
+          <UserPicks
+            {...upUserPicks}
+            onClick={onClick}
+          />
 
-    <span className={styles.value}>{downCount}</span>
+          <span
+            className={classNames({
+              [styles.icon]: true,
+              [styles.down]: selfVote === DOWNVOTE_STATUS,
+            })}
+          >
+            <IconVoteDown />
+          </span>
 
-    <UserPicks
-      onClickMore={onClickMore}
-    />
-  </div>
-);
+          <span className={styles.value}>{downCount}</span>
+
+          <UserPicks
+            {...downUserPicks}
+            onClick={onClick}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 Details.propTypes = {
+  loading: PropTypes.bool,
   upCount: PropTypes.number,
   downCount: PropTypes.number,
   selfVote: PropTypes.string,
-  onClickMore: PropTypes.func,
+  onShow: PropTypes.func,
+  upUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
+  downUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
+  onClick: PropTypes.func,
 };
 
 Details.defaultProps = {
-  upCount: 175,
-  downCount: 14,
+  loading: false,
+  upCount: 0,
+  downCount: 0,
   selfVote: undefined,
-  onClickMore: undefined,
+  onShow: undefined,
+  upUserPicks: [],
+  downUserPicks: [],
+  onClick: undefined,
 };
 
-export default Details;
+export default memo(Details);

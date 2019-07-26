@@ -81,21 +81,13 @@ export const addRepost = postId => async () => {
   }
 };
 
-export const postVote = payload => (dispatch) => {
-  loader.start();
-  api.vote(payload.isUp, payload.postId)
-    .then(humps)
-    .then((data) => {
-      dispatch(setPostVote({
-        id: payload.postId,
-        currentVote: data.currentVote,
-        myselfVote: payload.isUp ? UPVOTE_STATUS : DOWNVOTE_STATUS,
-      }));
-    })
-    .catch((error) => {
-      dispatch(addServerErrorNotification(error));
-    })
-    .then(() => loader.done());
+export const vote = (isUp, postId) => async (dispatch) => {
+  try {
+    await api.vote(isUp, postId);
+    await dispatch(postsFetch({ postId }));
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const getOnePostOffer = ({

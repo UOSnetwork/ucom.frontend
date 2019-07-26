@@ -1,9 +1,10 @@
+import { flow, compact } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import UserPick from '../../../UserPick';
 import styles from './styles.css';
 
-const UserPicks = ({ userPicks, onClickMore }) => (
+const UserPicks = ({ userPicks, onClickMore, onClick }) => (
   <span className={styles.users}>
     {userPicks.length > 0 &&
       <div className={styles.items}>
@@ -21,7 +22,7 @@ const UserPicks = ({ userPicks, onClickMore }) => (
     <span
       role="presentation"
       className={styles.more}
-      onClick={onClickMore}
+      onClick={flow(compact([onClick, onClickMore]))}
     >
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#C4C4C4" />
@@ -36,11 +37,13 @@ const UserPicks = ({ userPicks, onClickMore }) => (
 UserPicks.propTypes = {
   userPicks: PropTypes.arrayOf(PropTypes.shape(UserPick.propTypes)),
   onClickMore: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 UserPicks.defaultProps = {
   userPicks: [],
   onClickMore: undefined,
+  onClick: undefined,
 };
 
-export default UserPicks;
+export default memo(UserPicks);

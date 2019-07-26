@@ -18,8 +18,25 @@
 }
 
 .voteBtn {
+  position: relative;
+  width: 16px;
+  height: 16px;
   fill: #C4C4C4;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.voteBtn:hover {
+  opacity: 0.7;
+}
+
+.voteBtn svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 .value {
