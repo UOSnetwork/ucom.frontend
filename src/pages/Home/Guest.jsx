@@ -96,7 +96,7 @@ const Guest = () => {
     <LayoutBase>
       <PostsGridWrapper ids={state.topPostsIds} />
 
-      <div className="content">
+      <div className="content" style={{ overflow: 'hidden' }}>
         <div className="content__inner">
           <div className="grid grid_content">
             <div className="grid__item grid__item_main">
@@ -109,6 +109,8 @@ const Guest = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="content" style={{ paddingTop: 0 }}>
         <div className="content__inner">
           <div className="grid grid_content">
             <div className="grid__item grid__item_main">
