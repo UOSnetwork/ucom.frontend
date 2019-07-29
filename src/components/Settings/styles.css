@@ -151,6 +151,13 @@ h4.title {
   max-width: 400px;
 }
 
+.subscribe {
+  max-width: 600px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(0,0,0,0.6);
+}
+
 @media (max-width: 1023px) {
   .settings {
     grid-template-columns: 1fr;
