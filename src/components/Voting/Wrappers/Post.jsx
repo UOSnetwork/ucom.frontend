@@ -13,7 +13,6 @@ import { TAB_ID_ALL } from '../UsersPopup/Tabs';
 
 const PostVotingWrapper = ({ postId }) => {
   const dispatch = useDispatch();
-  const [count, setCount] = useState(0);
   const [upCount, setUpCount] = useState(0);
   const [downCount, setDownCount] = useState(0);
   const [upUserPicks, setUpUserPicks] = useState([]);
@@ -83,7 +82,7 @@ const PostVotingWrapper = ({ postId }) => {
           console.log('on laod more');
         },
         tabs: {
-          count,
+          count: post.currentVote,
           upCount,
           downCount,
           activeTabId: popupActiveTabId,
