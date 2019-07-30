@@ -118,6 +118,7 @@ app.post('/subscribe', async (req, res) => {
     );
     res.status(200).send();
   } catch (err) {
+    console.error(err);
     res.status(err.response.status).send(err.response.data);
   }
 });
