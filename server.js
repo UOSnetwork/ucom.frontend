@@ -104,7 +104,7 @@ routes.forEach((route) => {
 app.post('/subscribe', async (req, res) => {
   try {
     await axios.post(
-      'https://us3.api.mailchimp.com/3.0/lists/635397/members/',
+      'https://us3.api.mailchimp.com/3.0/lists/23512b5acd/members/',
       {
         email_address: req.body.email,
         status: 'subscribed',
