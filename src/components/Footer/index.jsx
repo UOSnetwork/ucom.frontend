@@ -24,6 +24,9 @@ export default memo(() => (
 
     <div className={styles.side}>
       <div className={styles.list}>
+        <Link to={urls.getPostUrl({ id: 7881 })}>Terms</Link>
+        <Link to={urls.getPostUrl({ id: 7886 })}>Privacy Policy</Link>
+        <Link to={urls.getPostUrl({ id: 7883 })}>Content Policy</Link>
         <Link to={urls.getFaqUrl()}>FAQ</Link>
         <a href="https://uos.network/" target="_blank" rel="noopener noreferrer">About</a>
       </div>
