@@ -9,6 +9,7 @@ import PostContent from '../../components/Post/Content';
 import PostRating from '../../components/Rating/PostRating';
 import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';
+import Footer from '../../components/Footer';
 import Button from '../../components/Button/index';
 import { postsFetch } from '../../actions/posts';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
@@ -100,6 +101,8 @@ const Post = ({ postId }) => {
             </div>
           </div>
         }
+
+        <Footer />
       </Content>
     </LayoutBase>
   );
