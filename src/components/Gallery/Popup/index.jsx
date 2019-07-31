@@ -1,181 +1,130 @@
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import React, { useEffect } from 'react';
-import styles from './styles.css';
+import React, { useState, useEffect, memo } from 'react';
 import Popup from '../../Popup';
+import IconArrowLeft from '../../Icons/ArrowLeft';
+import IconArrowRight from '../../Icons/ArrowRight';
 import IconClose from '../../Icons/Close';
-import ArrowRight from '../../Icons/GalleryArrowRight';
 import { UserCard } from '../../SimpleCard';
-import { isRightArrowKey, isLeftArrowKey } from '../../../utils/keyboard';
+import { isLeftArrowKey, isRightArrowKey } from '../../../utils/keyboard';
+import styles from './styles.css';
 
-const GalleryPopup = (props) => {
-  if (!props.images.length) {
-    return null;
-  }
+const GalleryPopup = ({
+  onClickClose, images, index, userId, date,
+}) => {
+  const [activeIndex, setActiveIndex] = useState(index);
+  const enabledNext = activeIndex + 1 < images.length;
+  const enabledPrev = activeIndex - 1 >= 0;
 
-  const { activeIndex, setActiveIndex } = props;
+  const getTransforms = (length, cursor = 0) => {
+    const result = [];
 
-  const canMoveLeft = activeIndex - 1 >= 0;
-  const canMoveRight = activeIndex + 1 < props.images.length;
-
-  const prevent = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const moveLeft = (e) => {
-    prevent(e);
-    if (canMoveLeft) {
-      setActiveIndex(activeIndex - 1);
+    for (let i = 0 - cursor; i < length - cursor; i++) {
+      if (i === 0) {
+        result.push({
+          transform: 'translateX(0px) scale(1)',
+          zIndex: length,
+        });
+      } else if (i > 0) {
+        result.push({
+          transform: `translateX(${Math.sqrt(i * 3000)}px) scale(${(length - Math.abs(i)) / length})`,
+          zIndex: length - Math.abs(i),
+          filter: 'brightness(0.8)',
+        });
+      } else {
+        result.push({
+          transform: `translateX(-${Math.sqrt(Math.abs(i) * 3000)}px) scale(${(length - Math.abs(i)) / length})`,
+          zIndex: length - Math.abs(i),
+          filter: 'brightness(0.8)',
+        });
+      }
     }
+
+    return result;
   };
 
-  const moveRight = (e) => {
-    prevent(e);
-    if (canMoveRight) {
-      setActiveIndex(activeIndex + 1);
-    }
-  };
+  const transforms = getTransforms(images.length, activeIndex);
 
-  const onKeyDown = (event) => {
-    if (isLeftArrowKey(event)) {
-      moveLeft(event);
-    } else if (isRightArrowKey(event)) {
-      moveRight(event);
+  const onKeyDown = (e) => {
+    if (isLeftArrowKey(e) && enabledPrev) {
+      setActiveIndex(activeIndex => activeIndex - 1);
+    } else if (isRightArrowKey(e) && enabledNext) {
+      setActiveIndex(activeIndex => activeIndex + 1);
     }
   };
 
   useEffect(() => {
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  });
-  const dummyLength = ((2 * activeIndex) - props.images.length) + 1;
-  let leftImages;
-  let rightImages;
+    window.addEventListener('keyup', onKeyDown);
 
-  if (dummyLength < 0) {
-    leftImages = [...Array(-dummyLength)];
-  } else if (dummyLength > 0) {
-    rightImages = [...Array(dummyLength)];
-  }
+    return () => {
+      window.removeEventListener('keyup', onKeyDown);
+    };
+  }, [activeIndex]);
+
   return (
-    <Popup
-      mod="dark"
-      onClickClose={() => props.onClickClose()}
-    >
-      <div
-        role="presentation"
-        className={styles.close}
-        onClick={() => props.onClickClose()}
-      >
-        <IconClose />
-      </div>
+    <Popup dark alignTop onClickClose={onClickClose}>
+      <div className={styles.popup}>
+        <span
+          role="presentation"
+          className={styles.close}
+          onClick={onClickClose}
+        >
+          <IconClose />
+        </span>
 
-      <div
-        role="presentation"
-        onClick={() => props.onClickClose()}
-        className={styles.popup}
-      >
-        <div className={styles.container}>
-          <div
+        <button
+          disabled={!enabledPrev}
+          className={styles.prev}
+          onClick={() => setActiveIndex(activeIndex - 1)}
+        >
+          <IconArrowLeft />
+        </button>
+
+        <button
+          disabled={!enabledNext}
+          className={styles.next}
+          onClick={() => setActiveIndex(activeIndex + 1)}
+        >
+          <IconArrowRight />
+        </button>
+
+        <div className={styles.activeImage}>
+          <img
             role="presentation"
-            onClick={moveLeft}
-            className={classNames({
-              [styles.arrow]: true,
-              [styles.leftArrow]: true,
-              [styles.active]: canMoveLeft,
-            })}
-          >
-            <div className={styles.arrowBlock}>
-              <div className={styles.rotate}>
-                <ArrowRight />
-              </div>
-            </div>
-          </div>
-          <div className={styles.viewport}>
-            <img
-              className={classNames({
-                [styles.image]: true,
-                [styles.pointer]: canMoveRight,
-              })}
-              role="presentation"
-              src={props.images[activeIndex].url}
-              alt={props.images[activeIndex].alt}
-            />
-          </div>
-          <div
-            role="presentation"
-            onClick={moveRight}
-            className={classNames({
-              [styles.arrow]: true,
-              [styles.active]: canMoveRight,
-            })}
-          >
-            <div className={styles.arrowBlock}>
-              <ArrowRight />
-            </div>
-          </div>
+            src={images[activeIndex].url}
+            alt={images[activeIndex].alt}
+            onClick={onClickClose}
+          />
         </div>
-
-
         <div className={styles.toolbar}>
           <div className={styles.userCard}>
-            {props.date &&
-              <div className={styles.date}>{props.date}</div>
+            {date &&
+              <div className={styles.date}>{date}</div>
             }
-            <UserCard userId={props.userId} />
+            <UserCard userId={userId} />
           </div>
+
           <div className={styles.thumbs}>
-            {leftImages && leftImages.map((image, index) => (
+            {images.map((item, index) => (
               <div
                 key={index}
                 role="presentation"
-                className={`${styles.emptyWrapper} ${styles.thumbWrapper}`}
-                level={((activeIndex - props.images.length) + index + 1)}
-              >
-                <div
-                  className={styles.thumb}
-                />
-              </div>
-            ))}
-            {props.images.map((image, index) => (
-              <div
-                key={index}
-                role="presentation"
-                className={styles.thumbWrapper}
-                level={index - activeIndex}
-                onClick={(e) => {
-                  prevent(e);
+                className={styles.thumb}
+                style={transforms[index]}
+                onClick={() => {
                   setActiveIndex(index);
                 }}
               >
                 <img
-                  className={styles.thumb}
-                  src={image.url}
-                  alt={image.alt}
-                />
-              </div>
-            ))}
-            {rightImages && rightImages.map((image, index) => (
-              <div
-                key={index}
-                role="presentation"
-                className={`${styles.emptyWrapper} ${styles.thumbWrapper}`}
-                level={((props.images.length - activeIndex) + index)}
-              >
-                <div
-                  className={styles.thumb}
+                  src={item.url}
+                  alt={item.alt}
                 />
               </div>
             ))}
           </div>
 
           <div className={styles.counter}>
-            {props.images.length > 1 &&
-              <span> {activeIndex + 1} / {props.images.length}</span>
-            }
+            {activeIndex + 1} / {images.length}
           </div>
-
         </div>
       </div>
     </Popup>
@@ -183,21 +132,21 @@ const GalleryPopup = (props) => {
 };
 
 GalleryPopup.propTypes = {
+  index: PropTypes.number,
+  onClickClose: PropTypes.func,
   images: PropTypes.arrayOf(PropTypes.shape({
-    url: PropTypes.string.isRequired,
     alt: PropTypes.string,
+    url: PropTypes.string,
   })),
-  userId: PropTypes.number,
+  userId: PropTypes.number.isRequired,
   date: PropTypes.string,
-  onClickClose: PropTypes.func.isRequired,
-  activeIndex: PropTypes.number.isRequired,
-  setActiveIndex: PropTypes.func.isRequired,
 };
 
 GalleryPopup.defaultProps = {
+  index: 0,
+  onClickClose: undefined,
   images: [],
-  userId: null,
-  date: null,
+  date: undefined,
 };
 
-export default GalleryPopup;
+export default memo(GalleryPopup);
