@@ -7,6 +7,7 @@ import styles from './styles.css';
 import Logo from '../Logo/Logo';
 import urls from '../../utils/urls';
 import IconWallet from '../Icons/Wallet';
+import IconBurger from '../Icons/Burger';
 import IconBell from '../Icons/Bell';
 import User from './User';
 import { authShowPopup } from '../../actions/auth';
@@ -114,7 +115,14 @@ const Header = ({ location }) => {
                   })}
                   onClick={() => setWalletPopupVisible(!walletPopupVisible)}
                 >
-                  {walletPopupVisible ? <IconClose /> : <IconWallet />}
+                  {walletPopupVisible ? (
+                    <IconClose />
+                  ) : (
+                    <Fragment>
+                      <span className={styles.iconWallet}><IconWallet /></span>
+                      <span className={styles.iconBurger}><IconBurger /></span>
+                    </Fragment>
+                  )}
                 </span>
               </Fragment>
             ) : (
