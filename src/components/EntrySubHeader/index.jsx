@@ -47,7 +47,7 @@ const EntrySubHeader = props => (
 EntrySubHeader.propTypes = {
   userUrl: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
-  userAvatarUrl: PropTypes.string.isRequired,
+  userAvatarUrl: PropTypes.string,
   userId: PropTypes.number.isRequired,
   userRate: PropTypes.number,
   showFollow: PropTypes.bool,
@@ -58,6 +58,7 @@ EntrySubHeader.defaultProps = {
   userRate: 0,
   showFollow: false,
   organization: false,
+  userAvatarUrl: undefined,
 };
 
 export default EntrySubHeader;

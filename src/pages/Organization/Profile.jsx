@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
+import { isEqual } from 'lodash';
 import { useSelector } from 'react-redux';
-import React from 'react';
+import React, { memo } from 'react';
 import Popup, { Content } from '../../components/Popup';
 import urls from '../../utils/urls';
 import Profile from '../../components/Profile/Organization';
@@ -8,12 +8,16 @@ import { selectOrgById, selectUserById } from '../../store/selectors';
 
 const ProfilePopup = ({ match, history }) => {
   const orgId = Number(match.params.organizationId);
-  const org = useSelector(selectOrgById(orgId));
-  const owner = org ? useSelector(selectUserById(org.userId)) : undefined;
+  const org = useSelector(selectOrgById(orgId), isEqual);
+  const owner = org ? useSelector(selectUserById(org.userId), isEqual) : undefined;
 
   const close = () => {
     history.push(urls.getOrganizationUrl(orgId));
   };
+
+  if (!org || !org.myselfData || !org.myselfData.editable) {
+    return null;
+  }
 
   return (
     <Popup
@@ -32,15 +36,4 @@ const ProfilePopup = ({ match, history }) => {
   );
 };
 
-ProfilePopup.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      organizationId: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-};
-
-export default ProfilePopup;
+export default memo(ProfilePopup);
