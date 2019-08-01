@@ -26,6 +26,7 @@ import { EntryListSectionOrgSourcesWrapper, EntryListSectionOrgAdminsWrapper } f
 import * as orgPageActions from '../../actions/orgPage';
 import * as orgsActions from '../../actions/organizations';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
+import NotFoundPage from '../NotFoundPage';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
@@ -66,6 +67,10 @@ const OrganizationPage = (props) => {
       dispatch(orgPageActions.reset());
     };
   }, [organizationId]);
+
+  if (state.loaded && !organization) {
+    return <NotFoundPage />;
+  }
 
   return (
     <LayoutBase gray>

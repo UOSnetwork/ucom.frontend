@@ -21,6 +21,7 @@ export const getPageData = orgIdentity => async (dispatch) => {
     dispatch(addUsers(followedBy.data));
 
     dispatch(setData({
+      loaded: true,
       followedBy: {
         ids: followedBy.data.map(i => i.id),
         metadata: followedBy.metadata,
@@ -32,6 +33,7 @@ export const getPageData = orgIdentity => async (dispatch) => {
     }));
   } catch (err) {
     console.error(err);
+    dispatch(setData({ loaded: true }));
     throw err;
   }
 };

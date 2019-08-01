@@ -1,6 +1,7 @@
 import merge from '../utils/merge';
 
 const getInitialState = () => ({
+  loaded: false,
   followedBy: {
     ids: [],
     metadata: {},
