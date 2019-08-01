@@ -42,10 +42,6 @@ const FeedUser = (props) => {
   };
 
   useEffect(() => {
-    dispatch(feedReset());
-    dispatch(commentsResetContainerDataById({
-      containerId: COMMENTS_CONTAINER_ID_FEED_POST,
-    }));
     dispatch(feedGetUserPosts({
       feedTypeId: props.feedTypeId,
       page: 1,
@@ -55,6 +51,13 @@ const FeedUser = (props) => {
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
     }));
+
+    return () => {
+      dispatch(feedReset());
+      dispatch(commentsResetContainerDataById({
+        containerId: COMMENTS_CONTAINER_ID_FEED_POST,
+      }));
+    };
   }, [props.userId, props.organizationId, props.tagIdentity]);
 
   return (
