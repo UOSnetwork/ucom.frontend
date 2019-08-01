@@ -48,6 +48,7 @@ const Popup = (props) => {
         [styles.popup]: true,
         [styles.transparent]: props.transparent,
         [styles.alignTop]: props.alignTop,
+        [styles.dark]: props.dark,
         [props.mod]: !!props.mod,
       })}
       style={{
@@ -82,6 +83,7 @@ Popup.propTypes = {
   transparent: PropTypes.bool,
   alignTop: PropTypes.bool,
   onClickClose: PropTypes.func,
+  dark: PropTypes.bool,
 };
 
 Popup.defaultProps = {
@@ -92,6 +94,7 @@ Popup.defaultProps = {
   transparent: false,
   alignTop: false,
   onClickClose: null,
+  dark: false,
 };
 
 export { default as Content } from './Content';
