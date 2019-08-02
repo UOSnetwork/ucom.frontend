@@ -5,8 +5,6 @@ import {
   NODES_PER_PAGE,
   BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
   BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
-  BP_STATUS_BACKUP_ID,
-  BP_STATUS_ACTIVE_ID,
 } from '../../../utils/constants';
 
 export const reset = () => ({ type: 'GOVERNANCE_PAGE_RESET' });
