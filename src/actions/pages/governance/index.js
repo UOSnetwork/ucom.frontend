@@ -79,8 +79,9 @@ export const getSelectedNodes = userId => async (dispatch) => {
 export const voteForNodes = (accountName, nodes, privateKey, nodeTypeId) => async (dispatch) => {
   try {
     const producers = nodes
-      .filter(node => node.bpStatus === BP_STATUS_ACTIVE_ID || node.bpStatus === BP_STATUS_BACKUP_ID)
-      .map(i => i.title);
+      // .filter(node => node.bpStatus === BP_STATUS_ACTIVE_ID || node.bpStatus === BP_STATUS_BACKUP_ID)
+      .map(i => i.title)
+      .filter(i => i !== 'eosiomeetone');
 
     await api.voteForNodes(accountName, producers, privateKey, nodeTypeId);
 
