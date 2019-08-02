@@ -169,6 +169,18 @@ export default class Validate {
     });
   }
 
+  static validatePost(data) {
+    const {
+      reuqired, inputMaxLength,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      title: [reuqired, inputMaxLength],
+      leadingText: [reuqired, inputMaxLength],
+      description: [reuqired],
+    });
+  }
+
   static isResponseErrors(response) {
     return isObject(response) && isObject(response.data) && isArray(response.data.errors);
   }

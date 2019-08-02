@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { throttle, isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import React, { Fragment, useState, useEffect, memo } from 'react';
+import React, { Fragment, useState, useEffect, useCallback, useRef, memo } from 'react';
 import styles from './styles.css';
 import Logo from '../Logo/Logo';
 import urls from '../../utils/urls';
@@ -19,34 +19,38 @@ import IconClose from '../Icons/Close';
 import SiteNotificationsTooltip from '../SiteNotificationsTooltip';
 import Counter from '../Counter';
 import Menu from '../Menu';
-import { selectOwner } from '../../store/selectors';
+import { selectOwner, selectOrgsByIds } from '../../store/selectors';
 
 // TODO: Make header sticky, not fixed
 
 const Header = ({ location }) => {
+  const elRef = useRef();
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
+  const orgs = useSelector(selectOrgsByIds(owner.organizations), isEqual);
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
-  const [isScroll, setIsScroll] = useState(false);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
 
   const checkScroll = throttle(() => {
-    setIsScroll(window.top.scrollY > 0);
+    if (window.top.scrollY > 0 && elRef.current) {
+      elRef.current.classList.add(styles.isScroll);
+    } else {
+      elRef.current.classList.remove(styles.isScroll);
+    }
   }, 100);
+
+  const showOrgsPopup = useCallback(() => {
+    setOrganizationsPopupVisible(true);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', checkScroll);
     return () => window.removeEventListener('scroll', checkScroll);
-  }, []);
+  }, [elRef]);
 
   return (
     <Fragment>
-      <div
-        className={classNames({
-          [styles.header]: true,
-          [styles.isScroll]: isScroll,
-        })}
-      >
+      <div ref={elRef} className={styles.header}>
         <div className={styles.inner}>
           <div className={styles.section}>
             <Link to={urls.getMainPageUrl()}>
@@ -83,7 +87,7 @@ const Header = ({ location }) => {
           <div className={`${styles.section} ${styles.flat}`}>
             {owner.id ? (
               <Fragment>
-                <User onClickOrganizationsViewAll={() => setOrganizationsPopupVisible(true)} />
+                <User onClickOrganizationsViewAll={showOrgsPopup} />
 
                 <SiteNotificationsTooltip>
                   {({ toggleTooltip, unreadNotifications, tooltipVisibilty }) => (
@@ -140,7 +144,7 @@ const Header = ({ location }) => {
       {organizationsPopupVisible &&
         <EntryListPopup
           title="My communities"
-          data={owner.organizations.map(item => ({
+          data={orgs.map(item => ({
             id: item.id,
             follow: false,
             organization: true,

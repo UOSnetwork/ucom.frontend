@@ -2,6 +2,7 @@ import humps from 'lodash-humps';
 import api from '../api';
 import { addUsers } from './users';
 import { getToken } from '../utils/token';
+import { selectOrgById } from '../store/selectors';
 
 export const addOrganizations = payload => ({ type: 'ADD_ORGANIZATIONS', payload });
 export const addOrganizationFollower = payload => ({ type: 'ADD_ORGANIZATION_FOLLOWER', payload });
@@ -99,5 +100,18 @@ export const unfollowOrganization = ({
   } catch (e) {
     console.error(e);
     throw e;
+  }
+};
+
+export const addDiscussion = (postId, orgId) => async (dispatch, getState) => {
+  try {
+    const state = getState();
+
+    await dispatch(getOrganization(orgId));
+    const org = selectOrgById(orgId)(state);
+    const discussions = [{ id: postId }].concat(org.discussions.map(({ id }) => ({ id })));
+    await api.setDiscussions(orgId, { discussions });
+  } catch (err) {
+    throw err;
   }
 };

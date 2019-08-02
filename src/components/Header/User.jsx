@@ -1,9 +1,10 @@
+import { isEqual } from 'lodash';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import React from 'react';
+import { useSelector } from 'react-redux';
+import React, { memo } from 'react';
 import { formatScaledImportance } from '../../utils/rate';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import { getUserName } from '../../utils/user';
 import DropdownMenu, {
   DROPDOWN_MENU_ITEM_TYPE_TITLE,
@@ -13,12 +14,13 @@ import DropdownMenu, {
 import urls from '../../utils/urls';
 import styles from './styles.css';
 import { logout } from '../../utils/auth';
-import { getUserById } from '../../store/users';
+import { selectOwner, selectOrgsByIds } from '../../store/selectors';
 
 const ORGANIZATIONS_ITEMS_LIMIT = 3;
 
-const User = ({ user, onClickOrganizationsViewAll }) => {
-  const organizations = user.organizations || [];
+const User = ({ onClickOrganizationsViewAll }) => {
+  const user = useSelector(selectOwner, isEqual);
+  const organizations = useSelector(selectOrgsByIds(user.organizations), isEqual);
   const menuItems = [{
     title: 'Publications',
     type: DROPDOWN_MENU_ITEM_TYPE_TITLE,
@@ -82,18 +84,11 @@ const User = ({ user, onClickOrganizationsViewAll }) => {
 };
 
 User.propTypes = {
-  user: PropTypes.shape({
-    avatarFilename: PropTypes.string,
-    scaledImportance: PropTypes.number,
-  }),
   onClickOrganizationsViewAll: PropTypes.func,
 };
 
 User.defaultProps = {
   onClickOrganizationsViewAll: undefined,
-  user: {},
 };
 
-export default connect(state => ({
-  user: getUserById(state.users, state.user.data.id),
-}))(User);
+export default memo(User);

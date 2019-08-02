@@ -9,6 +9,7 @@ import TributeWrapper from '../TributeWrapper';
 import EmbedService from '../../utils/embedService';
 import './styles.css';
 
+// TODO: Refactoring all medium components
 class Medium extends PureComponent {
   componentDidMount() {
     const MediumEditor = require('medium-editor');
@@ -52,6 +53,8 @@ class Medium extends PureComponent {
         this.onChange(html);
       }
     });
+
+    EmbedService.renderEmbeds(this.el, this.props.entityImages);
   }
 
   componentDidUpdate() {

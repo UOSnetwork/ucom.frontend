@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import UserPick from '../../UserPick/UserPick';
+import UserPick from '../../UserPick';
 import styles from './styles.css';
 import formatNumber from '../../../utils/formatNumber';
 

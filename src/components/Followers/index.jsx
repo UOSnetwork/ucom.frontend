@@ -2,7 +2,7 @@ import { withRouter } from 'react-router';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, Fragment } from 'react';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import styles from './styles.css';
 import EntryListPopup from '../EntryListPopup';
 

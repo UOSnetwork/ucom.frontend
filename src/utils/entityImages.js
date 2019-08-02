@@ -246,3 +246,33 @@ export const entityGetCoverUrl = (entityImages) => {
     return null;
   }
 };
+
+export const getPostCoverUrl = (entityImages) => {
+  try {
+    return entityImages.articleTitle[0].url;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const changePostCover = (entityImages, url) => {
+  if (!isObject(entityImages)) {
+    throw new Error('EntityImages not valid');
+  }
+
+  if (!isString(url) || !validUrl(url)) {
+    throw new Error('Url not valid');
+  }
+
+  const result = {
+    ...entityImages,
+    articleTitle: [{ url }],
+  };
+
+  return result;
+};
+
+export const removePostCover = entityImages => ({
+  ...entityImages,
+  articleTitle: [],
+});

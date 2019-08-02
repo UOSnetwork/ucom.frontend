@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 
 const UserPickWithIcon = ({ userPick, icon, iconSize }) => (
   <div className={styles.userPickWithIcon}>

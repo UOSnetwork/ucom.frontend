@@ -28,6 +28,7 @@
   cursor: pointer;
   position: relative;
   transition: color 0.2s ease, fill 0.2s ease,;
+  outline: none !important;
 }
 
 :global(.active) > .share {

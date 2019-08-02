@@ -1,0 +1,49 @@
+.createBy {
+  display: inline-block;
+  outline: none !important;
+}
+
+.inner {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 8px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.inner.enabled {
+  cursor: pointer;
+}
+
+.trigger svg {
+  fill: none;
+  width: 14px;
+  height: 14px;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list {
+  width: 250px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.item {
+  position: relative;
+  z-index: 1;
+  padding: 10px 20px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.item:hover,
+.item.active {
+  background: #F2F2F2;
+}

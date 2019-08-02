@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { useState, memo } from 'react';
 import styles from './styles.css';
 import IconUpload from './IconUpload';
-import UserPick from '../../UserPick/UserPick';
+import UserPick from '../../UserPick';
 import DropzoneWrapper from '../../DropzoneWrapper';
 
 const Avatar = (props) => {

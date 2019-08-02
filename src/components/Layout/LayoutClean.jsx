@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './styles.css';
 
 const LayoutClean = ({ children }) => (
-  <div className={`${styles.content} ${styles.fullHeight}`}>
+  <div className={`${styles.content} ${styles.clean}`}>
     {children}
   </div>
 );

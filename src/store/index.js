@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk';
 import * as redux from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import post from '../store/post';
+// import post from '../store/post';
 import auth from './auth';
 import notifications from './notifications';
 import siteNotifications from './siteNotifications';
@@ -35,7 +35,7 @@ export const createStore = () => {
     userPage,
     orgPage,
     user,
-    post,
+    // post,
     auth,
     notifications,
     siteNotifications,

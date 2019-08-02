@@ -16,7 +16,7 @@ import { getUserName } from '../../utils/user';
 import Button from '../Button/index';
 import SearchInput from '../SearchInput';
 import Validate from '../../utils/validate';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import { getUsersTeamStatusById } from '../../utils/organization';
 import api from '../../api';
 import { validUrl, extractSitename } from '../../utils/url';

@@ -11,7 +11,7 @@ import TextInput from '../TextInput';
 import Textarea from '../TextareaAutosize';
 import Button from '../Button/index';
 import IconRemove from '../Icons/Remove';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 import urls from '../../utils/urls';
 import Validate from '../../utils/validate';
 import { updateUser } from '../../actions/users';

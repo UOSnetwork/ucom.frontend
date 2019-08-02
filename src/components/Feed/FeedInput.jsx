@@ -5,7 +5,7 @@ import FeedForm from './FeedForm';
 import { selectUser } from '../../store/selectors/user';
 import { getUserById } from '../../store/users';
 import urls from '../../utils/urls';
-import UserPick from '../UserPick/UserPick';
+import UserPick from '../UserPick';
 
 class FeedInput extends PureComponent {
   constructor(props) {

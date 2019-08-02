@@ -1,10 +1,10 @@
-import { Tooltip } from 'react-tippy';
+import Tippy from '@tippy.js/react';
 import { Link } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 import React, { useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
-import UserPick from '../../components/UserPick/UserPick';
+import UserPick from '../../components/UserPick';
 import Footer from '../../components/Footer';
 import {
   BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
@@ -91,10 +91,10 @@ const GovernancePage = () => {
 
             <div className={styles.tabs}>
               <div className={styles.active}>Network</div>
-              <div><Tooltip arrow position="bottom" title="Coming Soon">My Projects</Tooltip></div>
-              <div><Tooltip arrow position="bottom" title="Coming Soon">Ideas</Tooltip></div>
-              <div><Tooltip arrow position="bottom" title="Coming Soon">Projects</Tooltip></div>
-              <div><Tooltip arrow position="bottom" title="Coming Soon">Results</Tooltip></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>My Projects</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Ideas</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Projects</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Results</span></Tippy></div>
             </div>
 
             <div className={styles.description}>
