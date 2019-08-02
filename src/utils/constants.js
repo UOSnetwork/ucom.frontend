@@ -44,6 +44,7 @@ export const BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES = Dictionary.BlockchainNodes
 export const NODES_PER_PAGE = 60;
 export const BP_STATUS_ACTIVE_ID = 1;
 export const BP_STATUS_BACKUP_ID = 2;
+export const BP_STATUS_NOT_ACTIVE_ID = 3;
 export const PRODUCERS_LIMIT = 30;
 
 export const USER_EDITABLE_PROPS = [
