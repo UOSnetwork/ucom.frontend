@@ -14,7 +14,7 @@ const Footer = () => {
         <div className={styles.list}>
           <span className={styles.telegram}>
             <span className={styles.telegramTitle}>
-              Chat with <strong>U°Community</strong> community:
+              Chat with <strong>U°Community</strong>:
             </span>
 
             <a href="https://t.me/uos_network_en" target="_blank" rel="noopener noreferrer">
