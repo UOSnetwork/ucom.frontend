@@ -7,6 +7,7 @@ import Checkbox from '../Checkbox';
 import RegistrationBrainkeyVerification from './RegistrationBrainkeyVerification';
 import { THIRD_STEP_ID } from '../../store/registration';
 import { registrationRegister, registrationSetIsTrackingAllowed } from '../../actions/registration';
+import * as subscribeActions from '../../actions/subscribe';
 import { getAirdropOfferId_2 } from '../../utils/airdrop';
 import { getGrecaptchaSitekey } from '../../utils/config';
 
@@ -132,6 +133,11 @@ class RegistrationStepThird extends PureComponent {
               </div>
             }
           </div>
+
+          <div className="registration__subscribe">
+            Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!
+            Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => this.props.showSubscribe()}>subscribe</span> to&nbsp;our weekly updates.
+          </div>
         </div>
       </div>
     );
@@ -145,5 +151,6 @@ export default withRouter(connect(
   {
     registrationRegister,
     registrationSetIsTrackingAllowed,
+    showSubscribe: subscribeActions.show,
   },
 )(RegistrationStepThird));

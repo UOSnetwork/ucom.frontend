@@ -5,6 +5,9 @@ require('babel-register')({
 
 const STATIC_VERSION = (new Date()).getTime();
 
+const config = require('config');
+const bodyParser = require('body-parser');
+const axios = require('axios');
 const xss = require('xss');
 const path = require('path');
 const ejs = require('ejs');
@@ -17,7 +20,13 @@ const { escapeHtml } = require('./src/utils/text');
 
 const app = express();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
+
 app.disable('x-powered-by');
+
 app.use(express.static('public'));
 
 routes.forEach((route) => {
@@ -90,6 +99,28 @@ routes.forEach((route) => {
       res.status(500).send(e);
     }
   });
+});
+
+app.post('/subscribe', async (req, res) => {
+  try {
+    await axios.post(
+      'https://us3.api.mailchimp.com/3.0/lists/23512b5acd/members/',
+      {
+        email_address: req.body.email,
+        status: 'subscribed',
+      },
+      {
+        auth: {
+          username: 'anystring',
+          password: config.get('mailchimp.key'),
+        },
+      },
+    );
+    res.status(200).send();
+  } catch (err) {
+    console.error(err);
+    res.status(err.response.status).send(err.response.data);
+  }
 });
 
 app.listen(process.env.PORT || 3000);

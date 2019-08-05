@@ -169,6 +169,16 @@ export default class Validate {
     });
   }
 
+  static validateSubscribe(data) {
+    const {
+      reuqired, email,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      email: [reuqired, email],
+    });
+  }
+
   static isResponseErrors(response) {
     return isObject(response) && isObject(response.data) && isArray(response.data.errors);
   }
