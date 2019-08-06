@@ -42,15 +42,13 @@ const WalletActivityPopup = (props) => {
           </div> : null
         }
         {props.rawTrData &&
-          <div className="wallet-activity-popup__switch">
-            <Panel
-              title="Detailed info"
-              active={active}
-              onClickToggler={() => setActive(!active)}
-            >
-              <pre className="wallet-activity-popup__detailed-info">{JSON.stringify(props.rawTrData, null, 4)}</pre>
-            </Panel>
-          </div>
+          <Panel
+            title="Detailed info"
+            active={active}
+            onClickToggler={() => setActive(!active)}
+          >
+            <pre className="wallet-activity-popup__detailed-info">{JSON.stringify(props.rawTrData, null, 4)}</pre>
+          </Panel>
         }
       </div>
     </div>
