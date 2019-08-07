@@ -39,16 +39,17 @@ export const addUsers = (data = []) => (dispatch) => {
 
     if (user.followedBy) {
       users = users.concat(user.followedBy);
-      user.followedBy = user.followedBy.map(u => u.id);
+      user.followedBy = user.followedBy.map(i => i.id);
     }
 
     if (user.iFollow) {
       users = users.concat(user.iFollow);
-      user.iFollow = user.iFollow.map(u => u.id);
+      user.iFollow = user.iFollow.map(i => i.id);
     }
 
     if (user.organizations) {
       organizations = organizations.concat(user.organizations);
+      user.organizations = user.organizations.map(i => i.id);
     }
 
     users.push(user);

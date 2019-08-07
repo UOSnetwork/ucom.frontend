@@ -1,0 +1,54 @@
+.cover {
+  display: block;
+  width: 100%;
+  padding-top: 50%;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  background: #D8E8E8;
+}
+
+.icon svg {
+  width: 62px;
+  height: 50px;
+}
+
+.preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.preview img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+  fill: #fff;
+  z-index: 1;
+}
+
+.remove svg {
+  width: 8px;
+  height: 8px;
+}

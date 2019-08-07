@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { memo } from 'react';
 import UserPick from '../UserPick';
 import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
@@ -102,4 +102,5 @@ EntryCard.defaultProps = {
   url: undefined,
 };
 
-export default EntryCard;
+export * from './wrappers';
+export default memo(EntryCard);

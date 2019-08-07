@@ -157,11 +157,19 @@ export default class MediumUpload extends MediumEditor.Extension {
   }
 
   onEdit = () => {
-    if (!window.getSelection().anchorNode) {
-      return;
-    }
+    const selection = window.getSelection();
 
-    this.currentEl = this.base.getSelectedParentElement();
+    if (selection.rangeCount > 0) {
+      const { startContainer } = selection.getRangeAt(0);
+
+      if (startContainer.nodeType === 1) {
+        if (startContainer.tagName === 'P') {
+          this.currentEl = startContainer;
+        } else if (startContainer.parentNode.tagName === 'P') {
+          this.currentEl = startContainer.parentNode;
+        }
+      }
+    }
 
     if (this.hasShowUploadButtons()) {
       this.uploadButtons.show(this.currentEl);
@@ -171,8 +179,15 @@ export default class MediumUpload extends MediumEditor.Extension {
   }
 
   hasShowUploadButtons() {
-    return this.currentEl.parentNode === this.base.origElements &&
-      this.currentEl.innerHTML === '<br>';
+    const selection = window.getSelection();
+
+    if (selection.rangeCount > 0) {
+      const { startContainer } = selection.getRangeAt(0);
+
+      return startContainer.nodeType === 1 && startContainer.tagName !== 'LI';
+    }
+
+    return false;
   }
 
   setCursorToElemnt(el) {
@@ -248,6 +263,10 @@ export default class MediumUpload extends MediumEditor.Extension {
   }
 
   appendEmbed = async (url) => {
+    if (this.onUploadStart) {
+      this.onUploadStart();
+    }
+
     try {
       const data = await EmbedService.getDataFromUrl(url);
       const div = document.createElement('div');
@@ -258,6 +277,10 @@ export default class MediumUpload extends MediumEditor.Extension {
     } catch (err) {
       console.error(err);
       this.onError(err.message);
+    }
+
+    if (this.onUploadDone) {
+      this.onUploadDone();
     }
   }
 }

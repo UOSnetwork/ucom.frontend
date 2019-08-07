@@ -1,4 +1,4 @@
-import { Tooltip } from 'react-tippy';
+import Tippy from '@tippy.js/react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { memo, useRef, useCallback, Fragment } from 'react';
@@ -12,36 +12,37 @@ import styles from './styles.css';
 
 // TODO: Phone version
 const Votin = ({
-  rate, count, selfVote, details, usersPopup, onClickUp, onClickDown,
+  rate, count, selfVote, details, usersPopup, onClickUp, onClickDown, onShow,
 }) => {
-  const tooltipRef = useRef();
+  const tippyInstance = useRef();
 
   const hideTooltip = useCallback(() => {
-    if (tooltipRef.current) {
-      tooltipRef.current.hideTooltip();
+    if (tippyInstance.current) {
+      tippyInstance.current.hide();
     }
-  }, [tooltipRef]);
+  }, [tippyInstance]);
 
   return (
     <Fragment>
       <UsersPopup {...usersPopup} />
 
-      <Tooltip
+      <Tippy
+        placement="top-center"
         arrow
-        useContext
         interactive
-        unmountHTMLWhenHide
-        ref={tooltipRef}
-        position="top-center"
         theme="dropdown-dark"
         trigger="mouseenter"
-        html={(
+        content={(
           <Details
             {...details}
             selfVote={selfVote}
             onClick={hideTooltip}
           />
         )}
+        onCreate={(instance) => {
+          tippyInstance.current = instance;
+        }}
+        onShow={onShow}
       >
         <div className={styles.voting}>
           <span
@@ -79,7 +80,7 @@ const Votin = ({
             <IconVoteDown />
           </span>
         </div>
-      </Tooltip>
+      </Tippy>
     </Fragment>
   );
 };
@@ -93,6 +94,7 @@ Votin.propTypes = {
   usersPopup: PropTypes.shape(UsersPopup.propTypes),
   onClickUp: PropTypes.func,
   onClickDown: PropTypes.func,
+  onShow: PropTypes.func,
 };
 
 Votin.defaultProps = {
@@ -104,6 +106,7 @@ Votin.defaultProps = {
   usersPopup: UsersPopup.defaultProps,
   onClickUp: undefined,
   onClickDown: undefined,
+  onShow: undefined,
 };
 
 export * from './Wrappers';

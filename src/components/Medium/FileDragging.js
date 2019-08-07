@@ -28,7 +28,6 @@ const containsFiles = (e) => {
   return false;
 };
 
-
 export default MediumEditor.extensions.fileDragging.extend({
   handleDrag(e) {
     e.preventDefault();
@@ -51,7 +50,6 @@ export default MediumEditor.extensions.fileDragging.extend({
 
   handleDrop(e) {
     e.preventDefault();
-    e.stopPropagation();
 
     if (e.dataTransfer.files) {
       const images = Array.from(e.dataTransfer.files)

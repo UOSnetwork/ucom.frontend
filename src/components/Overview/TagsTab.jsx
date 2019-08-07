@@ -7,7 +7,6 @@ import * as overviewUtils from '../../utils/overview';
 import * as feedActions from '../../actions/tagsFeed';
 import loader from '../../utils/loader';
 import { FEED_PER_PAGE } from '../../utils/feed';
-import urls from '../../utils/urls';
 // import { feedGetSide } from '../../actions/feed';
 
 // const LIST_LIMIT = 5;
@@ -44,7 +43,6 @@ const TagsTab = (props) => {
           hasMore={props.tagsFeed.metadata.hasMore}
           tagIds={props.tagsFeed.tagIds}
           loading={props.tagsFeed.loading}
-          loadMoreUrl={urls.getOverviewCategoryUrl({ filter: overviewCategoryName, page: page + 1, route: 'tags' })}
           onClickLoadMore={onClickLoadMore}
         />
       </div>

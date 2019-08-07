@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Tooltip } from 'react-tippy';
 import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
+import Tippy from '@tippy.js/react';
 import { useDispatch } from 'react-redux';
 import IconFacebook from '../Icons/Socials/Share/Facebook';
 import IconTwitter from '../Icons/Socials/Share/Twitter';
@@ -19,7 +19,7 @@ const Share = ({
 }) => {
   const dispatch = useDispatch();
   const [url, setUrl] = useState('');
-  const tooltipRef = useRef();
+  const tippyInstance = useRef();
 
   useEffect(() => {
     if (directUrl) {
@@ -30,18 +30,16 @@ const Share = ({
   }, [link, directUrl]);
 
   return (
-    <Tooltip
-      ref={tooltipRef}
+    <Tippy
+      onCreate={(instance) => {
+        tippyInstance.current = instance;
+      }}
       arrow
-      useContext
       interactive
       theme="dropdown"
-      position="bottom-center"
+      placement="bottom-center"
       trigger="click"
-      style={{
-        display: 'inline-block',
-      }}
-      html={(
+      content={(
         <div className={styles.share}>
           {postId && repostEnable &&
             <Fragment>
@@ -51,8 +49,8 @@ const Share = ({
                 onClick={async () => {
                   try {
                     await withLoader(dispatch(addRepost(postId)));
-                    if (tooltipRef.current) {
-                      tooltipRef.current.hideTooltip();
+                    if (tippyInstance.current) {
+                      tippyInstance.current.hide();
                     }
                     dispatch(addSuccessNotification('Repost is successful'));
                   } catch (err) {
@@ -120,6 +118,9 @@ const Share = ({
               role="presentation"
               className={styles.icon}
               onClick={() => {
+                if (tippyInstance.current) {
+                  tippyInstance.current.hide();
+                }
                 copyToClipboard(url);
                 dispatch(addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE));
               }}
@@ -131,7 +132,7 @@ const Share = ({
       )}
     >
       {children}
-    </Tooltip>
+    </Tippy>
   );
 };
 

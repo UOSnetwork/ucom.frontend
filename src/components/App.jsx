@@ -20,6 +20,7 @@ import { addMaintenanceNotification } from '../actions/notifications';
 import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
 import SearchPopup from '../components/SearchPopup';
+import Subscribe from '../components/Subscribe';
 import urls from '../utils/urls';
 
 const App = () => {
@@ -74,6 +75,7 @@ const App = () => {
 
       <SearchPopup />
       <Auth />
+      <Subscribe />
 
       {wallet.buyRamVisible && <BuyRam />}
       {wallet.sellRamVisible && <SellRam />}

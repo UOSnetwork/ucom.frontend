@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect } from 'react';
-import Header from '../HeaderSimple';
+import Header from '../Header';
 import styles from './styles.css';
 
 const LayoutBase = (props) => {

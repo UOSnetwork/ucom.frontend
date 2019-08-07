@@ -63,6 +63,20 @@
   align-self: flex-start;
 }
 
+.iconBurger {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .iconBurger {
+    display: block;
+  }
+
+  .iconWallet {
+    display: none;
+  }
+}
+
 .user {
   display: flex;
   align-items: center;

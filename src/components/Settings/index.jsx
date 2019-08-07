@@ -19,6 +19,7 @@ import {
 } from '../../utils/keys';
 import OwnerActiveKeys from './OwnerActiveKeys';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
+import * as subscribeActions from '../../actions/subscribe';
 import * as settingsActions from '../../actions/settings';
 import IconInputComplete from '../Icons/InputComplete';
 import urls from '../../utils/urls';
@@ -231,6 +232,11 @@ const Settings = () => {
                   }
                 </Element>
               }
+
+              <div className={styles.subscribe}>
+                Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!
+                Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => dispatch(subscribeActions.show())}>subscribe</span> to&nbsp;our weekly updates.
+              </div>
             </div>
 
             <div className={styles.footer}>

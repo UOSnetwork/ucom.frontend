@@ -1,10 +1,10 @@
-import { Tooltip } from 'react-tippy';
+import Tippy from '@tippy.js/react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import sectionStyles from '../Section/styles.css';
 import styles from './styles.css';
-import DropdownMenu from '../DropdownMenu';
+import DropdownMenu, { DropdownMenuIcon } from '../DropdownMenu';
 import Form from './Form';
 import List from './List';
 
@@ -27,13 +27,15 @@ const Discussions = (props) => {
 
         {props.editable &&
           <div className={styles.menu}>
-            <Tooltip
-              arrow
-              html={`Maximum ${DISCUSSIONS_LIMIT} Discussions`}
-              disabled={props.items.length < DISCUSSIONS_LIMIT}
-            >
+            {props.items.length >= DISCUSSIONS_LIMIT ? (
+              <Tippy
+                arrow
+                content={`Maximum ${DISCUSSIONS_LIMIT} Discussions`}
+              >
+                <DropdownMenuIcon />
+              </Tippy>
+            ) : (
               <DropdownMenu
-                disabled={props.items.length >= DISCUSSIONS_LIMIT}
                 items={[{
                   title: 'New Discussion',
                   url: props.newDiscussionUrl,
@@ -42,7 +44,7 @@ const Discussions = (props) => {
                   onClick: () => setFormVisible(true),
                 }]}
               />
-            </Tooltip>
+            )}
           </div>
         }
       </div>

@@ -28,7 +28,8 @@
   height: calc(100% - 50px);
 }
 
-.popup:global(.dark) {
+.popup:global(.dark),
+.popup.dark {
   background: rgba(23, 25, 27, 0.75);
 }
 

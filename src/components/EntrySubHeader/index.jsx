@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { memo } from 'react';
 import classNames from 'classnames';
 import styles from './styles.css';
 import UserPick from '../UserPick';
@@ -47,7 +47,7 @@ const EntrySubHeader = props => (
 EntrySubHeader.propTypes = {
   userUrl: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
-  userAvatarUrl: PropTypes.string.isRequired,
+  userAvatarUrl: PropTypes.string,
   userId: PropTypes.number.isRequired,
   userRate: PropTypes.number,
   showFollow: PropTypes.bool,
@@ -58,6 +58,8 @@ EntrySubHeader.defaultProps = {
   userRate: 0,
   showFollow: false,
   organization: false,
+  userAvatarUrl: undefined,
 };
 
-export default EntrySubHeader;
+export * from './wrappers';
+export default memo(EntrySubHeader);

@@ -18,6 +18,10 @@ module.exports = {
     './src/index.jsx',
   ],
 
+  node: {
+    net: 'empty',
+  },
+
   plugins: [
     new CopyWebpackPlugin(copySettings),
     {

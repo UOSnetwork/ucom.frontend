@@ -1,5 +1,5 @@
 import { range } from 'lodash';
-import { Tooltip } from 'react-tippy';
+import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import React from 'react';
@@ -13,9 +13,11 @@ export const TAB_ID_OFFERS = 4;
 const tabs = [{
   id: TAB_ID_COMMUNITIES,
   title: 'Communities',
+  disabled: false,
 }, {
   id: TAB_ID_PEOPLE,
   title: 'People',
+  disabled: false,
 }, {
   id: TAB_ID_ALL,
   title: 'All',
@@ -62,14 +64,14 @@ const Tabs = ({ activeTabId, onClickItem }) => (
             className={styles.link}
             onClick={() => !item.disabled && onClickItem(item.id)}
           >
-            <Tooltip
-              disabled={!item.disabled}
-              position="top"
+            <Tippy
               arrow
-              title={item.disabled ? 'Coming Soon' : undefined}
+              isEnabled={item.disabled}
+              placement="top"
+              content="Coming Soon"
             >
-              {item.title}
-            </Tooltip>
+              <span className={styles.text}>{item.title}</span>
+            </Tippy>
           </span>
         </div>
       ))}

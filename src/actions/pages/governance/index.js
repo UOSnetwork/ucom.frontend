@@ -1,7 +1,11 @@
 import { without } from 'lodash';
 import api, { graphql } from '../../../api';
 import * as nodesActions from '../../nodes';
-import { NODES_PER_PAGE, BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../../../utils/constants';
+import {
+  NODES_PER_PAGE,
+  BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
+  BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
+} from '../../../utils/constants';
 
 export const reset = () => ({ type: 'GOVERNANCE_PAGE_RESET' });
 
@@ -72,7 +76,10 @@ export const getSelectedNodes = userId => async (dispatch) => {
 
 export const voteForNodes = (accountName, nodes, privateKey, nodeTypeId) => async (dispatch) => {
   try {
-    const producers = nodes.map(i => i.title);
+    const producers = nodes
+      // .filter(node => node.bpStatus === BP_STATUS_ACTIVE_ID || node.bpStatus === BP_STATUS_BACKUP_ID)
+      .map(i => i.title)
+      .filter(i => i !== 'eosiomeetone');
 
     await api.voteForNodes(accountName, producers, privateKey, nodeTypeId);
 

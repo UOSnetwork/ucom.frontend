@@ -1,10 +1,10 @@
+import Tippy from '@tippy.js/react';
 import { isEqual } from 'lodash';
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
-import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
-import React, { createRef, memo } from 'react';
-import IconDots from '../Icons/Dots';
+import React, { useRef, memo } from 'react';
+import Icon from './Icon';
 import styles from './styles.css';
 
 export const DROPDOWN_MENU_ITEM_TYPE_TITLE = 1;
@@ -12,20 +12,26 @@ export const DROPDOWN_MENU_ITEM_TYPE_ENTRY = 2;
 export const DROPDOWN_MENU_ITEM_TYPE_LOGOUT = 3;
 
 const DropdownMenu = (props) => {
-  const tooltipRef = createRef();
+  const tippyInstance = useRef();
 
   return (
-    <Tooltip
-      ref={tooltipRef}
+    <Tippy
       arrow
-      useContext
       interactive
-      disabled={props.disabled}
+      isEnabled={!props.disabled}
       theme="dropdown"
       distance={props.distance}
-      position={props.position}
+      placement={props.position}
       trigger={props.trigger}
-      html={(
+      onCreate={(instance) => {
+        tippyInstance.current = instance;
+      }}
+      onHidden={() => {
+        if (props.onHidden) {
+          props.onHidden();
+        }
+      }}
+      content={(
         <div className={styles.tooltipMenu}>
           {props.items.map((item, id) => {
             let LinkTag = 'div';
@@ -46,8 +52,8 @@ const DropdownMenu = (props) => {
                   [styles.disabled]: item.disabled,
                 })}
                 onClick={() => {
-                  if (tooltipRef.current) {
-                    tooltipRef.current.hideTooltip();
+                  if (tippyInstance.current) {
+                    tippyInstance.current.hide();
                   }
 
                   if (item.url && item.url[0] !== '#') {
@@ -71,17 +77,8 @@ const DropdownMenu = (props) => {
         </div>
       )}
     >
-      {props.children ||
-        <div className={styles.icon}>
-          <button
-            onClick={props.onClickButton}
-            className={styles.button}
-          >
-            <IconDots />
-          </button>
-        </div>
-      }
-    </Tooltip>
+      {props.children || <Icon />}
+    </Tippy>
   );
 };
 
@@ -103,20 +100,22 @@ DropdownMenu.propTypes = {
   trigger: PropTypes.string,
   position: PropTypes.string,
   distance: PropTypes.number,
-  onClickButton: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  onHidden: PropTypes.func,
 };
 
 DropdownMenu.defaultProps = {
   disabled: false,
   children: null,
-  onClickButton: null,
   trigger: 'click',
   position: 'bottom-center',
   distance: 10,
+  onHidden: undefined,
 };
+
+export { default as DropdownMenuIcon } from './Icon';
 
 export default withRouter(memo(DropdownMenu, (perv, next) => (
   isEqual(perv.items, next.items)

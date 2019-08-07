@@ -52,6 +52,9 @@ const PostVotingWrapper = ({ postId }) => {
           dispatch(addErrorNotificationFromResponse(err));
         }
       }}
+      onShow={() => {
+        console.log('on show');
+      }}
       details={{
         upCount,
         downCount,
@@ -68,9 +71,6 @@ const PostVotingWrapper = ({ postId }) => {
           },
         },
         loading: detailsLoading,
-        onShow: () => {
-          console.log('on show');
-        },
       }}
       usersPopup={{
         users, // TODO: Map props

@@ -11,6 +11,7 @@ import styles from './styles.css';
 import UserPick from '../../../UserPick';
 import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
 import { copyToClipboard } from '../../../../utils/text';
+import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../../../utils/constants';
 import fromNow from '../../../../utils/fromNow';
 
 const PostFeedHeader = ({ post, ...props }) => {
@@ -18,17 +19,14 @@ const PostFeedHeader = ({ post, ...props }) => {
     return null;
   }
 
-  const [leftTime, setLeftTime] = useState(0);
-
-  const onClickDropdownButton = () => {
-    setLeftTime(15 - moment().diff(post.createdAt, 'm'));
-  };
+  const calcTimeLeft = () => 15 - moment().diff(post.createdAt, 'm');
+  const [leftTime, setLeftTime] = useState(calcTimeLeft());
 
   const items = [{
     title: 'Copy Link',
     onClick: () => {
       copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`);
-      props.addSuccessNotification('Link copied to clipboard');
+      props.addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE);
     },
   }];
 
@@ -82,7 +80,7 @@ const PostFeedHeader = ({ post, ...props }) => {
             <DropdownMenu
               items={items}
               position="bottom-end"
-              onClickButton={onClickDropdownButton}
+              onHidden={() => setLeftTime(calcTimeLeft())}
             />
           </div>
         }

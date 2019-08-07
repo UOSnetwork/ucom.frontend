@@ -40,15 +40,6 @@ export default class MediumPost extends MediumEditor.Extension {
     this.base.origElements.appendChild(leadText.el);
     this.base.origElements.appendChild(mainText.el);
 
-    this.base.subscribe('editableKeypress', (e) => {
-      const el = this.base.getSelectedParentElement();
-
-      if (e.which === 13 && (el === title.el || el === leadText.el) && el.nextSibling) {
-        e.preventDefault();
-        this.setCursorToElemnt(el.nextSibling);
-      }
-    });
-
     this.base.subscribe('editableInput', (e) => {
       if (e instanceof InputEvent) {
         const el = this.base.getSelectedParentElement();
@@ -65,15 +56,5 @@ export default class MediumPost extends MediumEditor.Extension {
         }
       }
     });
-  }
-
-  setCursorToElemnt(el) {
-    const range = document.createRange();
-    const sel = window.getSelection();
-
-    range.setStart(el, 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
   }
 }

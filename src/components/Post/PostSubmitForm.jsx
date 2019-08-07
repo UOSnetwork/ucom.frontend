@@ -9,7 +9,7 @@ import { addErrorNotification } from '../../actions/notifications';
 import api from '../../api';
 import loader from '../../utils/loader';
 import { POSTS_TITLE_MAX_LENGTH, POSTS_LEADING_TEXT_MAX_LENGTH } from '../../utils/posts';
-import CreateBy from '../CreateBy';
+import CreateBy from '../../pages/EditPost/CreateBy';
 
 
 const PostSubmitForm = (props) => {

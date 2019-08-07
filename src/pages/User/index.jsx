@@ -40,6 +40,7 @@ const UserPage = (props) => {
 
   const getPageData = async () => {
     try {
+      dispatch(userPageActions.reset());
       await withLoader(dispatch(userPageActions.getPageData(userIdentity)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
@@ -101,10 +102,6 @@ const UserPage = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     getPageData();
-
-    return () => {
-      dispatch(userPageActions.reset());
-    };
   }, [userIdentity]);
 
   if (state.loaded && !user) {

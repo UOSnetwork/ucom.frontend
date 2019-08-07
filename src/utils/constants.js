@@ -1,4 +1,5 @@
 const { Dictionary } = require('ucom-libs-wallet');
+const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
 
 export const ERROR_SERVER = 'Could not complete request, please try again later';
 export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
@@ -44,6 +45,7 @@ export const BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES = Dictionary.BlockchainNodes
 export const NODES_PER_PAGE = 60;
 export const BP_STATUS_ACTIVE_ID = 1;
 export const BP_STATUS_BACKUP_ID = 2;
+export const BP_STATUS_NOT_ACTIVE_ID = 3;
 export const PRODUCERS_LIMIT = 30;
 
 export const USER_EDITABLE_PROPS = [
@@ -69,6 +71,17 @@ export const USER_ACCOUNT_LENGTH = 12;
 export const USER_ACCOUNT_NAME_REG_EXP = /^[a-z1-5]{12}$/;
 export const USER_ACCOUNT_NAME_SYMBOLS_REG_EXP = /^[a-z1-5]+$/;
 
+
 export const UPVOTE_STATUS = 'upvote';
 export const DOWNVOTE_STATUS = 'downvote';
 export const NOVOTE_STATUS = 'no_vote';
+
+export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
+export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
+export const POST_TYPE_OFFER_ID = PostTypes.OFFER;
+export const POST_TYPE_REPOST_ID = PostTypes.REPOST;
+
+export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
+export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
+
+export const POSTS_DRAFT_LOCALSTORAGE_KEY = 'post_data_v_1';
