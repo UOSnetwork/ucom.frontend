@@ -109,21 +109,6 @@ const Form = (props) => {
   }, [embedUrlsFromMessage]);
 
   useEffect(() => {
-    autosize(textareaEl.current);
-
-    const removeInitDragAndDropListeners = initDragAndDropListeners(
-      fieldEl.current,
-      () => setDropOnForm(true),
-      () => setDropOnForm(false),
-    );
-
-    return () => {
-      autosize.destroy(textareaEl);
-      removeInitDragAndDropListeners();
-    };
-  }, []);
-
-  useEffect(() => {
     if (textareaEl && textareaEl.current) {
       autosize.update(textareaEl.current);
     }
@@ -138,6 +123,21 @@ const Form = (props) => {
       setEmbedUrlsFromMessage(embedUrlsFromMessage.concat(lastUrl));
     }
   }, [message]);
+
+  useEffect(() => {
+    autosize(textareaEl.current);
+
+    const removeInitDragAndDropListeners = initDragAndDropListeners(
+      fieldEl.current,
+      () => setDropOnForm(true),
+      () => setDropOnForm(false),
+    );
+
+    return () => {
+      autosize.destroy(textareaEl);
+      removeInitDragAndDropListeners();
+    };
+  }, []);
 
   return (
     <div
