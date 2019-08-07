@@ -7,6 +7,7 @@ import loader from '../../utils/loader';
 import withLoader from '../../utils/withLoader';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import * as editPostActions from '../../actions/pages/editPost';
+import styles from './styles.css';
 
 const EditPost = ({ match, location }) => {
   const dispatch = useDispatch();
@@ -42,10 +43,10 @@ const EditPost = ({ match, location }) => {
 
   return (
     <LayoutClean>
-      <div className="edit-post">
+      <div className={styles.editPost}>
         <Toolbar />
 
-        <div className="edit-post__content">
+        <div className={styles.content}>
           {state.loaded &&
             <Medium
               entityImages={state.data.entityImages}
@@ -53,9 +54,11 @@ const EditPost = ({ match, location }) => {
               onChange={({ html, urls }) => {
                 dispatch(editPostActions.changeContent(html, urls));
               }}
+              // TODO: Move to Medium
               onUploadStart={() => {
                 loader.start();
               }}
+              // TODO: Move to Medium
               onUploadDone={() => {
                 loader.done();
               }}

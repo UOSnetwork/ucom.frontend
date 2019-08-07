@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React, { Fragment, memo, useState, useCallback } from 'react';
@@ -32,7 +33,12 @@ const Toolbar = ({
         <SubmitPopup onClickClose={hideSubmitPopup} />
       }
 
-      <div className={styles.toolbar}>
+      <div
+        className={classNames({
+          [styles.toolbar]: true,
+          [styles.withClose]: showClose,
+        })}
+      >
         <div className={styles.inner}>
           <div className={styles.title}>
             {state.loaded && showTitle &&
@@ -65,7 +71,7 @@ const Toolbar = ({
               history.goBack();
             }}
           >
-            Close <Close />
+            <span className={styles.label}>Close</span> <Close />
           </div>
         }
       </div>

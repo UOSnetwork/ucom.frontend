@@ -1,4 +1,4 @@
-.edit-post {
+.editPost {
   position: relative;
   box-sizing: border-box;
   max-width: 1280px;
@@ -10,7 +10,7 @@
   min-height: 100vh;
 }
 
-.edit-post__content {
+.content {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
