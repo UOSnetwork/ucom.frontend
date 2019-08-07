@@ -11,8 +11,13 @@ import {
   LIST_PER_PAGE,
   BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS,
   BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES,
+  POST_TYPE_MEDIA_ID,
+  ENTITY_NAMES_USERS,
+  ENTITY_NAMES_ORG,
+  ENTITY_NAMES_POSTS,
+  VOTING_UPVOTE_ID,
+  VOTING_DOWNVOTE_ID,
 } from '../utils/constants';
-import { POST_TYPE_MEDIA_ID, ENTITY_NAMES_USERS, ENTITY_NAMES_ORG } from '../utils/posts';
 
 const request = async (data, extraOptions = {}) => {
   let options = {
@@ -838,6 +843,38 @@ const api = {
       return data.data;
     } catch (e) {
       throw e;
+    }
+  },
+
+  async getVotesForPostPreview(postId) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      upvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
+        filters: {
+          interaction_type: VOTING_UPVOTE_ID,
+          entity_id: postId,
+          entity_name: ENTITY_NAMES_POSTS,
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        page: 1,
+        per_page: 3,
+      }),
+      downvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
+        filters: {
+          interaction_type: VOTING_DOWNVOTE_ID,
+          entity_id: postId,
+          entity_name: ENTITY_NAMES_POSTS,
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        page: 1,
+        per_page: 3,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data;
+    } catch (err) {
+      throw err;
     }
   },
 };

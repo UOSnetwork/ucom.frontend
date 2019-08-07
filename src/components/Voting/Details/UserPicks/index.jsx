@@ -8,8 +8,8 @@ const UserPicks = ({ userPicks, onClickMore, onClick }) => (
   <span className={styles.users}>
     {userPicks.length > 0 &&
       <div className={styles.items}>
-        {userPicks.slice(0, 3).map(userPick => (
-          <div className={styles.item}>
+        {userPicks.slice(0, 3).map((userPick, index) => (
+          <div className={styles.item} key={index}>
             <UserPick
               {...userPick}
               shadow
