@@ -43,6 +43,8 @@ const Publications = (props) => {
       .then(loader.done);
   }, [overviewCategoryName]);
 
+  React.useEffect(() => () => props.dispatch(feedActions.feedReset()), []);
+
   return (
     <div className="grid grid_publications">
       <div className="grid__item grid__item_main">
