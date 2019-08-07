@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import { withRouter } from 'react-router';
-import urls from '../../utils/urls';
 import Feed from '../Feed/FeedView';
 import UserList from '../User/UserList';
 import OrganizationList from '../Organization/OrganizationList';
@@ -52,7 +51,6 @@ const Publications = (props) => {
           hasMore={props.feed.metadata.hasMore}
           postIds={props.feed.postIds}
           loading={props.feed.loading}
-          loadMoreUrl={urls.getOverviewCategoryUrl({ filter: overviewCategory.name, page: page + 1 })}
           onClickLoadMore={onClickLoadMore}
           isMobile
         />

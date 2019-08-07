@@ -7,7 +7,6 @@ import * as feedActions from '../../actions/communityFeed';
 // import { feedGetSide } from '../../actions/feed';
 import loader from '../../utils/loader';
 import { FEED_PER_PAGE } from '../../utils/feed';
-import urls from '../../utils/urls';
 // import UserList from './../User/UserList';
 
 // const LIST_LIMIT = 5;
@@ -45,7 +44,6 @@ const Communities = (props) => {
           hasMore={props.communityFeed.metadata.hasMore}
           communityIds={props.communityFeed.communityIds}
           loading={props.communityFeed.loading}
-          loadMoreUrl={urls.getOverviewCategoryUrl({ filter: overviewCategoryName, page: page + 1, route: 'communities' })}
           onClickLoadMore={onClickLoadMore}
         />
       </div>

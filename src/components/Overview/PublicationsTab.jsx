@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import { withRouter } from 'react-router';
-import urls from '../../utils/urls';
 import Feed from '../Feed/FeedView';
 import UserList from '../User/UserList';
 import OrganizationList from '../Organization/OrganizationList';
@@ -18,7 +17,6 @@ const Publications = (props) => {
   const page = +props.match.params.page || 1;
   const overviewCategoryName = props.match.params.filter;
   const overviewCategory = overviewUtils.OVERVIEW_CATEGORIES.find(i => i.name === overviewCategoryName);
-
 
   const postTypeId = POST_TYPE_MEDIA_ID;
 
@@ -52,7 +50,6 @@ const Publications = (props) => {
           hasMore={props.feed.metadata.hasMore}
           postIds={props.feed.postIds}
           loading={props.feed.loading}
-          loadMoreUrl={urls.getOverviewCategoryUrl({ filter: overviewCategory.name, page: page + 1 })}
           onClickLoadMore={onClickLoadMore}
         />
       </div>
