@@ -37,6 +37,7 @@ const OrganizationPage = (props) => {
 
   const getPageData = async () => {
     try {
+      dispatch(orgPageActions.reset());
       await withLoader(dispatch(orgPageActions.getPageData(organizationId)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
@@ -62,10 +63,6 @@ const OrganizationPage = (props) => {
   useEffect(() => {
     getOrganization();
     getPageData();
-
-    return () => {
-      dispatch(orgPageActions.reset());
-    };
   }, [organizationId]);
 
   if (state.loaded && !organization) {
