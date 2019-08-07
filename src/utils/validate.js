@@ -169,6 +169,7 @@ export default class Validate {
     });
   }
 
+
   static validatePost(data) {
     const {
       reuqired, inputMaxLength,
@@ -178,6 +179,16 @@ export default class Validate {
       title: [reuqired, inputMaxLength],
       leadingText: [reuqired, inputMaxLength],
       description: [reuqired],
+    });
+  }
+
+  static validateSubscribe(data) {
+    const {
+      reuqired, email,
+    } = Validate.getValidateFunctions();
+
+    return Validate.validate(data, {
+      email: [reuqired, email],
     });
   }
 

@@ -10,7 +10,7 @@ import Checkbox from '../../../Checkbox';
 import { selectNodesByIds, selectOwner } from '../../../../store/selectors';
 import { formatScaledImportance } from '../../../../utils/rate';
 import { getBpStatusById } from '../../../../utils/nodes';
-import { BP_STATUS_ACTIVE_ID, PRODUCERS_LIMIT } from '../../../../utils/constants';
+import { BP_STATUS_ACTIVE_ID, BP_STATUS_NOT_ACTIVE_ID, PRODUCERS_LIMIT } from '../../../../utils/constants';
 import urls from '../../../../utils/urls';
 import styles from './styles.css';
 
@@ -98,6 +98,7 @@ const TableNodes = ({
           <Badge
             strech
             green={node.bpStatus === BP_STATUS_ACTIVE_ID}
+            gray={node.bpStatus === BP_STATUS_NOT_ACTIVE_ID}
           >
             {getBpStatusById(node.bpStatus)}
           </Badge>,

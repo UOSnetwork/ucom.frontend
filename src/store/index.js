@@ -24,9 +24,11 @@ import nodes from './nodes';
 import pages from './pages';
 import settings from './settings';
 import searchPopup from './searchPopup';
+import subscribe from './subscribe';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    subscribe,
     settings,
     searchPopup,
     pages,

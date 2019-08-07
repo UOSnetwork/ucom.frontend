@@ -1,4 +1,4 @@
-import { BP_STATUS_ACTIVE_ID, BP_STATUS_BACKUP_ID } from './constants';
+import { BP_STATUS_NOT_ACTIVE_ID, BP_STATUS_ACTIVE_ID, BP_STATUS_BACKUP_ID } from './constants';
 
 export const getBpStatusById = (id) => {
   switch (id) {
@@ -6,7 +6,10 @@ export const getBpStatusById = (id) => {
       return 'Active';
 
     case BP_STATUS_BACKUP_ID:
-    default:
       return 'Backup';
+
+    case BP_STATUS_NOT_ACTIVE_ID:
+    default:
+      return 'Not active';
   }
 };
