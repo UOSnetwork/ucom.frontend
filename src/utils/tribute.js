@@ -3,7 +3,7 @@ import api from '../api';
 import urls from './urls';
 import withLoader from './withLoader';
 import { getUserName } from './user';
-import { EntryCard } from '../components/EntryCard';
+import { EntryCardComponent } from '../components/EntryCard';
 
 export const defaultTributeConfig = {
   fillAttr: 'accountName',
@@ -22,7 +22,7 @@ export const defaultTributeConfig = {
   },
 
   menuItemTemplate: item => (
-    renderToStaticMarkup(EntryCard({
+    renderToStaticMarkup(EntryCardComponent({
       disableRate: true,
       avatarSrc: urls.getFileUrl(item.original.avatarFilename),
       title: getUserName(item.original),

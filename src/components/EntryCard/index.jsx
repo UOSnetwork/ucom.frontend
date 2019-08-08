@@ -7,7 +7,7 @@ import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
-export const EntryCard = (props) => {
+const EntryCard = (props) => {
   let LinkTag;
 
   if (props.disabledLink || !props.url) {
@@ -104,3 +104,4 @@ EntryCard.defaultProps = {
 
 export * from './wrappers';
 export default memo(EntryCard);
+export const EntryCardComponent = EntryCard;
