@@ -3,7 +3,7 @@ import api from '../api';
 import urls from './urls';
 import withLoader from './withLoader';
 import { getUserName } from './user';
-import EntryCard from '../components/EntryCard';
+import { EntryCard } from '../components/EntryCard';
 
 export const defaultTributeConfig = {
   fillAttr: 'accountName',

@@ -7,7 +7,7 @@ import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
-const EntryCard = (props) => {
+export const EntryCard = (props) => {
   let LinkTag;
 
   if (props.disabledLink || !props.url) {
