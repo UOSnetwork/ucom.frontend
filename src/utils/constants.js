@@ -92,5 +92,5 @@ export const ENTITY_NAMES_USERS = EntityNames.USERS;
 export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
 export const ENTITY_NAMES_POSTS = EntityNames.POSTS;
 
-export const VOTING_UPVOTE_ID = InteractionTypeDictionary.getUpvoteId();
-export const VOTING_DOWNVOTE_ID = InteractionTypeDictionary.getDownvoteId();
+export const INTERACTION_TYPE_ID_VOTING_UPVOTE = InteractionTypeDictionary.getUpvoteId();
+export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.getDownvoteId();

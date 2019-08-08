@@ -85,6 +85,7 @@ export const addRepost = postId => async () => {
   }
 };
 
+// TODO: Move to voting.js
 export const vote = (isUp, postId) => async (dispatch) => {
   try {
     await api.vote(isUp, postId);

@@ -47,5 +47,5 @@
   grid-template-columns: 1fr 160px;
   grid-column-gap: 54px;
   align-items: center;
-  margin: 0 0 16px;
+  margin: 16px 0;
 }

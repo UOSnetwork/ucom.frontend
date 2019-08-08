@@ -15,8 +15,8 @@ import {
   ENTITY_NAMES_USERS,
   ENTITY_NAMES_ORG,
   ENTITY_NAMES_POSTS,
-  VOTING_UPVOTE_ID,
-  VOTING_DOWNVOTE_ID,
+  INTERACTION_TYPE_ID_VOTING_UPVOTE,
+  INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
 } from '../utils/constants';
 
 const request = async (data, extraOptions = {}) => {
@@ -850,7 +850,7 @@ const api = {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
       upvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
-          interaction_type: VOTING_UPVOTE_ID,
+          interaction_type: INTERACTION_TYPE_ID_VOTING_UPVOTE,
           entity_id: postId,
           entity_name: ENTITY_NAMES_POSTS,
         },
@@ -860,7 +860,7 @@ const api = {
       }),
       downvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
-          interaction_type: VOTING_DOWNVOTE_ID,
+          interaction_type: INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
           entity_id: postId,
           entity_name: ENTITY_NAMES_POSTS,
         },
@@ -873,6 +873,28 @@ const api = {
     try {
       const data = await request({ query });
       return data.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async getVotesForPost(postId, interactionType, page = 1, perPage = LIST_PER_PAGE) {
+    const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
+      votes: GraphQLSchema.getOneContentVotingUsersQueryPart({
+        filters: {
+          ...(interactionType ? { interaction_type: interactionType } : {}),
+          entity_id: postId,
+          entity_name: ENTITY_NAMES_POSTS,
+        },
+        order_by: LIST_ORDER_BY_RATE,
+        page,
+        per_page: perPage,
+      }),
+    });
+
+    try {
+      const data = await request({ query });
+      return data.data.votes;
     } catch (err) {
       throw err;
     }

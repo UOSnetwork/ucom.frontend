@@ -1,6 +1,6 @@
-import { throttle, xor } from 'lodash';
+import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { memo, useRef, useCallback, Fragment } from 'react';
+import React, { memo, useRef, useCallback } from 'react';
 import EntryCard from '../../EntryCard';
 import UserFollowButton from '../../User/UserFollowButton';
 import Popup, { Content } from '../../Popup';
@@ -22,9 +22,6 @@ const UsersPopup = ({
     }
   }, 100), [listRef]);
 
-  const followers = users.filter(user => user && user.myselfData && user.myselfData.myFollower);
-  const others = xor(users, followers);
-
   if (!visible) {
     return null;
   }
@@ -45,31 +42,12 @@ const UsersPopup = ({
             className={styles.list}
             onScroll={onScroll}
           >
-            {followers.length > 0 &&
-              <Fragment>
-                <div className={styles.label}>Your Followers</div>
-
-                {followers.map(item => (
-                  <div className={styles.item} key={item.id}>
-                    <EntryCard {...item} />
-                    <UserFollowButton userId={item.id} />
-                  </div>
-                ))}
-              </Fragment>
-            }
-
-            {others.length > 0 &&
-              <Fragment>
-                <div className={styles.label}>Other</div>
-
-                {others.map(item => (
-                  <div className={styles.item} key={item.id}>
-                    <EntryCard {...item} />
-                    <UserFollowButton userId={item.id} />
-                  </div>
-                ))}
-              </Fragment>
-            }
+            {users.map(item => (
+              <div className={styles.item} key={item.id}>
+                <EntryCard {...item} />
+                <UserFollowButton userId={item.id} />
+              </div>
+            ))}
           </div>
         </div>
       </Content>
