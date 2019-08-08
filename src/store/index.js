@@ -1,7 +1,6 @@
 import thunk from 'redux-thunk';
 import * as redux from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-// import post from '../store/post';
 import auth from './auth';
 import notifications from './notifications';
 import siteNotifications from './siteNotifications';
@@ -25,9 +24,11 @@ import pages from './pages';
 import settings from './settings';
 import searchPopup from './searchPopup';
 import subscribe from './subscribe';
+import ieobanner from './ieobanner';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    ieobanner,
     subscribe,
     settings,
     searchPopup,
@@ -37,7 +38,6 @@ export const createStore = () => {
     userPage,
     orgPage,
     user,
-    // post,
     auth,
     notifications,
     siteNotifications,

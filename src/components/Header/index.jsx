@@ -28,6 +28,7 @@ const Header = ({ location }) => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
   const orgs = useSelector(selectOrgsByIds(owner.organizations), isEqual);
+  const ieobanner = useSelector(state => state.ieobanner, isEqual);
   const [walletPopupVisible, setWalletPopupVisible] = useState(false);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
 
@@ -50,7 +51,13 @@ const Header = ({ location }) => {
 
   return (
     <Fragment>
-      <div ref={elRef} className={styles.header}>
+      <div
+        ref={elRef}
+        className={classNames({
+          [styles.header]: true,
+          [styles.ieobanner]: ieobanner.visible,
+        })}
+      >
         <div className={styles.inner}>
           <div className={styles.section}>
             <Link to={urls.getMainPageUrl()}>

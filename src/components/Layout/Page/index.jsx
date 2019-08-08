@@ -1,4 +1,6 @@
-import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
+import { isEqual } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import React, { useEffect } from 'react';
 import * as authActions from '../../../actions/auth';
@@ -9,6 +11,7 @@ import styles from './styles.css';
 
 const Page = ({ location, children }) => {
   const dispatch = useDispatch();
+  const ieobanner = useSelector(state => state.ieobanner, isEqual);
 
   useEffect(() => {
     dispatch(authActions.hidePopup());
@@ -18,7 +21,12 @@ const Page = ({ location, children }) => {
   }, [location]);
 
   return (
-    <div className={styles.page}>
+    <div
+      className={classNames({
+        [styles.page]: true,
+        [styles.ieobanner]: ieobanner.visible,
+      })}
+    >
       {children}
     </div>
   );

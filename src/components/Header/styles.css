@@ -10,6 +10,10 @@
   background: #F9F9F9;
 }
 
+.header.ieobanner {
+  top: 72px;
+}
+
 .inner {
   display: flex;
   justify-content: space-between;

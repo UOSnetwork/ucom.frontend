@@ -2,3 +2,7 @@
   display: flex;
   flex-direction: column;
 }
+
+.page.ieobanner {
+  padding-top: 72px;
+}

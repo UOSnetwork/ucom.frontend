@@ -21,6 +21,7 @@ import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
 import SearchPopup from '../components/SearchPopup';
 import Subscribe from '../components/Subscribe';
+import IEOBanner from '../components/IEOBanner';
 import urls from '../utils/urls';
 
 const App = () => {
@@ -66,6 +67,8 @@ const App = () => {
           }
         }}
       </HashRouter>
+
+      <IEOBanner />
 
       <Page>
         <Switch>

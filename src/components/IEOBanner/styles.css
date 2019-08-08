@@ -1,0 +1,102 @@
+.ieobanner {
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background: #212528;
+  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+@media (max-width: 1023px) {
+  .ieobanner {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ieobanner {
+    font-size: 16px;
+  }
+}
+
+.bg {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bg svg {
+  margin: 0 auto;
+  fill: none;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  height: 100%;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0 40px 0 20px;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  margin-top: -12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  fill: #fff;
+  opacity: 0.3;
+}
+
+@media (max-width: 767px) {
+  .close {
+    right: 10px;
+  }
+}
+
+.button {
+  margin: 0 0 0 48px;
+  width: 214px;
+}
+
+@media (max-width: 1023px) {
+  .button {
+    margin: 0 0 0 24px;
+    width: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .button {
+    margin: 0 0 0 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .title {
+    text-align: right;
+  }
+}
