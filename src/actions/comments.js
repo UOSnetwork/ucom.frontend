@@ -23,12 +23,12 @@ export const addComments = comments => (dispatch) => {
   });
 };
 
+// TODO: Move to voting.js
 export const commentVote = ({
   isUp,
   postId,
   commentId,
 }) => async (dispatch) => {
-  loader.start();
   try {
     const data = await api.vote(isUp, postId, commentId);
     dispatch({
@@ -39,11 +39,9 @@ export const commentVote = ({
         myselfVote: isUp ? UPVOTE_STATUS : DOWNVOTE_STATUS,
       },
     });
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
+  } catch (err) {
+    throw err;
   }
-  loader.done();
 };
 
 export const commentsResetContainerDataByEntryId = ({

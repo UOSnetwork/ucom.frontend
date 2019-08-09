@@ -45,7 +45,9 @@ const UsersPopup = ({
             {users.map(item => (
               <div className={styles.item} key={item.id}>
                 <EntryCard {...item} />
-                <UserFollowButton userId={item.id} />
+                <div className={styles.follow}>
+                  <UserFollowButton userId={item.id} />
+                </div>
               </div>
             ))}
           </div>

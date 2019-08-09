@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import ButtonEdit from '../../components/ButtonEdit';
 import PostContent from '../../components/Post/Content';
-import PostRating from '../../components/Rating/PostRating';
+import { PostVotingWrapper } from '../../components/Voting';
 import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';
 import Footer from '../../components/Footer';
@@ -69,7 +69,7 @@ const Post = ({ postId }) => {
                       </div>
                     </div>
                     <div className={styles.rating}>
-                      <PostRating postId={+postId} />
+                      <PostVotingWrapper postId={+postId} />
                     </div>
                     <div className={styles.share}>
                       <Share

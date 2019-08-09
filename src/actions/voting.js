@@ -1,9 +1,9 @@
 import graphql from '../api/graphql';
 import { addUsers } from './users';
 
-export const getVotesForPostPreview = postId => async (dispatch) => {
+export const getVotesForEntityPreview = (entityId, entityName) => async (dispatch) => {
   try {
-    const { upvotes, downvotes } = await graphql.getVotesForPostPreview(postId);
+    const { upvotes, downvotes } = await graphql.getVotesForEntityPreview(entityId, entityName);
 
     dispatch(addUsers(upvotes.data.concat(downvotes.data)));
 
@@ -13,15 +13,17 @@ export const getVotesForPostPreview = postId => async (dispatch) => {
   }
 };
 
-export const getVotesForPost = (
-  postId,
+export const getVotesForEntity = (
+  entityId,
+  entityName,
   interactionType,
   page,
   perPage,
 ) => async (dispatch) => {
   try {
-    const { data, metadata } = await graphql.getVotesForPost(
-      postId,
+    const { data, metadata } = await graphql.getVotesForEntity(
+      entityId,
+      entityName,
       interactionType,
       page,
       perPage,

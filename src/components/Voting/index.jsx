@@ -10,7 +10,6 @@ import { formatRate } from '../../utils/rate';
 import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../utils/constants';
 import styles from './styles.css';
 
-// TODO: Phone version
 const Votin = ({
   rate, count, selfVote, details, usersPopup, onClickUp, onClickDown, onShow,
 }) => {

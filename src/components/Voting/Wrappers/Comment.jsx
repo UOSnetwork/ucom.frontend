@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { memo, useState, useCallback } from 'react';
 import Votin from '../index';
-import { selectOwner, selectPostById, selectUsersByIds } from '../../../store/selectors';
+import { selectOwner, selectCommentById, selectUsersByIds } from '../../../store/selectors';
 import { authShowPopup } from '../../../actions/auth';
-import { vote } from '../../../actions/posts';
+import { commentVote } from '../../../actions/comments';
 import { getVotesForEntityPreview, getVotesForEntity } from '../../../actions/voting';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 import { formatRate } from '../../../utils/rate';
@@ -13,7 +13,7 @@ import withLoader from '../../../utils/withLoader';
 import { TAB_ID_ALL, TAB_ID_UP, TAB_ID_DOWN } from '../UsersPopup/Tabs';
 import urls from '../../../utils/urls';
 import { getUserName } from '../../../utils/user';
-import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_POSTS } from '../../../utils/constants';
+import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_COMMENTS } from '../../../utils/constants';
 
 const interactionTypesByTabId = {
   [TAB_ID_ALL]: null,
@@ -21,7 +21,7 @@ const interactionTypesByTabId = {
   [TAB_ID_DOWN]: INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
 };
 
-const PostVotingWrapper = ({ postId }) => {
+const CommentVotingWrapper = ({ postId, commentId }) => {
   const dispatch = useDispatch();
   const [upCount, setUpCount] = useState(0);
   const [downCount, setDownCount] = useState(0);
@@ -34,7 +34,7 @@ const PostVotingWrapper = ({ postId }) => {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
 
-  const post = useSelector(selectPostById(postId), isEqual);
+  const comment = useSelector(selectCommentById(commentId), isEqual);
   const owner = useSelector(selectOwner, isEqual);
   const users = useSelector(selectUsersByIds(popupUsersIds), isEqual);
   const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
@@ -43,7 +43,7 @@ const PostVotingWrapper = ({ postId }) => {
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
     try {
-      const { downvotes, upvotes } = await withLoader(dispatch(getVotesForEntityPreview(postId, ENTITY_NAMES_POSTS)));
+      const { downvotes, upvotes } = await withLoader(dispatch(getVotesForEntityPreview(commentId, ENTITY_NAMES_COMMENTS)));
       setUpCount(upvotes.metadata.totalAmount);
       setDownCount(downvotes.metadata.totalAmount);
       setDetailsUpUserIds(upvotes.data.map(i => i.id));
@@ -59,7 +59,7 @@ const PostVotingWrapper = ({ postId }) => {
     setPopupUsersLoading(true);
     setPopupUsersIds([]);
     try {
-      const { data, metadata } = await withLoader(dispatch(getVotesForEntity(postId, ENTITY_NAMES_POSTS, interactionType)));
+      const { data, metadata } = await withLoader(dispatch(getVotesForEntity(commentId, ENTITY_NAMES_COMMENTS, interactionType)));
       setPopupUsersIds(data.map(i => i.id));
       setPopupUsersMetadata(metadata);
     } catch (err) {
@@ -71,7 +71,7 @@ const PostVotingWrapper = ({ postId }) => {
   const getMoreDataForUpList = useCallback(async (interactionType, page) => {
     setPopupUsersLoading(true);
     try {
-      const { data, metadata } = await withLoader(dispatch(getVotesForEntity(postId, ENTITY_NAMES_POSTS, interactionType, page)));
+      const { data, metadata } = await withLoader(dispatch(getVotesForEntity(commentId, ENTITY_NAMES_COMMENTS, interactionType, page)));
       setPopupUsersIds(prev => prev.concat(data.map(i => i.id)));
       setPopupUsersMetadata(metadata);
     } catch (err) {
@@ -82,16 +82,20 @@ const PostVotingWrapper = ({ postId }) => {
 
   return (
     <Votin
-      rate={formatRate(post.currentRate, true)}
-      count={post.currentVote}
-      selfVote={post.myselfData && post.myselfData.myselfVote}
+      rate={formatRate(comment.currentRate, true)}
+      count={comment.currentVote}
+      selfVote={comment.myselfData && comment.myselfData.myselfVote}
       onClickUp={async () => {
         if (!owner.id) {
           dispatch(authShowPopup());
           return;
         }
         try {
-          await withLoader(dispatch(vote(true, postId)));
+          await withLoader(dispatch(commentVote({
+            isUp: true,
+            postId,
+            commentId,
+          })));
         } catch (err) {
           dispatch(addErrorNotificationFromResponse(err));
         }
@@ -102,7 +106,11 @@ const PostVotingWrapper = ({ postId }) => {
           return;
         }
         try {
-          await withLoader(dispatch(vote(false, postId)));
+          await withLoader(dispatch(commentVote({
+            isUp: false,
+            postId,
+            commentId,
+          })));
         } catch (err) {
           dispatch(addErrorNotificationFromResponse(err));
         }
@@ -168,8 +176,9 @@ const PostVotingWrapper = ({ postId }) => {
   );
 };
 
-PostVotingWrapper.propTypes = {
+CommentVotingWrapper.propTypes = {
   postId: PropTypes.number.isRequired,
+  commentId: PropTypes.number.isRequired,
 };
 
-export default memo(PostVotingWrapper);
+export default memo(CommentVotingWrapper);

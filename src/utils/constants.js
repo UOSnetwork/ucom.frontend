@@ -91,6 +91,7 @@ export const POSTS_DRAFT_LOCALSTORAGE_KEY = 'post_data_v_1';
 export const ENTITY_NAMES_USERS = EntityNames.USERS;
 export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
 export const ENTITY_NAMES_POSTS = EntityNames.POSTS;
+export const ENTITY_NAMES_COMMENTS = EntityNames.COMMENTS;
 
 export const INTERACTION_TYPE_ID_VOTING_UPVOTE = InteractionTypeDictionary.getUpvoteId();
 export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.getDownvoteId();

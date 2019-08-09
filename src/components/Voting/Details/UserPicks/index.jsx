@@ -19,18 +19,20 @@ const UserPicks = ({ userPicks, onClickMore, onClick }) => (
         ))}
       </div>
     }
-    <span
-      role="presentation"
-      className={styles.more}
-      onClick={flow(compact([onClick, onClickMore]))}
-    >
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#C4C4C4" />
-        <circle r="0.999783" transform="matrix(1 0 0 -1 6.99978 10.0002)" fill="#C4C4C4" />
-        <circle r="0.999783" transform="matrix(1 0 0 -1 9.99978 10.0002)" fill="#C4C4C4" />
-        <circle r="0.999783" transform="matrix(1 0 0 -1 12.9998 10.0002)" fill="#C4C4C4" />
-      </svg>
-    </span>
+    {onClickMore &&
+      <span
+        role="presentation"
+        className={styles.more}
+        onClick={flow(compact([onClick, onClickMore]))}
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#C4C4C4" />
+          <circle r="0.999783" transform="matrix(1 0 0 -1 6.99978 10.0002)" fill="#C4C4C4" />
+          <circle r="0.999783" transform="matrix(1 0 0 -1 9.99978 10.0002)" fill="#C4C4C4" />
+          <circle r="0.999783" transform="matrix(1 0 0 -1 12.9998 10.0002)" fill="#C4C4C4" />
+        </svg>
+      </span>
+    }
   </span>
 );
 

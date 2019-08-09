@@ -14,7 +14,6 @@ import {
   POST_TYPE_MEDIA_ID,
   ENTITY_NAMES_USERS,
   ENTITY_NAMES_ORG,
-  ENTITY_NAMES_POSTS,
   INTERACTION_TYPE_ID_VOTING_UPVOTE,
   INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
 } from '../utils/constants';
@@ -846,13 +845,13 @@ const api = {
     }
   },
 
-  async getVotesForPostPreview(postId) {
+  async getVotesForEntityPreview(entityId, entityName) {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
       upvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
           interaction_type: INTERACTION_TYPE_ID_VOTING_UPVOTE,
-          entity_id: postId,
-          entity_name: ENTITY_NAMES_POSTS,
+          entity_id: entityId,
+          entity_name: entityName,
         },
         order_by: LIST_ORDER_BY_RATE,
         page: 1,
@@ -861,8 +860,8 @@ const api = {
       downvotes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
           interaction_type: INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
-          entity_id: postId,
-          entity_name: ENTITY_NAMES_POSTS,
+          entity_id: entityId,
+          entity_name: entityName,
         },
         order_by: LIST_ORDER_BY_RATE,
         page: 1,
@@ -878,13 +877,13 @@ const api = {
     }
   },
 
-  async getVotesForPost(postId, interactionType, page = 1, perPage = LIST_PER_PAGE) {
+  async getVotesForEntity(entityId, entityName, interactionType, page = 1, perPage = LIST_PER_PAGE) {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
       votes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
           ...(interactionType ? { interaction_type: interactionType } : {}),
-          entity_id: postId,
-          entity_name: ENTITY_NAMES_POSTS,
+          entity_id: entityId,
+          entity_name: entityName,
         },
         order_by: LIST_ORDER_BY_RATE,
         page,

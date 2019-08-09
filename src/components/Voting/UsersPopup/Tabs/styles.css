@@ -16,6 +16,8 @@
 
 @media (max-width: 767px) {
   .tabs {
+    margin: 0 -20px;
+    padding: 0 20px;
     grid-auto-flow: row;
     grid-template-columns: 1fr;
   }
@@ -27,13 +29,6 @@
   transition: color 0.2s ease, border-bottom 0.2s ease;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-}
-
-@media (max-width: 767px) {
-  .tab {
-    border-bottom: none;
-    margin: 0;
-  }
 }
 
 .tab.active {
