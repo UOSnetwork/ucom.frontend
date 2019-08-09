@@ -5,8 +5,7 @@ import React, { memo, useState, useCallback } from 'react';
 import Votin from '../index';
 import { selectOwner, selectCommentById, selectUsersByIds } from '../../../store/selectors';
 import { authShowPopup } from '../../../actions/auth';
-import { commentVote } from '../../../actions/comments';
-import { getVotesForEntityPreview, getVotesForEntity } from '../../../actions/voting';
+import { getVotesForEntityPreview, getVotesForEntity, voteForComment } from '../../../actions/voting';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 import { formatRate } from '../../../utils/rate';
 import withLoader from '../../../utils/withLoader';
@@ -14,6 +13,7 @@ import { TAB_ID_ALL, TAB_ID_UP, TAB_ID_DOWN } from '../UsersPopup/Tabs';
 import urls from '../../../utils/urls';
 import { getUserName } from '../../../utils/user';
 import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_COMMENTS } from '../../../utils/constants';
+import { restoreActiveKey } from '../../../utils/keys';
 
 const interactionTypesByTabId = {
   [TAB_ID_ALL]: null,
@@ -80,41 +80,29 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
     setPopupUsersLoading(false);
   }, []);
 
+  const vote = useCallback(async (isUp) => {
+    const privateKey = restoreActiveKey();
+
+    if (!owner.id || !privateKey) {
+      dispatch(authShowPopup());
+      return;
+    }
+
+    try {
+      await withLoader(dispatch(voteForComment(isUp, postId, commentId, owner.accountName, privateKey, comment.blockchainId)));
+    } catch (err) {
+      console.error(err);
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  }, [postId, commentId, owner, comment]);
+
   return (
     <Votin
       rate={formatRate(comment.currentRate, true)}
       count={comment.currentVote}
       selfVote={comment.myselfData && comment.myselfData.myselfVote}
-      onClickUp={async () => {
-        if (!owner.id) {
-          dispatch(authShowPopup());
-          return;
-        }
-        try {
-          await withLoader(dispatch(commentVote({
-            isUp: true,
-            postId,
-            commentId,
-          })));
-        } catch (err) {
-          dispatch(addErrorNotificationFromResponse(err));
-        }
-      }}
-      onClickDown={async () => {
-        if (!owner.id) {
-          dispatch(authShowPopup());
-          return;
-        }
-        try {
-          await withLoader(dispatch(commentVote({
-            isUp: false,
-            postId,
-            commentId,
-          })));
-        } catch (err) {
-          dispatch(addErrorNotificationFromResponse(err));
-        }
-      }}
+      onClickUp={() => vote(true)}
+      onClickDown={() => vote(false)}
       onShow={getDataForPreview}
       details={{
         upCount,

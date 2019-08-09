@@ -175,7 +175,7 @@ class Api {
     return humps(response.data);
   }
 
-  async vote(isUp, postId, commentId) {
+  async vote(isUp, postId, commentId, signedTransaction) {
     let url = `/api/v1/posts/${postId}`;
 
     if (commentId) {
@@ -184,7 +184,9 @@ class Api {
 
     url = `${url}/${isUp ? 'upvote' : 'downvote'}`;
 
-    const response = await this.actions.post(url);
+    const response = await this.actions.post(url, {
+      signed_transaction: signedTransaction,
+    });
 
     return humps(response.data);
   }

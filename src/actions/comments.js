@@ -1,7 +1,6 @@
 import api from '../api';
 import graphql from '../api/graphql';
 import loader from '../utils/loader';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../utils/constants';
 import { addServerErrorNotification } from './notifications';
 import { addUsers } from './users';
 
@@ -21,27 +20,6 @@ export const addComments = comments => (dispatch) => {
     type: 'ADD_COMMENTS',
     payload: comments,
   });
-};
-
-// TODO: Move to voting.js
-export const commentVote = ({
-  isUp,
-  postId,
-  commentId,
-}) => async (dispatch) => {
-  try {
-    const data = await api.vote(isUp, postId, commentId);
-    dispatch({
-      type: 'SET_COMMENT_VOTE',
-      payload: {
-        id: commentId,
-        currentVote: data.currentVote,
-        myselfVote: isUp ? UPVOTE_STATUS : DOWNVOTE_STATUS,
-      },
-    });
-  } catch (err) {
-    throw err;
-  }
 };
 
 export const commentsResetContainerDataByEntryId = ({
