@@ -18,7 +18,13 @@ const PostContent = ({ postId }) => {
 
   const onClickImg = useCallback((e) => {
     if (e.target.tagName.toLowerCase() === 'img') {
-      setGalleryPopupIndex(postImagesUrls.indexOf(e.target.src));
+      const postImagesUrlsIndex = postImagesUrls.indexOf(e.target.src);
+
+      if (postImagesUrlsIndex === -1) {
+        return;
+      }
+
+      setGalleryPopupIndex(postImagesUrlsIndex);
       setGalleryPopupVisible(true);
     }
   }, [postImagesUrls]);
