@@ -877,7 +877,7 @@ const api = {
     }
   },
 
-  async getVotesForEntity(entityId, entityName, interactionType, page = 1, perPage = LIST_PER_PAGE) {
+  async getVotesForEntity(entityId, entityName, interactionType, page = 1, perPage = 20) {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
       votes: GraphQLSchema.getOneContentVotingUsersQueryPart({
         filters: {
