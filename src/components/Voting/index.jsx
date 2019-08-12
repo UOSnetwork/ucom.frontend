@@ -55,7 +55,10 @@ const Votin = ({
               [styles.voteBtn]: true,
               [styles.up]: selfVote === UPVOTE_STATUS,
             })}
-            onClick={onClickUp}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickUp();
+            }}
           >
             <IconVoteUp />
           </span>
@@ -78,7 +81,10 @@ const Votin = ({
               [styles.voteBtn]: true,
               [styles.down]: selfVote === DOWNVOTE_STATUS,
             })}
-            onClick={onClickDown}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickDown();
+            }}
           >
             <IconVoteDown />
           </span>
