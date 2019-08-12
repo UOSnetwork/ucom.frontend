@@ -12,6 +12,7 @@
   line-height: 1;
   transition: background 0.2s ease;
   outline: none !important;
+  cursor: pointer;
 }
 
 .voting:hover {

@@ -11,7 +11,7 @@ import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../utils/constants';
 import styles from './styles.css';
 
 const Votin = ({
-  rate, count, selfVote, details, usersPopup, onClickUp, onClickDown, onShow,
+  rate, count, selfVote, details, usersPopup, onClick, onClickUp, onClickDown, onShow,
 }) => {
   const tippyInstance = useRef();
 
@@ -43,7 +43,11 @@ const Votin = ({
         }}
         onShow={onShow}
       >
-        <div className={styles.voting}>
+        <div
+          role="presentation"
+          className={styles.voting}
+          onClick={onClick}
+        >
           <span
             title="Upvote"
             role="presentation"
@@ -94,6 +98,7 @@ Votin.propTypes = {
   onClickUp: PropTypes.func,
   onClickDown: PropTypes.func,
   onShow: PropTypes.func,
+  onClick: PropTypes.func,
 };
 
 Votin.defaultProps = {
@@ -106,6 +111,7 @@ Votin.defaultProps = {
   onClickUp: undefined,
   onClickDown: undefined,
   onShow: undefined,
+  onClick: undefined,
 };
 
 export * from './Wrappers';

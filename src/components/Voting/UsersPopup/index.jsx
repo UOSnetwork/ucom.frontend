@@ -2,6 +2,7 @@ import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo, useRef, useCallback } from 'react';
 import EntryCard from '../../EntryCard';
+import { DownvoteIcon, UpvoteIcon } from '../../Icons/FeedIcons';
 import UserFollowButton from '../../User/UserFollowButton';
 import Popup, { Content } from '../../Popup';
 import Tabs from './Tabs';
@@ -44,7 +45,17 @@ const UsersPopup = ({
           >
             {users.map(item => (
               <div className={styles.item} key={item.id}>
-                <EntryCard {...item} />
+                <EntryCard
+                  {...item}
+                  userPickWithIcon={{
+                    icon: item.contentVote === 2 ? <UpvoteIcon /> : <DownvoteIcon />,
+                    userPick: {
+                      url: item.url,
+                      src: item.avatarSrc,
+                      shadow: true,
+                    },
+                  }}
+                />
                 <div className={styles.follow}>
                   <UserFollowButton userId={item.id} />
                 </div>

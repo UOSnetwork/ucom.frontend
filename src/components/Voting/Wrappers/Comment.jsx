@@ -1,3 +1,5 @@
+// TODO: Move copy paste from Post.jsx and Comment.jsx to single component
+
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -103,6 +105,11 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
       selfVote={comment.myselfData && comment.myselfData.myselfVote}
       onClickUp={() => vote(true)}
       onClickDown={() => vote(false)}
+      onClick={upCount + downCount > 0 ? () => {
+        setPopupActiveTabId(TAB_ID_ALL);
+        getDataForPopup();
+        setPopupVisible(true);
+      } : undefined}
       onShow={getDataForPreview}
       details={{
         upCount,
@@ -139,6 +146,7 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
           title: getUserName(item),
           nickname: item.accountName,
           scaledImportance: item.scaledImportance,
+          contentVote: item.relatedMetadata.contentVote,
         })),
         visible: popupVisible,
         onClickClose: () => {
