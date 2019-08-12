@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
+import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
 import Tippy from '@tippy.js/react';
-import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import IconFacebook from '../Icons/Socials/Share/Facebook';
 import IconTwitter from '../Icons/Socials/Share/Twitter';
@@ -152,4 +152,4 @@ Share.defaultProps = {
   socialEnable: false,
 };
 
-export default Share;
+export default memo(Share);

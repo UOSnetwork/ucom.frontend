@@ -1,11 +1,10 @@
 import Wallet from 'ucom-libs-wallet';
-import humps from 'lodash-humps';
 import { omit } from 'lodash';
 import api from '../api';
 import graphql from '../api/graphql';
 import { addUsers } from './users';
 import { addOrganizations, getOrganization } from './organizations';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS, POST_TYPE_MEDIA_ID } from '../utils/posts';
+import { POST_TYPE_MEDIA_ID } from '../utils/constants';
 import { addServerErrorNotification } from './notifications';
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
@@ -84,23 +83,6 @@ export const addRepost = postId => async () => {
   } catch (err) {
     throw err;
   }
-};
-
-export const postVote = payload => (dispatch) => {
-  loader.start();
-  api.vote(payload.isUp, payload.postId)
-    .then(humps)
-    .then((data) => {
-      dispatch(setPostVote({
-        id: payload.postId,
-        currentVote: data.currentVote,
-        myselfVote: payload.isUp ? UPVOTE_STATUS : DOWNVOTE_STATUS,
-      }));
-    })
-    .catch((error) => {
-      dispatch(addServerErrorNotification(error));
-    })
-    .then(() => loader.done());
 };
 
 export const getOnePostOffer = ({

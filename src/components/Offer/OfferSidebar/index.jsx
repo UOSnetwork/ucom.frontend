@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formatRate } from '../../../utils/rate';
-import PostRating from '../../Rating/PostRating';
+import { PostVotingWrapper } from '../../Voting';
 import One from '../../Icons/Airdrop/One';
 import Two from '../../Icons/Airdrop/Two';
 import Three from '../../Icons/Airdrop/Three';
@@ -47,7 +47,7 @@ const OfferSidebar = (props) => {
     <Fragment>
       <div className={styles.rateVote}>
         <div className={styles.rate}>{formatRate(props.rate)}°</div>
-        <PostRating postId={props.postId} />
+        <PostVotingWrapper postId={props.postId} />
       </div>
       {conditions && ((conditions.airdropStatus === AirdropStatuses.PENDING ||
         conditions.airdropStatus === AirdropStatuses.RECEIVED) ||

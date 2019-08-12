@@ -1,5 +1,7 @@
 const { Dictionary } = require('ucom-libs-wallet');
 const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
+const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
+const { InteractionTypeDictionary } = require('ucom-libs-social-transactions');
 
 export const ERROR_SERVER = 'Could not complete request, please try again later';
 export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
@@ -71,6 +73,11 @@ export const USER_ACCOUNT_LENGTH = 12;
 export const USER_ACCOUNT_NAME_REG_EXP = /^[a-z1-5]{12}$/;
 export const USER_ACCOUNT_NAME_SYMBOLS_REG_EXP = /^[a-z1-5]+$/;
 
+
+export const UPVOTE_STATUS = 'upvote';
+export const DOWNVOTE_STATUS = 'downvote';
+export const NOVOTE_STATUS = 'no_vote';
+
 export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
 export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
 export const POST_TYPE_OFFER_ID = PostTypes.OFFER;
@@ -80,3 +87,11 @@ export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
 export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
 
 export const POSTS_DRAFT_LOCALSTORAGE_KEY = 'post_data_v_1';
+
+export const ENTITY_NAMES_USERS = EntityNames.USERS;
+export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
+export const ENTITY_NAMES_POSTS = EntityNames.POSTS;
+export const ENTITY_NAMES_COMMENTS = EntityNames.COMMENTS;
+
+export const INTERACTION_TYPE_ID_VOTING_UPVOTE = InteractionTypeDictionary.getUpvoteId();
+export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.getDownvoteId();

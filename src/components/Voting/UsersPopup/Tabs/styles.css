@@ -1,0 +1,37 @@
+.tabs {
+  margin: 0 -36px;
+  padding: 0 36px;
+  border-bottom: 1px solid #E8ECEC;
+}
+
+.inner {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-column-gap: 40px;
+  line-height: 1;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+@media (max-width: 767px) {
+  .tabs {
+    margin: 0 -20px;
+    padding: 0 20px;
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+  }
+}
+
+.tab {
+  margin: 0 0 -1px;
+  padding: 10px 0;
+  transition: color 0.2s ease, border-bottom 0.2s ease;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #D8352F;
+  border-color: #D8352F;
+}

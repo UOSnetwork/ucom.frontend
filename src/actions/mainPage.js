@@ -4,8 +4,15 @@ import { addOrganizations } from './organizations';
 import { addTags } from './tags';
 import { addUsers } from './users';
 import { TAB_ID_PEOPLE, TAB_ID_COMMUNITIES } from '../components/Feed/Tabs';
-import { ENTITY_NAMES_USERS, ENTITY_NAMES_ORG, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils/posts';
-import { LIST_PER_PAGE, LIST_ORDER_BY_RATE, LIST_ORDER_BY_ID } from '../utils/constants';
+import {
+  LIST_PER_PAGE,
+  LIST_ORDER_BY_RATE,
+  LIST_ORDER_BY_ID,
+  ENTITY_NAMES_USERS,
+  ENTITY_NAMES_ORG,
+  POST_TYPE_MEDIA_ID,
+  POST_TYPE_DIRECT_ID,
+} from '../utils/constants';
 
 export const setData = payload => ({ type: 'MAIN_PAGE_SET_DATA', payload });
 

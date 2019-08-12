@@ -1,0 +1,46 @@
+.items {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.item {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: -5px;
+}
+
+.item:nth-child(1) {
+  z-index: 3;
+}
+
+.item:nth-child(2) {
+  z-index: 2;
+}
+
+.item:nth-child(3) {
+  z-index: 1;
+}
+
+.more {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.more:hover rect {
+  stroke: #fff;
+}
+
+.more:hover circle {
+  fill: #fff;
+}
+
+.more svg {
+  fill: none;
+}
+
+.more rect,
+.more circle {
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}

@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React, { memo } from 'react';
 import UserPick from '../UserPick';
+import UserPickWithIcon from '../UserPickWithIcon';
 import { formatRate, formatScaledImportance } from '../../utils/rate';
 import styles from './styles.css';
 import { filterURL } from '../../utils/url';
 
-const EntryCard = (props) => {
+const EntryCard = ({ userPickWithIcon, ...props }) => {
   let LinkTag;
 
   if (props.disabledLink || !props.url) {
@@ -34,12 +35,16 @@ const EntryCard = (props) => {
             href={filterURL(props.url)}
             target={props.isExternal ? '_blank' : undefined}
           >
-            <UserPick
-              shadow
-              src={props.avatarSrc}
-              organization={props.organization}
-              isExternal={props.isExternal}
-            />
+            {!userPickWithIcon ? (
+              <UserPick
+                shadow
+                src={props.avatarSrc}
+                organization={props.organization}
+                isExternal={props.isExternal}
+              />
+            ) : (
+              <UserPickWithIcon {...userPickWithIcon} />
+            )}
           </LinkTag>
         </div>
       }
@@ -75,6 +80,7 @@ const EntryCard = (props) => {
 };
 
 EntryCard.propTypes = {
+  userPickWithIcon: PropTypes.shape(UserPickWithIcon.propTypes),
   organization: PropTypes.bool,
   avatarSrc: PropTypes.string,
   url: PropTypes.string,
@@ -90,6 +96,7 @@ EntryCard.propTypes = {
 };
 
 EntryCard.defaultProps = {
+  userPickWithIcon: undefined,
   organization: false,
   avatarSrc: undefined,
   currentRate: undefined,

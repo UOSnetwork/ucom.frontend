@@ -5,7 +5,7 @@ import { UserCard } from '../../SimpleCard';
 import Gallery from '../../Gallery';
 import Form from '../Form';
 import ShowReplies from '../ShowReplies';
-import CommentRating from '../../Rating/CommentRating';
+import { CommentVotingWrapper } from '../../Voting';
 import Embed from '../../Embed';
 
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
@@ -65,7 +65,7 @@ const Comment = (props) => {
             </div>
             <div className={styles.date}>{props.date}</div>
             <div className={styles.rating}>
-              <CommentRating commentId={props.id} />
+              <CommentVotingWrapper postId={props.postId} commentId={props.id} />
             </div>
           </div>
         </div>

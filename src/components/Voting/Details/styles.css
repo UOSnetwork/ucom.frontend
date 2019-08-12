@@ -1,0 +1,26 @@
+.details {
+  padding: 12px 16px;
+}
+
+.data {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  grid-gap: 11px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.icon {
+  fill: #C4C4C4;
+  opacity: 0.5;
+}
+
+.up {
+  fill: #7ABE5A;
+}
+
+.down {
+  fill: #D8352F;
+}
