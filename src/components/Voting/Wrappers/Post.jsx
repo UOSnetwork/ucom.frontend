@@ -32,7 +32,7 @@ const PostVotingWrapper = ({ postId }) => {
   const [popupActiveTabId, setPopupActiveTabId] = useState(TAB_ID_ALL);
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupUsersIds, setPopupUsersIds] = useState([]);
-  const [popupUsersMetadata, setPopupUsersMetadata] = useState([]);
+  const [popupUsersMetadata, setPopupUsersMetadata] = useState({});
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
 
@@ -49,7 +49,6 @@ const PostVotingWrapper = ({ postId }) => {
       setUpCount(upvotes.metadata.totalAmount);
       setDownCount(downvotes.metadata.totalAmount);
       setDetailsUpUserIds(upvotes.data.map(i => i.id));
-
       setDetailsDownUserIds(downvotes.data.map(i => i.id));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));

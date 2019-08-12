@@ -21,7 +21,7 @@ const UsersPopup = ({
     if (listRef.current.scrollHeight - listRef.current.scrollTop < listRef.current.clientHeight + 300) {
       onLoadMore();
     }
-  }, 100), [listRef]);
+  }, 100), [listRef, onLoadMore]);
 
   if (!visible) {
     return null;
