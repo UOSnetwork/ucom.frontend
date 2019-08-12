@@ -133,20 +133,20 @@ const GalleryPopup = ({
 
 GalleryPopup.propTypes = {
   index: PropTypes.number,
-  onClickClose: PropTypes.func,
+  userId: PropTypes.number.isRequired,
+  date: PropTypes.string,
   images: PropTypes.arrayOf(PropTypes.shape({
     alt: PropTypes.string,
     url: PropTypes.string,
   })),
-  userId: PropTypes.number.isRequired,
-  date: PropTypes.string,
+  onClickClose: PropTypes.func,
 };
 
 GalleryPopup.defaultProps = {
   index: 0,
-  onClickClose: undefined,
-  images: [],
   date: undefined,
+  images: [],
+  onClickClose: undefined,
 };
 
 export default memo(GalleryPopup);

@@ -6,7 +6,7 @@ import Popup from './Popup';
 
 const Gallery = ({ images, userId, date }) => {
   const [popupVisible, setPopupVisible] = useState(false);
-  const [activveIndex, setActivveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const moreLabel = images.length > 5 ? `+ ${images.length - 5}` : null;
 
   if (!images.length) {
@@ -17,7 +17,7 @@ const Gallery = ({ images, userId, date }) => {
     <Fragment>
       {popupVisible &&
         <Popup
-          index={activveIndex}
+          index={activeIndex}
           date={date}
           userId={userId}
           images={images}
@@ -32,7 +32,7 @@ const Gallery = ({ images, userId, date }) => {
             key={index}
             label={index === 4 ? moreLabel : null}
             onClick={() => {
-              setActivveIndex(index);
+              setActiveIndex(index);
               setPopupVisible(true);
             }}
           />
@@ -54,4 +54,5 @@ Gallery.defaultProps = {
   date: null,
 };
 
+export { default as GalleryPopup } from './Popup';
 export default memo(Gallery);

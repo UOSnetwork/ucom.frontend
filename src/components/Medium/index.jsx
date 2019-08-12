@@ -1,5 +1,7 @@
 /* eslint-disable global-require, new-cap */
 
+// TODO: Replace medium editor to draft.js
+
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

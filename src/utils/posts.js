@@ -86,23 +86,29 @@ export const postIsEditable = (createdAt, leftMinutes) => {
   return (new Date()).getTime() - (new Date(createdAt)).getTime() < leftMinutes;
 };
 
-export const getPostBody = (post) => {
-  const createdAtTime = Number.isInteger(+post.createdAt) ? +post.createdAt : new Date(post.createdAt);
+export const getPostBody = ({
+  createdAt,
+  description,
+  mainImageFilename,
+  leadingText,
+  title,
+}) => {
+  const createdAtTime = Number.isInteger(+createdAt) ? +createdAt : new Date(createdAt);
   const newPostsTime = 1545226768471;
   const postIsNewEditor = createdAtTime - newPostsTime > 0;
-  let postBody = post.description;
+  let postBody = description;
 
   if (!postIsNewEditor) {
-    if (post.mainImageFilename) {
-      postBody = `<p><img src="${urls.getFileUrl(post.mainImageFilename)}" /></p>`.concat(postBody);
+    if (mainImageFilename) {
+      postBody = `<p><img src="${urls.getFileUrl(mainImageFilename)}" /></p>`.concat(postBody);
     }
 
-    if (post.leadingText) {
-      postBody = `<h2>${post.leadingText}</h2>`.concat(postBody);
+    if (leadingText) {
+      postBody = `<h2>${leadingText}</h2>`.concat(postBody);
     }
 
-    if (post.title) {
-      postBody = `<h1>${post.title}</h1>`.concat(postBody);
+    if (title) {
+      postBody = `<h1>${title}</h1>`.concat(postBody);
     }
   }
 
@@ -181,3 +187,8 @@ export const getContentMetaTags = (post) => {
     path: urls.getPostUrl(post),
   };
 };
+
+export const getPostImages = content => (
+  (content.match(/<img.*?src\s*=\s*\\*"(.+?)\\*"\s*\/>/g) || [])
+    .map(str => str.match(/src=\"(.*)\"/)[1])
+);

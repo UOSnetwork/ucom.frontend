@@ -86,7 +86,7 @@ const Post = ({ postId }) => {
 
                 <div className={styles.main}>
                   <div className={styles.post}>
-                    <PostContent post={post} />
+                    <PostContent postId={postId} />
                   </div>
                   <div className={styles.comments}>
                     <Comments postId={+postId} containerId={COMMENTS_CONTAINER_ID_POST} />
