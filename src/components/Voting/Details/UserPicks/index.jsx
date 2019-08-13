@@ -1,4 +1,3 @@
-import { flow, compact } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
 import UserPick from '../../../UserPick';
@@ -23,7 +22,17 @@ const UserPicks = ({ userPicks, onClickMore, onClick }) => (
       <span
         role="presentation"
         className={styles.more}
-        onClick={flow(compact([onClick, onClickMore]))}
+        onClick={(e) => {
+          e.stopPropagation();
+
+          if (onClickMore) {
+            onClickMore();
+          }
+
+          if (onClick) {
+            onClick();
+          }
+        }}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="0.5" y="0.5" width="19" height="19" rx="9.5" stroke="#C4C4C4" />

@@ -19,7 +19,7 @@ const Votin = ({
     if (tippyInstance.current) {
       tippyInstance.current.hide();
     }
-  }, [tippyInstance]);
+  }, [tippyInstance, onClick]);
 
   return (
     <Fragment>
@@ -35,7 +35,14 @@ const Votin = ({
           <Details
             {...details}
             selfVote={selfVote}
-            onClick={hideTooltip}
+            hideTooltip={hideTooltip}
+            onClick={() => {
+              hideTooltip();
+
+              if (onClick) {
+                onClick();
+              }
+            }}
           />
         )}
         onCreate={(instance) => {

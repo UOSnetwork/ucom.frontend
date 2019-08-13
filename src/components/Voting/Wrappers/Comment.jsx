@@ -16,6 +16,7 @@ import urls from '../../../utils/urls';
 import { getUserName } from '../../../utils/user';
 import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_COMMENTS } from '../../../utils/constants';
 import { restoreActiveKey } from '../../../utils/keys';
+import equalByProps from '../../../utils/equalByProps';
 
 const interactionTypesByTabId = {
   [TAB_ID_ALL]: null,
@@ -36,8 +37,8 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
 
-  const comment = useSelector(selectCommentById(commentId), isEqual);
-  const owner = useSelector(selectOwner, isEqual);
+  const comment = useSelector(selectCommentById(commentId), equalByProps(['blockchainId', 'currentRate', 'currentVote', 'myselfData.myselfVote']));
+  const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
   const users = useSelector(selectUsersByIds(popupUsersIds), isEqual);
   const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
   const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds), isEqual);
@@ -49,7 +50,6 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
       setUpCount(upvotes.metadata.totalAmount);
       setDownCount(downvotes.metadata.totalAmount);
       setDetailsUpUserIds(upvotes.data.map(i => i.id));
-
       setDetailsDownUserIds(downvotes.data.map(i => i.id));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));

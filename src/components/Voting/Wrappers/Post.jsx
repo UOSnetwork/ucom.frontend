@@ -16,6 +16,7 @@ import urls from '../../../utils/urls';
 import { restoreActiveKey } from '../../../utils/keys';
 import { getUserName } from '../../../utils/user';
 import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_POSTS } from '../../../utils/constants';
+import equalByProps from '../../../utils/equalByProps';
 
 const interactionTypesByTabId = {
   [TAB_ID_ALL]: null,
@@ -36,8 +37,8 @@ const PostVotingWrapper = ({ postId }) => {
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
 
-  const post = useSelector(selectPostById(postId), isEqual);
-  const owner = useSelector(selectOwner, isEqual);
+  const post = useSelector(selectPostById(postId), equalByProps(['blockchainId', 'currentRate', 'currentVote', 'myselfData.myselfVote']));
+  const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
   const users = useSelector(selectUsersByIds(popupUsersIds), isEqual);
   const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
   const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds), isEqual);

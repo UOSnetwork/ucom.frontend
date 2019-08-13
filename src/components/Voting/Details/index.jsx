@@ -9,9 +9,13 @@ import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../../utils/constants';
 import styles from './styles.css';
 
 const Details = ({
-  upCount, downCount, upUserPicks, downUserPicks, selfVote, loading, onClick,
+  upCount, downCount, upUserPicks, downUserPicks, selfVote, loading, hideTooltip, onClick,
 }) => (
-  <div className={styles.details}>
+  <div
+    role="presentation"
+    className={styles.details}
+    onClick={onClick}
+  >
     {loading ? (
       <Spinner />
     ) : (
@@ -29,7 +33,7 @@ const Details = ({
 
         <UserPicks
           {...upUserPicks}
-          onClick={onClick}
+          onClick={hideTooltip}
         />
 
         <span
@@ -45,7 +49,7 @@ const Details = ({
 
         <UserPicks
           {...downUserPicks}
-          onClick={onClick}
+          onClick={hideTooltip}
         />
       </div>
     )}
@@ -59,6 +63,7 @@ Details.propTypes = {
   selfVote: PropTypes.string,
   upUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
   downUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
+  hideTooltip: PropTypes.func,
   onClick: PropTypes.func,
 };
 
@@ -69,6 +74,7 @@ Details.defaultProps = {
   selfVote: undefined,
   upUserPicks: [],
   downUserPicks: [],
+  hideTooltip: undefined,
   onClick: undefined,
 };
 
