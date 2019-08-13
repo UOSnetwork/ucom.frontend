@@ -102,27 +102,9 @@
   margin-top: -12px;
   opacity: 0;
   transition: opacity 0.2s ease;
-}
-
-:local(.followLink button) {
-  display: flex;
-  align-items: center;
   line-height: 24px;
   font-size: 16px;
   font-weight: bold;
-  outline: none;
-}
-
-:local(.followLink button svg) {
-  margin: 0 0 0 5px;
-}
-
-:local(.followLink button path) {
-  transition: stroke 0.2s ease;
-}
-
-:local(.followLink button:hover path) {
-  stroke: #D8352F;
 }
 
 @media (max-width: 767px) {

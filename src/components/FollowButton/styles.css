@@ -1,0 +1,13 @@
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 0 5px;
+}
+
+.icon svg path {
+  transition: stroke 0.2s ease;
+}
+
+:global(.red-hover:hover) > .icon svg path {
+  stroke: #D8352F;
+}

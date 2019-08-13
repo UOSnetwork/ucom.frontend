@@ -1,8 +1,9 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { FollowersWrapper } from '../../Followers';
-import OrganizationFollowButton from '../OrganizationFollowButton';
+import { OrgFollowButton } from '../../FollowButton';
 import { userIsAdmin } from '../../../utils/organization';
 import urls from '../../../utils/urls';
 import styles from '../../EntryHeader/styles.css';
@@ -18,8 +19,8 @@ import { entityHasCover, entityGetCoverUrl } from '../../../utils/entityImages';
 import * as selectors from '../../../store/selectors';
 
 const OrganizationHeader = (props) => {
-  const organization = useSelector(selectors.selectOrgById(props.organizationId));
-  const owner = useSelector(selectors.selectOwner);
+  const organization = useSelector(selectors.selectOrgById(props.organizationId), isEqual);
+  const owner = useSelector(selectors.selectOwner, isEqual);
 
   if (!organization) {
     return null;
@@ -76,7 +77,7 @@ const OrganizationHeader = (props) => {
 
         <div className={styles.side}>
           <div className={styles.followButton}>
-            <OrganizationFollowButton organizationId={+organization.id} />
+            <OrgFollowButton orgId={+organization.id} />
           </div>
 
           <div className={styles.usersLists}>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, { memo, useRef, useCallback } from 'react';
 import EntryCard from '../../EntryCard';
 import { DownvoteIcon, UpvoteIcon } from '../../Icons/FeedIcons';
-import UserFollowButton from '../../User/UserFollowButton';
+import { UserFollowButton } from '../../FollowButton';
 import Popup, { Content } from '../../Popup';
 import Tabs from './Tabs';
 import styles from './styles.css';

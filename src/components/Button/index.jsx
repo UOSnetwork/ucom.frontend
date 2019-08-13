@@ -39,7 +39,7 @@ const Button = (props) => {
           [styles.large]: props.large,
           [styles.big]: props.big,
           [styles.small]: props.small,
-          [styles.medium]: props.big,
+          [styles.medium]: props.medium,
           [styles.cap]: props.cap,
           [styles.disabled]: props.disabled,
         })}
@@ -72,6 +72,7 @@ Button.propTypes = {
   large: PropTypes.bool,
   redBorder: PropTypes.bool,
   width: PropTypes.number,
+  medium: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -90,6 +91,7 @@ Button.defaultProps = {
   redBorder: false,
   large: false,
   width: undefined,
+  medium: false,
 };
 
 export default Button;

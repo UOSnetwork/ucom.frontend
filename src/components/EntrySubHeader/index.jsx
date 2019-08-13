@@ -4,8 +4,7 @@ import React, { memo } from 'react';
 import classNames from 'classnames';
 import styles from './styles.css';
 import UserPick from '../UserPick';
-import UserFollowButton from '../User/UserFollowButton';
-import OrganizationFollowButton from '../Organization/OrganizationFollowButton';
+import { UserFollowButton, OrgFollowButton } from '../FollowButton';
 import { formatScaledImportance, formatRate } from '../../utils/rate';
 
 const EntrySubHeader = props => (
@@ -35,7 +34,7 @@ const EntrySubHeader = props => (
     {props.showFollow &&
       <div className={styles.followLink}>
         {props.organization ? (
-          <OrganizationFollowButton asLink organizationId={+props.userId} />
+          <OrgFollowButton asLink orgId={+props.userId} />
         ) : (
           <UserFollowButton asLink userId={props.userId} />
         )}

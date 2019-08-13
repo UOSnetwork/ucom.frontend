@@ -199,34 +199,36 @@ class Api {
     return humps(response.data);
   }
 
-  async follow(userId, token, senderAccountName, recipientAccountName, senderActivePrivateKey) {
-    const signedTransaction = await TransactionFactory.getSignedUserFollowsUser(
-      senderAccountName,
-      senderActivePrivateKey,
-      recipientAccountName,
-      true,
-    );
+  async followUser(userId, signedTransactionJson) {
+    const resp = await this.actions.post(`/api/v1/users/${userId}/follow`, {
+      signed_transaction: signedTransactionJson,
+    });
 
-    const response = await this.actions.post(`/api/v1/users/${userId}/follow`, {
-      signed_transaction: signedTransaction,
+    return resp;
+  }
+
+  async unfollowUser(userId, signedTransactionJson) {
+    const resp = await this.actions.post(`/api/v1/users/${userId}/unfollow`, {
+      signed_transaction: signedTransactionJson,
+    });
+
+    return resp;
+  }
+
+  async followOrg(orgId, signedTransactionJson) {
+    const response = await this.actions.post(`/api/v1/organizations/${orgId}/follow`, {
+      signed_transaction: signedTransactionJson,
     });
 
     return response;
   }
 
-  async unfollow(userId, token, senderAccountName, recipientAccountName, senderActivePrivateKey) {
-    const signedTransaction = await TransactionFactory.getSignedUserUnfollowsUser(
-      senderAccountName,
-      senderActivePrivateKey,
-      recipientAccountName,
-      true,
-    );
-
-    const response = await this.actions.post(`/api/v1/users/${userId}/unfollow`, {
-      signed_transaction: signedTransaction,
+  async unfollowOrg(orgId, signedTransactionJson) {
+    const response = await this.actions.post(`/api/v1/organizations/${orgId}/unfollow`, {
+      signed_transaction: signedTransactionJson,
     });
 
-    return humps(response.data);
+    return response;
   }
 
   async trustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
@@ -249,33 +251,6 @@ class Api {
       userAccountName,
     );
     const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, {
-      signed_transaction: signedTransaction,
-    });
-
-    return humps(response.data);
-  }
-
-  async followOrganization(id, token, senderAccountName, recipientAccountName, senderActivePrivateKey) {
-    const signedTransaction = await TransactionFactory.getSignedUserFollowsOrg(
-      senderAccountName,
-      senderActivePrivateKey,
-      recipientAccountName,
-    );
-
-    const response = await this.actions.post(`/api/v1/organizations/${id}/follow`, {
-      signed_transaction: signedTransaction,
-    });
-
-    return humps(response.data);
-  }
-
-  async unfollowOrganization(id, token, senderAccountName, recipientAccountName, senderActivePrivateKey) {
-    const signedTransaction = await TransactionFactory.getSignedUserUnfollowsOrg(
-      senderAccountName,
-      senderActivePrivateKey,
-      recipientAccountName,
-    );
-    const response = await this.actions.post(`/api/v1/organizations/${id}/unfollow`, {
       signed_transaction: signedTransaction,
     });
 

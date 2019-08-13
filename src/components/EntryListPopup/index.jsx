@@ -4,8 +4,7 @@ import React from 'react';
 import styles from './styles.css';
 import EntryCard from '../EntryCard';
 import Popup, { Content } from '../Popup';
-import OrganizationFollowButton from '../Organization/OrganizationFollowButton';
-import UserFollowButton from '../User/UserFollowButton';
+import { UserFollowButton, OrgFollowButton } from '../FollowButton';
 import Pagination from '../Pagination/index';
 
 // TODO: Replace and remove another popups
@@ -31,7 +30,7 @@ const EntryListPopup = props => (
 
               {item.follow && item.organization &&
                 <div className={styles.action}>
-                  <OrganizationFollowButton organizationId={+item.id} />
+                  <OrgFollowButton orgId={+item.id} />
                 </div>
               }
 

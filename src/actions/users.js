@@ -12,11 +12,6 @@ import { restoreActiveKey } from '../utils/keys';
 import { USER_EDITABLE_PROPS } from '../utils/constants';
 // import { enableGtm } from '../utils/gtm';
 
-export const usersAddIFollow = payload => ({ type: 'USERS_ADD_I_FOLLOW', payload });
-export const usersRemoveIFollow = payload => ({ type: 'USERS_REMOVE_I_FOLLOW', payload });
-export const usersAddFollowedBy = payload => ({ type: 'USERS_ADD_FOLLOWED_BY', payload });
-export const usersRemoveFollowedBy = payload => ({ type: 'USERS_REMOVE_FOLLOWED_BY', payload });
-
 export const addUsers = (data = []) => (dispatch) => {
   let users = [];
   let organizations = [];
@@ -191,48 +186,6 @@ export const updateUser = userData => async (dispatch) => {
   } catch (err) {
     console.error(err);
     throw err;
-  }
-};
-
-export const followUser = ({
-  user,
-  owner,
-  activeKey,
-}) => async (dispatch) => {
-  try {
-    await api.follow(user.id, getToken(), owner.accountName, user.accountName, activeKey);
-    dispatch(usersAddIFollow({
-      ownerId: Number(owner.id),
-      userId: user.id,
-    }));
-    dispatch(usersAddFollowedBy({
-      ownerId: Number(user.id),
-      userId: owner.id,
-    }));
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-};
-
-export const unfollowUser = ({
-  user,
-  owner,
-  activeKey,
-}) => async (dispatch) => {
-  try {
-    await api.unfollow(user.id, getToken(), owner.accountName, user.accountName, activeKey);
-    dispatch(usersRemoveIFollow({
-      ownerId: Number(owner.id),
-      userId: user.id,
-    }));
-    dispatch(usersRemoveFollowedBy({
-      ownerId: Number(user.id),
-      userId: owner.id,
-    }));
-  } catch (e) {
-    console.error(e);
-    throw e;
   }
 };
 

@@ -11,7 +11,7 @@ import withLoader from '../../../utils/withLoader';
 import { getFilePreview } from '../../../utils/upload';
 import UserStatus from '../UserStatus';
 import { formatScaledImportance } from '../../../utils/rate';
-import UserFollowButton from '../UserFollowButton';
+import { UserFollowButton } from '../../FollowButton';
 import { FollowersWrapper } from '../../Followers';
 import ButtonEdit from '../../ButtonEdit';
 import Menu from '../../EntryHeader/Menu';
