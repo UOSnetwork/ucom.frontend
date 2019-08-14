@@ -1,6 +1,7 @@
 import merge from '../utils/merge';
 
 const getInitialState = () => ({
+  userIdentity: null,
   loaded: false,
   trustLoading: false,
   trustedBy: {

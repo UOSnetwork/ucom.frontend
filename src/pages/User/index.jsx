@@ -33,9 +33,9 @@ import { selectUserById, selectOwner } from '../../store/selectors';
 
 const UserPage = (props) => {
   const userIdentity = props.match.params.userId;
-  const user = useSelector(selectUserById(userIdentity), isEqual);
-  const owner = useSelector(selectOwner, isEqual);
   const state = useSelector(state => state.userPage, isEqual);
+  const user = useSelector(selectUserById(state.userIdentity), isEqual);
+  const owner = useSelector(selectOwner, isEqual);
   const dispatch = useDispatch();
 
   const getPageData = async () => {

@@ -57,7 +57,12 @@ const FeedForm = (props) => {
     setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
     const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadOneImage(url)));
     const urls = data.map(item => item.files[0]);
-    setEntityImages(addGalleryImages(savedEntityImages, urls));
+    const newEntityImages = addGalleryImages(savedEntityImages, urls);
+    setEntityImages(newEntityImages);
+
+    if (props.onEntityImages) {
+      props.onEntityImages(newEntityImages);
+    }
   };
 
   const sumbitForm = () => {
@@ -71,7 +76,12 @@ const FeedForm = (props) => {
       return;
     }
 
-    setEntityImages(entityImagesAddEmbed(entityImages, data));
+    const newEntityImages = entityImagesAddEmbed(entityImages, data);
+    setEntityImages(newEntityImages);
+
+    if (props.onEntityImages) {
+      props.onEntityImages(newEntityImages);
+    }
   };
 
   const parseUrlAndAddEmbed = async (url) => {
@@ -87,6 +97,14 @@ const FeedForm = (props) => {
       console.error(err);
     }
     loader.done();
+  };
+
+  const onEdit = (message) => {
+    setMessage(message);
+
+    if (props.onMessage) {
+      props.onMessage(message);
+    }
   };
 
   useEffect(() => {
@@ -176,7 +194,7 @@ const FeedForm = (props) => {
           <div className="feed-form__container">
             <TributeWrapper
               enabledImgUrlParse
-              onChange={message => setMessage(message)}
+              onChange={onEdit}
               onImage={url => onMultipleImages([url])}
               onParseImgUrl={(url) => {
                 setEntityImages(addGalleryImages(entityImages, [{ url }]));
@@ -189,7 +207,7 @@ const FeedForm = (props) => {
                 className="feed-form__textarea"
                 placeholder="Leave a comment"
                 value={message}
-                onChange={e => setMessage(e.target.value)}
+                onChange={e => onEdit(e.target.value)}
                 onKeyDown={(e) => {
                   if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
                     e.preventDefault();
@@ -238,10 +256,12 @@ const FeedForm = (props) => {
 FeedForm.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onMessage: PropTypes.func,
   message: PropTypes.string,
   entityImages: PropTypes.objectOf(PropTypes.array),
   initialText: PropTypes.string,
   formIsVisible: PropTypes.bool,
+  onEntityImages: PropTypes.func,
 };
 
 FeedForm.defaultProps = {
@@ -249,6 +269,8 @@ FeedForm.defaultProps = {
   initialText: '',
   entityImages: null,
   formIsVisible: false,
+  onMessage: undefined,
+  onEntityImages: undefined,
 };
 
 export default FeedForm;

@@ -23,6 +23,7 @@ export const getPageData = userIdentity => async (dispatch) => {
     dispatch(addOrganizations(orgs.data));
 
     dispatch(setData({
+      userIdentity,
       trustedBy: {
         ids: trustedBy.data.map(i => i.id),
         metadata: trustedBy.metadata,

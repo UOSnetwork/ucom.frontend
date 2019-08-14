@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, memo, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { feedReset, feedGetUserPosts, feedCreatePost } from '../../actions/feed';
 import { FEED_PER_PAGE } from '../../utils/feed';
@@ -14,7 +14,7 @@ const FeedUser = (props) => {
   const dispatch = useDispatch();
   const feed = useSelector(state => state.feed, isEqual);
 
-  const onClickLoadMore = async () => {
+  const onClickLoadMore = useMemo(() => async () => {
     await withLoader(dispatch(feedGetUserPosts({
       feedTypeId: props.feedTypeId,
       page: feed.metadata.page + 1,
@@ -24,9 +24,9 @@ const FeedUser = (props) => {
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
     })));
-  };
+  }, [props.feedTypeId, feed, props.userId, props.organizationId, props.tagIdentity]);
 
-  const onSubmitPostForm = (description, entityImages) => {
+  const onSubmitPostForm = useMemo(() => (description, entityImages) => {
     withLoader(dispatch(feedCreatePost(props.feedTypeId, {
       organizationId: props.organizationId,
       userId: props.userId,
@@ -39,7 +39,7 @@ const FeedUser = (props) => {
     if (props.callbackOnSubmit) {
       props.callbackOnSubmit();
     }
-  };
+  }, [props.feedTypeId, props.organizationId, props.userId, props.callbackOnSubmit]);
 
   useEffect(() => {
     dispatch(feedGetUserPosts({

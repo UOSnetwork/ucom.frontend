@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import FeedInput from './FeedInput';
+import FeedInput from './Input';
 import Post from './Post/Post';
 import LoadMore from './LoadMore';
 
