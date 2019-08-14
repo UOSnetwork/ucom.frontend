@@ -37,6 +37,14 @@ const Form = (props) => {
   const isExistGalleryImages = !!galleryImages.length;
   const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
   const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
+  const [autosizeInited, setAutosizeInited] = useState(false);
+
+  const onFocus = () => {
+    if (!autosizeInited) {
+      autosize(textareaEl.current);
+      setAutosizeInited(true);
+    }
+  };
 
   const postHasContent = () => (
     message.trim().length !== 0 ||
@@ -125,8 +133,6 @@ const Form = (props) => {
   }, [message]);
 
   useEffect(() => {
-    autosize(textareaEl.current);
-
     const removeInitDragAndDropListeners = initDragAndDropListeners(
       fieldEl.current,
       () => setDropOnForm(true),
@@ -134,7 +140,9 @@ const Form = (props) => {
     );
 
     return () => {
-      autosize.destroy(textareaEl);
+      if (autosizeInited) {
+        autosize.destroy(textareaEl);
+      }
       removeInitDragAndDropListeners();
     };
   }, []);
@@ -195,6 +203,7 @@ const Form = (props) => {
                       reset();
                     }
                   }}
+                  onFocus={onFocus}
                 />
               </TributeWrapper>
             </div>
