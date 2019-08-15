@@ -73,8 +73,8 @@ export const fetchMyself = () => async (dispatch) => {
   try {
     data = await api.getMyself(token);
 
-    dispatch(setUser(data));
     dispatch(addUsers([data]));
+    dispatch(setUser(data));
     dispatch(siteNotificationsSetUnreadAmount(data.unreadMessagesCount));
     dispatch(walletGetAccount(data.accountName));
 
