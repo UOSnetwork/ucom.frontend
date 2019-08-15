@@ -39,7 +39,7 @@ const Form = (props) => {
   const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
   const [autosizeInited, setAutosizeInited] = useState(false);
 
-  const onFocus = () => {
+  const initializeAutosize = () => {
     if (!autosizeInited) {
       autosize(textareaEl.current);
       setAutosizeInited(true);
@@ -197,13 +197,13 @@ const Form = (props) => {
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   onKeyDown={(e) => {
+                    initializeAutosize();
                     if (isSubmitKey(e)) {
                       submit();
                     } else if (isEscKey(e)) {
                       reset();
                     }
                   }}
-                  onFocus={onFocus}
                 />
               </TributeWrapper>
             </div>
