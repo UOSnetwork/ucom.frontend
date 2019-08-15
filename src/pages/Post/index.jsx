@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import ButtonEdit from '../../components/ButtonEdit';
-import PostContent from '../../components/Post/Content';
+import PostContent from './Content';
 import { PostVotingWrapper } from '../../components/Voting';
 import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';

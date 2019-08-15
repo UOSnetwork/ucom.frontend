@@ -1,15 +1,18 @@
-import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import SimpleCard from './index';
 import { selectUserById } from '../../store/selectors';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import { formatScaledImportance } from '../../utils/rate';
+import equalByProps from '../../utils/equalByProps';
 
-export const UserCard = ({ userId }) => {
-  const user = useSelector(selectUserById(userId), isEqual);
+export const UserCard = memo(({ userId }) => {
+  const user = useSelector(
+    selectUserById(userId),
+    equalByProps(['avatarFilename', 'scaledImportance', 'id', 'firstName', 'accountName']),
+  );
 
   if (!user) {
     return null;
@@ -24,7 +27,7 @@ export const UserCard = ({ userId }) => {
       url={urls.getUserUrl(user.id)}
     />
   );
-};
+});
 
 UserCard.propTypes = {
   userId: PropTypes.number.isRequired,

@@ -48,42 +48,48 @@ const urls = {
     return `${urls.getGovernanceVotingUrl(id)}/cast`;
   },
 
-  getPostUrl({
-    id,
-    postTypeId,
-    entityNameFor,
-    entityIdFor,
-  }) {
-    if (!id) {
+  getPostUrl: memoize(
+    ({
+      id,
+      postTypeId,
+      entityNameFor,
+      entityIdFor,
+    }) => {
+      if (!id) {
+        return null;
+      }
+
+      if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
+        return `/posts/${id}`;
+      }
+
+      if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
+        return `/communities/${entityIdFor}/${id}`;
+      }
+
+      if (entityIdFor) {
+        return `/user/${entityIdFor}/${id}`;
+      }
+
       return null;
-    }
+    },
+    params => Object.values(params).join(),
+  ),
 
-    if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
-      return `/posts/${id}`;
-    }
+  getFeedPostUrl: memoize(
+    ({ id, entityIdFor, entityNameFor }) => {
+      if (!id || !entityIdFor || !entityNameFor) {
+        return null;
+      }
 
-    if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
-      return `/communities/${entityIdFor}/${id}`;
-    }
+      if (entityNameFor.trim() === 'org') {
+        return `/communities/${entityIdFor}/${id}`;
+      }
 
-    if (entityIdFor) {
       return `/user/${entityIdFor}/${id}`;
-    }
-
-    return null;
-  },
-
-  getFeedPostUrl(post) {
-    if (!post || !post.id || !post.entityIdFor || !post.entityNameFor) {
-      return null;
-    }
-
-    if (post.entityNameFor.trim() === 'org') {
-      return `/communities/${post.entityIdFor}/${post.id}`;
-    }
-
-    return `/user/${post.entityIdFor}/${post.id}`;
-  },
+    },
+    params => Object.values(params).join(),
+  ),
 
   getPostEditUrl(postId) {
     if (!postId) {

@@ -1,21 +1,30 @@
-import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React, { memo } from 'react';
 import Direct from './Direct';
 import Repost from './Repost';
 import Media from './Media';
 import { POST_TYPE_REPOST_ID, POST_TYPE_MEDIA_ID } from '../../../utils/posts';
-import { getPostById } from '../../../store/posts';
-import { getUserById } from '../../../store/users';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
+import equalByProps from '../../../utils/equalByProps';
+import { selectPostById, selectUserById, selectOwner } from '../../../store/selectors';
 
 const Post = ({
-  post, user, owner, commentsContainerId, ...props
+  commentsContainerId, id, feedTypeId, originEnabled,
 }) => {
-  if (!post || !user) {
+  const post = useSelector(selectPostById(id), equalByProps(['description', 'entityImages']));
+
+  if (!post) {
     return null;
   }
+
+  const user = useSelector(selectUserById(post.userId), () => true);
+
+  if (!user) {
+    return null;
+  }
+
+  const owner = useSelector(selectOwner, equalByProps(['id']));
 
   switch (post.postTypeId) {
     case POST_TYPE_REPOST_ID:
@@ -24,10 +33,10 @@ const Post = ({
           post={post}
           user={user}
           owner={owner}
-          id={props.id}
-          feedTypeId={props.feedTypeId}
+          id={id}
+          feedTypeId={feedTypeId}
           commentsContainerId={commentsContainerId}
-          originEnabled={props.originEnabled}
+          originEnabled={originEnabled}
         />
       );
     case POST_TYPE_MEDIA_ID:
@@ -36,10 +45,10 @@ const Post = ({
           post={post}
           user={user}
           owner={owner}
-          id={props.id}
-          feedTypeId={props.feedTypeId}
+          id={id}
+          feedTypeId={feedTypeId}
           commentsContainerId={commentsContainerId}
-          originEnabled={props.originEnabled}
+          originEnabled={originEnabled}
         />
       );
     default:
@@ -48,10 +57,10 @@ const Post = ({
           post={post}
           user={user}
           owner={owner}
-          id={props.id}
-          feedTypeId={props.feedTypeId}
+          id={id}
+          feedTypeId={feedTypeId}
           commentsContainerId={commentsContainerId}
-          originEnabled={props.originEnabled}
+          originEnabled={originEnabled}
         />
       );
   }
@@ -61,6 +70,7 @@ Post.propTypes = {
   id: PropTypes.number.isRequired,
   commentsContainerId: PropTypes.number,
   originEnabled: PropTypes.bool,
+  feedTypeId: PropTypes.number.isRequired,
 };
 
 Post.defaultProps = {
@@ -68,18 +78,4 @@ Post.defaultProps = {
   originEnabled: true,
 };
 
-export default connect((state, props) => {
-  const post = getPostById(state.posts, props.id);
-
-  return {
-    post,
-    user: post ? getUserById(state.users, post.userId) : undefined,
-    owner: state.user.data,
-  };
-})(memo(Post, (prev, next) => (
-  prev.post &&
-  next.post &&
-  prev.owner.id === next.owner.id &&
-  prev.post.description === next.post.description &&
-  isEqual(prev.post.entityImages, next.post.entityImages)
-)));
+export default memo(Post, equalByProps(['owner.id', 'post.description', 'post.entityImages']));

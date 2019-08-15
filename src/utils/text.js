@@ -163,5 +163,3 @@ export const sanitizeEmbedContent = memoize(html => sanitizeHtml(html, {
 export const sanitizeCommentText = html => sanitizeCommentTexWithoutLink(makeLink(html));
 
 export const sanitizePostTitle = memoize(text => sanitizeHtml(text));
-
-export const capitalizeFirstLetter = string => string.charAt(0).toUpperCase() + string.slice(1);

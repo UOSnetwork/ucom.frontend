@@ -1,15 +1,8 @@
+import { memoize } from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const IconShare = props => (
-  <svg className={props.className} width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+export default memoize(() => (
+  <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" clipRule="evenodd" d="M11.9727 0.108815C11.4434 0.328236 11.0986 0.843983 11.0986 1.41582V4.12841C5.39551 4.82879 0.998047 9.70409 0.998047 15.5571C0.998047 16.1245 1.33691 16.637 1.85938 16.8587C2.38184 17.0808 2.98633 16.9684 3.39453 16.5744C5.49023 14.5508 8.18359 13.3083 11.0986 13.0041V15.5571C11.0986 16.129 11.4434 16.6447 11.9717 16.8636C12.1445 16.9351 12.3281 16.9712 12.5127 16.9712C12.8857 16.9712 13.2461 16.8239 13.5127 16.5577L20.584 9.48644C21.1357 8.9345 21.1357 8.03862 20.583 7.48632L13.5127 0.415822C13.1094 0.0117078 12.502 -0.109325 11.9727 0.108815ZM12.0518 5.86943L12.918 5.82866V2.38952L19.0127 8.48485L12.918 14.5801V11.0878L11.9775 11.1202C8.58984 11.2372 5.40234 12.4599 2.86328 14.6042C3.32715 9.86736 7.22168 6.09679 12.0518 5.86943Z" />
   </svg>
-
-);
-
-IconShare.propTypes = {
-  className: PropTypes.string,
-};
-
-export default IconShare;
+), () => true);

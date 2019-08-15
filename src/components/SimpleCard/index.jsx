@@ -1,7 +1,9 @@
+import { memoize } from 'lodash';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import UserPick from '../UserPick';
+import memoizeResolver from '../../utils/memoizeResolver';
 import styles from './styles.css';
 
 const SimpleCard = (props) => {
@@ -37,4 +39,4 @@ SimpleCard.defaultProps = {
 };
 
 export * from './wrappers';
-export default SimpleCard;
+export default memoize(SimpleCard, memoizeResolver('SimpleCard', Object.keys(SimpleCard.propTypes)));

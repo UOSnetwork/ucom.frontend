@@ -1,10 +1,12 @@
+import { memoize } from 'lodash';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import React, { memo } from 'react';
+import React from 'react';
 import IconUser from '../Icons/User';
 import IconOrganization from '../Icons/Organization';
 import IconExternal from '../Icons/External';
+import memoizeResolver from '../../utils/memoizeResolver';
 import styles from './styles.css';
 
 const UserPick = (props) => {
@@ -78,4 +80,4 @@ UserPick.defaultProps = {
   isExternal: false,
 };
 
-export default memo(UserPick);
+export default memoize(UserPick, memoizeResolver('UserPick', Object.keys(UserPick.propTypes)));
