@@ -3,11 +3,11 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import React, { Fragment, useEffect, useRef, memo, useState, useCallback } from 'react';
-import { sanitizePostText, checkHashTag, checkMentionTag } from '../../utils/text';
-import { getPostBody, getPostImages } from '../../utils/posts';
-import { GalleryPopup } from '../Gallery';
-import EmbedService from '../../utils/embedService';
-import { selectPostById } from '../../store/selectors';
+import { sanitizePostText, checkHashTag, checkMentionTag } from '../../../utils/text';
+import { getPostBody, getPostImages } from '../../../utils/posts';
+import { GalleryPopup } from '../../../components/Gallery';
+import EmbedService from '../../../utils/embedService';
+import { selectPostById } from '../../../store/selectors';
 
 const PostContent = ({ postId }) => {
   const post = useSelector(selectPostById(postId), isEqual);

@@ -2,8 +2,12 @@ import humps from 'lodash-humps';
 import api from '../api';
 import { addUsers } from './users';
 import { selectOrgById } from '../store/selectors';
+import { getOrganizationByIds } from '../store/organizations';
 
-export const addOrganizations = payload => ({ type: 'ADD_ORGANIZATIONS', payload });
+export const addOrganizations = payload => (dispatch) => {
+  getOrganizationByIds.cache.clear();
+  dispatch({ type: 'ADD_ORGANIZATIONS', payload });
+};
 
 export const getOrganization = id => async (dispatch) => {
   try {

@@ -11,6 +11,7 @@ import { walletGetAccount } from './walletSimple';
 import { restoreActiveKey } from '../utils/keys';
 import { USER_EDITABLE_PROPS } from '../utils/constants';
 // import { enableGtm } from '../utils/gtm';
+import { getUserById, getUsersByIds } from '../store/users';
 
 export const addUsers = (data = []) => (dispatch) => {
   let users = [];
@@ -50,8 +51,13 @@ export const addUsers = (data = []) => (dispatch) => {
     users.push(user);
   });
 
-  dispatch(addOrganizations(organizations));
-  dispatch({ type: 'USERS_ADD', payload: users });
+  if (data.length) {
+    users.forEach(user => getUserById.cache.delete(user.id));
+    getUsersByIds.cache.clear();
+
+    dispatch(addOrganizations(organizations));
+    dispatch({ type: 'USERS_ADD', payload: users });
+  }
 };
 
 export const fetchMyself = () => async (dispatch) => {

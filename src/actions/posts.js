@@ -11,6 +11,7 @@ import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import snakes from '../utils/snakes';
 import loader from '../utils/loader';
 import { searchTags } from '../utils/text';
+import { getPostById } from '../store/posts';
 
 const { PublicationsApi } = Wallet.Content;
 
@@ -39,6 +40,9 @@ export const addPosts = (postsData = []) => (dispatch) => {
   };
 
   postsData.forEach(parsePost);
+
+  posts.forEach(post => getPostById.cache.delete(post.id));
+
   dispatch(addUsers(users));
   dispatch(addOrganizations(organizations));
   dispatch({ type: 'ADD_POSTS', payload: posts });

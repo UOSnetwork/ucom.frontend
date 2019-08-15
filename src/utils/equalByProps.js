@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 
 export default (props = []) => (prev, next) =>
-  props.every(prop => get(prev, prop) === get(next, prop));
+  props.every(prop => isEqual(get(prev, prop), get(next, prop)));
