@@ -103,8 +103,8 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
       rate={formatRate(comment.currentRate, true)}
       count={comment.currentVote}
       selfVote={comment.myselfData && comment.myselfData.myselfVote}
-      onClickUp={() => vote(true)}
-      onClickDown={() => vote(false)}
+      onClickUp={comment && owner && comment.userId !== owner.id ? () => vote(true) : undefined}
+      onClickDown={comment && owner && comment.userId !== owner.id ? () => vote(false) : undefined}
       onClick={upCount + downCount > 0 ? () => {
         setPopupActiveTabId(TAB_ID_ALL);
         getDataForPopup();

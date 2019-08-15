@@ -55,20 +55,22 @@ const Votin = ({
           className={styles.voting}
           onClick={onClick}
         >
-          <span
-            title="Upvote"
-            role="presentation"
-            className={classNames({
-              [styles.voteBtn]: true,
-              [styles.up]: selfVote === UPVOTE_STATUS,
-            })}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClickUp();
-            }}
-          >
-            <IconVoteUp />
-          </span>
+          {onClickUp &&
+            <span
+              title="Upvote"
+              role="presentation"
+              className={classNames({
+                [styles.voteBtn]: true,
+                [styles.up]: selfVote === UPVOTE_STATUS,
+              })}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickUp();
+              }}
+            >
+              <IconVoteUp />
+            </span>
+          }
           <span className={styles.value}>
             <span
               className={classNames({
@@ -81,20 +83,22 @@ const Votin = ({
             </span>
             <span className={styles.rate}>{rate}</span>
           </span>
-          <span
-            title="Downvote"
-            role="presentation"
-            className={classNames({
-              [styles.voteBtn]: true,
-              [styles.down]: selfVote === DOWNVOTE_STATUS,
-            })}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClickDown();
-            }}
-          >
-            <IconVoteDown />
-          </span>
+          {onClickDown &&
+            <span
+              title="Downvote"
+              role="presentation"
+              className={classNames({
+                [styles.voteBtn]: true,
+                [styles.down]: selfVote === DOWNVOTE_STATUS,
+              })}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickDown();
+              }}
+            >
+              <IconVoteDown />
+            </span>
+          }
         </div>
       </Tippy>
     </Fragment>

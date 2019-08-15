@@ -102,8 +102,8 @@ const PostVotingWrapper = ({ postId }) => {
       rate={formatRate(post.currentRate, true)}
       count={post.currentVote}
       selfVote={post.myselfData && post.myselfData.myselfVote}
-      onClickUp={() => vote(true)}
-      onClickDown={() => vote(false)}
+      onClickUp={post && owner && post.userId !== owner.id ? () => vote(true) : undefined}
+      onClickDown={post && owner && post.userId !== owner.id ? () => vote(false) : undefined}
       onShow={getDataForPreview}
       onClick={upCount + downCount > 0 ? () => {
         setPopupActiveTabId(TAB_ID_ALL);
