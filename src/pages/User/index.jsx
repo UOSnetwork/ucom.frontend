@@ -102,6 +102,10 @@ const UserPage = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     getPageData();
+
+    return () => {
+      dispatch(userPageActions.reset());
+    };
   }, [userIdentity]);
 
   if (state.loaded && !user) {
