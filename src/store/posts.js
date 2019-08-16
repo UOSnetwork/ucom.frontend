@@ -52,10 +52,7 @@ const posts = (state = getInitialState(), action) => {
   }
 };
 
-export const getPostById = memoize(
-  (posts, postId) => (posts.data[postId]),
-  (posts, postId) => postId,
-);
+export const getPostById = (posts, postId) => posts.data[postId];
 
 export const getPostByIds = (posts, postIds = []) => postIds.map(id => posts.data[id]);
 

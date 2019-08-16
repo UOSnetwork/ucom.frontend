@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +24,7 @@ import styles from './styles.css';
 
 const Post = ({ postId }) => {
   const dispatch = useDispatch();
-  const post = useSelector(selectPostById(postId));
+  const post = useSelector(selectPostById(postId), isEqual);
   const owner = useSelector(selectOwner);
 
   const getData = async () => {
