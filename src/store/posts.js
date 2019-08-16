@@ -1,5 +1,3 @@
-import { memoize } from 'lodash';
-
 const getInitialState = () => ({
   data: {},
 });
