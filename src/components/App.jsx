@@ -21,13 +21,17 @@ import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
 import SearchPopup from '../components/SearchPopup';
 import Subscribe from '../components/Subscribe';
+import Loader from '../components/Loader';
 import urls from '../utils/urls';
+import loader from '../utils/loader';
 
 const App = () => {
   const dispatch = useDispatch();
   const wallet = useSelector(state => state.walletSimple);
 
   useEffect(() => {
+    loader.init(dispatch);
+
     if (process.env.NODE_ENV === 'production') {
       enableGtm();
     }
@@ -54,6 +58,8 @@ const App = () => {
 
   return (
     <Fragment>
+      <Loader />
+
       <HashRouter>
         {(route) => {
           switch (route) {

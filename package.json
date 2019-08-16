@@ -124,7 +124,6 @@
     "moment-duration-format": "^2.2.2",
     "normalize-url": "^4.1.0",
     "normalize.css": "^8.0.0",
-    "nprogress": "^0.2.0",
     "object-to-formdata": "^1.5.2",
     "pluralize": "^8.0.0",
     "prop-types": "^15.6.2",

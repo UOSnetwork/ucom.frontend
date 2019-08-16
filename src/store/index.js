@@ -25,9 +25,11 @@ import settings from './settings';
 import searchPopup from './searchPopup';
 import subscribe from './subscribe';
 import ieobanner from './ieobanner';
+import loader from './loader';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    loader,
     ieobanner,
     subscribe,
     settings,

@@ -1,25 +1,21 @@
-import NProgress from 'nprogress';
+import * as loderActions from '../actions/loader';
 
-NProgress.configure({
-  showSpinner: false,
-});
-
-let queue = 0;
+let dispatch;
 
 export default {
-  start() {
-    queue++;
+  init(dispatchFn) {
+    dispatch = dispatchFn;
+  },
 
-    NProgress.start();
+  start() {
+    if (dispatch) {
+      dispatch(loderActions.start());
+    }
   },
 
   done() {
-    if (queue > 0) {
-      queue--;
-    }
-
-    if (queue === 0) {
-      NProgress.done();
+    if (dispatch) {
+      dispatch(loderActions.done());
     }
   },
 };

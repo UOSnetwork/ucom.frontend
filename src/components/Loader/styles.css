@@ -1,0 +1,31 @@
+.loader {
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.loader.start .progress {
+  transition: transform 10s ease;
+  transform: translateX(0);
+}
+
+.loader.done .progress {
+  opacity: 0;
+  transform: none;
+  transition: transform 0.2s ease, opacity 0.2s ease 0.5s;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: #D8352F;
+  box-shadow: 0 0 5px rgba(216, 53, 47, 0.5);
+  transform: translateX(-100%);
+  transition: opacity 0.2s ease;
+}
