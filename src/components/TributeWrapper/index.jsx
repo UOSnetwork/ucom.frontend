@@ -17,11 +17,6 @@ class TributeWrapper extends PureComponent {
   }
 
   componentDidMount() {
-    const Tribute = require('tributejs'); //eslint-disable-line
-
-    this.tribute = new Tribute({ ...defaultTributeConfig, ...this.props.config });
-    this.tribute.attach(this.element);
-
     if (this.props.onChange) {
       this.element.addEventListener('tribute-replaced', this.onChangeValue);
     }
@@ -32,7 +27,7 @@ class TributeWrapper extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.tribute.detach(this.element);
+    this.detachTribute();
 
     if (this.props.onChange) {
       this.element.removeEventListener('tribute-replaced', this.onChangeValue);
@@ -54,6 +49,20 @@ class TributeWrapper extends PureComponent {
 
   onChangeValue = () => {
     this.props.onChange(this.element.value || this.element.innerHTML);
+  }
+
+  attachTribute() {
+    if (!this.tribute && this.element) {
+      const Tribute = require('tributejs'); //eslint-disable-line
+      this.tribute = new Tribute({ ...defaultTributeConfig, ...this.props.config });
+      this.tribute.attach(this.element);
+    }
+  }
+
+  detachTribute() {
+    if (this.tribute) {
+      this.tribute.detach(this.element);
+    }
   }
 
   render() {
@@ -82,6 +91,11 @@ class TributeWrapper extends PureComponent {
           }
         } : (e) => {
           this.props.onChange(e.target.value);
+        },
+        onFocus: () => {
+          setTimeout(() => {
+            this.attachTribute();
+          }, 0);
         },
       })
     );
