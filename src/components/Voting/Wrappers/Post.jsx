@@ -39,9 +39,9 @@ const PostVotingWrapper = ({ postId }) => {
 
   const post = useSelector(selectPostById(postId), equalByProps(['blockchainId', 'currentRate', 'currentVote', 'myselfData.myselfVote']));
   const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
-  const users = useSelector(selectUsersByIds(popupUsersIds), isEqual);
-  const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
-  const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds), isEqual);
+  const users = useSelector(selectUsersByIds(popupUsersIds));
+  const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds));
+  const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds));
 
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
