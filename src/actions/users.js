@@ -52,8 +52,8 @@ export const addUsers = (data = []) => (dispatch) => {
   });
 
   if (data.length) {
-    users.forEach(user => getUserById.cache.delete(user.id));
-    getUsersByIds.cache.clear();
+    // users.forEach(user => getUserById.cache.delete(user.id));
+    // getUsersByIds.cache.clear();
 
     dispatch(addOrganizations(organizations));
     dispatch({ type: 'USERS_ADD', payload: users });

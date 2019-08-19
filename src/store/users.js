@@ -53,32 +53,52 @@ const users = (state = getInitialState(), action) => {
   }
 };
 
+export const getUserById = (users, userIdOrName) => {
+  let result;
 
-export const getUserById = memoize(
-  (users, userIdOrName) => {
-    let result;
+  if (Number.isNaN(+userIdOrName) || `${userIdOrName}`.length === USER_ACCOUNT_LENGTH) {
+    result = Object.values(users.data).find(e => e.accountName === userIdOrName);
+  }
 
-    if (Number.isNaN(+userIdOrName) || `${userIdOrName}`.length === USER_ACCOUNT_LENGTH) {
-      result = Object.values(users.data).find(e => e.accountName === userIdOrName);
-    }
+  return result || users.data[userIdOrName];
+};
 
-    return result || users.data[userIdOrName];
-  },
-  (users, userIdOrName) => userIdOrName,
-);
+// export const getUserById = memoize(
+//   (users, userIdOrName) => {
+//     let result;
 
-export const getUsersByIds = memoize(
-  (users, ids = [], limit) => {
-    let result = ids.map(id => getUserById(users, id))
-      .filter(user => Boolean(user));
+//     if (Number.isNaN(+userIdOrName) || `${userIdOrName}`.length === USER_ACCOUNT_LENGTH) {
+//       result = Object.values(users.data).find(e => e.accountName === userIdOrName);
+//     }
 
-    if (limit) {
-      result = result.slice(0, limit);
-    }
+//     return result || users.data[userIdOrName];
+//   },
+//   (users, userIdOrName) => userIdOrName,
+// );
 
-    return result;
-  },
-  (users, ids = []) => ids.join(),
-);
+export const getUsersByIds = (users, ids = [], limit) => {
+  let result = ids.map(id => getUserById(users, id))
+    .filter(user => Boolean(user));
+
+  if (limit) {
+    result = result.slice(0, limit);
+  }
+
+  return result;
+};
+
+// export const getUsersByIds = memoize(
+//   (users, ids = [], limit) => {
+//     let result = ids.map(id => getUserById(users, id))
+//       .filter(user => Boolean(user));
+
+//     if (limit) {
+//       result = result.slice(0, limit);
+//     }
+
+//     return result;
+//   },
+//   (users, ids = []) => ids.join(),
+// );
 
 export default users;
