@@ -16,7 +16,7 @@ import equalByProps from '../../../../utils/equalByProps';
 import { restoreActiveKey } from '../../../../utils/keys';
 import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
 import { authShowPopup } from '../../../../actions/auth';
-import { selectOwner, selectUserById } from '../../../../store/selectors';
+import { selectOwner, selectUserById, selectOrgById } from '../../../../store/selectors';
 import withLoader from '../../../../utils/withLoader';
 
 const PostFeedContent = ({
@@ -26,7 +26,7 @@ const PostFeedContent = ({
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, equalByProps('id', 'accountName'));
   const forUser = useSelector(selectUserById(forUserId), equalByProps('accountName'));
-  const forOrg = useSelector(selectUserById(forOrgId), equalByProps('blockchainId'));
+  const forOrg = useSelector(selectOrgById(forOrgId), equalByProps('blockchainId'));
 
   if (!post) {
     return null;
