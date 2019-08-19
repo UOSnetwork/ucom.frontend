@@ -146,7 +146,7 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
           title: getUserName(item),
           nickname: item.accountName,
           scaledImportance: item.scaledImportance,
-          contentVote: item.relatedMetadata.contentVote,
+          contentVote: item.relatedMetadata && item.relatedMetadata.contentVote,
         })),
         visible: popupVisible,
         onClickClose: () => {
