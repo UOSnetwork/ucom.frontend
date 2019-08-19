@@ -43,6 +43,8 @@ const PostVotingWrapper = ({ postId }) => {
   const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
   const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds), isEqual);
 
+  console.log(users);
+
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
     try {
