@@ -50,7 +50,6 @@ const UsersPopup = ({
                   userPickWithIcon={{
                     icon: item.contentVote === 2 ? <UpvoteIcon /> : <DownvoteIcon />,
                     userPick: {
-                      // url: item.url,
                       src: item.avatarSrc,
                       shadow: true,
                     },

@@ -43,8 +43,6 @@ const PostVotingWrapper = ({ postId }) => {
   const detailsUpUsers = useSelector(selectUsersByIds(detailsUpUserIds), isEqual);
   const detailsDownUsers = useSelector(selectUsersByIds(detailsDownUserIds), isEqual);
 
-  console.log(users);
-
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
     try {
@@ -147,7 +145,7 @@ const PostVotingWrapper = ({ postId }) => {
           title: getUserName(item),
           nickname: item.accountName,
           scaledImportance: item.scaledImportance,
-          contentVote: item.relatedMetadata.contentVote,
+          contentVote: item.relatedMetadata && item.relatedMetadata.contentVote,
         })),
         visible: popupVisible,
         onClickClose: () => {
