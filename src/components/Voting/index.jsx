@@ -1,7 +1,8 @@
+import { isEqual } from 'lodash';
 import Tippy from '@tippy.js/react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { useRef, useCallback, Fragment } from 'react';
+import React, { memo, useRef, useCallback, Fragment } from 'react';
 import IconVoteUp from '../Icons/VoteUp';
 import IconVoteDown from '../Icons/VoteDown';
 import Details from './Details';
@@ -132,4 +133,4 @@ Votin.defaultProps = {
 };
 
 export * from './Wrappers';
-export default Votin;
+export default memo(Votin, isEqual);

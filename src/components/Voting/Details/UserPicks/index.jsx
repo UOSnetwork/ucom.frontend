@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
 import UserPick from '../../../UserPick';
@@ -57,4 +58,4 @@ UserPicks.defaultProps = {
   onClick: undefined,
 };
 
-export default memo(UserPicks);
+export default memo(UserPicks, isEqual);

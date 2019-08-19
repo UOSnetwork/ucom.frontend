@@ -1,6 +1,6 @@
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useRef, useCallback } from 'react';
+import React, { memo, useRef, useCallback } from 'react';
 import EntryCard from '../../EntryCard';
 import { DownvoteIcon, UpvoteIcon } from '../../Icons/FeedIcons';
 import { UserFollowButton } from '../../FollowButton';
@@ -86,4 +86,4 @@ UsersPopup.defaultProps = {
   onClickClose: undefined,
 };
 
-export default UsersPopup;
+export default memo(UsersPopup, isEqual);

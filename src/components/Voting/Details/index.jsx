@@ -1,6 +1,7 @@
+import { isEqual } from 'lodash';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
 import IconVoteUp from '../../Icons/VoteUp';
 import IconVoteDown from '../../Icons/VoteDown';
 import UserPicks from './UserPicks';
@@ -78,4 +79,4 @@ Details.defaultProps = {
   onClick: undefined,
 };
 
-export default Details;
+export default memo(Details, isEqual);
