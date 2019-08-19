@@ -52,10 +52,9 @@ export const addUsers = (data = []) => (dispatch) => {
   });
 
   if (data.length) {
-    // users.forEach(user => getUserById.cache.delete(user.id));
-    // getUsersByIds.cache.clear();
-
     dispatch(addOrganizations(organizations));
+    users.forEach(user => getUserById.cache.delete(user.id));
+    getUsersByIds.cache.clear();
     dispatch({ type: 'USERS_ADD', payload: users });
   }
 };

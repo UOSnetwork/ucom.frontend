@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { memo } from 'react';
+import React from 'react';
 import IconVoteUp from '../../Icons/VoteUp';
 import IconVoteDown from '../../Icons/VoteDown';
 import UserPicks from './UserPicks';
@@ -61,8 +61,8 @@ Details.propTypes = {
   upCount: PropTypes.number,
   downCount: PropTypes.number,
   selfVote: PropTypes.string,
-  upUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
-  downUserPicks: PropTypes.arrayOf(PropTypes.shape(UserPicks.propTypes)),
+  upUserPicks: PropTypes.shape(UserPicks.propTypes),
+  downUserPicks: PropTypes.shape(UserPicks.propTypes),
   hideTooltip: PropTypes.func,
   onClick: PropTypes.func,
 };
@@ -78,4 +78,4 @@ Details.defaultProps = {
   onClick: undefined,
 };
 
-export default memo(Details);
+export default Details;
