@@ -40,10 +40,10 @@ const Direct = ({
               />
               <PostFeedContent
                 post={post}
+                forUserId={props.forUserId}
+                forOrgId={props.forOrgId}
                 postId={props.id}
-                userId={owner.id}
                 postTypeId={post.postTypeId}
-                linkText={post.description}
                 formIsVisible={formIsVisible}
                 hideForm={() => setFormIsVisible(false)}
               />
@@ -72,10 +72,9 @@ const Direct = ({
           />
           <PostFeedContent
             post={post}
+            user={user}
             postId={props.id}
-            userId={owner.id}
             postTypeId={post.postTypeId}
-            linkText={post.description}
             formIsVisible={formIsVisible}
             hideForm={() => setFormIsVisible(false)}
           />
@@ -99,11 +98,15 @@ Direct.propTypes = {
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   commentsContainerId: PropTypes.number,
   originEnabled: PropTypes.bool,
+  forUserId: PropTypes.number,
+  forOrgId: PropTypes.number,
 };
 
 Direct.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
   originEnabled: true,
+  forUserId: undefined,
+  forOrgId: undefined,
 };
 
 export default memo(Direct, (prev, next) => (

@@ -1,21 +1,14 @@
 import Wallet from 'ucom-libs-wallet';
 import { omit } from 'lodash';
-import api from '../api';
-import graphql from '../api/graphql';
+import api, { graphql } from '../api';
 import { addUsers } from './users';
 import { addOrganizations, getOrganization } from './organizations';
 import { POST_TYPE_MEDIA_ID } from '../utils/constants';
-import { addServerErrorNotification } from './notifications';
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
-import snakes from '../utils/snakes';
-import loader from '../utils/loader';
 import { searchTags } from '../utils/text';
 
 const { PublicationsApi } = Wallet.Content;
-
-export const setPostVote = payload => ({ type: 'SET_POST_VOTE', payload });
-export const setPostCommentCount = payload => ({ type: 'SET_POST_COMMENT_COUNT', payload });
 
 export const addPosts = (postsData = []) => (dispatch) => {
   const posts = [];
@@ -64,18 +57,6 @@ export const postsFetch = ({
     console.error(err);
     throw err;
   }
-};
-
-export const updatePost = payload => (dispatch) => {
-  loader.start();
-  api.updatePost(snakes(payload.data), payload.postId)
-    .then((data) => {
-      dispatch(addPosts([data]));
-    })
-    .catch((error) => {
-      dispatch(addServerErrorNotification(error));
-    })
-    .then(() => loader.done());
 };
 
 export const addRepost = postId => async () => {
@@ -235,6 +216,120 @@ export const updateMediaPost = (
     const result = await api.updatePost(data, id);
 
     return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createDirectPost = (
+  ownerId,
+  ownerAccountName,
+  ownerPrivateKey,
+  userId,
+  userAccountName,
+  orgId,
+  orgBlockchainId,
+  data,
+) => async (dispatch) => {
+  try {
+    const postContent = {
+      description: data.description,
+      entity_images: data.entityImages,
+      post_type_id: data.postTypeId,
+      entity_tags: searchTags(data.description),
+    };
+
+    let signed_transaction;
+    let blockchain_id;
+    let post;
+
+    if (!orgBlockchainId) {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForAccount(
+        ownerAccountName,
+        ownerPrivateKey,
+        userAccountName,
+        postContent,
+      ));
+    } else {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForOrganization(
+        ownerAccountName,
+        orgBlockchainId,
+        ownerPrivateKey,
+        postContent,
+      ));
+    }
+
+    if (!orgId) {
+      post = await api.createUserCommentPost(userId, {
+        ...omit(postContent, ['entity_tags']),
+        signed_transaction: JSON.stringify(signed_transaction),
+        blockchain_id,
+      });
+    } else {
+      post = await api.createOrganizationsCommentPost(orgId, {
+        ...omit(postContent, ['entity_tags']),
+        signed_transaction: JSON.stringify(signed_transaction),
+        blockchain_id,
+      });
+    }
+
+    dispatch(addPosts([post]));
+
+    return post;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const upadteDirectPost = (
+  ownerAccountName,
+  ownerPrivateKey,
+  postBlockchainId,
+  userAccountName,
+  postId,
+  orgId,
+  orgBlockchainId,
+  data,
+) => async (dispatch) => {
+  try {
+    const postContent = {
+      id: data.id,
+      description: data.description,
+      entity_images: data.entityImages,
+      post_type_id: data.postTypeId,
+      entity_tags: searchTags(data.description),
+      blockchain_id: data.blockchainId,
+      created_at: data.createdAt,
+    };
+
+    let signed_transaction;
+
+    if (!orgId) {
+      signed_transaction = await PublicationsApi.signUpdateDirectPostForAccount(
+        ownerAccountName,
+        ownerPrivateKey,
+        userAccountName,
+        postContent,
+        postBlockchainId,
+      );
+    } else {
+      signed_transaction = await PublicationsApi.signUpdateDirectPostForOrganization(
+        ownerAccountName,
+        ownerPrivateKey,
+        orgBlockchainId,
+        postContent,
+        postBlockchainId,
+      );
+    }
+
+    const post = await api.updatePost({
+      ...omit(postContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+    }, postId);
+
+    dispatch(addPosts([post]));
+
+    return post;
   } catch (err) {
     throw err;
   }

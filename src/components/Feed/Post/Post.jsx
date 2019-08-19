@@ -10,7 +10,7 @@ import equalByProps from '../../../utils/equalByProps';
 import { selectPostById, selectUserById, selectOwner } from '../../../store/selectors';
 
 const Post = ({
-  commentsContainerId, id, feedTypeId, originEnabled,
+  commentsContainerId, id, feedTypeId, originEnabled, forUserId, forOrgId,
 }) => {
   const post = useSelector(selectPostById(id), equalByProps(['description', 'entityImages']));
 
@@ -61,6 +61,8 @@ const Post = ({
           feedTypeId={feedTypeId}
           commentsContainerId={commentsContainerId}
           originEnabled={originEnabled}
+          forUserId={forUserId}
+          forOrgId={forOrgId}
         />
       );
   }
@@ -71,11 +73,15 @@ Post.propTypes = {
   commentsContainerId: PropTypes.number,
   originEnabled: PropTypes.bool,
   feedTypeId: PropTypes.number.isRequired,
+  forUserId: PropTypes.number,
+  forOrgId: PropTypes.number,
 };
 
 Post.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
   originEnabled: true,
+  forUserId: undefined,
+  forOrgId: undefined,
 };
 
 export default memo(Post, equalByProps(['owner.id', 'post.description', 'post.entityImages']));

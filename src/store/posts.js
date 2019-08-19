@@ -15,35 +15,6 @@ const posts = (state = getInitialState(), action) => {
       });
     }
 
-    case 'SET_POST_VOTE': {
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [action.payload.id]: {
-            ...state.data[action.payload.id],
-            currentVote: action.payload.currentVote,
-            myselfData: {
-              ...state.data[action.payload.id].myselfData,
-              myselfVote: action.payload.myselfVote,
-            },
-          },
-        },
-      };
-    }
-
-    case 'SET_POST_COMMENT_COUNT':
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [action.payload.postId]: {
-            ...state.data[action.payload.postId],
-            commentsCount: action.payload.commentsCount,
-          },
-        },
-      };
-
     default: {
       return state;
     }

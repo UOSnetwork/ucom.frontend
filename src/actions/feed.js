@@ -9,9 +9,9 @@ import {
   TAG_FEED_ID,
 } from '../utils/feed';
 import { COMMENTS_INITIAL_COUNT_USER_WALL_FEED, COMMENTS_CONTAINER_ID_FEED_POST } from '../utils/comments';
-import api from '../api';
+// import api from '../api';
 import graphql from '../api/graphql';
-import { addPosts } from './posts';
+import { addPosts, createDirectPost } from './posts';
 import { commentsAddContainerData } from './comments';
 
 export const feedReset = () => ({ type: 'POSTS_FEED_RESET' });
@@ -89,25 +89,35 @@ export const feedGetUserPosts = ({
   dispatch(feedSetLoading(false));
 };
 
-export const feedCreatePost = (feedTypeId, params) => (dispatch) => {
-  const createCommentPostFunctions = {
-    [USER_NEWS_FEED_ID]: api.createUserCommentPost.bind(api),
-    [USER_WALL_FEED_ID]: api.createUserCommentPost.bind(api),
-    [ORGANIZATION_FEED_ID]: api.createOrganizationsCommentPost.bind(api),
-    [TAG_FEED_ID]: api.createUserCommentPost.bind(api),
-  };
-
+export const createPost = (
+  ownerId,
+  ownerAccountName,
+  ownerPrivateKey,
+  userId,
+  userAccountName,
+  orgId,
+  orgBlockchainId,
+  data,
+) => async (dispatch) => {
   dispatch(feedSetLoading(true));
 
-  return createCommentPostFunctions[feedTypeId](params)
-    .then((data) => {
-      dispatch(addPosts([data]));
-      dispatch(feedPrependPostIds([data.id]));
-      dispatch(feedSetLoading(false));
-    })
-    .catch(() => {
-      dispatch(feedSetLoading(false));
-    });
+  try {
+    const post = await dispatch(createDirectPost(
+      ownerId,
+      ownerAccountName,
+      ownerPrivateKey,
+      userId,
+      userAccountName,
+      orgId,
+      orgBlockchainId,
+      data,
+    ));
+    dispatch(feedPrependPostIds([post.id]));
+    dispatch(feedSetLoading(false));
+  } catch (err) {
+    dispatch(feedSetLoading(false));
+    throw err;
+  }
 };
 
 const filter = {

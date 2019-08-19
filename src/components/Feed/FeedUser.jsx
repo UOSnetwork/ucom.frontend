@@ -1,18 +1,28 @@
+// TODO: Refactoring all feed components
+
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, memo, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { feedReset, feedGetUserPosts, feedCreatePost } from '../../actions/feed';
+import { feedReset, feedGetUserPosts, createPost as feedCreatePost } from '../../actions/feed';
+import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { FEED_PER_PAGE } from '../../utils/feed';
 import { POST_TYPE_DIRECT_ID } from '../../utils/posts';
 import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
 import withLoader from '../../utils/withLoader';
+import equalByProps from '../../utils/equalByProps';
+import { restoreActiveKey } from '../../utils/keys';
+import { selectOwner, selectUserById, selectOrgById } from '../../store/selectors';
+import { authShowPopup } from '../../actions/auth';
 
 const FeedUser = (props) => {
   const dispatch = useDispatch();
   const feed = useSelector(state => state.feed, isEqual);
+  const owner = useSelector(selectOwner, equalByProps(['accountName']));
+  const user = useSelector(selectUserById(props.userId), equalByProps(['accountName']));
+  const org = useSelector(selectOrgById(props.organizationId), equalByProps(['blockchainId']));
 
   const onClickLoadMore = useMemo(() => async () => {
     await withLoader(dispatch(feedGetUserPosts({
@@ -26,20 +36,37 @@ const FeedUser = (props) => {
     })));
   }, [props.feedTypeId, feed, props.userId, props.organizationId, props.tagIdentity]);
 
-  const onSubmitPostForm = useMemo(() => (description, entityImages) => {
-    withLoader(dispatch(feedCreatePost(props.feedTypeId, {
-      organizationId: props.organizationId,
-      userId: props.userId,
-      data: {
-        description,
-        entityImages,
-        postTypeId: POST_TYPE_DIRECT_ID,
-      },
-    })));
-    if (props.callbackOnSubmit) {
-      props.callbackOnSubmit();
+  const onSubmitPostForm = useMemo(() => async (description, entityImages) => {
+    const ownerPrivateKey = restoreActiveKey();
+
+    if (!owner.id || !owner.accountName || !ownerPrivateKey) {
+      dispatch(authShowPopup());
+      return;
     }
-  }, [props.feedTypeId, props.organizationId, props.userId, props.callbackOnSubmit]);
+
+    try {
+      await withLoader(dispatch(feedCreatePost(
+        owner.id,
+        owner.accountName,
+        ownerPrivateKey,
+        props.userId,
+        user && user.accountName,
+        props.organizationId,
+        org && org.blockchainId,
+        {
+          description,
+          entityImages,
+          postTypeId: POST_TYPE_DIRECT_ID,
+        },
+      )));
+
+      if (props.callbackOnSubmit) {
+        props.callbackOnSubmit();
+      }
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  }, [props.organizationId, props.userId, props.callbackOnSubmit, owner, user, org]);
 
   useEffect(() => {
     dispatch(feedGetUserPosts({
@@ -71,6 +98,8 @@ const FeedUser = (props) => {
       filter={props.filter}
       feedTypeId={props.feedTypeId}
       originEnabled={props.originEnabled}
+      forUserId={props.userId}
+      forOrgId={props.organizationId}
     />
   );
 };

@@ -1,11 +1,10 @@
-import { isEqual } from 'lodash';
 import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FeedForm from '../../FeedForm';
 import Gallery from '../../../Gallery';
-import { updatePost } from '../../../../actions/posts';
+import { upadteDirectPost } from '../../../../actions/posts';
 import DescDirectPost from './DescDirectPost';
 import { checkMentionTag } from '../../../../utils/text';
 import styles from './styles.css';
@@ -13,11 +12,54 @@ import urls from '../../../../utils/urls';
 import { getCoverImage } from '../../../../utils/entityImages';
 import Embed from '../../../Embed';
 import { POST_TYPE_DIRECT_ID } from '../../../../utils/posts';
+import equalByProps from '../../../../utils/equalByProps';
+import { restoreActiveKey } from '../../../../utils/keys';
+import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
+import { authShowPopup } from '../../../../actions/auth';
+import { selectOwner, selectUserById } from '../../../../store/selectors';
+import withLoader from '../../../../utils/withLoader';
 
-const PostFeedContent = ({ post, ...props }) => {
+const PostFeedContent = ({
+  post, forUserId, forOrgId, ...props
+}) => {
+  const dispatch = useDispatch();
+  const owner = useSelector(selectOwner, equalByProps('id', 'accountName'));
+  const forUser = useSelector(selectUserById(forUserId), equalByProps('accountName'));
+  const forOrg = useSelector(selectUserById(forOrgId), equalByProps('blockchainId'));
+
   if (!post) {
     return null;
   }
+
+  const onSubmit = async (description, entityImages) => {
+    const ownerPrivateKey = restoreActiveKey();
+
+    if (!owner.id || !owner.accountName || !ownerPrivateKey) {
+      dispatch(authShowPopup());
+      return;
+    }
+
+    try {
+      await withLoader(dispatch(upadteDirectPost(
+        owner.accountName,
+        ownerPrivateKey,
+        post.blockchainId,
+        forUser && forUser.accountName,
+        post.id,
+        forOrg && forOrg.id,
+        forOrg && forOrg.blockchainId,
+        {
+          description,
+          entityImages,
+          postTypeId: post.postTypeId,
+          createdAt: post.createdAt,
+        },
+      )));
+      props.hideForm();
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
 
   return props.formIsVisible ? (
     <div className={styles.form}>
@@ -26,13 +68,7 @@ const PostFeedContent = ({ post, ...props }) => {
         entityImages={post.entityImages}
         onCancel={props.hideForm}
         formIsVisible={props.formIsVisible}
-        onSubmit={(description, entityImages) => {
-          props.hideForm();
-          props.updatePost({
-            postId: post.id,
-            data: { description, entityImages },
-          });
-        }}
+        onSubmit={onSubmit}
       />
     </div>
   ) : (
@@ -83,9 +119,4 @@ PostFeedContent.propTypes = {
   hideForm: PropTypes.func.isRequired,
 };
 
-export default connect(null, {
-  updatePost,
-})(memo(PostFeedContent, (prev, next) => (
-  prev.post.description === next.post.description &&
-  isEqual(prev.post.entityImages, next.post.entityImages)
-)));
+export default memo(PostFeedContent, equalByProps(['post.description', 'post.entityImages']));

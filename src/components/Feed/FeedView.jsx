@@ -21,6 +21,8 @@ const FeedView = props => (
               id={id}
               feedTypeId={props.feedTypeId}
               originEnabled={props.originEnabled}
+              forUserId={props.forUserId}
+              forOrgId={props.forOrgId}
             />
           </div>
         ))}
@@ -54,6 +56,8 @@ FeedView.propTypes = {
   filter: PropTypes.func,
   isMobile: PropTypes.bool,
   originEnabled: PropTypes.bool,
+  forUserId: PropTypes.number,
+  forOrgId: PropTypes.number,
 };
 
 FeedView.defaultProps = {
@@ -63,6 +67,8 @@ FeedView.defaultProps = {
   filter: null,
   isMobile: false,
   originEnabled: true,
+  forUserId: undefined,
+  forOrgId: undefined,
 };
 
 export default FeedView;

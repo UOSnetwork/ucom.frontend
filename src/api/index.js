@@ -346,30 +346,16 @@ class Api {
     return humps(response.data);
   }
 
-  async createUserCommentPost({ userId, data }) {
+  async createUserCommentPost(userId, data) {
     const url = `/api/v2/users/${userId}/posts`;
     const response = await this.actions.post(url, snakes(data));
 
     return humps(response.data);
   }
 
-  async updateUserCommentPost(userId, postId, data) {
-    const url = `/api/v2/users/${userId}/posts/${postId}`;
-    const response = await this.actions.patch(url, data);
-
-    return humps(response.data);
-  }
-
-  async createOrganizationsCommentPost({ organizationId, data }) {
-    const url = `/api/v1/organizations/${organizationId}/posts`;
+  async createOrganizationsCommentPost(orgId, data) {
+    const url = `/api/v1/organizations/${orgId}/posts`;
     const response = await this.actions.post(url, snakes(data));
-
-    return humps(response.data);
-  }
-
-  async updateOrganizationsCommentPost(orgId, postId, data) {
-    const url = `/api/v1/organizations/${orgId}/posts/${postId}`;
-    const response = await this.actions.path(url, data);
 
     return humps(response.data);
   }
