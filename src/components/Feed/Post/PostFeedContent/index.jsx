@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { Fragment, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +22,7 @@ import withLoader from '../../../../utils/withLoader';
 const PostFeedContent = ({
   post, forUserId, forOrgId, ...props
 }) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, equalByProps('id', 'accountName'));
   const forUser = useSelector(selectUserById(forUserId), equalByProps('accountName'));
@@ -32,12 +33,18 @@ const PostFeedContent = ({
   }
 
   const onSubmit = async (description, entityImages) => {
+    if (loading) {
+      return;
+    }
+
     const ownerPrivateKey = restoreActiveKey();
 
     if (!owner.id || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());
       return;
     }
+
+    setLoading(true);
 
     try {
       await withLoader(dispatch(upadteDirectPost(
@@ -59,6 +66,8 @@ const PostFeedContent = ({
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
+
+    setLoading(false);
   };
 
   return props.formIsVisible ? (
