@@ -28,6 +28,7 @@ import { getUrlsFromStr, validUrl } from '../../../utils/url';
 import loader from '../../../utils/loader';
 
 const Form = (props) => {
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(props.message);
   const [entityImages, setEntityImages] = useState({ gallery: [] });
   const [dropOnForm, setDropOnForm] = useState(false);
@@ -35,7 +36,7 @@ const Form = (props) => {
   const textareaEl = useRef(null);
   const galleryImages = getGalleryImages({ entityImages });
   const isExistGalleryImages = !!galleryImages.length;
-  const addGalleryImages = addGalleryImagesWithCatch(props.addErrorNotification);
+  const addGalleryImages = addGalleryImagesWithCatch(props.onError);
   const [embedUrlsFromMessage, setEmbedUrlsFromMessage] = useState([]);
   const [autosizeInited, setAutosizeInited] = useState(false);
 
@@ -61,18 +62,23 @@ const Form = (props) => {
     }
   };
 
-  const submit = () => {
-    if (postHasContent()) {
-      props.onSubmit({
-        message,
-        containerId: props.containerId,
-        postId: props.postId,
-        commentId: props.commentId,
-        entityImages: JSON.stringify(entityImages),
-      });
-      reset();
+  const submit = async () => {
+    if (loading || !postHasContent()) {
+      return;
     }
-    return undefined;
+
+    setLoading(true);
+
+    await props.onSubmit({
+      message,
+      containerId: props.containerId,
+      postId: props.postId,
+      commentId: props.commentId,
+      entityImages: JSON.stringify(entityImages),
+    });
+
+    setLoading(false);
+    reset();
   };
 
   const addEmbed = (data) => {
@@ -192,6 +198,7 @@ const Form = (props) => {
                   ref={textareaEl}
                   autoFocus={props.autoFocus}
                   rows="1"
+                  disabled={loading}
                   className={styles.input}
                   placeholder="Leave a comment..."
                   value={message}
@@ -264,6 +271,7 @@ Form.propTypes = {
       url: PropTypes.string.isRequired,
     })),
   }),
+  onError: PropTypes.func,
 };
 
 Form.defaultProps = {
@@ -277,6 +285,7 @@ Form.defaultProps = {
   userName: null,
   onReset: null,
   entityImages: { gallery: [] },
+  onError: undefined,
 };
 
 export default Form;

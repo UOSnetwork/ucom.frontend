@@ -61,6 +61,10 @@
   color: #C1C1C1;
 }
 
+.input:disabled {
+  opacity: 0.5;
+}
+
 .action {
   display: flex;
   align-items: center;

@@ -68,8 +68,12 @@ export const getUserById = memoize(
 
 export const getUsersByIds = memoize(
   (users, ids = [], limit) => {
-    let result = ids.map(id => getUserById(users, id))
-      .filter(user => Boolean(user));
+    let result = [];
+
+    if (ids && ids.length) {
+      result = ids.map(id => getUserById(users, id))
+        .filter(user => Boolean(user));
+    }
 
     if (limit) {
       result = result.slice(0, limit);

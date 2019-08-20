@@ -8,7 +8,7 @@
 }
 
 .loader.start .progress {
-  transition: transform 10s ease;
+  transition: transform 20s ease;
   transform: translateX(0);
 }
 

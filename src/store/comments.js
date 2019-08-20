@@ -91,13 +91,14 @@ const comments = (state = getInitialState(), action) => {
 
 export const getCommentById = (comments, commentId) => comments.data[commentId];
 
-export const getCommentsByEntryId = (comments, entryId) => (
-  Object.entries(comments.data)
-    .map(item => item[1])
-    .filter(item => item.commentableId === entryId)
-);
+export const getCommentsByIds = (comments, ids) => {
+  if (ids && ids.length) {
+    return ids.map(id => comments.data[id]);
+  }
 
-export const getCommentsByContainer = (state, containerId, entryId) =>
-  state.comments.containersData[containerId][entryId];
+  return [];
+};
+
+export const getCommentsByContainer = (state, containerId, entryId) => state.comments.containersData[containerId][entryId];
 
 export default comments;

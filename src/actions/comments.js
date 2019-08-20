@@ -1,8 +1,13 @@
+import { omit } from 'lodash';
+import Wallet from 'ucom-libs-wallet';
 import api from '../api';
 import graphql from '../api/graphql';
 import loader from '../utils/loader';
 import { addServerErrorNotification } from './notifications';
 import { addUsers } from './users';
+import { searchTags } from '../utils/text';
+
+const { PublicationsApi } = Wallet.Content;
 
 export const addComments = comments => (dispatch) => {
   const users = [];
@@ -16,10 +21,7 @@ export const addComments = comments => (dispatch) => {
   });
 
   dispatch(addUsers(users));
-  dispatch({
-    type: 'ADD_COMMENTS',
-    payload: comments,
-  });
+  dispatch({ type: 'ADD_COMMENTS', payload: comments });
 };
 
 export const commentsResetContainerDataByEntryId = ({
@@ -121,24 +123,79 @@ export const getCommentsOnComment = ({
   loader.done();
 };
 
-export const createComment = ({
+export const createComment = (
+  ownerId,
+  ownerAccountName,
+  ownerPrivateKey,
+  postId,
+  postBlockchainId,
   containerId,
   data,
-  postId,
   commentId,
-}) => async (dispatch) => {
-  loader.start();
+  commentBlockchainId,
+  orgBlockchainId,
+) => async (dispatch) => {
   try {
-    const commentData = await api.createComment(data, postId, commentId);
-    commentData.isNew = true;
+    const commentContent = {
+      description: data.description,
+      entity_images: data.entityImages,
+      entity_tags: searchTags(data.description),
+    };
+    let signed_transaction;
+    let blockchain_id;
+
+    if (orgBlockchainId && !commentBlockchainId) {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+        ownerAccountName,
+        ownerPrivateKey,
+        postBlockchainId,
+        orgBlockchainId,
+        commentContent,
+        false,
+      ));
+    } else if (orgBlockchainId && commentBlockchainId) {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+        ownerAccountName,
+        ownerPrivateKey,
+        commentBlockchainId,
+        orgBlockchainId,
+        commentContent,
+        true,
+      ));
+    } else if (commentBlockchainId) {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+        ownerAccountName,
+        ownerPrivateKey,
+        commentBlockchainId,
+        commentContent,
+        true,
+      ));
+    } else {
+      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+        ownerAccountName,
+        ownerPrivateKey,
+        postBlockchainId,
+        commentContent,
+        false,
+      ));
+    }
+
+    const comment = await api.createComment(
+      {
+        ...omit(commentContent, ['entity_tags']),
+        signed_transaction: JSON.stringify(signed_transaction),
+        blockchain_id,
+      },
+      postId,
+      commentId,
+    );
+
     dispatch(commentsAddContainerData({
       containerId,
       entryId: postId,
-      comments: [commentData],
+      comments: [{ ...comment, isNew: true }],
     }));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
+  } catch (err) {
+    throw err;
   }
-  loader.done();
 };
