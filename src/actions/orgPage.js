@@ -39,30 +39,25 @@ export const getPageData = orgIdentity => async (dispatch) => {
 };
 
 export const getFollowedByPopup = (orgIdentity, page) => async (dispatch) => {
-  try {
-    const { data, metadata } = await graphql.getOrganizationActivity({
-      filters: {
-        organization_identity: `${orgIdentity}`,
-        activity: 'followed_by',
-      },
-      order_by: LIST_ORDER_BY_RATE,
-      per_page: LIST_PER_PAGE,
-      page,
-    });
+  const { data, metadata } = await graphql.getOrganizationActivity({
+    filters: {
+      organization_identity: `${orgIdentity}`,
+      activity: 'followed_by',
+    },
+    order_by: LIST_ORDER_BY_RATE,
+    per_page: LIST_PER_PAGE,
+    page,
+  });
 
-    dispatch(addUsers(data));
+  dispatch(addUsers(data));
 
-    dispatch(setData({
-      followedByPopup: {
-        ids: data.map(i => i.id),
-        metadata,
-      },
-      followedBy: {
-        metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    followedByPopup: {
+      ids: data.map(i => i.id),
+      metadata,
+    },
+    followedBy: {
+      metadata,
+    },
+  }));
 };

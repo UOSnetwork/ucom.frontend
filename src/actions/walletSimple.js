@@ -21,17 +21,14 @@ export const walletToggleSendTokens = visible => ({
 });
 
 export const walletGetAccount = accountName => async (dispatch) => {
-  try {
-    const data = await api.getAccountState(accountName);
-    data.tokens.uosFutures = await api.getAccountBalance(accountName, 'UOSF');
-    dispatch({
-      type: 'WALLET_SET_DATA',
-      payload: data,
-    });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const data = await api.getAccountState(accountName);
+
+  data.tokens.uosFutures = await api.getAccountBalance(accountName, 'UOSF');
+
+  dispatch({
+    type: 'WALLET_SET_DATA',
+    payload: data,
+  });
 };
 
 export const walletBuyRam = (
@@ -39,14 +36,11 @@ export const walletBuyRam = (
   amount,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const data = await api.buyRam(accountName, amount, privateKey);
-    dispatch(walletGetAccount(accountName));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw (e);
-  }
+  const data = await api.buyRam(accountName, amount, privateKey);
+
+  dispatch(walletGetAccount(accountName));
+
+  return data;
 };
 
 export const walletSellRam = (
@@ -54,14 +48,11 @@ export const walletSellRam = (
   amount,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const data = await api.sellRam(accountName, amount, privateKey);
-    dispatch(walletGetAccount(accountName));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw (e);
-  }
+  const data = await api.sellRam(accountName, amount, privateKey);
+
+  dispatch(walletGetAccount(accountName));
+
+  return data;
 };
 
 export const walletEditStake = (
@@ -70,14 +61,11 @@ export const walletEditStake = (
   cpuAmount,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const data = await api.stakeOrUnstakeTokens(accountName, netAmount, cpuAmount, privateKey);
-    dispatch(walletGetAccount(accountName));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw (e);
-  }
+  const data = await api.stakeOrUnstakeTokens(accountName, netAmount, cpuAmount, privateKey);
+
+  dispatch(walletGetAccount(accountName));
+
+  return data;
 };
 
 export const walletSendTokens = (
@@ -87,26 +75,20 @@ export const walletSendTokens = (
   memo,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const data = await api.sendTokens(accountNameFrom, accountNameTo, amount, memo, privateKey);
-    dispatch(walletGetAccount(accountNameFrom));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw (e);
-  }
+  const data = await api.sendTokens(accountNameFrom, accountNameTo, amount, memo, privateKey);
+
+  dispatch(walletGetAccount(accountNameFrom));
+
+  return data;
 };
 
 export const walletGetEmission = (
   accountName,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const data = await api.claimEmission(accountName, privateKey);
-    dispatch(walletGetAccount(accountName));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw (e);
-  }
+  const data = await api.claimEmission(accountName, privateKey);
+
+  dispatch(walletGetAccount(accountName));
+
+  return data;
 };

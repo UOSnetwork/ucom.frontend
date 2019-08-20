@@ -135,67 +135,65 @@ export const createComment = (
   commentBlockchainId,
   orgBlockchainId,
 ) => async (dispatch) => {
-  try {
-    const commentContent = {
-      description: data.description,
-      entity_images: data.entityImages,
-      entity_tags: searchTags(data.description),
-    };
-    let signed_transaction;
-    let blockchain_id;
+  const commentContent = {
+    description: data.description,
+    entity_images: data.entityImages,
+    entity_tags: searchTags(data.description),
+  };
+  let signed_transaction;
+  let blockchain_id;
 
-    if (orgBlockchainId && !commentBlockchainId) {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
-        ownerAccountName,
-        ownerPrivateKey,
-        postBlockchainId,
-        orgBlockchainId,
-        commentContent,
-        false,
-      ));
-    } else if (orgBlockchainId && commentBlockchainId) {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
-        ownerAccountName,
-        ownerPrivateKey,
-        commentBlockchainId,
-        orgBlockchainId,
-        commentContent,
-        true,
-      ));
-    } else if (commentBlockchainId) {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
-        ownerAccountName,
-        ownerPrivateKey,
-        commentBlockchainId,
-        commentContent,
-        true,
-      ));
-    } else {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
-        ownerAccountName,
-        ownerPrivateKey,
-        postBlockchainId,
-        commentContent,
-        false,
-      ));
-    }
-
-    const comment = await api.createComment(
-      {
-        ...omit(commentContent, ['entity_tags']),
-        signed_transaction: JSON.stringify(signed_transaction),
-        blockchain_id,
-      },
-      postId,
-      commentId,
-    );
-
-    dispatch(commentsAddContainerData({
-      containerId,
-      entryId: postId,
-      comments: [{ ...comment, isNew: true }],
-    }));
-  } catch (err) {
-    throw err;
+  if (orgBlockchainId && !commentBlockchainId) {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+      ownerAccountName,
+      ownerPrivateKey,
+      postBlockchainId,
+      orgBlockchainId,
+      commentContent,
+      false,
+    ));
+  } else if (orgBlockchainId && commentBlockchainId) {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+      ownerAccountName,
+      ownerPrivateKey,
+      commentBlockchainId,
+      orgBlockchainId,
+      commentContent,
+      true,
+    ));
+  } else if (commentBlockchainId) {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+      ownerAccountName,
+      ownerPrivateKey,
+      commentBlockchainId,
+      commentContent,
+      true,
+    ));
+  } else {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+      ownerAccountName,
+      ownerPrivateKey,
+      postBlockchainId,
+      commentContent,
+      false,
+    ));
   }
+
+  const comment = await api.createComment(
+    {
+      ...omit(commentContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+      blockchain_id,
+    },
+    postId,
+    commentId,
+  );
+
+  dispatch(commentsAddContainerData({
+    containerId,
+    entryId: postId,
+    comments: [{ ...comment, isNew: true }],
+  }));
+
+  return comment;
 };

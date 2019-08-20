@@ -90,115 +90,90 @@ export const getTrustedBy = userIdentity => async (dispatch) => {
 };
 
 export const getTrustedByPopup = (userIdentity, page) => async (dispatch) => {
-  try {
-    const { data, metadata } = await graphql.getUserTrustedBy({
-      userIdentity,
-      page,
-    });
+  const { data, metadata } = await graphql.getUserTrustedBy({
+    userIdentity,
+    page,
+  });
 
-    dispatch(addUsers(data));
+  dispatch(addUsers(data));
 
-    dispatch(setData({
-      trustedByPopup: {
-        metadata,
-        ids: data.map(i => i.id),
-      },
-      trustedBy: {
-        metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    trustedByPopup: {
+      metadata,
+      ids: data.map(i => i.id),
+    },
+    trustedBy: {
+      metadata,
+    },
+  }));
 };
 
 export const submitTrust = (userIdentity, isTrust, params) => async (dispatch) => {
-  try {
-    dispatch(setData({
-      trustLoading: true,
-    }));
+  dispatch(setData({
+    trustLoading: true,
+  }));
 
-    await dispatch((isTrust ? trustUser : untrustUser)(params));
-    await dispatch(getTrustedBy(userIdentity));
+  await dispatch((isTrust ? trustUser : untrustUser)(params));
+  await dispatch(getTrustedBy(userIdentity));
 
-    dispatch(setData({
-      trustLoading: false,
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    trustLoading: false,
+  }));
 };
 
 export const getOrgsPopup = (userIdentity, page) => async (dispatch) => {
-  try {
-    const { data, metadata } = await graphql.getUserFollowsOrganizations({
-      userIdentity,
-      page,
-    });
+  const { data, metadata } = await graphql.getUserFollowsOrganizations({
+    userIdentity,
+    page,
+  });
 
-    dispatch(addOrganizations(data));
+  dispatch(addOrganizations(data));
 
-    dispatch(setData({
-      orgsPopup: {
-        ids: data.map(i => i.id),
-        metadata,
-      },
-      orgs: {
-        metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    orgsPopup: {
+      ids: data.map(i => i.id),
+      metadata,
+    },
+    orgs: {
+      metadata,
+    },
+  }));
 };
 
 export const getIFollowPopup = (userIdentity, page) => async (dispatch) => {
-  try {
-    const { data, metadata } = await graphql.getUserIFollow({
-      userIdentity,
-      page,
-    });
+  const { data, metadata } = await graphql.getUserIFollow({
+    userIdentity,
+    page,
+  });
 
-    dispatch(addUsers(data));
+  dispatch(addUsers(data));
 
-    dispatch(setData({
-      iFollowPopup: {
-        ids: data.map(i => i.id),
-        metadata,
-      },
-      iFollow: {
-        metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    iFollowPopup: {
+      ids: data.map(i => i.id),
+      metadata,
+    },
+    iFollow: {
+      metadata,
+    },
+  }));
 };
 
 export const getFollowedByPopup = (userIdentity, page) => async (dispatch) => {
-  try {
-    const { data, metadata } = await graphql.getUserFollowedBy({
-      userIdentity,
-      page,
-    });
+  const { data, metadata } = await graphql.getUserFollowedBy({
+    userIdentity,
+    page,
+  });
 
-    dispatch(addUsers(data));
+  dispatch(addUsers(data));
 
-    dispatch(setData({
-      followedByPopup: {
-        ids: data.map(i => i.id),
-        metadata,
-      },
-      followedBy: {
-        metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    followedByPopup: {
+      ids: data.map(i => i.id),
+      metadata,
+    },
+    followedBy: {
+      metadata,
+    },
+  }));
 };

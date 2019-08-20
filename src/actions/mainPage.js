@@ -158,53 +158,38 @@ export const getFeed = (activeTabId, page) => async (dispatch, getState) => {
 };
 
 export const getUsersForPopup = page => async (dispatch) => {
-  try {
-    const data = await graphql.getManyUsers({ page });
+  const data = await graphql.getManyUsers({ page });
 
-    dispatch(addUsers(data.data));
-    dispatch(setData({
-      usersPopup: {
-        ids: data.data.map(user => user.id),
-        metadata: data.metadata,
-      },
-    }));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(addUsers(data.data));
+  dispatch(setData({
+    usersPopup: {
+      ids: data.data.map(user => user.id),
+      metadata: data.metadata,
+    },
+  }));
 };
 
 export const getOrganizationsForPopup = (page, activeTabId = TAB_ID_COMMUNITIES) => async (dispatch) => {
-  try {
-    const data = await (activeTabId === TAB_ID_PEOPLE ?
-      graphql.getHotOrganizations({ page }) :
-      graphql.getTrendingOrganizations({ page }));
+  const data = await (activeTabId === TAB_ID_PEOPLE ?
+    graphql.getHotOrganizations({ page }) :
+    graphql.getTrendingOrganizations({ page }));
 
-    dispatch(setData({
-      organizationsPopup: {
-        ids: data.manyOrganizations.data.map(org => org.id),
-        metadata: data.manyOrganizations.metadata,
-      },
-    }));
-    dispatch(addOrganizations(data.manyOrganizations.data));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  dispatch(setData({
+    organizationsPopup: {
+      ids: data.manyOrganizations.data.map(org => org.id),
+      metadata: data.manyOrganizations.metadata,
+    },
+  }));
+  dispatch(addOrganizations(data.manyOrganizations.data));
 };
 
 export const getTagsForPopup = page => async (dispatch) => {
-  try {
-    const data = await graphql.getTrendingTags({ page });
-    dispatch(setData({
-      tagsPopup: {
-        ids: data.manyTags.data.map(tag => tag.title),
-        metadata: data.manyTags.metadata,
-      },
-    }));
-    dispatch(addTags(data.manyTags.data));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const data = await graphql.getTrendingTags({ page });
+  dispatch(setData({
+    tagsPopup: {
+      ids: data.manyTags.data.map(tag => tag.title),
+      metadata: data.manyTags.metadata,
+    },
+  }));
+  dispatch(addTags(data.manyTags.data));
 };

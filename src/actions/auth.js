@@ -27,20 +27,15 @@ export const login = (brainkey, accountName) => async (dispatch, getState) => {
   const state = getState();
   const { redirectUrl } = state.auth;
 
-  try {
-    const data = await api.login(snakes({ brainkey, accountName }));
+  const data = await api.login(snakes({ brainkey, accountName }));
 
-    saveToken(data.token);
-    saveActiveKey(getActivePrivateKey(brainkey));
+  saveToken(data.token);
+  saveActiveKey(getActivePrivateKey(brainkey));
 
-    if (redirectUrl) {
-      window.location.replace(redirectUrl);
-    } else {
-      window.location.reload();
-    }
-  } catch (err) {
-    console.error(err);
-    throw err;
+  if (redirectUrl) {
+    window.location.replace(redirectUrl);
+  } else {
+    window.location.reload();
   }
 };
 
@@ -49,13 +44,9 @@ export const checkBrainkey = brainkey => async (dispatch, getState) => {
   const owner = selectOwner(state);
   const { accountName } = owner;
 
-  try {
-    const data = await api.login(snakes({ brainkey, accountName }));
-    saveToken(data.token);
-    saveActiveKey(getActivePrivateKey(brainkey));
-    return true;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const data = await api.login(snakes({ brainkey, accountName }));
+  saveToken(data.token);
+  saveActiveKey(getActivePrivateKey(brainkey));
+
+  return true;
 };

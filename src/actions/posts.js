@@ -41,30 +41,21 @@ export const addPosts = (postsData = []) => (dispatch) => {
 export const postsFetch = ({
   postId,
 }) => async (dispatch) => {
-  try {
-    const data = await graphql.getOnePost({ postId });
-    dispatch(commentsAddContainerData({
-      containerId: COMMENTS_CONTAINER_ID_POST,
-      entryId: postId,
-      parentId: 0,
-      comments: data.comments.data,
-      metadata: data.comments.metadata,
-    }));
-    delete data.comments;
-    dispatch(addPosts([data]));
-    return data;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const data = await graphql.getOnePost({ postId });
+  dispatch(commentsAddContainerData({
+    containerId: COMMENTS_CONTAINER_ID_POST,
+    entryId: postId,
+    parentId: 0,
+    comments: data.comments.data,
+    metadata: data.comments.metadata,
+  }));
+  delete data.comments;
+  dispatch(addPosts([data]));
+  return data;
 };
 
 export const addRepost = postId => async () => {
-  try {
-    await api.repostPost(postId);
-  } catch (err) {
-    throw err;
-  }
+  await api.repostPost(postId);
 };
 
 export const getOnePostOffer = ({
@@ -73,27 +64,22 @@ export const getOnePostOffer = ({
   commentsPerPage,
   usersTeamQuery,
 }, options) => async (dispatch) => {
-  try {
-    const data = await graphql.getOnePostOffer({
-      postId,
-      commentsPage,
-      commentsPerPage,
-      usersTeamQuery,
-    }, options);
-    dispatch(commentsAddContainerData({
-      containerId: COMMENTS_CONTAINER_ID_POST,
-      entryId: postId,
-      parentId: 0,
-      comments: data.onePostOffer.comments.data,
-      metadata: data.onePostOffer.comments.metadata,
-    }));
-    delete data.onePostOffer.comments;
-    dispatch(addPosts([data.onePostOffer]));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const data = await graphql.getOnePostOffer({
+    postId,
+    commentsPage,
+    commentsPerPage,
+    usersTeamQuery,
+  }, options);
+  dispatch(commentsAddContainerData({
+    containerId: COMMENTS_CONTAINER_ID_POST,
+    entryId: postId,
+    parentId: 0,
+    comments: data.onePostOffer.comments.data,
+    metadata: data.onePostOffer.comments.metadata,
+  }));
+  delete data.onePostOffer.comments;
+  dispatch(addPosts([data.onePostOffer]));
+  return data;
 };
 
 export const getOnePostOfferWithUserAirdrop = ({
@@ -103,28 +89,23 @@ export const getOnePostOfferWithUserAirdrop = ({
   commentsPerPage,
   usersTeamQuery,
 }, options) => async (dispatch) => {
-  try {
-    const data = await graphql.getOnePostOfferWithUserAirdrop({
-      airdropFilter,
-      postId,
-      commentsPage,
-      commentsPerPage,
-      usersTeamQuery,
-    }, options);
-    dispatch(commentsAddContainerData({
-      containerId: COMMENTS_CONTAINER_ID_POST,
-      entryId: postId,
-      parentId: 0,
-      comments: data.onePostOffer.comments.data,
-      metadata: data.onePostOffer.comments.metadata,
-    }));
-    delete data.onePostOffer.comments;
-    dispatch(addPosts([data.onePostOffer]));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const data = await graphql.getOnePostOfferWithUserAirdrop({
+    airdropFilter,
+    postId,
+    commentsPage,
+    commentsPerPage,
+    usersTeamQuery,
+  }, options);
+  dispatch(commentsAddContainerData({
+    containerId: COMMENTS_CONTAINER_ID_POST,
+    entryId: postId,
+    parentId: 0,
+    comments: data.onePostOffer.comments.data,
+    metadata: data.onePostOffer.comments.metadata,
+  }));
+  delete data.onePostOffer.comments;
+  dispatch(addPosts([data.onePostOffer]));
+  return data;
 };
 
 export const createMediaPost = (
@@ -138,38 +119,34 @@ export const createMediaPost = (
   accountName,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const content = {
-      title,
-      description,
-      leading_text: leadingText,
-      entity_images: entityImages,
-      entity_tags: searchTags(description),
-    };
+  const content = {
+    title,
+    description,
+    leading_text: leadingText,
+    entity_images: entityImages,
+    entity_tags: searchTags(description),
+  };
 
-    let transaction;
+  let transaction;
 
-    if (organizationId) {
-      const organization = await dispatch(getOrganization(organizationId));
-      transaction = await PublicationsApi.signCreatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content);
-    } else {
-      transaction = await PublicationsApi.signCreatePublicationFromUser(accountName, privateKey, content);
-    }
-
-    const data = {
-      ...omit(content, ['entity_tags']),
-      ...(organizationId ? { organization_id: organizationId } : null),
-      post_type_id: POST_TYPE_MEDIA_ID,
-      signed_transaction: JSON.stringify(transaction.signed_transaction),
-      blockchain_id: transaction.blockchain_id,
-    };
-
-    const result = await api.createPost(data);
-
-    return result;
-  } catch (err) {
-    throw err;
+  if (organizationId) {
+    const organization = await dispatch(getOrganization(organizationId));
+    transaction = await PublicationsApi.signCreatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content);
+  } else {
+    transaction = await PublicationsApi.signCreatePublicationFromUser(accountName, privateKey, content);
   }
+
+  const data = {
+    ...omit(content, ['entity_tags']),
+    ...(organizationId ? { organization_id: organizationId } : null),
+    post_type_id: POST_TYPE_MEDIA_ID,
+    signed_transaction: JSON.stringify(transaction.signed_transaction),
+    blockchain_id: transaction.blockchain_id,
+  };
+
+  const result = await api.createPost(data);
+
+  return result;
 };
 
 export const updateMediaPost = (
@@ -186,39 +163,35 @@ export const updateMediaPost = (
   accountName,
   privateKey,
 ) => async (dispatch) => {
-  try {
-    const content = {
-      title,
-      description,
-      leading_text: leadingText,
-      entity_images: entityImages,
-      entity_tags: searchTags(description),
-      created_at: createdAt,
-      blockchain_id: blockchainId,
-    };
+  const content = {
+    title,
+    description,
+    leading_text: leadingText,
+    entity_images: entityImages,
+    entity_tags: searchTags(description),
+    created_at: createdAt,
+    blockchain_id: blockchainId,
+  };
 
-    let signed_transaction;
+  let signed_transaction;
 
-    if (organizationId) {
-      const organization = await dispatch(getOrganization(organizationId));
-      signed_transaction = await PublicationsApi.signUpdatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content, blockchainId);
-    } else {
-      signed_transaction = await PublicationsApi.signUpdatePublicationFromUser(accountName, privateKey, content, blockchainId);
-    }
-
-    const data = {
-      ...omit(content, ['entity_tags']),
-      ...(organizationId ? { organization_id: organizationId } : null),
-      post_type_id: POST_TYPE_MEDIA_ID,
-      signed_transaction: JSON.stringify(signed_transaction),
-    };
-
-    const result = await api.updatePost(data, id);
-
-    return result;
-  } catch (err) {
-    throw err;
+  if (organizationId) {
+    const organization = await dispatch(getOrganization(organizationId));
+    signed_transaction = await PublicationsApi.signUpdatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content, blockchainId);
+  } else {
+    signed_transaction = await PublicationsApi.signUpdatePublicationFromUser(accountName, privateKey, content, blockchainId);
   }
+
+  const data = {
+    ...omit(content, ['entity_tags']),
+    ...(organizationId ? { organization_id: organizationId } : null),
+    post_type_id: POST_TYPE_MEDIA_ID,
+    signed_transaction: JSON.stringify(signed_transaction),
+  };
+
+  const result = await api.updatePost(data, id);
+
+  return result;
 };
 
 export const createDirectPost = (
@@ -231,54 +204,50 @@ export const createDirectPost = (
   orgBlockchainId,
   data,
 ) => async (dispatch) => {
-  try {
-    const postContent = {
-      description: data.description,
-      entity_images: data.entityImages,
-      post_type_id: data.postTypeId,
-      entity_tags: searchTags(data.description),
-    };
+  const postContent = {
+    description: data.description,
+    entity_images: data.entityImages,
+    post_type_id: data.postTypeId,
+    entity_tags: searchTags(data.description),
+  };
 
-    let signed_transaction;
-    let blockchain_id;
-    let post;
+  let signed_transaction;
+  let blockchain_id;
+  let post;
 
-    if (!orgBlockchainId) {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForAccount(
-        ownerAccountName,
-        ownerPrivateKey,
-        userAccountName,
-        postContent,
-      ));
-    } else {
-      ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForOrganization(
-        ownerAccountName,
-        orgBlockchainId,
-        ownerPrivateKey,
-        postContent,
-      ));
-    }
-
-    if (!orgId) {
-      post = await api.createUserCommentPost(userId, {
-        ...omit(postContent, ['entity_tags']),
-        signed_transaction: JSON.stringify(signed_transaction),
-        blockchain_id,
-      });
-    } else {
-      post = await api.createOrganizationsCommentPost(orgId, {
-        ...omit(postContent, ['entity_tags']),
-        signed_transaction: JSON.stringify(signed_transaction),
-        blockchain_id,
-      });
-    }
-
-    dispatch(addPosts([post]));
-
-    return post;
-  } catch (err) {
-    throw err;
+  if (!orgBlockchainId) {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForAccount(
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
+      postContent,
+    ));
+  } else {
+    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForOrganization(
+      ownerAccountName,
+      orgBlockchainId,
+      ownerPrivateKey,
+      postContent,
+    ));
   }
+
+  if (!orgId) {
+    post = await api.createUserCommentPost(userId, {
+      ...omit(postContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+      blockchain_id,
+    });
+  } else {
+    post = await api.createOrganizationsCommentPost(orgId, {
+      ...omit(postContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+      blockchain_id,
+    });
+  }
+
+  dispatch(addPosts([post]));
+
+  return post;
 };
 
 export const upadteDirectPost = (
@@ -291,46 +260,42 @@ export const upadteDirectPost = (
   orgBlockchainId,
   data,
 ) => async (dispatch) => {
-  try {
-    const postContent = {
-      id: data.id,
-      description: data.description,
-      entity_images: data.entityImages,
-      post_type_id: data.postTypeId,
-      entity_tags: searchTags(data.description),
-      blockchain_id: data.blockchainId,
-      created_at: data.createdAt,
-    };
+  const postContent = {
+    id: data.id,
+    description: data.description,
+    entity_images: data.entityImages,
+    post_type_id: data.postTypeId,
+    entity_tags: searchTags(data.description),
+    blockchain_id: data.blockchainId,
+    created_at: data.createdAt,
+  };
 
-    let signed_transaction;
+  let signed_transaction;
 
-    if (!orgId) {
-      signed_transaction = await PublicationsApi.signUpdateDirectPostForAccount(
-        ownerAccountName,
-        ownerPrivateKey,
-        userAccountName,
-        postContent,
-        postBlockchainId,
-      );
-    } else {
-      signed_transaction = await PublicationsApi.signUpdateDirectPostForOrganization(
-        ownerAccountName,
-        ownerPrivateKey,
-        orgBlockchainId,
-        postContent,
-        postBlockchainId,
-      );
-    }
-
-    const post = await api.updatePost({
-      ...omit(postContent, ['entity_tags']),
-      signed_transaction: JSON.stringify(signed_transaction),
-    }, postId);
-
-    dispatch(addPosts([post]));
-
-    return post;
-  } catch (err) {
-    throw err;
+  if (!orgId) {
+    signed_transaction = await PublicationsApi.signUpdateDirectPostForAccount(
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
+      postContent,
+      postBlockchainId,
+    );
+  } else {
+    signed_transaction = await PublicationsApi.signUpdateDirectPostForOrganization(
+      ownerAccountName,
+      ownerPrivateKey,
+      orgBlockchainId,
+      postContent,
+      postBlockchainId,
+    );
   }
+
+  const post = await api.updatePost({
+    ...omit(postContent, ['entity_tags']),
+    signed_transaction: JSON.stringify(signed_transaction),
+  }, postId);
+
+  dispatch(addPosts([post]));
+
+  return post;
 };

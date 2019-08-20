@@ -93,30 +93,25 @@ export const fetchMyself = () => async (dispatch) => {
 };
 
 export const fetchUser = userIdentity => async (dispatch) => {
-  try {
-    const data = await graphql.fetchUser({ userIdentity });
-    dispatch(addUsers([data]));
-    return data;
-  } catch (e) {
-    throw e;
-  }
+  const data = await graphql.fetchUser({ userIdentity });
+
+  dispatch(addUsers([data]));
+
+  return data;
 };
 
 export const fetchUserPageData = ({
   userIdentity,
 }) => async (dispatch) => {
-  try {
-    const data = await graphql.getUserPageData({
-      userIdentity,
-    });
-    const { oneUser, oneUserTrustedBy, oneUserFollowsOrganizations } = data;
+  const data = await graphql.getUserPageData({
+    userIdentity,
+  });
+  const { oneUser, oneUserTrustedBy, oneUserFollowsOrganizations } = data;
 
-    dispatch(addUsers(oneUserTrustedBy.data.concat([oneUser])));
-    dispatch(addOrganizations(oneUserFollowsOrganizations.data));
-    return data;
-  } catch (e) {
-    throw e;
-  }
+  dispatch(addUsers(oneUserTrustedBy.data.concat([oneUser])));
+  dispatch(addOrganizations(oneUserFollowsOrganizations.data));
+
+  return data;
 };
 
 export const fetchUserTrustedBy = ({
@@ -125,18 +120,16 @@ export const fetchUserTrustedBy = ({
   perPage,
   page,
 }) => async (dispatch) => {
-  try {
-    const data = await graphql.getUserTrustedBy({
-      userIdentity,
-      orderBy,
-      perPage,
-      page,
-    });
-    dispatch(addUsers(data.data));
-    return data;
-  } catch (e) {
-    throw e;
-  }
+  const data = await graphql.getUserTrustedBy({
+    userIdentity,
+    orderBy,
+    perPage,
+    page,
+  });
+
+  dispatch(addUsers(data.data));
+
+  return data;
 };
 
 export const fetchUserFollowsOrganizations = ({
@@ -145,18 +138,16 @@ export const fetchUserFollowsOrganizations = ({
   perPage,
   page,
 }) => async (dispatch) => {
-  try {
-    const data = await graphql.getUserFollowsOrganizations({
-      userIdentity,
-      orderBy,
-      perPage,
-      page,
-    });
-    dispatch(addOrganizations(data.data));
-    return data;
-  } catch (e) {
-    throw e;
-  }
+  const data = await graphql.getUserFollowsOrganizations({
+    userIdentity,
+    orderBy,
+    perPage,
+    page,
+  });
+
+  dispatch(addOrganizations(data.data));
+
+  return data;
 };
 
 export const updateUser = userData => async (dispatch) => {
@@ -177,21 +168,16 @@ export const updateUser = userData => async (dispatch) => {
     throw new Error('UserData object is not valid');
   }
 
-  try {
-    const signedTransaction = await ContentApi.updateProfile(userData.accountName, activeKey, dataAsJson);
+  const signedTransaction = await ContentApi.updateProfile(userData.accountName, activeKey, dataAsJson);
 
-    const dataForApi = {
-      ...userData,
-      entityImages: JSON.stringify(userData.entityImages),
-      signedTransaction: JSON.stringify(signedTransaction),
-    };
+  const dataForApi = {
+    ...userData,
+    entityImages: JSON.stringify(userData.entityImages),
+    signedTransaction: JSON.stringify(signedTransaction),
+  };
 
-    await api.patchMyself(dataForApi);
-    dispatch(fetchUser(userData.id));
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  await api.patchMyself(dataForApi);
+  await dispatch(fetchUser(userData.id));
 };
 
 export const getManyUsersAirdrop = ({
@@ -201,20 +187,17 @@ export const getManyUsersAirdrop = ({
   perPage,
   isMyself,
 }) => async (dispatch) => {
-  try {
-    const data = await graphql.getManyUsersAirdrop({
-      airdropFilter,
-      orderBy,
-      page,
-      perPage,
-      isMyself,
-    });
-    dispatch(addUsers([data]));
-    return data;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const data = await graphql.getManyUsersAirdrop({
+    airdropFilter,
+    orderBy,
+    page,
+    perPage,
+    isMyself,
+  });
+
+  dispatch(addUsers([data]));
+
+  return data;
 };
 
 export const trustUser = ({
@@ -223,24 +206,20 @@ export const trustUser = ({
   ownerAccountName,
   activeKey,
 }) => async (dispatch) => {
-  try {
-    await api.trustUser(
-      ownerAccountName,
-      userAccountName,
+  await api.trustUser(
+    ownerAccountName,
+    userAccountName,
+    userId,
+    activeKey,
+  );
+
+  dispatch({
+    type: 'USERS_SET_TRUST',
+    payload: {
       userId,
-      activeKey,
-    );
-    dispatch({
-      type: 'USERS_SET_TRUST',
-      payload: {
-        userId,
-        trust: true,
-      },
-    });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+      trust: true,
+    },
+  });
 };
 
 export const untrustUser = ({
@@ -249,22 +228,18 @@ export const untrustUser = ({
   ownerAccountName,
   activeKey,
 }) => async (dispatch) => {
-  try {
-    await api.untrustUser(
-      ownerAccountName,
-      userAccountName,
+  await api.untrustUser(
+    ownerAccountName,
+    userAccountName,
+    userId,
+    activeKey,
+  );
+
+  dispatch({
+    type: 'USERS_SET_TRUST',
+    payload: {
       userId,
-      activeKey,
-    );
-    dispatch({
-      type: 'USERS_SET_TRUST',
-      payload: {
-        userId,
-        trust: false,
-      },
-    });
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+      trust: false,
+    },
+  });
 };
