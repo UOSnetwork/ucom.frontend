@@ -27,10 +27,12 @@ import {
   addErrorNotification,
   addErrorNotificationFromResponse,
 } from '../../actions/notifications';
-import { updateOrganization, createOrganization } from '../../actions/organizations';
+import { saveOrganization } from '../../actions/organizations';
+import { authShowPopup } from '../../actions/auth';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
 import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import EmbedService from '../../utils/embedService';
+import { restoreActiveKey } from '../../utils/keys';
 import styles from './styles.css';
 
 const defaultOrg = {
@@ -50,7 +52,7 @@ const defaultOrg = {
   entityImages: {},
 };
 
-const ORG_EDITABLE_PROPS = ['id', ...Object.keys(defaultOrg)];
+const ORG_EDITABLE_PROPS = ['id', 'blockchainId', ...Object.keys(defaultOrg)];
 
 const OrganizationProfile = ({
   owner,
@@ -94,11 +96,26 @@ const OrganizationProfile = ({
       return;
     }
 
+    const ownerPrivateKey = restoreActiveKey();
+
+    if (!owner || !owner.accountName || !ownerPrivateKey) {
+      dispatch(authShowPopup());
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await withLoader(data.id ? dispatch(updateOrganization(data)) : dispatch(createOrganization(data)));
+      const result = await withLoader(dispatch(saveOrganization(
+        owner.accountName,
+        ownerPrivateKey,
+        data.id,
+        data.blockchainId,
+        data,
+      )));
+
       dispatch(addSuccessNotification(data.id ? 'Community has been saved' : 'Community has been created'));
+
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
