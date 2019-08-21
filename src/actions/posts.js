@@ -54,10 +54,6 @@ export const postsFetch = ({
   return data;
 };
 
-export const addRepost = postId => async () => {
-  await api.repostPost(postId);
-};
-
 export const getOnePostOffer = ({
   postId,
   commentsPage,
@@ -298,4 +294,30 @@ export const upadteDirectPost = (
   dispatch(addPosts([post]));
 
   return post;
+};
+
+export const createRepost = (
+  ownerAccountName,
+  ownerPrivateKey,
+  postBlockchainId,
+  postId,
+) => async () => {
+  const postContent = {
+    parent_id: postId,
+  };
+
+  const { signed_transaction, blockchain_id } = await PublicationsApi.signCreateRepostPostForAccount(
+    ownerAccountName,
+    ownerPrivateKey,
+    postBlockchainId,
+    postContent,
+  );
+
+  const result = await api.repostPost(postId, {
+    ...postContent,
+    signed_transaction: JSON.stringify(signed_transaction),
+    blockchain_id,
+  });
+
+  return result;
 };

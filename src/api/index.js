@@ -102,8 +102,8 @@ class Api {
     return response.data;
   }
 
-  async repostPost(postId) {
-    const response = await this.actions.post(`/api/v1/posts/${postId}/repost`);
+  async repostPost(postId, data) {
+    const response = await this.actions.post(`/api/v1/posts/${postId}/repost`, snakes(data));
 
     return response.data;
   }

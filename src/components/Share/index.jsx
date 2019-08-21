@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
 import Tippy from '@tippy.js/react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import IconFacebook from '../Icons/Socials/Share/Facebook';
 import IconTwitter from '../Icons/Socials/Share/Twitter';
 import IconTelegram from '../Icons/Socials/Share/Telegram';
@@ -11,7 +11,11 @@ import { copyToClipboard } from '../../utils/text';
 import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
 import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
-import { addRepost } from '../../actions/posts';
+import * as postsActions from '../../actions/posts';
+import { authShowPopup } from '../../actions/auth';
+import { selectOwner, selectPostById } from '../../store/selectors';
+import equalByProps from '../../utils/equalByProps'
+import { restoreActiveKey } from '../../utils/keys'
 import styles from './styles.css';
 
 const Share = ({
@@ -20,6 +24,9 @@ const Share = ({
   const dispatch = useDispatch();
   const [url, setUrl] = useState('');
   const tippyInstance = useRef();
+  const owner = useSelector(selectOwner, equalByProps(['accountName']));
+  const post = useSelector(selectPostById(postId), equalByProps(['blockchainId']));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (directUrl) {
@@ -28,6 +35,40 @@ const Share = ({
       setUrl(`${window.location.origin}${link}`);
     }
   }, [link, directUrl]);
+
+  const createRepost = async () => {
+    if (loading) {
+      return;
+    }
+
+    const ownerPrivateKey = restoreActiveKey();
+
+    if (!owner.accountName || !ownerPrivateKey) {
+      dispatch(authShowPopup());
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await withLoader(dispatch(postsActions.createRepost(
+        owner.accountName,
+        ownerPrivateKey,
+        post.blockchainId,
+        post.id,
+      )));
+
+      if (tippyInstance.current) {
+        tippyInstance.current.hide();
+      }
+
+      dispatch(addSuccessNotification('Repost is successful'));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+
+    setLoading(false);
+  };
 
   return (
     <Tippy
@@ -46,17 +87,7 @@ const Share = ({
               <div
                 role="presentation"
                 className={`${styles.title} ${styles.action}`}
-                onClick={async () => {
-                  try {
-                    await withLoader(dispatch(addRepost(postId)));
-                    if (tippyInstance.current) {
-                      tippyInstance.current.hide();
-                    }
-                    dispatch(addSuccessNotification('Repost is successful'));
-                  } catch (err) {
-                    dispatch(addErrorNotificationFromResponse(err));
-                  }
-                }}
+                onClick={createRepost}
               >
                 <IconRepost />
                 Repost to my profile
