@@ -14,8 +14,8 @@ import { addSuccessNotification, addErrorNotificationFromResponse } from '../../
 import * as postsActions from '../../actions/posts';
 import { authShowPopup } from '../../actions/auth';
 import { selectOwner, selectPostById } from '../../store/selectors';
-import equalByProps from '../../utils/equalByProps'
-import { restoreActiveKey } from '../../utils/keys'
+import equalByProps from '../../utils/equalByProps';
+import { restoreActiveKey } from '../../utils/keys';
 import styles from './styles.css';
 
 const Share = ({
