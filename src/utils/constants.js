@@ -93,5 +93,6 @@ export const ENTITY_NAMES_ORG = EntityNames.ORGANIZATIONS;
 export const ENTITY_NAMES_POSTS = EntityNames.POSTS;
 export const ENTITY_NAMES_COMMENTS = EntityNames.COMMENTS;
 
+// TODO: Remove ucom-libs-social-transactions
 export const INTERACTION_TYPE_ID_VOTING_UPVOTE = InteractionTypeDictionary.getUpvoteId();
 export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.getDownvoteId();
