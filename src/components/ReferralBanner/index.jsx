@@ -26,7 +26,7 @@ const ReferralBanner = () => {
               directUrl={owner.affiliates.referralRedirectUrl}
               socialEnable
             >
-              <Button red>Share Refferal Link</Button>
+              <Button red>Share Referral Link</Button>
             </Share>
           }
           <Link className="link red" to={referralPostLink}>Learn More</Link>

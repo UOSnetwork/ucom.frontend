@@ -214,11 +214,11 @@ const Settings = () => {
 
                   {state.refferals.ids.length > 0 &&
                     <div className={styles.subSection}>
-                      <h4 className={styles.title}>Your Refferals</h4>
+                      <h4 className={styles.title}>Your Referrals</h4>
                       <div className={styles.refferals}>
                         <EntryListSectionUsersWrapper
                           titleEnabled={false}
-                          title="Your Refferals"
+                          title="Your Referrals"
                           limit={3}
                           showViewMore={state.refferals.metadata.totalAmount > state.refferals.ids.length}
                           count={state.refferals.metadata.totalAmount}
