@@ -50,13 +50,11 @@ class Api {
 
     const response = await this.actions.post('/api/v1/auth/registration', {
       sign,
-      brainkey,
       active_public_key: activePublicKey,
       owner_public_key: ownerPublicKey,
       social_public_key: socialPublicKey,
       is_tracking_allowed: isTrackingAllowed,
       account_name: accountName,
-      public_key: activePublicKey,
     });
 
     await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
