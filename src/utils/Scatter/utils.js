@@ -4,4 +4,9 @@ export default class Amount {
   static getUosAmountAsString(amount, symbol = CORE_TOKEN_NAME) {
     return `${Math.floor(amount)}.0000 ${symbol}`;
   }
+
+  static getTokensAmountFromString(stringValue, token = CORE_TOKEN_NAME) {
+    const value = stringValue.replace(` ${token}`, '');
+    return +value;
+  }
 }

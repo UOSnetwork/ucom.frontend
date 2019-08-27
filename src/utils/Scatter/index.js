@@ -2,7 +2,8 @@ import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
 import { Api } from 'eosjs';
 import Network from './network';
-import Amount from './amount';
+import Utils from './utils';
+import Validator from './validator';
 import { SMART_CONTRACT_EOSIO_TOKEN, ACTION_TRANSFER, BLOCKS_BEHIND, EXPIRE_SECONDS } from './constants';
 
 ScatterJS.plugins(new ScatterEOS());
@@ -25,10 +26,10 @@ export default class Scatter {
   }
 
   async sendTokens(accountNameFrom, accountNameTo, amount, memo) {
-    Network.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountNameFrom);
-    await Network.isAccountNameExitOrException(accountNameFrom);
-    await Network.isAccountNameExitOrException(accountNameTo);
-    await Network.isEnoughBalanceOrException(accountNameFrom, amount);
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountNameFrom);
+    await Validator.isAccountNameExitOrException(accountNameFrom);
+    await Validator.isAccountNameExitOrException(accountNameTo);
+    await Validator.isEnoughBalanceOrException(accountNameFrom, amount);
 
     const result = await this.sendTransaction([{
       account: SMART_CONTRACT_EOSIO_TOKEN,
@@ -40,7 +41,7 @@ export default class Scatter {
       data: {
         from: accountNameFrom,
         to: accountNameTo,
-        quantity: Amount.getUosAmountAsString(amount),
+        quantity: Utils.getUosAmountAsString(amount),
         memo,
       },
     }]);
@@ -48,10 +49,26 @@ export default class Scatter {
     return result;
   }
 
-  // async stakeOrUnstakeTokens(accountName, netAmount, cpuAmount) {
-  //   Network.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
-  //   await Network.isAccountNameExitOrException(accountName);
-  // }
+  async stakeOrUnstakeTokens(accountName, netAmount, cpuAmount) {
+    Validator.isNonNegativeNetAmountOrException(netAmount);
+    Validator.isNonNegativeCpuAmountOrException(cpuAmount);
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
+    await Validator.isAccountNameExitOrException(accountName);
+
+    const { net: currentNet, cpu: currentCpu } = await Network.getCurrentNetAndCpuStakedTokens(accountName);
+    const netDelta = netAmount - currentNet;
+    const cpuDelta = cpuAmount - currentCpu;
+
+    if (netDelta > 0) {
+      await Validator.isEnoughBalanceOrException(accountName, netDelta);
+    }
+
+    if (cpuDelta > 0) {
+      await Validator.isEnoughBalanceOrException(accountName, cpuDelta);
+    }
+
+    const actions = [];
+  }
 
   static async connect() {
     const network = await Network.getNetwork();

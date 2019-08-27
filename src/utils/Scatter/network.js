@@ -1,7 +1,8 @@
 import ScatterJS from '@scatterjs/core';
 import { JsonRpc } from 'eosjs';
 import { getBlockchainHost, getBlockchainPort, getBlockchainProtocol } from '../config';
-import { SMART_CONTRACT_EOSIO_TOKEN, CORE_TOKEN_NAME } from './constants';
+import { CORE_TOKEN_NAME } from './constants';
+import Utils from './utils';
 
 export default class Network {
   static getRpc() {
@@ -31,36 +32,20 @@ export default class Network {
     });
   }
 
-  static async isAccountNameExitOrException(accountName) {
+  static async getCurrentNetAndCpuStakedTokens(accountName) {
     const rpc = Network.getRpc();
+    const response = await rpc.get_account(accountName);
+    const result = {
+      net: 0,
+      cpu: 0,
+      currency: CORE_TOKEN_NAME,
+    };
 
-    try {
-      await rpc.get_account(accountName);
-      return true;
-    } catch (err) {
-      throw new Error('Probably account does not exist. Please check spelling.');
-    }
-  }
-
-  static async isEnoughBalanceOrException(accountName, amount) {
-    const rpc = Network.getRpc();
-    let balance;
-
-    try {
-      balance = await rpc.get_currency_balance(SMART_CONTRACT_EOSIO_TOKEN, accountName, CORE_TOKEN_NAME);
-    } catch (err) {
-      throw new Error('Could not complete request, please try again later');
+    if (response.self_delegated_bandwidth) {
+      result.net = Utils.getTokensAmountFromString(response.self_delegated_bandwidth.net_weight);
+      result.cpu = Utils.getTokensAmountFromString(response.self_delegated_bandwidth.cpu_weight);
     }
 
-    if (!balance.length || +parseFloat(balance[0]).toFixed(4) < +amount.toFixed(4)) {
-      throw new Error('Not enough tokens. Please correct input data');
-    }
-  }
-
-  static isAccountNameAnActorOrExceptionAndLogout(actorAccountName, testAccountName) {
-    if (actorAccountName !== testAccountName) {
-      ScatterJS.logout();
-      throw new Error('The user does not match the user of the scatter');
-    }
+    return result;
   }
 }
