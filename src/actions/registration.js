@@ -4,7 +4,7 @@ import api from '../api';
 import { generateBrainkey } from '../utils/brainkey';
 import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
-import { saveActiveKey, getActivePrivateKey } from '../utils/keys';
+import { saveSocialKey, saveActiveKey, getActivePrivateKey, getSocialPrivateKeyByBrainkey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
@@ -54,70 +54,76 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
   const state = getState();
   const { brainkey, accountName, isTrackingAllowed } = state.registration;
   const activePrivateKey = getActivePrivateKey(brainkey);
+  const socialPrivateKey = getSocialPrivateKeyByBrainkey(brainkey);
 
   dispatch(registrationSetLoading(true));
 
-  setTimeout(async () => {
-    let referralData;
-    let registrationData;
+  let referralData;
+  let registrationData;
 
+  try {
+    referralData = await api.getReferralState(EventsIds.registration());
+  } catch (err) {
+    console.error(err);
+  }
+
+  try {
+    registrationData = await api.register(brainkey, accountName, isTrackingAllowed);
+  } catch (err) {
+    console.error(err);
+    dispatch(registrationSetLoading(false));
+    throw err;
+  }
+
+  try {
+    saveToken(registrationData.token);
+    saveActiveKey(activePrivateKey);
+    saveSocialKey(socialPrivateKey);
+  } catch (err) {
+    console.error(err);
+  }
+
+  try {
+    const userCreatedAt = moment().utc().format();
+    const signedTransaction = await ContentApi.createProfileAfterRegistration(accountName, activePrivateKey, isTrackingAllowed, userCreatedAt);
+    const signedTransactionAsJson = JSON.stringify(signedTransaction);
+
+    await api.registrationProfile(signedTransactionAsJson, userCreatedAt);
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (
+    referralData &&
+    referralData.affiliatesActions &&
+    referralData.affiliatesActions[0] &&
+    referralData.affiliatesActions[0].accountNameSource &&
+    referralData.affiliatesActions[0].offerId &&
+    referralData.affiliatesActions[0].action
+  ) {
     try {
-      referralData = await api.getReferralState(EventsIds.registration());
+      const signedTransaction = await SocialApi.getReferralFromUserSignedTransactionAsJson(
+        accountName,
+        activePrivateKey,
+        referralData.affiliatesActions[0].accountNameSource,
+      );
+
+      await api.referralTransaction(
+        signedTransaction,
+        referralData.affiliatesActions[0].accountNameSource,
+        referralData.affiliatesActions[0].offerId,
+        referralData.affiliatesActions[0].action,
+      );
     } catch (err) {
       console.error(err);
     }
+  }
 
-    try {
-      registrationData = await api.register(brainkey, accountName, isTrackingAllowed);
-      saveToken(registrationData.token);
-      saveActiveKey(activePrivateKey);
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-
-    try {
-      const userCreatedAt = moment().utc().format();
-      const signedTransaction = await ContentApi.createProfileAfterRegistration(accountName, activePrivateKey, isTrackingAllowed, userCreatedAt);
-      const signedTransactionAsJson = JSON.stringify(signedTransaction);
-
-      await api.registrationProfile(signedTransactionAsJson, userCreatedAt);
-    } catch (err) {
-      console.error(err);
-    }
-
-    if (
-      referralData &&
-      referralData.affiliatesActions &&
-      referralData.affiliatesActions[0] &&
-      referralData.affiliatesActions[0].accountNameSource &&
-      referralData.affiliatesActions[0].offerId &&
-      referralData.affiliatesActions[0].action
-    ) {
-      try {
-        const signedTransaction = await SocialApi.getReferralFromUserSignedTransactionAsJson(
-          accountName,
-          activePrivateKey,
-          referralData.affiliatesActions[0].accountNameSource,
-        );
-
-        await api.referralTransaction(
-          signedTransaction,
-          referralData.affiliatesActions[0].accountNameSource,
-          referralData.affiliatesActions[0].offerId,
-          referralData.affiliatesActions[0].action,
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
-      window.location.replace(getPostUrl(prevPage));
-    } else if (registrationData && registrationData.user && registrationData.user.id) {
-      window.location.replace(urls.getUserEditProfileUrl(registrationData.user.id));
-    } else {
-      window.location.replace(urls.getMainPageUrl());
-    }
-  }, 10);
+  if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
+    window.location.replace(getPostUrl(prevPage));
+  } else if (registrationData && registrationData.user && registrationData.user.id) {
+    window.location.replace(urls.getUserEditProfileUrl(registrationData.user.id));
+  } else {
+    window.location.replace(urls.getMainPageUrl());
+  }
 };

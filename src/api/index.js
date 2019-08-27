@@ -1,14 +1,13 @@
+import { WalletApi, SocialApi, Dictionary, SocialKeyApi } from 'ucom-libs-wallet';
 import ecc from 'eosjs-ecc';
 import humps from 'lodash-humps';
 import param from 'jquery-param';
 import HttpActions from './HttpActions';
 import { getToken } from '../utils/token';
-import { getActivePrivateKey } from '../utils/keys';
+import { getActivePrivateKey, getOwnerPublicKeyByBrainkey, getPublicKeyByPrivateKey, getSocialPrivateKeyByActiveKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
 import { LIST_PER_PAGE } from '../utils/constants';
-
-const { WalletApi, SocialApi, Dictionary } = require('ucom-libs-wallet');
 
 const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
 const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
@@ -42,16 +41,25 @@ class Api {
   }
 
   async register(brainkey, accountName, isTrackingAllowed) {
-    const activeKey = getActivePrivateKey(brainkey);
-    const sign = ecc.sign(accountName, activeKey);
-    const publicKey = ecc.privateToPublic(activeKey);
+    const ownerPublicKey = getOwnerPublicKeyByBrainkey(brainkey);
+    const activePrivateKey = getActivePrivateKey(brainkey);
+    const activePublicKey = getPublicKeyByPrivateKey(activePrivateKey);
+    const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
+    const socialPublicKey = getPublicKeyByPrivateKey(socialPrivateKey);
+    const sign = ecc.sign(accountName, socialPrivateKey);
+
     const response = await this.actions.post('/api/v1/auth/registration', {
       sign,
       brainkey,
+      active_public_key: activePublicKey,
+      owner_public_key: ownerPublicKey,
+      social_public_key: socialPublicKey,
       is_tracking_allowed: isTrackingAllowed,
       account_name: accountName,
-      public_key: publicKey,
+      public_key: activePublicKey,
     });
+
+    await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
 
     return humps(response.data);
   }
