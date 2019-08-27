@@ -3,13 +3,15 @@ import React, { useState, Fragment, memo } from 'react';
 import styles from './styles.css';
 import Image from './Image';
 import Popup from './Popup';
+import { validImageUrl } from '../../utils/url';
 
 const Gallery = ({ images, userId, date }) => {
+  const validImages = images.filter(i => validImageUrl(i.url));
   const [popupVisible, setPopupVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const moreLabel = images.length > 5 ? `+ ${images.length - 5}` : null;
+  const moreLabel = validImages.length > 5 ? `+ ${validImages.length - 5}` : null;
 
-  if (!images.length) {
+  if (!validImages.length) {
     return null;
   }
 
@@ -20,13 +22,13 @@ const Gallery = ({ images, userId, date }) => {
           index={activeIndex}
           date={date}
           userId={userId}
-          images={images}
+          images={validImages}
           onClickClose={() => setPopupVisible(false)}
         />
       }
 
       <div className={styles.gallery}>
-        {images.slice(0, 5).map((image, index) => (
+        {validImages.slice(0, 5).map((image, index) => (
           <Image
             {...image}
             key={index}

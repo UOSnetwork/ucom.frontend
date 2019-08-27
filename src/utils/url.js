@@ -40,6 +40,14 @@ export const validUrl = memoize((str) => {
 });
 /* eslint-enable */
 
+export const validImageUrl = memoize((str) => {
+  if (!validUrl(str)) {
+    return false;
+  }
+
+  return ['png', 'gif', 'ico', 'jpe', 'jpeg', 'jpg'].indexOf(str.split('.').slice(-1)[0]) > -1;
+});
+
 export const filterURL = memoize((url) => {
   if (validUrl(url)) {
     return url;
