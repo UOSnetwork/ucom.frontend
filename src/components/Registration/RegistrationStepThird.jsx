@@ -8,8 +8,10 @@ import RegistrationBrainkeyVerification from './RegistrationBrainkeyVerification
 import { THIRD_STEP_ID } from '../../store/registration';
 import { registrationRegister, registrationSetIsTrackingAllowed } from '../../actions/registration';
 import * as subscribeActions from '../../actions/subscribe';
+import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { getAirdropOfferId_2 } from '../../utils/airdrop';
 import { getGrecaptchaSitekey } from '../../utils/config';
+import withLoader from '../../utils/withLoader';
 
 const offerId = getAirdropOfferId_2();
 
@@ -60,6 +62,14 @@ class RegistrationStepThird extends PureComponent {
     }
 
     return prevPageId;
+  }
+
+  async submitRegistration() {
+    try {
+      await withLoader(this.props.registrationRegister(this.getPrevPageId() || null));
+    } catch (err) {
+      this.props.addErrorNotificationFromResponse(err);
+    }
   }
 
   render() {
@@ -124,7 +134,7 @@ class RegistrationStepThird extends PureComponent {
                 type="submit"
                 text="Finish"
                 isDisabled={this.props.registration.loading || !this.state.brainkeyVerificationIsValid || !this.state.termsAccepted || !this.state.recaptchaValid}
-                onClick={() => this.props.registrationRegister(this.getPrevPageId() || null)}
+                onClick={() => this.submitRegistration()}
               />
             </div>
             {this.state.brainkeyVerificationIsComplete && !this.state.brainkeyVerificationIsValid &&
@@ -152,5 +162,6 @@ export default withRouter(connect(
     registrationRegister,
     registrationSetIsTrackingAllowed,
     showSubscribe: subscribeActions.show,
+    addErrorNotificationFromResponse,
   },
 )(RegistrationStepThird));
