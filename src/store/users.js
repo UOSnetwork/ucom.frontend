@@ -63,7 +63,13 @@ export const getUserById = memoize(
 
     return result || users.data[userIdOrName];
   },
-  (users, userIdOrName) => userIdOrName,
+  (users, userIdOrName) => {
+    if (Number.isNaN(+userIdOrName)) {
+      return userIdOrName;
+    }
+
+    return +userIdOrName;
+  },
 );
 
 export const getUsersByIds = memoize(
