@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleSendTokens, walletSendTokens } from '../../../actions/walletSimple';
+import { walletToggleSendTokens, walletSendTokens, walletGetAccount } from '../../../actions/walletSimple';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
@@ -13,15 +12,20 @@ import api from '../../../api';
 import SearchInput from '../../SearchInput';
 import { addSuccessNotification } from '../../../actions/notifications';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
+import { selectOwner } from '../../../store/selectors';
 
-const SendTokens = (props) => {
+const SendTokens = () => {
+  const dispatch = useDispatch();
+  const owner = useSelector(selectOwner);
+  const wallet = useSelector(state => state.walletSimple);
+
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const [formError, setFormError] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
 
-  if (!props.wallet.sendTokensVisibility) {
+  if (!wallet.sendTokensVisibility) {
     return null;
   }
 
@@ -31,38 +35,54 @@ const SendTokens = (props) => {
       onSubmit={async (privateKey) => {
         setLoading(true);
         try {
-          await withLoader(props.dispatch(walletSendTokens(props.owner.accountName, user.accountName, +amount, memo, privateKey)));
+          await withLoader(dispatch(walletSendTokens(owner.accountName, user.accountName, +amount, memo, privateKey)));
           setFormError(null);
-          props.dispatch(addSuccessNotification('Successfully sent tokens'));
+          dispatch(addSuccessNotification('Successfully sent tokens'));
           setTimeout(() => {
-            props.dispatch(walletToggleSendTokens(false));
+            dispatch(walletToggleSendTokens(false));
           }, 0);
-        } catch (e) {
-          const errors = parseResponseError(e);
+        } catch (err) {
+          const errors = parseResponseError(err);
           setFormError(errors[0].message);
+        }
+        setLoading(false);
+      }}
+      onScatterConnect={async (scatter) => {
+        setLoading(true);
+        try {
+          await scatter.sendTokens(owner.accountName, user.accountName, amount, memo);
+          setFormError(null);
+          dispatch(addSuccessNotification('Successfully sent tokens'));
+          setTimeout(() => {
+            dispatch(walletGetAccount(owner.accountName));
+            dispatch(walletToggleSendTokens(false));
+          }, 0);
+        } catch (err) {
+          setFormError(err.message);
         }
         setLoading(false);
       }}
     >
       {requestActiveKey => (
-        <Popup onClickClose={() => props.dispatch(walletToggleSendTokens(false))}>
+        <Popup onClickClose={() => dispatch(walletToggleSendTokens(false))}>
           <Content
             walletAction
             roundBorders={false}
-            onClickClose={() => props.dispatch(walletToggleSendTokens(false))}
+            onClickClose={() => dispatch(walletToggleSendTokens(false))}
           >
             <form
               className={styles.content}
               onSubmit={async (e) => {
                 e.preventDefault();
-                requestActiveKey();
+                setLoading(true);
+                await requestActiveKey();
+                setLoading(false);
               }}
             >
               <h2 className={styles.title}>Send Tokens</h2>
               <div className={styles.field}>
                 <TextInput
                   autoFocus
-                  touched
                   placeholder="0"
                   label="UOS Amount"
                   value={`${amount}`}
@@ -80,7 +100,7 @@ const SendTokens = (props) => {
                     try {
                       const query = q[0] === '@' ? q.substr(1) : q;
                       const data = await withLoader(api.searchUsers(query));
-                      return data.slice(0, 20).filter(i => i.id !== props.owner.id);
+                      return data.slice(0, 20).filter(i => i.id !== owner.id);
                     } catch (err) {
                       return [];
                     }
@@ -91,7 +111,6 @@ const SendTokens = (props) => {
               </label>
               <div className={styles.field}>
                 <TextInput
-                  touched
                   placeholder="Example"
                   label="Memo"
                   value={`${memo}`}
@@ -126,18 +145,4 @@ const SendTokens = (props) => {
   );
 };
 
-SendTokens.propTypes = {
-  owner: PropTypes.shape({
-    accountName: PropTypes.string,
-    id: PropTypes.number,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  wallet: PropTypes.shape({
-    sendTokensVisibility: PropTypes.bool.isRequired,
-  }).isRequired,
-};
-
-export default connect(state => ({
-  owner: state.user.data,
-  wallet: state.walletSimple,
-}))(SendTokens);
+export default SendTokens;

@@ -29,7 +29,6 @@ const ActiveKey = (props) => {
       <div className={styles.field}>
         <TextInput
           autoFocus
-          touched
           ymDisableKeys
           label="Active Private Key"
           value={value}

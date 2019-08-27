@@ -84,7 +84,6 @@ const EditStake = (props) => {
                 <div className={styles.field}>
                   <TextInput
                     autoFocus
-                    touched
                     placeholder="6664"
                     label="UOS for CPU Time"
                     value={`${cpu}`}
@@ -96,7 +95,6 @@ const EditStake = (props) => {
                 </div>
                 <div className={styles.field}>
                   <TextInput
-                    touched
                     placeholder="6664"
                     label="UOS for Network BW"
                     value={`${net}`}

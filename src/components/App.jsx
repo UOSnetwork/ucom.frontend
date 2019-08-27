@@ -24,7 +24,6 @@ import Subscribe from '../components/Subscribe';
 import Loader from '../components/Loader';
 import urls from '../utils/urls';
 import loader from '../utils/loader';
-import Scatter from '../utils/scatter';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -53,8 +52,6 @@ const App = () => {
     if (config.maintenanceMode) {
       dispatch(addMaintenanceNotification());
     }
-
-    Scatter.Connect();
 
     return removeInitDragAndDropListeners;
   }, []);

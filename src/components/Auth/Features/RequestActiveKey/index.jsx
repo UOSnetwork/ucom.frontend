@@ -6,6 +6,8 @@ import ActiveKey from './ActiveKey';
 import Password from './Password';
 import ChangePassword from '../ChangePassword';
 import { encryptedActiveKeyIsExists } from '../../../../utils/keys';
+import Scatter from '../../../../utils/Scatter';
+import withLoader from '../../../../utils/withLoader';
 
 const STEP_PASSWORD_SET = 1;
 const STEP_PASSWORD = 2;
@@ -25,7 +27,7 @@ const RequestActiveKey = (props) => {
     }
   };
 
-  const show = (...args) => {
+  const show = (args) => {
     setSubmitArgs(args);
     resetStep();
     setVisible(true);
@@ -39,9 +41,22 @@ const RequestActiveKey = (props) => {
     props.onSubmit.apply(null, [activeKey].concat(submitArgs));
   };
 
+  const request = async (...args) => {
+    if (!props.onScatterConnect) {
+      show(args);
+    }
+
+    try {
+      const scatter = await withLoader(Scatter.connect());
+      await props.onScatterConnect.apply(null, [scatter, ...args]);
+    } catch (err) {
+      show(args);
+    }
+  };
+
   return (
     <Fragment>
-      {(!props.replace || !visible) && props.children(show)}
+      {(!props.replace || !visible) && props.children(request)}
 
       {visible && (() => {
         switch (currentStep) {
@@ -114,12 +129,14 @@ const RequestActiveKey = (props) => {
 
 RequestActiveKey.propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onScatterConnect: PropTypes.func,
   replace: PropTypes.bool,
   children: PropTypes.func.isRequired,
 };
 
 RequestActiveKey.defaultProps = {
   replace: false,
+  onScatterConnect: undefined,
 };
 
 export default RequestActiveKey;

@@ -50,6 +50,18 @@
       "uploaderEndpoint": "https://uploader.u.community"
     }
   },
+  "blockchanin": {
+    "staging": {
+      "host": "staging-mini-mongo.u.community",
+      "protocol": "https",
+      "port": "6888"
+    },
+    "production": {
+      "host": "mini-mongo.u.community",
+      "protocol": "https",
+      "port": "6889"
+    }
+  },
   "iframely": {
     "httpEndpoint": "https://iframely.u.community/iframely"
   },
@@ -98,6 +110,8 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
+    "@scatterjs/core": "^2.7.44",
+    "@scatterjs/eosjs2": "^1.5.26",
     "@tippy.js/react": "^1.1.1",
     "autosize": "^4.0.2",
     "axios": "^0.19.0",
@@ -144,8 +158,6 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-thunk": "^2.3.0",
     "sanitize-html": "^1.19.1",
-    "scatterjs-core": "^2.7.18",
-    "scatterjs-plugin-eosjs": "^1.5.1",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "textarea-caret": "^3.1.0",

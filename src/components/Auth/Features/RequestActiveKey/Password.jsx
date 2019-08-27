@@ -34,7 +34,6 @@ const Password = (props) => {
       <p className={styles.text}>Enter the password for your Private Active Key, stored in the browser.</p>
       <div className={styles.field}>
         <TextInput
-          touched
           autoFocus
           type="password"
           label="Password"

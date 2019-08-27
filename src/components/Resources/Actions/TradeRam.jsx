@@ -58,7 +58,6 @@ const TradeRam = (props) => {
               <h2 className={styles.title}>{props.sell ? 'Sell' : 'Buy'} RAM</h2>
               <div className={styles.field}>
                 <TextInput
-                  touched
                   autoFocus
                   placeholder="6664"
                   label="RAM Amount, Bytes"
