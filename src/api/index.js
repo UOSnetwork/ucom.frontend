@@ -29,14 +29,23 @@ class Api {
   }
 
   async login({ brainkey, account_name }) {
-    const activeKey = getActivePrivateKey(brainkey);
-    const sign = ecc.sign(account_name, activeKey);
-    const publicKey = ecc.privateToPublic(activeKey);
+    const activePrivateKey = getActivePrivateKey(brainkey);
+    const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
+    const socialPublicKey = getPublicKeyByPrivateKey(socialPrivateKey);
+    const sign = ecc.sign(account_name, socialPrivateKey);
+
+    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(account_name);
+
+    if (!socialKeyIsBinded) {
+      await SocialKeyApi.bindSocialKeyWithSocialPermissions(account_name, activePrivateKey, socialPublicKey);
+    }
+
     const response = await this.actions.post('/api/v1/auth/login', {
       sign,
       account_name,
-      public_key: publicKey,
+      social_public_key: socialPublicKey,
     });
+
     return humps(response.data);
   }
 

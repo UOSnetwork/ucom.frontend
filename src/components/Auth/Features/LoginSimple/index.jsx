@@ -6,6 +6,7 @@ import Popup, { Content } from '../../../Popup';
 import TextInput from '../../../TextInput';
 import Button from '../../../Button/index';
 import * as authActions from '../../../../actions/auth';
+import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
 import Validate from '../../../../utils/validate';
 import { USER_ACCOUNT_LENGTH } from '../../../../utils/constants';
 import withLoader from '../../../../utils/withLoader';
@@ -51,7 +52,11 @@ const LoginSimple = ({ location }) => {
     try {
       await withLoader(dispatch(authActions.login(data.brainkey.trim(), data.accountName)));
     } catch (err) {
-      setErrors(Validate.parseResponseError(err.response));
+      if (Validate.isResponseErrors(err.response)) {
+        setErrors(Validate.parseResponseError(err.response));
+      } else {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
     }
 
     setLoading(false);

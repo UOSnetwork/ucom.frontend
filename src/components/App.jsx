@@ -24,6 +24,7 @@ import Subscribe from '../components/Subscribe';
 import Loader from '../components/Loader';
 import urls from '../utils/urls';
 import loader from '../utils/loader';
+import { logoutIfNeedBindSocialKey } from '../utils/auth';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ const App = () => {
       enableGtm();
     }
 
+    logoutIfNeedBindSocialKey();
     dispatch(fetchMyself());
     dispatch(initNotificationsListeners());
 

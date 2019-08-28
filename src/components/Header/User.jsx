@@ -13,7 +13,7 @@ import DropdownMenu, {
 } from '../DropdownMenu';
 import urls from '../../utils/urls';
 import styles from './styles.css';
-import { logout } from '../../utils/auth';
+import { logoutAndReload } from '../../utils/auth';
 import { selectOwner, selectOrgsByIds } from '../../store/selectors';
 
 const ORGANIZATIONS_ITEMS_LIMIT = 3;
@@ -61,7 +61,7 @@ const User = ({ onClickOrganizationsViewAll }) => {
     }, {
       title: 'Log Out',
       type: DROPDOWN_MENU_ITEM_TYPE_LOGOUT,
-      onClick: logout,
+      onClick: logoutAndReload,
     }]);
 
   return (

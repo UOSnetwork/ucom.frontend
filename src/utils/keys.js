@@ -130,7 +130,7 @@ export const removeEncryptedActiveKey = () => {
 export const socialKeyIsExists = () => {
   try {
     const socialKey = localStorage.getItem('socialKey');
-    return socialKey && socialKey.length;
+    return socialKey && socialKey.length && privateKeyIsValid(socialKey);
   } catch (e) {
     return false;
   }
@@ -168,29 +168,15 @@ export const restoreSocialKey = () => {
   return socialKey;
 };
 
-// TODO: Remove when develop social key auth feature
-if (typeof localStorage !== 'undefined') {
+export const removeSocialKey = () => {
   try {
-    const activeKey = localStorage.getItem('activeKey');
-    if (!privateKeyIsValid(activeKey)) {
-      localStorage.removeItem('activeKey');
-    }
-  } catch (e) {
-    console.error(e);
+    localStorage.removeItem('socialKey');
+  } catch (err) {
+    console.error(err);
   }
+};
 
-  try {
-    const brainkey = localStorage.getItem('brainkey');
-    if (brainkey) {
-      const activeKey = getActivePrivateKey(brainkey);
-      localStorage.setItem('activeKey', activeKey);
-    }
-    localStorage.removeItem('brainkey');
-  } catch (e) {
-    console.error(e);
-  }
-}
-
+// TODO: Remove when develop social key auth feature is done
 export const saveActiveKey = (activeKey) => {
   try {
     localStorage.setItem('activeKey', activeKey);
@@ -214,4 +200,19 @@ export const removeActiveKey = () => {
     console.error(e);
   }
 };
+
+if (typeof localStorage !== 'undefined') {
+  try {
+    const brainkey = localStorage.getItem('brainkey');
+
+    if (brainkey) {
+      const activeKey = getActivePrivateKey(brainkey);
+      localStorage.setItem('activeKey', activeKey);
+    }
+
+    localStorage.removeItem('brainkey');
+  } catch (err) {
+    console.error(err);
+  }
+}
 // TODO: End
