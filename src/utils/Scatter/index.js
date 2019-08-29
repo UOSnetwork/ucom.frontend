@@ -66,8 +66,6 @@ export default class Scatter {
     if (cpuDelta > 0) {
       await Validator.isEnoughBalanceOrException(accountName, cpuDelta);
     }
-
-    const actions = [];
   }
 
   static async connect() {
