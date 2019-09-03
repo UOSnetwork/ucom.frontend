@@ -6,6 +6,8 @@ import {
   ACTION_UNDELEGATE_BANDWIDTH,
   ACTION_TRANSFER,
   ACTION_WITHDRAWAL,
+  ACTION_SELL_RAM_BYTES,
+  ACTION_BUY_RAM_BYTES,
 } from './constants';
 import Utils from './utils';
 
@@ -63,6 +65,31 @@ export default class Actions {
       authorization,
       data: {
         owner: accountNameFrom,
+      },
+    };
+  }
+
+  static getSellRamAction(authorization, accountName, amount) {
+    return {
+      account: SMART_CONTRACT_EISIO,
+      name: ACTION_SELL_RAM_BYTES,
+      authorization,
+      data: {
+        account: accountName,
+        bytes: amount,
+      },
+    };
+  }
+
+  static getBuyRamAction(authorization, accountNameFrom, amount, accountNameTo) {
+    return {
+      account: SMART_CONTRACT_EISIO,
+      name: ACTION_BUY_RAM_BYTES,
+      authorization,
+      data: {
+        payer: accountNameFrom,
+        receiver: accountNameTo,
+        bytes: amount,
       },
     };
   }

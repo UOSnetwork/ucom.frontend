@@ -90,8 +90,34 @@ export default class Scatter {
   }
 
   async claimEmission(accountName) {
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
     await Validator.isAccountNameExitOrException(accountName);
     const actions = [Actions.getClaimEmissionAction(this.authorization, accountName)];
+    const result = await this.sendTransaction(actions);
+
+    return result;
+  }
+
+  async sellRam(accountName, bytesAmount) {
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
+    Validator.isNonNegativeBytesAmountOrException(bytesAmount);
+    await Validator.isAccountNameExitOrException(accountName);
+    await Validator.isEnoughRamOrException(accountName, bytesAmount);
+    await Validator.isMinUosAmountForRamOrException(bytesAmount);
+
+    const actions = [Actions.getSellRamAction(this.authorization, accountName, bytesAmount)];
+    const result = await this.sendTransaction(actions);
+
+    return result;
+  }
+
+  async buyRam(accountName, bytesAmount) {
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
+    Validator.isNonNegativeBytesAmountOrException(bytesAmount);
+    const price = await Validator.isMinUosAmountForRamOrException(bytesAmount);
+    await Validator.isEnoughBalanceOrException(accountName, price);
+
+    const actions = [Actions.getBuyRamAction(this.authorization, accountName, bytesAmount, accountName)];
     const result = await this.sendTransaction(actions);
 
     return result;

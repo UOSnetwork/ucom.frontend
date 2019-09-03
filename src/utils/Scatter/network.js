@@ -1,7 +1,7 @@
 import ScatterJS from '@scatterjs/core';
 import { JsonRpc } from 'eosjs';
 import { getBlockchainHost, getBlockchainPort, getBlockchainProtocol } from '../config';
-import { CORE_TOKEN_NAME } from './constants';
+import { CORE_TOKEN_NAME, SMART_CONTRACT_EISIO, TABLE_NAME_RAM_MARKET } from './constants';
 import Utils from './utils';
 
 export default class Network {
@@ -47,5 +47,28 @@ export default class Network {
     }
 
     return result;
+  }
+
+  static async getFreeRamAmountInBytes(accountName) {
+    const rpc = Network.getRpc();
+    const response = await rpc.get_account(accountName);
+    if (+response.ram_usage && +response.ram_quota) {
+      return +response.ram_quota - +response.ram_usage;
+    }
+    return 0;
+  }
+
+  static async getCurrentTokenPerRamByte() {
+    const rpc = Network.getRpc();
+    const response = await rpc.get_table_rows({
+      code: SMART_CONTRACT_EISIO,
+      scope: SMART_CONTRACT_EISIO,
+      table: TABLE_NAME_RAM_MARKET,
+    });
+    const data = response.rows[0];
+    const connectorBalance = Utils.getTokensAmountFromString(data.quote.balance);
+    const smartTokenOutstandingSupply = Utils.getRamAmountFromString(data.base.balance);
+    const connectorWeight = 1; // +data.quote.weight; this weight leads to wrong price calculations
+    return connectorBalance / (smartTokenOutstandingSupply * connectorWeight);
   }
 }

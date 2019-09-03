@@ -9,4 +9,9 @@ export default class Amount {
     const value = stringValue.replace(` ${token}`, '');
     return +value;
   }
+
+  static getRamAmountFromString(stringValue) {
+    const value = stringValue.replace(' RAM', '');
+    return +value;
+  }
 }

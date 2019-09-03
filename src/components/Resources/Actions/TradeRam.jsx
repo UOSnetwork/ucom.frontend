@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import Button from '../../Button/index';
-import { walletBuyRam, walletSellRam } from '../../../actions/walletSimple';
+import { walletBuyRam, walletSellRam, walletGetAccount } from '../../../actions/walletSimple';
 import { parseResponseError } from '../../../utils/errors';
 import IconInputError from '../../Icons/InputError';
 import api from '../../../api';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { addSuccessNotification } from '../../../actions/notifications';
 import Popup, { Content } from '../../Popup';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
@@ -19,26 +19,43 @@ const TradeRam = (props) => {
   const [loading, setLoading] = useState(false);
   const [cost, setCost] = useState(null);
 
+  const onSuccess = () => {
+    setFormError(null);
+    props.dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
+    withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+    setTimeout(() => {
+      props.onSubmit();
+    }, 0);
+  };
+
   return (
     <RequestActiveKey
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
         try {
           const submitFn = props.sell ? walletSellRam : walletBuyRam;
-          await props.dispatch(submitFn(props.owner.accountName, ram, privateKey));
-          setFormError(null);
-          props.dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
-          setTimeout(() => {
-            props.onSubmit();
-          }, 0);
-        } catch (e) {
-          const errors = parseResponseError(e);
+          await withLoader(props.dispatch(submitFn(props.owner.accountName, ram, privateKey)));
+          onSuccess();
+        } catch (err) {
+          const errors = parseResponseError(err);
           setFormError(errors[0].message);
         }
         setLoading(false);
-        loader.done();
+      }}
+      onScatterConnect={async (scatter) => {
+        setLoading(true);
+        try {
+          if (props.sell) {
+            await withLoader(scatter.sellRam(props.owner.accountName, ram));
+          } else {
+            await withLoader(scatter.buyRam(props.owner.accountName, ram));
+          }
+          onSuccess();
+        } catch (err) {
+          setFormError(err.message);
+        }
+        setLoading(false);
       }}
     >
       {requestActiveKey => (

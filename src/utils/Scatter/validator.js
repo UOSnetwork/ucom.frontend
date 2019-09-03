@@ -10,6 +10,26 @@ export default class Validator {
     }
   }
 
+  static async isEnoughRamOrException(accountName, bytesAmount) {
+    const balance = await Network.getFreeRamAmountInBytes(accountName);
+
+    if (balance < bytesAmount) {
+      throw new Error('Not enough free RAM. Please correct input data');
+    }
+  }
+
+  static async isMinUosAmountForRamOrException(bytesAmount) {
+    Validator.isNonNegativeBytesAmountOrException(bytesAmount);
+    const rate = await Network.getCurrentTokenPerRamByte();
+    const price = +(bytesAmount * rate).toFixed(6);
+
+    if (price < 1) {
+      throw new Error('Please increase amounts of bytes - total UOS price must be more or equal 1');
+    }
+
+    return price;
+  }
+
   static async isAccountNameExitOrException(accountName) {
     const rpc = Network.getRpc();
 
@@ -54,5 +74,9 @@ export default class Validator {
 
   static isNonNegativeCpuAmountOrException(value) {
     Validator.isNonNegativeIntOrException(value, Validator.makeNonNegativeIntExceptionMessage('Cpu amount'));
+  }
+
+  static isNonNegativeBytesAmountOrException(value) {
+    Validator.isNonNegativeIntOrException(value, Validator.makeNonNegativeIntExceptionMessage('Bytes amount'));
   }
 }

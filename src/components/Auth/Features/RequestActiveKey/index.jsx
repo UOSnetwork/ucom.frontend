@@ -48,7 +48,7 @@ const RequestActiveKey = (props) => {
 
     try {
       const scatter = await withLoader(Scatter.connect());
-      await props.onScatterConnect.apply(null, [scatter, ...args]);
+      await withLoader(props.onScatterConnect.apply(null, [scatter, ...args]));
     } catch (err) {
       console.error(err);
       show(args);
