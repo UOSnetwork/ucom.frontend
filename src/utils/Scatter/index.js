@@ -1,3 +1,4 @@
+import { uniq } from 'lodash';
 import ScatterJS from '@scatterjs/core';
 import ScatterEOS from '@scatterjs/eosjs2';
 import { Api } from 'eosjs';
@@ -114,10 +115,58 @@ export default class Scatter {
   async buyRam(accountName, bytesAmount) {
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
     Validator.isNonNegativeBytesAmountOrException(bytesAmount);
+    await Validator.isAccountNameExitOrException(accountName);
     const price = await Validator.isMinUosAmountForRamOrException(bytesAmount);
     await Validator.isEnoughBalanceOrException(accountName, price);
 
     const actions = [Actions.getBuyRamAction(this.authorization, accountName, bytesAmount, accountName)];
+    const result = await this.sendTransaction(actions);
+
+    return result;
+  }
+
+  async voteForBlockProducers(accountName, producers) {
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
+
+    if (producers.length > 30) {
+      throw new Error('It is possible to vote up to 30 block producers');
+    }
+
+    const userInfo = await Validator.isAccountNameExitOrException(accountName);
+    await Validator.isBlockProducersExistOrExeption(producers);
+    const netSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.net_weight);
+    const cpuSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.cpu_weight);
+
+    if (netSelfDelegated + cpuSelfDelegated === 0) {
+      throw new Error('It is possible to vote only if you have self-staked tokens.');
+    }
+
+    producers.sort();
+
+    const actions = [Actions.getVoteForBlockProducersAction(this.authorization, accountName, uniq(producers))];
+    const result = await this.sendTransaction(actions);
+
+    return result;
+  }
+
+  async voteForCalculatorNodes(accountName, nodes) {
+    Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
+
+    if (nodes.length > 30) {
+      throw new Error('It is possible to vote up to 30 calculator nodes');
+    }
+
+    const userInfo = await Validator.isAccountNameExitOrException(accountName);
+    const netSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.net_weight);
+    const cpuSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.cpu_weight);
+
+    if (netSelfDelegated + cpuSelfDelegated === 0) {
+      throw new Error('It is possible to vote only if you have self-staked tokens.');
+    }
+
+    nodes.sort();
+
+    const actions = [Actions.getVoteForCalculatorNodesAction(this.authorization, accountName, uniq(nodes))];
     const result = await this.sendTransaction(actions);
 
     return result;

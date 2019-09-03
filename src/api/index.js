@@ -6,12 +6,9 @@ import { getToken } from '../utils/token';
 import { getActivePrivateKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
-import { LIST_PER_PAGE } from '../utils/constants';
+import { LIST_PER_PAGE, BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../utils/constants';
 
-const { WalletApi, SocialApi, Dictionary } = require('ucom-libs-wallet');
-
-const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
-const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
+const { WalletApi, SocialApi } = require('ucom-libs-wallet');
 
 if (process.env.NODE_ENV === 'production') {
   WalletApi.initForProductionEnv();
@@ -460,8 +457,8 @@ class Api {
 
   async voteForNodes(accountName, producers, privateKey, nodeType) {
     const voteFunctions = {
-      [BLOCK_PRODUCERS]: WalletApi.voteForBlockProducers,
-      [CALCULATOR_NODES]: WalletApi.voteForCalculatorNodes,
+      [BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS]: WalletApi.voteForBlockProducers,
+      [BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES]: WalletApi.voteForCalculatorNodes,
     };
 
     const response = await voteFunctions[nodeType](accountName, privateKey, producers);

@@ -1,6 +1,7 @@
+import { difference } from 'lodash';
 import ScatterJS from '@scatterjs/core';
 import Network from './network';
-import { SMART_CONTRACT_EOSIO_TOKEN, CORE_TOKEN_NAME } from './constants';
+import { SMART_CONTRACT_EOSIO_TOKEN, CORE_TOKEN_NAME, TABLE_ROWS_LIMIT_ALL } from './constants';
 
 export default class Validator {
   static isAccountNameAnActorOrExceptionAndLogout(actorAccountName, testAccountName) {
@@ -34,8 +35,8 @@ export default class Validator {
     const rpc = Network.getRpc();
 
     try {
-      await rpc.get_account(accountName);
-      return true;
+      const response = await rpc.get_account(accountName);
+      return response;
     } catch (err) {
       throw new Error('Probably account does not exist. Please check spelling.');
     }
@@ -53,6 +54,20 @@ export default class Validator {
 
     if (!balance.length || +parseFloat(balance[0]).toFixed(4) < +amount.toFixed(4)) {
       throw new Error('Not enough tokens. Please correct input data');
+    }
+  }
+
+  static async isBlockProducersExistOrExeption(producers) {
+    const rpc = Network.getRpc();
+    const allProducers = await rpc.get_producers(true, '', TABLE_ROWS_LIMIT_ALL);
+    const producersIndex = [];
+    for (let i = 0; i < allProducers.rows.length; i += 1) {
+      const producer = allProducers.rows[i];
+      producersIndex.push(producer.owner);
+    }
+    const notExisted = difference(producers, producersIndex);
+    if (notExisted.length > 0) {
+      throw new Error(`There is no such block producers: ${notExisted.join(', ')}`);
     }
   }
 

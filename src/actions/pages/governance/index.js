@@ -74,7 +74,15 @@ export const getSelectedNodes = userId => async (dispatch) => {
   }
 };
 
-export const voteForNodes = (accountName, nodes, privateKey, nodeTypeId) => async (dispatch) => {
+export const setSelectedNodes = (nodesIds, nodeTypeId) => (dispatch) => {
+  dispatch(setData({
+    selectedIds: {
+      [nodeTypeId]: nodesIds,
+    },
+  }));
+};
+
+export const voteForNodes = (accountName, nodes, privateKey, nodeTypeId) => async () => {
   try {
     const producers = nodes
       // .filter(node => node.bpStatus === BP_STATUS_ACTIVE_ID || node.bpStatus === BP_STATUS_BACKUP_ID)
@@ -82,12 +90,6 @@ export const voteForNodes = (accountName, nodes, privateKey, nodeTypeId) => asyn
       .filter(i => i !== 'eosiomeetone');
 
     await api.voteForNodes(accountName, producers, privateKey, nodeTypeId);
-
-    dispatch(setData({
-      selectedIds: {
-        [nodeTypeId]: nodes.map(i => i.id),
-      },
-    }));
   } catch (err) {
     console.error(err);
     throw err;

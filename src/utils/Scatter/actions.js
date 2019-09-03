@@ -8,6 +8,8 @@ import {
   ACTION_WITHDRAWAL,
   ACTION_SELL_RAM_BYTES,
   ACTION_BUY_RAM_BYTES,
+  ACTION_VOTE_PRODUCER,
+  ACTION_VOTE_PRODUCER_CALCULATORS,
 } from './constants';
 import Utils from './utils';
 
@@ -90,6 +92,32 @@ export default class Actions {
         payer: accountNameFrom,
         receiver: accountNameTo,
         bytes: amount,
+      },
+    };
+  }
+
+  static getVoteForBlockProducersAction(authorization, accountNameFrom, producers) {
+    return {
+      account: SMART_CONTRACT_EISIO,
+      name: ACTION_VOTE_PRODUCER,
+      authorization,
+      data: {
+        voter: accountNameFrom,
+        proxy: '',
+        producers,
+      },
+    };
+  }
+
+  static getVoteForCalculatorNodesAction(authorization, accountNameFrom, nodes) {
+    return {
+      account: SMART_CONTRACT_EISIO,
+      name: ACTION_VOTE_PRODUCER_CALCULATORS,
+      authorization,
+      data: {
+        voter: accountNameFrom,
+        proxy: '',
+        calculators: nodes,
       },
     };
   }
