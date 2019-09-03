@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleEditStake, walletEditStake } from '../../../actions/walletSimple';
+import { walletToggleEditStake, walletEditStake, walletGetAccount } from '../../../actions/walletSimple';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
 import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
 import { addSuccessNotification } from '../../../actions/notifications';
@@ -49,9 +50,8 @@ const EditStake = (props) => {
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
         try {
-          await props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey));
+          await withLoader(props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey)));
           setFormError(null);
           props.dispatch(addSuccessNotification('Successfully set stake'));
           setTimeout(() => {
@@ -62,7 +62,22 @@ const EditStake = (props) => {
           setFormError(errors[0].message);
         }
         setLoading(false);
-        loader.done();
+      }}
+      onScatterConnect={async (scatter) => {
+        setLoading(true);
+        try {
+          await withLoader(scatter.stakeOrUnstakeTokens(props.owner.accountName, net, cpu));
+          setFormError(null);
+          props.dispatch(addSuccessNotification('Successfully set stake'));
+          setTimeout(() => {
+            withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+            props.dispatch(walletToggleEditStake(false));
+          }, 0);
+        } catch (err) {
+          console.error(err);
+          setFormError(err.message);
+        }
+        setLoading(false);
       }}
     >
       {requestActiveKey => (

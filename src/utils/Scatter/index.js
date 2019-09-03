@@ -4,7 +4,8 @@ import { Api } from 'eosjs';
 import Network from './network';
 import Utils from './utils';
 import Validator from './validator';
-import { SMART_CONTRACT_EOSIO_TOKEN, ACTION_TRANSFER, BLOCKS_BEHIND, EXPIRE_SECONDS } from './constants';
+import Actions from './actions';
+import { BLOCKS_BEHIND, EXPIRE_SECONDS } from './constants';
 
 ScatterJS.plugins(new ScatterEOS());
 
@@ -12,6 +13,10 @@ export default class Scatter {
   constructor(eos, account) {
     this.eos = eos;
     this.account = account;
+    this.authorization = [{
+      actor: this.account.name,
+      permission: this.account.authority,
+    }];
   }
 
   async sendTransaction(actions) {
@@ -31,20 +36,8 @@ export default class Scatter {
     await Validator.isAccountNameExitOrException(accountNameTo);
     await Validator.isEnoughBalanceOrException(accountNameFrom, amount);
 
-    const result = await this.sendTransaction([{
-      account: SMART_CONTRACT_EOSIO_TOKEN,
-      name: ACTION_TRANSFER,
-      authorization: [{
-        actor: this.account.name,
-        permission: this.account.authority,
-      }],
-      data: {
-        from: accountNameFrom,
-        to: accountNameTo,
-        quantity: Utils.getUosAmountAsString(amount),
-        memo,
-      },
-    }]);
+    const actions = [Actions.getSendTokensAction(this.authorization, accountNameFrom, accountNameTo, amount, memo)];
+    const result = await this.sendTransaction(actions);
 
     return result;
   }
@@ -66,6 +59,34 @@ export default class Scatter {
     if (cpuDelta > 0) {
       await Validator.isEnoughBalanceOrException(accountName, cpuDelta);
     }
+
+    const actions = [];
+
+    if (netDelta !== 0) {
+      const netString = Utils.getUosAmountAsString(Math.abs(netDelta));
+      const cpuString = Utils.getUosAmountAsString(0);
+      const action = netDelta > 0 ?
+        Actions.getDelegateBandwidthAction(this.authorization, accountName, netString, cpuString, accountName, false) :
+        Actions.getUnstakeTokensAction(this.authorization, accountName, netString, cpuString, accountName, false);
+      actions.push(action);
+    }
+
+    if (cpuDelta !== 0) {
+      const netString = Utils.getUosAmountAsString(0);
+      const cpuString = Utils.getUosAmountAsString(Math.abs(cpuDelta));
+      const action = cpuDelta > 0 ?
+        Actions.getDelegateBandwidthAction(this.authorization, accountName, netString, cpuString, accountName, false) :
+        Actions.getUnstakeTokensAction(this.authorization, accountName, netString, cpuString, accountName, false);
+      actions.push(action);
+    }
+
+    if (actions.length === 0) {
+      return null;
+    }
+
+    const result = await this.sendTransaction(actions);
+
+    return result;
   }
 
   static async connect() {
