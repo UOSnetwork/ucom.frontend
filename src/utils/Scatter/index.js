@@ -89,6 +89,14 @@ export default class Scatter {
     return result;
   }
 
+  async claimEmission(accountName) {
+    await Validator.isAccountNameExitOrException(accountName);
+    const actions = [Actions.getClaimEmissionAction(this.authorization, accountName)];
+    const result = await this.sendTransaction(actions);
+
+    return result;
+  }
+
   static async connect() {
     const network = await Network.getNetwork();
     const connected = await ScatterJS.connect('U.Community', { network });

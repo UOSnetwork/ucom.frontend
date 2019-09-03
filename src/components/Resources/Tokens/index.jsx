@@ -1,15 +1,16 @@
 import moment from 'moment';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.css';
 import Token from './Token';
 import {
   walletToggleSendTokens,
   walletToggleEditStake,
   walletGetEmission,
+  walletGetAccount,
 } from '../../../actions/walletSimple';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { addErrorNotification, addSuccessNotification } from '../../../actions/notifications';
 import { parseResponseError } from '../../../utils/errors';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
@@ -17,6 +18,7 @@ import formatNumber from '../../../utils/formatNumber';
 
 const Tokens = (props) => {
   const { tokens } = props.wallet;
+  const [loading, setLoading] = useState(false);
 
   if (!tokens) {
     return null;
@@ -44,15 +46,26 @@ const Tokens = (props) => {
 
       <RequestActiveKey
         onSubmit={async (privateKey) => {
-          loader.start();
+          setLoading(true);
           try {
-            await props.dispatch(walletGetEmission(props.owner.accountName, privateKey));
+            await withLoader(props.dispatch(walletGetEmission(props.owner.accountName, privateKey)));
             props.dispatch(addSuccessNotification('Successfully get emission'));
-          } catch (e) {
-            const errors = parseResponseError(e);
+          } catch (err) {
+            const errors = parseResponseError(err);
             props.dispatch(addErrorNotification(errors[0].message));
           }
-          loader.done();
+          setLoading(false);
+        }}
+        onScatterConnect={async (scatter) => {
+          setLoading(true);
+          try {
+            await withLoader(scatter.claimEmission(props.owner.accountName));
+            props.dispatch(addSuccessNotification('Successfully get emission'));
+            await withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+          } catch (err) {
+            props.dispatch(addErrorNotification(err.message));
+          }
+          setLoading(false);
         }}
       >
         {requestActiveKey => (
@@ -60,7 +73,7 @@ const Tokens = (props) => {
             value={`${formatNumber(tokens.emission)}`}
             label="Emission, UOS"
             action={{
-              disabled: +tokens.emission === 0,
+              disabled: +tokens.emission === 0 || loading,
               title: 'Get Emission',
               onClick: async () => {
                 requestActiveKey();

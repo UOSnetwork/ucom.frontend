@@ -1,9 +1,11 @@
 import {
   SMART_CONTRACT_EOSIO_TOKEN,
   SMART_CONTRACT_EISIO,
+  SMART_CONTRACT_EMISSION,
   ACTION_DELEGATE_BANDWIDTH,
   ACTION_UNDELEGATE_BANDWIDTH,
   ACTION_TRANSFER,
+  ACTION_WITHDRAWAL,
 } from './constants';
 import Utils from './utils';
 
@@ -50,6 +52,17 @@ export default class Actions {
         unstake_net_quantity: netAmount,
         unstake_cpu_quantity: cpuAmount,
         transfer,
+      },
+    };
+  }
+
+  static getClaimEmissionAction(authorization, accountNameFrom) {
+    return {
+      account: SMART_CONTRACT_EMISSION,
+      name: ACTION_WITHDRAWAL,
+      authorization,
+      data: {
+        owner: accountNameFrom,
       },
     };
   }
