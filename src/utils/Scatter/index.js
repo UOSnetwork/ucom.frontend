@@ -58,14 +58,17 @@ export default class Scatter {
 
     const netDelta = netAmount - currentNet;
     const cpuDelta = cpuAmount - currentCpu;
+    const checkBalansePromises = [];
 
     if (netDelta > 0) {
-      await Validator.isEnoughBalanceOrException(accountName, netDelta);
+      checkBalansePromises.push(Validator.isEnoughBalanceOrException(accountName, netDelta));
     }
 
     if (cpuDelta > 0) {
-      await Validator.isEnoughBalanceOrException(accountName, cpuDelta);
+      checkBalansePromises.push(Validator.isEnoughBalanceOrException(accountName, cpuDelta));
     }
+
+    await Promise.all(checkBalansePromises);
 
     const actions = [];
 
