@@ -33,9 +33,12 @@ export default class Scatter {
 
   async sendTokens(accountNameFrom, accountNameTo, amount, memo) {
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountNameFrom);
-    await Validator.isAccountNameExitOrException(accountNameFrom);
-    await Validator.isAccountNameExitOrException(accountNameTo);
-    await Validator.isEnoughBalanceOrException(accountNameFrom, amount);
+
+    await Promise.all([
+      Validator.isAccountNameExitOrException(accountNameFrom),
+      Validator.isAccountNameExitOrException(accountNameTo),
+      Validator.isEnoughBalanceOrException(accountNameFrom, amount),
+    ]);
 
     const actions = [Actions.getSendTokensAction(this.authorization, accountNameFrom, accountNameTo, amount, memo)];
     const result = await this.sendTransaction(actions);
@@ -47,9 +50,12 @@ export default class Scatter {
     Validator.isNonNegativeNetAmountOrException(netAmount);
     Validator.isNonNegativeCpuAmountOrException(cpuAmount);
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
-    await Validator.isAccountNameExitOrException(accountName);
 
-    const { net: currentNet, cpu: currentCpu } = await Network.getCurrentNetAndCpuStakedTokens(accountName);
+    const [, { net: currentNet, cpu: currentCpu }] = await Promise.all([
+      Validator.isAccountNameExitOrException(accountName),
+      Network.getCurrentNetAndCpuStakedTokens(accountName),
+    ]);
+
     const netDelta = netAmount - currentNet;
     const cpuDelta = cpuAmount - currentCpu;
 
@@ -102,9 +108,11 @@ export default class Scatter {
   async sellRam(accountName, bytesAmount) {
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
     Validator.isNonNegativeBytesAmountOrException(bytesAmount);
-    await Validator.isAccountNameExitOrException(accountName);
-    await Validator.isEnoughRamOrException(accountName, bytesAmount);
-    await Validator.isMinUosAmountForRamOrException(bytesAmount);
+    await Promise.all([
+      Validator.isAccountNameExitOrException(accountName),
+      Validator.isEnoughRamOrException(accountName, bytesAmount),
+      Validator.isMinUosAmountForRamOrException(bytesAmount),
+    ]);
 
     const actions = [Actions.getSellRamAction(this.authorization, accountName, bytesAmount)];
     const result = await this.sendTransaction(actions);
@@ -115,8 +123,12 @@ export default class Scatter {
   async buyRam(accountName, bytesAmount) {
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
     Validator.isNonNegativeBytesAmountOrException(bytesAmount);
-    await Validator.isAccountNameExitOrException(accountName);
-    const price = await Validator.isMinUosAmountForRamOrException(bytesAmount);
+
+    const [, price] = Promise.all([
+      Validator.isAccountNameExitOrException(accountName),
+      Validator.isMinUosAmountForRamOrException(bytesAmount),
+    ]);
+
     await Validator.isEnoughBalanceOrException(accountName, price);
 
     const actions = [Actions.getBuyRamAction(this.authorization, accountName, bytesAmount, accountName)];
@@ -132,8 +144,11 @@ export default class Scatter {
       throw new Error('It is possible to vote up to 30 block producers');
     }
 
-    const userInfo = await Validator.isAccountNameExitOrException(accountName);
-    await Validator.isBlockProducersExistOrExeption(producers);
+    const [userInfo] = Promise.all([
+      Validator.isAccountNameExitOrException(accountName),
+      Validator.isBlockProducersExistOrExeption(producers),
+    ]);
+
     const netSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.net_weight);
     const cpuSelfDelegated = Utils.getTokensAmountFromString(userInfo.self_delegated_bandwidth.cpu_weight);
 

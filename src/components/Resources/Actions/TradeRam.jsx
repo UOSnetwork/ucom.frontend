@@ -28,6 +28,11 @@ const TradeRam = (props) => {
     }, 0);
   };
 
+  const onError = (err) => {
+    const errors = parseResponseError(err);
+    setFormError(errors[0].message);
+  };
+
   return (
     <RequestActiveKey
       replace
@@ -38,8 +43,7 @@ const TradeRam = (props) => {
           await withLoader(props.dispatch(submitFn(props.owner.accountName, ram, privateKey)));
           onSuccess();
         } catch (err) {
-          const errors = parseResponseError(err);
-          setFormError(errors[0].message);
+          onError(err);
         }
         setLoading(false);
       }}
@@ -53,12 +57,12 @@ const TradeRam = (props) => {
           }
           onSuccess();
         } catch (err) {
-          setFormError(err.message);
+          onError(err);
         }
         setLoading(false);
       }}
     >
-      {requestActiveKey => (
+      {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={props.onClickClose}>
           <Content
             walletAction
@@ -117,7 +121,7 @@ const TradeRam = (props) => {
                   red
                   strech
                   type="submit"
-                  disabled={!ram || loading}
+                  disabled={!ram || loading || requestLoading}
                 >
                   {props.sell ? 'Sell' : 'Buy'}
                 </Button>

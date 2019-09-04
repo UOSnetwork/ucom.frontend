@@ -18,12 +18,25 @@ const SendTokens = () => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
   const wallet = useSelector(state => state.walletSimple);
-
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const [formError, setFormError] = useState('');
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+
+  const onSuccess = () => {
+    setFormError(null);
+    dispatch(addSuccessNotification('Successfully sent tokens'));
+    setTimeout(() => {
+      dispatch(walletGetAccount(owner.accountName));
+      dispatch(walletToggleSendTokens(false));
+    }, 0);
+  };
+
+  const onError = (err) => {
+    const errors = parseResponseError(err);
+    setFormError(errors[0].message);
+  };
 
   if (!wallet.sendTokensVisibility) {
     return null;
@@ -36,14 +49,9 @@ const SendTokens = () => {
         setLoading(true);
         try {
           await withLoader(dispatch(walletSendTokens(owner.accountName, user.accountName, +amount, memo, privateKey)));
-          setFormError(null);
-          dispatch(addSuccessNotification('Successfully sent tokens'));
-          setTimeout(() => {
-            dispatch(walletToggleSendTokens(false));
-          }, 0);
+          onSuccess();
         } catch (err) {
-          const errors = parseResponseError(err);
-          setFormError(errors[0].message);
+          onError(err);
         }
         setLoading(false);
       }}
@@ -51,19 +59,14 @@ const SendTokens = () => {
         setLoading(true);
         try {
           await scatter.sendTokens(owner.accountName, user.accountName, amount, memo);
-          setFormError(null);
-          dispatch(addSuccessNotification('Successfully sent tokens'));
-          setTimeout(() => {
-            dispatch(walletGetAccount(owner.accountName));
-            dispatch(walletToggleSendTokens(false));
-          }, 0);
+          onSuccess();
         } catch (err) {
-          setFormError(err.message);
+          onError(err);
         }
         setLoading(false);
       }}
     >
-      {requestActiveKey => (
+      {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={() => dispatch(walletToggleSendTokens(false))}>
           <Content
             walletAction
@@ -132,7 +135,7 @@ const SendTokens = () => {
                   red
                   strech
                   type="submit"
-                  disabled={!amount || !user || !user.accountName || loading}
+                  disabled={!amount || !user || !user.accountName || loading || requestLoading}
                 >
                   Send
                 </Button>

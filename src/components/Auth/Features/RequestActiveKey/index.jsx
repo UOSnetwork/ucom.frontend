@@ -18,6 +18,7 @@ const RequestActiveKey = (props) => {
   const [currentStep, setCurrentStep] = useState(null);
   const [visible, setVisible] = useState(false);
   const [submitArgs, setSubmitArgs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const resetStep = () => {
     if (encryptedActiveKeyIsExists()) {
@@ -46,6 +47,8 @@ const RequestActiveKey = (props) => {
       show(args);
     }
 
+    setLoading(true);
+
     try {
       const scatter = await withLoader(Scatter.connect());
       await withLoader(props.onScatterConnect.apply(null, [scatter, ...args]));
@@ -53,11 +56,13 @@ const RequestActiveKey = (props) => {
       console.error(err);
       show(args);
     }
+
+    setLoading(false);
   };
 
   return (
     <Fragment>
-      {(!props.replace || !visible) && props.children(request)}
+      {(!props.replace || !visible) && props.children(request, loading)}
 
       {visible && (() => {
         switch (currentStep) {

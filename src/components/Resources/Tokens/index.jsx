@@ -20,6 +20,16 @@ const Tokens = (props) => {
   const { tokens } = props.wallet;
   const [loading, setLoading] = useState(false);
 
+  const onSuccessGetEmission = async () => {
+    props.dispatch(addSuccessNotification('Successfully get emission'));
+    await withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+  };
+
+  const onErrorGetEmission = (err) => {
+    const errors = parseResponseError(err);
+    props.dispatch(addErrorNotification(errors[0].message));
+  };
+
   if (!tokens) {
     return null;
   }
@@ -49,10 +59,9 @@ const Tokens = (props) => {
           setLoading(true);
           try {
             await withLoader(props.dispatch(walletGetEmission(props.owner.accountName, privateKey)));
-            props.dispatch(addSuccessNotification('Successfully get emission'));
+            await onSuccessGetEmission();
           } catch (err) {
-            const errors = parseResponseError(err);
-            props.dispatch(addErrorNotification(errors[0].message));
+            onErrorGetEmission(err);
           }
           setLoading(false);
         }}
@@ -60,20 +69,19 @@ const Tokens = (props) => {
           setLoading(true);
           try {
             await withLoader(scatter.claimEmission(props.owner.accountName));
-            props.dispatch(addSuccessNotification('Successfully get emission'));
-            await withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+            await onSuccessGetEmission();
           } catch (err) {
-            props.dispatch(addErrorNotification(err.message));
+            onErrorGetEmission(err);
           }
           setLoading(false);
         }}
       >
-        {requestActiveKey => (
+        {(requestActiveKey, requestLoading) => (
           <Token
             value={`${formatNumber(tokens.emission)}`}
             label="Emission, UOS"
             action={{
-              disabled: +tokens.emission === 0 || loading,
+              disabled: +tokens.emission === 0 || loading || requestLoading,
               title: 'Get Emission',
               onClick: async () => {
                 requestActiveKey();

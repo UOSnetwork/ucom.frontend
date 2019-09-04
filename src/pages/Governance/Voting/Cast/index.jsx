@@ -143,13 +143,13 @@ const Cast = ({ history, match }) => {
               onSubmit={onSubmit}
               onScatterConnect={onScatterConnect}
             >
-              {requestActiveKey => (
+              {(requestActiveKey, requestLoading) => (
                 <Button
                   red
                   big
                   cap
                   width={200}
-                  disabled={loading}
+                  disabled={loading || requestLoading}
                   onClick={() => {
                     if (!owner.id) {
                       dispatch(authShowPopup());

@@ -35,6 +35,20 @@ const EditStake = (props) => {
     loader.done();
   };
 
+  const onSuccess = () => {
+    setFormError(null);
+    props.dispatch(addSuccessNotification('Successfully set stake'));
+    setTimeout(() => {
+      withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+      props.dispatch(walletToggleEditStake(false));
+    }, 0);
+  };
+
+  const onError = (err) => {
+    const errors = parseResponseError(err);
+    setFormError(errors[0].message);
+  };
+
   useEffect(() => {
     if (props.wallet.editStakeVisible && props.owner.accountName) {
       getCurrentNetAndCpuStakedTokens();
@@ -52,14 +66,9 @@ const EditStake = (props) => {
         setLoading(true);
         try {
           await withLoader(props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey)));
-          setFormError(null);
-          props.dispatch(addSuccessNotification('Successfully set stake'));
-          setTimeout(() => {
-            props.dispatch(walletToggleEditStake(false));
-          }, 0);
-        } catch (e) {
-          const errors = parseResponseError(e);
-          setFormError(errors[0].message);
+          onSuccess();
+        } catch (err) {
+          onError(err);
         }
         setLoading(false);
       }}
@@ -67,20 +76,14 @@ const EditStake = (props) => {
         setLoading(true);
         try {
           await withLoader(scatter.stakeOrUnstakeTokens(props.owner.accountName, net, cpu));
-          setFormError(null);
-          props.dispatch(addSuccessNotification('Successfully set stake'));
-          setTimeout(() => {
-            withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
-            props.dispatch(walletToggleEditStake(false));
-          }, 0);
+          onSuccess();
         } catch (err) {
-          console.error(err);
-          setFormError(err.message);
+          onError(err);
         }
         setLoading(false);
       }}
     >
-      {requestActiveKey => (
+      {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
           <Content
             walletAction
@@ -136,7 +139,7 @@ const EditStake = (props) => {
                   red
                   strech
                   type="submit"
-                  disabled={!`${cpu}`.length || !`${net}`.length || loading}
+                  disabled={!`${cpu}`.length || !`${net}`.length || loading || requestLoading}
                 >
                   Update
                 </Button>
