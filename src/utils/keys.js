@@ -168,6 +168,14 @@ export const restoreSocialKey = () => {
   return socialKey;
 };
 
+export const getSocialKey = () => {
+  try {
+    return restoreSocialKey();
+  } catch (err) {
+    return null;
+  }
+};
+
 export const removeSocialKey = () => {
   try {
     localStorage.removeItem('socialKey');
@@ -176,43 +184,11 @@ export const removeSocialKey = () => {
   }
 };
 
-// TODO: Remove when develop social key auth feature is done
-export const saveActiveKey = (activeKey) => {
-  try {
-    localStorage.setItem('activeKey', activeKey);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-export const restoreActiveKey = () => {
-  try {
-    return localStorage.getItem('activeKey');
-  } catch (e) {
-    return null;
-  }
-};
-
-export const removeActiveKey = () => {
-  try {
-    localStorage.removeItem('activeKey');
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 if (typeof localStorage !== 'undefined') {
   try {
-    const brainkey = localStorage.getItem('brainkey');
-
-    if (brainkey) {
-      const activeKey = getActivePrivateKey(brainkey);
-      localStorage.setItem('activeKey', activeKey);
-    }
-
+    localStorage.removeItem('activeKey');
     localStorage.removeItem('brainkey');
   } catch (err) {
     console.error(err);
   }
 }
-// TODO: End

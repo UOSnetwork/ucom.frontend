@@ -8,8 +8,8 @@ import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
 import { walletGetAccount } from './walletSimple';
-import { restoreActiveKey } from '../utils/keys';
-import { USER_EDITABLE_PROPS } from '../utils/constants';
+import { getSocialKey } from '../utils/keys';
+import { USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 // import { enableGtm } from '../utils/gtm';
 import { getUserById, getUsersByIds } from '../store/users';
 
@@ -152,10 +152,10 @@ export const fetchUserFollowsOrganizations = ({
 
 export const updateUser = userData => async (dispatch) => {
   let dataAsJson;
-  const activeKey = restoreActiveKey();
+  const socialKey = getSocialKey();
 
-  if (!activeKey) {
-    throw new Error('Active key is required');
+  if (!socialKey) {
+    throw new Error('Social key is required');
   }
 
   if (!isEqual(Object.keys(userData), USER_EDITABLE_PROPS)) {
@@ -168,7 +168,7 @@ export const updateUser = userData => async (dispatch) => {
     throw new Error('UserData object is not valid');
   }
 
-  const signedTransaction = await ContentApi.updateProfile(userData.accountName, activeKey, dataAsJson);
+  const signedTransaction = await ContentApi.updateProfile(userData.accountName, socialKey, dataAsJson, TRANSACTION_PERMISSION_SOCIAL);
 
   const dataForApi = {
     ...userData,
@@ -204,13 +204,13 @@ export const trustUser = ({
   userId,
   userAccountName,
   ownerAccountName,
-  activeKey,
+  socialKey,
 }) => async (dispatch) => {
   await api.trustUser(
     ownerAccountName,
     userAccountName,
     userId,
-    activeKey,
+    socialKey,
   );
 
   dispatch({
@@ -226,13 +226,13 @@ export const untrustUser = ({
   userId,
   userAccountName,
   ownerAccountName,
-  activeKey,
+  socialKey,
 }) => async (dispatch) => {
   await api.untrustUser(
     ownerAccountName,
     userAccountName,
     userId,
-    activeKey,
+    socialKey,
   );
 
   dispatch({

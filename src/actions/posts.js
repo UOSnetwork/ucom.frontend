@@ -3,7 +3,7 @@ import { omit } from 'lodash';
 import api, { graphql } from '../api';
 import { addUsers } from './users';
 import { addOrganizations, getOrganization } from './organizations';
-import { POST_TYPE_MEDIA_ID } from '../utils/constants';
+import { POST_TYPE_MEDIA_ID, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { searchTags } from '../utils/text';
@@ -127,9 +127,20 @@ export const createMediaPost = (
 
   if (organizationId) {
     const organization = await dispatch(getOrganization(organizationId));
-    transaction = await PublicationsApi.signCreatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content);
+    transaction = await PublicationsApi.signCreatePublicationFromOrganization(
+      accountName,
+      privateKey,
+      organization.blockchainId,
+      content,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
   } else {
-    transaction = await PublicationsApi.signCreatePublicationFromUser(accountName, privateKey, content);
+    transaction = await PublicationsApi.signCreatePublicationFromUser(
+      accountName,
+      privateKey,
+      content,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
   }
 
   const data = {
@@ -173,9 +184,22 @@ export const updateMediaPost = (
 
   if (organizationId) {
     const organization = await dispatch(getOrganization(organizationId));
-    signed_transaction = await PublicationsApi.signUpdatePublicationFromOrganization(accountName, privateKey, organization.blockchainId, content, blockchainId);
+    signed_transaction = await PublicationsApi.signUpdatePublicationFromOrganization(
+      accountName,
+      privateKey,
+      organization.blockchainId,
+      content,
+      blockchainId,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
   } else {
-    signed_transaction = await PublicationsApi.signUpdatePublicationFromUser(accountName, privateKey, content, blockchainId);
+    signed_transaction = await PublicationsApi.signUpdatePublicationFromUser(
+      accountName,
+      privateKey,
+      content,
+      blockchainId,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
   }
 
   const data = {
@@ -217,6 +241,7 @@ export const createDirectPost = (
       ownerPrivateKey,
       userAccountName,
       postContent,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
     ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForOrganization(
@@ -224,6 +249,7 @@ export const createDirectPost = (
       orgBlockchainId,
       ownerPrivateKey,
       postContent,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   }
 
@@ -275,6 +301,7 @@ export const upadteDirectPost = (
       userAccountName,
       postContent,
       postBlockchainId,
+      TRANSACTION_PERMISSION_SOCIAL,
     );
   } else {
     signed_transaction = await PublicationsApi.signUpdateDirectPostForOrganization(
@@ -283,6 +310,7 @@ export const upadteDirectPost = (
       orgBlockchainId,
       postContent,
       postBlockchainId,
+      TRANSACTION_PERMISSION_SOCIAL,
     );
   }
 
@@ -311,6 +339,7 @@ export const createRepost = (
     ownerPrivateKey,
     postBlockchainId,
     postContent,
+    TRANSACTION_PERMISSION_SOCIAL,
   );
 
   const result = await api.repostPost(postId, {

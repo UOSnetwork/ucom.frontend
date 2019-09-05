@@ -20,7 +20,7 @@ import { addErrorNotification, addErrorNotificationFromResponse } from '../../ac
 import { getOrganization } from '../../actions/organizations';
 import { authShowPopup } from '../../actions/auth';
 import withLoader from '../../utils/withLoader';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 
 const Wrapper = ({ containerId, postId, ...props }) => {
   const dispatch = useDispatch();
@@ -60,7 +60,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     containerId,
     entityImages,
   }) => {
-    const ownerPrivateKey = restoreActiveKey();
+    const ownerPrivateKey = getSocialKey();
 
     if (!owner.id || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());

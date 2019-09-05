@@ -13,7 +13,7 @@ import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
 import withLoader from '../../utils/withLoader';
 import equalByProps from '../../utils/equalByProps';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 import { selectOwner, selectUserById, selectOrgById } from '../../store/selectors';
 import { authShowPopup } from '../../actions/auth';
 
@@ -37,7 +37,7 @@ const FeedUser = (props) => {
   }, [props.feedTypeId, feed, props.userId, props.organizationId, props.tagIdentity]);
 
   const onSubmitPostForm = useMemo(() => async (description, entityImages) => {
-    const ownerPrivateKey = restoreActiveKey();
+    const ownerPrivateKey = getSocialKey();
 
     if (!owner.id || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());

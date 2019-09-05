@@ -7,7 +7,7 @@ import { getToken } from '../utils/token';
 import { getActivePrivateKey, getOwnerPublicKeyByBrainkey, getPublicKeyByPrivateKey, getSocialPrivateKeyByActiveKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
-import { LIST_PER_PAGE } from '../utils/constants';
+import { LIST_PER_PAGE, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 
 const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
 const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
@@ -38,6 +38,8 @@ class Api {
 
     if (!socialKeyIsBinded) {
       await SocialKeyApi.bindSocialKeyWithSocialPermissions(account_name, activePrivateKey, socialPublicKey);
+    } else {
+      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(account_name, activePrivateKey);
     }
 
     const response = await this.actions.post('/api/v1/auth/login', {
@@ -242,11 +244,13 @@ class Api {
     return response;
   }
 
+  // TODO: Move sign transaction to redux action
   async trustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
     const signedTransaction = await SocialApi.getTrustUserSignedTransactionsAsJson(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,
+      TRANSACTION_PERMISSION_SOCIAL,
     );
     const response = await this.actions.post(`/api/v1/users/${userId}/trust`, {
       signed_transaction: signedTransaction,
@@ -255,11 +259,13 @@ class Api {
     return humps(response.data);
   }
 
+  // TODO: Move sign transaction to redux action
   async untrustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
     const signedTransaction = await SocialApi.getUnTrustUserSignedTransactionsAsJson(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,
+      TRANSACTION_PERMISSION_SOCIAL,
     );
     const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, {
       signed_transaction: signedTransaction,

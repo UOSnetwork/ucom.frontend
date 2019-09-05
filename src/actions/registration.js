@@ -4,7 +4,7 @@ import api from '../api';
 import { generateBrainkey } from '../utils/brainkey';
 import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
-import { saveSocialKey, saveActiveKey, getActivePrivateKey, getSocialPrivateKeyByBrainkey } from '../utils/keys';
+import { saveSocialKey, getActivePrivateKey, getSocialPrivateKeyByBrainkey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
@@ -77,7 +77,6 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
 
   try {
     saveToken(registrationData.token);
-    saveActiveKey(activePrivateKey);
     saveSocialKey(socialPrivateKey);
   } catch (err) {
     console.error(err);

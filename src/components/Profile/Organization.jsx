@@ -32,7 +32,7 @@ import { authShowPopup } from '../../actions/auth';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
 import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import EmbedService from '../../utils/embedService';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 import styles from './styles.css';
 
 const defaultOrg = {
@@ -96,7 +96,7 @@ const OrganizationProfile = ({
       return;
     }
 
-    const ownerPrivateKey = restoreActiveKey();
+    const ownerPrivateKey = getSocialKey();
 
     if (!owner || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());

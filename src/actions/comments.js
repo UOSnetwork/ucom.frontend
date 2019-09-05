@@ -6,6 +6,7 @@ import loader from '../utils/loader';
 import { addServerErrorNotification } from './notifications';
 import { addUsers } from './users';
 import { searchTags } from '../utils/text';
+import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 
 const { PublicationsApi } = Wallet.Content;
 
@@ -151,6 +152,7 @@ export const createComment = (
       orgBlockchainId,
       commentContent,
       false,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else if (orgBlockchainId && commentBlockchainId) {
     ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
@@ -160,6 +162,7 @@ export const createComment = (
       orgBlockchainId,
       commentContent,
       true,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else if (commentBlockchainId) {
     ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
@@ -168,6 +171,7 @@ export const createComment = (
       commentBlockchainId,
       commentContent,
       true,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
     ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
@@ -176,6 +180,7 @@ export const createComment = (
       postBlockchainId,
       commentContent,
       false,
+      TRANSACTION_PERMISSION_SOCIAL,
     ));
   }
 

@@ -15,7 +15,7 @@ import * as postsActions from '../../actions/posts';
 import { authShowPopup } from '../../actions/auth';
 import { selectOwner, selectPostById } from '../../store/selectors';
 import equalByProps from '../../utils/equalByProps';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 import styles from './styles.css';
 
 const Share = ({
@@ -41,7 +41,7 @@ const Share = ({
       return;
     }
 
-    const ownerPrivateKey = restoreActiveKey();
+    const ownerPrivateKey = getSocialKey();
 
     if (!owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());
