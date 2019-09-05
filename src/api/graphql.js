@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'ucom-libs-graphql-schemas';
 import humps from 'lodash-humps';
-import * as axios from 'axios';
+import axios from './axios';
 import snakes from '../utils/snakes';
 import { getBackendConfig } from '../utils/config';
 import { getToken } from '../utils/token';

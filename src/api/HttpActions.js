@@ -1,5 +1,5 @@
 import objectToFormData from 'object-to-formdata';
-import * as axios from 'axios';
+import axios from './axios';
 import { getToken } from '../utils/token';
 
 class HttpActions {
