@@ -69,6 +69,7 @@ class Api {
     });
 
     await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
+    await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activePrivateKey);
 
     return humps(response.data);
   }
