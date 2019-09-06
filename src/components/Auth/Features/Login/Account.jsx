@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { memo, Fragment, useState } from 'react';
-import styles from '../styles.css';
+import styles from '../../styles.css';
 import Button from '../../../Button/index';
 import IconInputError from '../../../Icons/InputError';
 import {
@@ -74,7 +74,7 @@ const Account = (props) => {
                 cap
                 strech
                 type="submit"
-                disabled={props.loading || formError || props.error}
+                disabled={Boolean(props.loading || formError || props.error)}
               >
                 Proceed
               </Button>

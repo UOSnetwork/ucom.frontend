@@ -23,16 +23,9 @@ export const hidePopup = () => (dispatch) => {
   }));
 };
 
-export const login = (brainkey, accountName) => async (dispatch, getState) => {
+export const redirectAfterLoginIfNeedOrRefresh = () => (dispatch, getState) => {
   const state = getState();
   const { redirectUrl } = state.auth;
-
-  const data = await api.login(snakes({ brainkey, accountName }));
-  const activePrivateKey = getActivePrivateKey(brainkey);
-  const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
-
-  saveToken(data.token);
-  saveSocialKey(socialPrivateKey);
 
   if (redirectUrl) {
     window.location.replace(redirectUrl);
@@ -41,12 +34,43 @@ export const login = (brainkey, accountName) => async (dispatch, getState) => {
   }
 };
 
+export const login = (brainkey, accountName) => async (dispatch) => {
+  const data = await api.loginByBrainkey(snakes({ brainkey, accountName }));
+  const activePrivateKey = getActivePrivateKey(brainkey);
+  const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
+
+  saveToken(data.token);
+  saveSocialKey(socialPrivateKey);
+  dispatch(redirectAfterLoginIfNeedOrRefresh());
+};
+
+export const loginBySocialKey = (socialKey, accountName) => async (dispatch) => {
+  const resp = await api.loginBySocialKey(socialKey, accountName);
+
+  saveToken(resp.token);
+  saveSocialKey(socialKey);
+  dispatch(redirectAfterLoginIfNeedOrRefresh());
+};
+
+export const recoveryByBrainkey = (brainkey, accountName) => async () => {
+  try {
+    await api.loginByBrainkey(brainkey, accountName);
+  } catch (err) {
+    throw new Error('Brainkey is wrong');
+  }
+
+  const activeKey = getActivePrivateKey(brainkey);
+  const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
+
+  return socialKey;
+};
+
 export const checkBrainkey = brainkey => async (dispatch, getState) => {
   const state = getState();
   const owner = selectOwner(state);
   const { accountName } = owner;
+  const data = await api.loginByBrainkey(snakes({ brainkey, accountName }));
 
-  const data = await api.login(snakes({ brainkey, accountName }));
   saveToken(data.token);
 
   return true;

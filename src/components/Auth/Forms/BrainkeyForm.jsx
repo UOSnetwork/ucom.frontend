@@ -67,7 +67,7 @@ const BrainkeyForm = (props) => {
           cap
           strech
           type="submit"
-          disabled={props.loading || Boolean(props.error) || Boolean(formError)}
+          disabled={Boolean(props.loading || props.error || formError)}
         >
           Proceed
         </Button>

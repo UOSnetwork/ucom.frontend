@@ -1,42 +1,40 @@
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { isEqual } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, memo } from 'react';
 import Popup, { Content } from '../../../Popup';
 import Account from './Account';
 import SocialKey from './SocialKey';
 import GenerateSocialKey from './GenerateSocialKey';
 import SaveSocialKey from './SaveSocialKey';
 import { fetchUser } from '../../../../actions/users';
-import loader from '../../../../utils/loader';
-import { getUserById } from '../../../../store/users';
+import withLoader from '../../../../utils/withLoader';
+import { selectUserById } from '../../../../store/selectors';
 import urls from '../../../../utils/urls';
 import { getUserName } from '../../../../utils/user';
 import * as authActions from '../../../../actions/auth';
+import { parseResponseError } from '../../../../utils/errors';
 
 const STEP_ACCOUNT = 1;
 const STEP_SOCIAL_KEY = 2;
 const STEP_NEW_SOCIAL_KEY = 3;
 const STEP_SAVE_SOCIAL_KEY = 4;
-
 const ERROR_ACCOUNT_NOT_EXIST = 'Such account does not exist in a blockchain';
 
-const Auth = (props) => {
-  if (!props.visibility) {
-    return null;
-  }
-
+const Auth = () => {
+  const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(STEP_ACCOUNT);
   const [loading, setLoading] = useState(false);
   const [accountError, setAccountError] = useState('');
+  const [socialKeyError, setSocialKeyError] = useState('');
   const [userId, setUserId] = useState(null);
   const [socialKey, setSocialKey] = useState(null);
-  const user = getUserById(props.users, userId);
+  const user = useSelector(selectUserById(userId), isEqual);
 
   return (
-    <Popup onClickClose={() => props.dispatch(authActions.hidePopup())}>
+    <Popup onClickClose={() => dispatch(authActions.hidePopup())}>
       <Content
         fullHeight
-        onClickClose={() => props.dispatch(authActions.hidePopup())}
+        onClickClose={() => dispatch(authActions.hidePopup())}
       >
         {(() => {
           switch (currentStep) {
@@ -48,17 +46,33 @@ const Auth = (props) => {
 
               return (
                 <SocialKey
+                  loading={loading}
+                  error={socialKeyError}
                   userName={getUserName(user)}
                   userAccountName={user.accountName}
                   userAvatarSrc={urls.getFileUrl(user.avatarFilename)}
                   onClickBack={() => setCurrentStep(STEP_ACCOUNT)}
                   onClickNewKeys={() => setCurrentStep(STEP_NEW_SOCIAL_KEY)}
+                  onChange={() => {
+                    setSocialKeyError('');
+                  }}
+                  onSubmit={async (socialKey) => {
+                    setLoading(true);
+                    try {
+                      await withLoader(dispatch(authActions.loginBySocialKey(socialKey, user.accountName)));
+                    } catch (err) {
+                      const errors = parseResponseError(err);
+                      setSocialKeyError(errors[0].message);
+                      setLoading(false);
+                    }
+                  }}
                 />
               );
             }
             case STEP_NEW_SOCIAL_KEY:
               return (
                 <GenerateSocialKey
+                  accountName={user.accountName}
                   onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
                   onSubmit={(socialKey) => {
                     setSocialKey(socialKey);
@@ -83,9 +97,8 @@ const Auth = (props) => {
                   }}
                   onSubmit={async (accountName) => {
                     setLoading(true);
-                    loader.start();
                     try {
-                      const userData = await props.dispatch(fetchUser(accountName));
+                      const userData = await withLoader(dispatch(fetchUser(accountName)));
                       setAccountError('');
                       setUserId(userData.id);
                       setCurrentStep(STEP_SOCIAL_KEY);
@@ -93,7 +106,6 @@ const Auth = (props) => {
                       setAccountError(ERROR_ACCOUNT_NOT_EXIST);
                     }
                     setLoading(false);
-                    loader.done();
                   }}
                 />
               );
@@ -104,17 +116,4 @@ const Auth = (props) => {
   );
 };
 
-Auth.propTypes = {
-  users: PropTypes.objectOf(PropTypes.any).isRequired,
-  visibility: PropTypes.bool,
-  dispatch: PropTypes.func.isRequired,
-};
-
-Auth.defaultProps = {
-  visibility: false,
-};
-
-export default connect(state => ({
-  users: state.users,
-  visibility: state.auth.visibility,
-}))(Auth);
+export default memo(Auth);
