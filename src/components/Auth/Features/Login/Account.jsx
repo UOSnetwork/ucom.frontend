@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React, { memo, Fragment, useState } from 'react';
 import styles from '../../styles.css';
@@ -7,6 +8,7 @@ import {
   USER_ACCOUNT_NAME_SYMBOLS_REG_EXP,
   USER_ACCOUNT_NAME_REG_EXP,
 } from '../../../../utils/constants';
+import urls from '../../../../utils/urls';
 
 const ERROR_WRONG_ACCOUNT_NAME = 'Wrong Account Name format';
 
@@ -83,7 +85,7 @@ const Account = (props) => {
         </div>
         <div className={styles.bottom}>
           Don’t have an account?&nbsp;
-          <a href="#" className={`red ${styles.navText}`}>Create one</a>
+          <Link to={urls.getRegistrationUrl()} className={`red ${styles.navText}`}>Create one</Link>
         </div>
       </div>
     </Fragment>
