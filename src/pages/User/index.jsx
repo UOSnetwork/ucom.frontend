@@ -228,7 +228,7 @@ export const getUserPageData = async (store, params) => {
       contentMetaTags: {
         title: getUserName(user),
         description: user.about,
-        image: '',
+        image: urls.getFileUrl(user.avatarFilename),
       },
     };
   } catch (err) {
