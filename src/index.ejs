@@ -43,6 +43,9 @@
     <% if (typeof contentMetaTags.imageHeight === 'string') { %>
       <meta property="og:image:height" content="<%- contentMetaTags.imageHeight %>" />
     <% } %>
+    <% if (typeof contentMetaTags.keywords === 'string') { %>
+      <meta name="keywords" content="<%- contentMetaTags.keywords %>" />
+    <% } %>
   <% } %>
 
   <style>

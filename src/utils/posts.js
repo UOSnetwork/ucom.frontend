@@ -1,5 +1,5 @@
 import { truncate, memoize } from 'lodash';
-import { removeLineBreaksMultipleSpacesAndTrim } from '../utils/text';
+import { removeLineBreaksMultipleSpacesAndTrim, searchTags } from '../utils/text';
 import urls from './urls';
 
 const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
@@ -177,6 +177,7 @@ export const getContentMetaTags = (post) => {
     title: post.title,
     description: post.leadingText,
     path: urls.getPostUrl(post),
+    keywords: searchTags(post.description).join(','),
   };
 };
 
