@@ -6,6 +6,7 @@ import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
 import { saveSocialKey, getActivePrivateKey, getSocialPrivateKeyByBrainkey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
+import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
 const { SocialApi, ContentApi } = require('ucom-libs-wallet');
@@ -103,8 +104,9 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     try {
       const signedTransaction = await SocialApi.getReferralFromUserSignedTransactionAsJson(
         accountName,
-        activePrivateKey,
+        socialPrivateKey,
         referralData.affiliatesActions[0].accountNameSource,
+        TRANSACTION_PERMISSION_SOCIAL,
       );
 
       await api.referralTransaction(

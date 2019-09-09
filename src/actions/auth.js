@@ -69,7 +69,7 @@ export const checkBrainkey = brainkey => async (dispatch, getState) => {
   const state = getState();
   const owner = selectOwner(state);
   const { accountName } = owner;
-  const data = await api.loginByBrainkey(snakes({ brainkey, accountName }));
+  const data = await api.loginByBrainkey(brainkey, accountName);
 
   saveToken(data.token);
 
