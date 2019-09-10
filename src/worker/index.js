@@ -14,6 +14,10 @@ import {
   WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
   WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
   WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+  WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
+  WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
+  WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
+  WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
 } from '../utils/constants';
 
 export default class Api {
@@ -179,6 +183,58 @@ export default class Api {
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signCreatePublicationFromOrganization(accountName, privateKey, blockchainId, content, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
+      accountName,
+      privateKey,
+      blockchainId,
+      content,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signCreatePublicationFromUser(accountName, privateKey, content, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
+      accountName,
+      privateKey,
+      content,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signUpdatePublicationFromOrganization(accountName, privateKey, orgBlockchainId, content, postBlockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
+      accountName,
+      privateKey,
+      orgBlockchainId,
+      content,
+      postBlockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signUpdatePublicationFromUser(accountName, privateKey, content, blockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
+      accountName,
+      privateKey,
+      content,
+      blockchainId,
       permission,
     });
 

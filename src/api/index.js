@@ -1,4 +1,4 @@
-import { WalletApi, SocialApi, Dictionary, SocialKeyApi } from 'ucom-libs-wallet';
+import { WalletApi, Dictionary, SocialKeyApi } from 'ucom-libs-wallet';
 import ecc from 'eosjs-ecc';
 import humps from 'lodash-humps';
 import param from 'jquery-param';

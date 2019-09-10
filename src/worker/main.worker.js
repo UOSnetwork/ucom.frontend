@@ -17,10 +17,14 @@ import {
   WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
   WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
   WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+  WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
+  WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
+  WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
+  WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
 } from '../utils/constants';
 
 const { SocialKeyApi, SocialApi } = Wallet;
-const { ContentInteractionsApi } = Wallet.Content;
+const { ContentInteractionsApi, PublicationsApi } = Wallet.Content;
 
 registerPromiseWorker((action) => {
   switch (action.type) {
@@ -78,6 +82,22 @@ registerPromiseWorker((action) => {
 
     case WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON: {
       return SocialApi.getUnTrustUserSignedTransactionsAsJson(action.ownerAccountName, action.ownerPrivateKey, action.userAccountName, action.permission);
+    }
+
+    case WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION: {
+      return PublicationsApi.signCreatePublicationFromOrganization(action.accountName, action.privateKey, action.blockchainId, action.content, action.permission);
+    }
+
+    case WORKER_SIGN_CREATE_PUBLICATION_FROM_USER: {
+      return PublicationsApi.signCreatePublicationFromUser(action.accountName, action.privateKey, action.content, action.permission);
+    }
+
+    case WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION: {
+      return PublicationsApi.signUpdatePublicationFromOrganization(action.accountName, action.privateKey, action.orgBlockchainId, action.content, action.postBlockchainId, action.permission);
+    }
+
+    case WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER: {
+      return PublicationsApi.signUpdatePublicationFromUser(action.accountName, action.privateKey, action.content, action.blockchainId, action.permission);
     }
 
     default:

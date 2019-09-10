@@ -7,6 +7,7 @@ import { POST_TYPE_MEDIA_ID, TRANSACTION_PERMISSION_SOCIAL } from '../utils/cons
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { searchTags } from '../utils/text';
+import Worker from '../worker';
 
 const { PublicationsApi } = Wallet.Content;
 
@@ -127,7 +128,7 @@ export const createMediaPost = (
 
   if (organizationId) {
     const organization = await dispatch(getOrganization(organizationId));
-    transaction = await PublicationsApi.signCreatePublicationFromOrganization(
+    transaction = await Worker.signCreatePublicationFromOrganization(
       accountName,
       privateKey,
       organization.blockchainId,
@@ -135,7 +136,7 @@ export const createMediaPost = (
       TRANSACTION_PERMISSION_SOCIAL,
     );
   } else {
-    transaction = await PublicationsApi.signCreatePublicationFromUser(
+    transaction = await Worker.signCreatePublicationFromUser(
       accountName,
       privateKey,
       content,
@@ -184,7 +185,7 @@ export const updateMediaPost = (
 
   if (organizationId) {
     const organization = await dispatch(getOrganization(organizationId));
-    signed_transaction = await PublicationsApi.signUpdatePublicationFromOrganization(
+    signed_transaction = await Worker.signUpdatePublicationFromOrganization(
       accountName,
       privateKey,
       organization.blockchainId,
@@ -193,7 +194,7 @@ export const updateMediaPost = (
       TRANSACTION_PERMISSION_SOCIAL,
     );
   } else {
-    signed_transaction = await PublicationsApi.signUpdatePublicationFromUser(
+    signed_transaction = await Worker.signUpdatePublicationFromUser(
       accountName,
       privateKey,
       content,
