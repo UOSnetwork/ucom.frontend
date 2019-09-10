@@ -11,9 +11,13 @@ import {
   WORKER_ECC_SIGN,
   WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
   WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
+  WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+  WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+  WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+  WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
 } from '../utils/constants';
 
-const { SocialKeyApi } = Wallet;
+const { SocialKeyApi, SocialApi } = Wallet;
 const { ContentInteractionsApi } = Wallet.Content;
 
 registerPromiseWorker((action) => {
@@ -48,6 +52,22 @@ registerPromiseWorker((action) => {
 
     case WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION: {
       return ContentInteractionsApi.getUpvoteContentSignedTransaction(action.accountName, action.privateKey, action.blockchainId, action.permission);
+    }
+
+    case WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION: {
+      return SocialApi.getFollowAccountSignedTransaction(action.ownerAccountName, action.privateKey, action.userAccountName, action.permission);
+    }
+
+    case WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION: {
+      return SocialApi.getUnfollowAccountSignedTransaction(action.ownerAccountName, action.privateKey, action.userAccountName, action.permission);
+    }
+
+    case WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION: {
+      return SocialApi.getFollowOrganizationSignedTransaction(action.ownerAccountName, action.privateKey, action.orgBlockchainId, action.permission);
+    }
+
+    case WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION: {
+      return SocialApi.getUnfollowOrganizationSignedTransaction(action.ownerAccountName, action.privateKey, action.orgBlockchainId, action.permission);
     }
 
     default:

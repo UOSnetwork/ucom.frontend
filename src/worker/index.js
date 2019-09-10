@@ -8,6 +8,10 @@ import {
   WORKER_ECC_SIGN,
   WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
   WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
+  WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+  WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+  WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+  WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
 } from '../utils/constants';
 
 export default class Api {
@@ -101,6 +105,54 @@ export default class Api {
       accountName,
       privateKey,
       blockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getFollowAccountSignedTransaction(ownerAccountName, privateKey, userAccountName, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+      ownerAccountName,
+      privateKey,
+      userAccountName,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getUnfollowAccountSignedTransaction(ownerAccountName, privateKey, userAccountName, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+      ownerAccountName,
+      privateKey,
+      userAccountName,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getFollowOrganizationSignedTransaction(ownerAccountName, privateKey, orgBlockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+      ownerAccountName,
+      privateKey,
+      orgBlockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getUnfollowOrganizationSignedTransaction(ownerAccountName, privateKey, orgBlockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+      ownerAccountName,
+      privateKey,
+      orgBlockchainId,
       permission,
     });
 
