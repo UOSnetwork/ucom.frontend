@@ -15,6 +15,8 @@ import {
   WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
   WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
   WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+  WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+  WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
 } from '../utils/constants';
 
 const { SocialKeyApi, SocialApi } = Wallet;
@@ -68,6 +70,14 @@ registerPromiseWorker((action) => {
 
     case WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION: {
       return SocialApi.getUnfollowOrganizationSignedTransaction(action.ownerAccountName, action.privateKey, action.orgBlockchainId, action.permission);
+    }
+
+    case WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON: {
+      return SocialApi.getTrustUserSignedTransactionsAsJson(action.ownerAccountName, action.ownerPrivateKey, action.userAccountName, action.permission);
+    }
+
+    case WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON: {
+      return SocialApi.getUnTrustUserSignedTransactionsAsJson(action.ownerAccountName, action.ownerPrivateKey, action.userAccountName, action.permission);
     }
 
     default:

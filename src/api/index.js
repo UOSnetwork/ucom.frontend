@@ -255,7 +255,7 @@ class Api {
 
   // TODO: Move sign transaction to redux action
   async trustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
-    const signedTransaction = await SocialApi.getTrustUserSignedTransactionsAsJson(
+    const signedTransaction = await Worker.getTrustUserSignedTransactionsAsJson(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,
@@ -270,7 +270,7 @@ class Api {
 
   // TODO: Move sign transaction to redux action
   async untrustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
-    const signedTransaction = await SocialApi.getUnTrustUserSignedTransactionsAsJson(
+    const signedTransaction = await Worker.getUnTrustUserSignedTransactionsAsJson(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,

@@ -1,5 +1,5 @@
 import graphql from '../api/graphql';
-import { addUsers, trustUser, untrustUser } from './users';
+import { addUsers, trustUser, untrustUser, fetchUser } from './users';
 import { addOrganizations } from './organizations';
 
 export const reset = () => ({ type: 'USER_PAGE_RESET' });
@@ -109,16 +109,13 @@ export const getTrustedByPopup = (userIdentity, page) => async (dispatch) => {
 };
 
 export const submitTrust = (userIdentity, isTrust, params) => async (dispatch) => {
-  dispatch(setData({
-    trustLoading: true,
-  }));
+  dispatch(setData({ trustLoading: true }));
 
   await dispatch((isTrust ? trustUser : untrustUser)(params));
   await dispatch(getTrustedBy(userIdentity));
+  await dispatch(fetchUser(userIdentity));
 
-  dispatch(setData({
-    trustLoading: false,
-  }));
+  dispatch(setData({ trustLoading: false }));
 };
 
 export const getOrgsPopup = (userIdentity, page) => async (dispatch) => {

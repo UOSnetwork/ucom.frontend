@@ -12,6 +12,8 @@ import {
   WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
   WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
   WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+  WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+  WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
 } from '../utils/constants';
 
 export default class Api {
@@ -153,6 +155,30 @@ export default class Api {
       ownerAccountName,
       privateKey,
       orgBlockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getTrustUserSignedTransactionsAsJson(ownerAccountName, ownerPrivateKey, userAccountName, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getUnTrustUserSignedTransactionsAsJson(ownerAccountName, ownerPrivateKey, userAccountName, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
       permission,
     });
 
