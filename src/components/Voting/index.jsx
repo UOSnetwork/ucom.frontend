@@ -9,10 +9,11 @@ import Details from './Details';
 import UsersPopup from './UsersPopup';
 import { formatRate } from '../../utils/rate';
 import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../utils/constants';
+import Spinner from '../Spinner';
 import styles from './styles.css';
 
 const Votin = ({
-  rate, count, selfVote, details, usersPopup, onClick, onClickUp, onClickDown, onShow,
+  rate, count, selfVote, details, usersPopup, onClick, onClickUp, onClickDown, onShow, loading,
 }) => {
   const tippyInstance = useRef();
 
@@ -53,7 +54,10 @@ const Votin = ({
       >
         <div
           role="presentation"
-          className={styles.voting}
+          className={classNames({
+            [styles.voting]: true,
+            [styles.loading]: loading,
+          })}
           onClick={onClick}
         >
           {onClickUp &&
@@ -83,6 +87,7 @@ const Votin = ({
               {count}
             </span>
             <span className={styles.rate}>{rate}</span>
+            <span className={styles.spinner}><Spinner color="rgba(0,0,0,0.3)" width={6} size={16} /></span>
           </span>
           {onClickDown &&
             <span
@@ -117,6 +122,7 @@ Votin.propTypes = {
   onClickDown: PropTypes.func,
   onShow: PropTypes.func,
   onClick: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 Votin.defaultProps = {
@@ -130,6 +136,7 @@ Votin.defaultProps = {
   onClickDown: undefined,
   onShow: undefined,
   onClick: undefined,
+  loading: false,
 };
 
 export * from './Wrappers';

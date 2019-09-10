@@ -36,6 +36,7 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
   const [popupUsersMetadata, setPopupUsersMetadata] = useState([]);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const comment = useSelector(selectCommentById(commentId), equalByProps(['blockchainId', 'currentRate', 'currentVote', 'myselfData.myselfVote']));
   const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
@@ -46,7 +47,7 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
     try {
-      const { downvotes, upvotes } = await withLoader(dispatch(getVotesForEntityPreview(commentId, ENTITY_NAMES_COMMENTS)));
+      const { downvotes, upvotes } = await dispatch(getVotesForEntityPreview(commentId, ENTITY_NAMES_COMMENTS));
       setUpCount(upvotes.metadata.totalAmount);
       setDownCount(downvotes.metadata.totalAmount);
       setDetailsUpUserIds(upvotes.data.map(i => i.id));
@@ -83,6 +84,10 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
   }, []);
 
   const vote = useCallback(async (isUp) => {
+    if (loading) {
+      return;
+    }
+
     const privateKey = getSocialKey();
 
     if (!owner.id || !privateKey) {
@@ -90,16 +95,21 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      await withLoader(dispatch(voteForComment(isUp, postId, commentId, owner.accountName, privateKey, comment.blockchainId)));
+      await dispatch(voteForComment(isUp, postId, commentId, owner.accountName, privateKey, comment.blockchainId));
     } catch (err) {
       console.error(err);
       dispatch(addErrorNotificationFromResponse(err));
     }
-  }, [postId, commentId, owner, comment]);
+
+    setLoading(false);
+  }, [postId, commentId, owner, comment, loading]);
 
   return (
     <Votin
+      loading={loading}
       rate={formatRate(comment.currentRate, true)}
       count={comment.currentVote}
       selfVote={comment.myselfData && comment.myselfData.myselfVote}

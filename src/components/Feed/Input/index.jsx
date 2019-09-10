@@ -1,4 +1,3 @@
-// import PromiseWorker from 'promise-worker';
 import PropTypes from 'prop-types';
 import React, { useState, memo } from 'react';
 import { useSelector } from 'react-redux';
@@ -21,13 +20,6 @@ const FeedInput = ({ initialText, onSubmit }) => {
 
   const showForm = async () => {
     setFormVisible(true);
-    // const Worker = require('../../../utils/test.worker');
-    // const worker = new Worker();
-    // const promiseWorker = new PromiseWorker(worker);
-
-    // promiseWorker.postMessage('ping').then((val) => {
-    //   console.log(val);
-    // });
   };
 
   const createPost = (message, fileImg) => {

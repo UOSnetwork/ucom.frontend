@@ -1,10 +1,8 @@
-import Wallet from 'ucom-libs-wallet';
 import api, { graphql } from '../api';
 import { addUsers } from './users';
 import { postsFetch } from './posts';
 import { UPVOTE_STATUS, DOWNVOTE_STATUS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
-
-const { ContentInteractionsApi } = Wallet.Content;
+import Worker from '../worker';
 
 export const getVotesForEntityPreview = (entityId, entityName) => async (dispatch) => {
   const { upvotes, downvotes } = await graphql.getVotesForEntityPreview(entityId, entityName);
@@ -23,7 +21,7 @@ export const getVotesForEntity = (entityId, entityName, interactionType, page, p
 };
 
 export const voteForPost = (isUp, postId, accountName, privateKey, blockchainId) => async (dispatch) => {
-  const signTransaction = isUp ? ContentInteractionsApi.getUpvoteContentSignedTransaction : ContentInteractionsApi.getDownvoteContentSignedTransaction;
+  const signTransaction = isUp ? Worker.getUpvoteContentSignedTransaction : Worker.getDownvoteContentSignedTransaction;
   const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, TRANSACTION_PERMISSION_SOCIAL);
   const signedTransaction = JSON.stringify(signedTransactionObject);
 
@@ -32,7 +30,7 @@ export const voteForPost = (isUp, postId, accountName, privateKey, blockchainId)
 };
 
 export const voteForComment = (isUp, postId, commentId, accountName, privateKey, blockchainId) => async (dispatch) => {
-  const signTransaction = isUp ? ContentInteractionsApi.getUpvoteContentSignedTransaction : ContentInteractionsApi.getDownvoteContentSignedTransaction;
+  const signTransaction = isUp ? Worker.getUpvoteContentSignedTransaction : Worker.getDownvoteContentSignedTransaction;
   const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, TRANSACTION_PERMISSION_SOCIAL);
   const signedTransaction = JSON.stringify(signedTransactionObject);
   const data = await api.vote(isUp, postId, commentId, signedTransaction);

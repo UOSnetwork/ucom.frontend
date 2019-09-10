@@ -1,4 +1,4 @@
-import { SocialKeyApi } from 'ucom-libs-wallet';
+import Wallet from 'ucom-libs-wallet';
 import ecc from 'eosjs-ecc';
 import registerPromiseWorker from 'promise-worker/register';
 import { getActivePrivateKey, getSocialPrivateKeyByActiveKey, getPublicKeyByPrivateKey } from '../utils/keys';
@@ -9,7 +9,12 @@ import {
   WORKER_BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
   WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
   WORKER_ECC_SIGN,
+  WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
+  WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
 } from '../utils/constants';
+
+const { SocialKeyApi } = Wallet;
+const { ContentInteractionsApi } = Wallet.Content;
 
 registerPromiseWorker((action) => {
   switch (action.type) {
@@ -35,6 +40,14 @@ registerPromiseWorker((action) => {
 
     case WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE: {
       return SocialKeyApi.addSocialPermissionsToEmissionAndProfile(action.accountName, action.activeKey);
+    }
+
+    case WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION: {
+      return ContentInteractionsApi.getUpvoteContentSignedTransaction(action.accountName, action.privateKey, action.blockchainId, action.permission);
+    }
+
+    case WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION: {
+      return ContentInteractionsApi.getUpvoteContentSignedTransaction(action.accountName, action.privateKey, action.blockchainId, action.permission);
     }
 
     default:

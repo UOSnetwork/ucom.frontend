@@ -36,6 +36,7 @@ const PostVotingWrapper = ({ postId }) => {
   const [popupUsersMetadata, setPopupUsersMetadata] = useState({});
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [popupUsersLoading, setPopupUsersLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const post = useSelector(selectPostById(postId), equalByProps(['blockchainId', 'currentRate', 'currentVote', 'myselfData.myselfVote']));
   const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
@@ -46,7 +47,7 @@ const PostVotingWrapper = ({ postId }) => {
   const getDataForPreview = useCallback(async () => {
     setDetailsLoading(true);
     try {
-      const { downvotes, upvotes } = await withLoader(dispatch(getVotesForEntityPreview(postId, ENTITY_NAMES_POSTS)));
+      const { downvotes, upvotes } = await dispatch(getVotesForEntityPreview(postId, ENTITY_NAMES_POSTS));
       setUpCount(upvotes.metadata.totalAmount);
       setDownCount(downvotes.metadata.totalAmount);
       setDetailsUpUserIds(upvotes.data.map(i => i.id));
@@ -83,6 +84,10 @@ const PostVotingWrapper = ({ postId }) => {
   }, []);
 
   const vote = useCallback(async (isUp) => {
+    if (loading) {
+      return;
+    }
+
     const privateKey = getSocialKey();
 
     if (!owner.id || !privateKey) {
@@ -90,15 +95,20 @@ const PostVotingWrapper = ({ postId }) => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      await withLoader(dispatch(voteForPost(isUp, postId, owner.accountName, privateKey, post.blockchainId)));
+      await dispatch(voteForPost(isUp, postId, owner.accountName, privateKey, post.blockchainId));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
-  }, [postId, owner, post]);
+
+    setLoading(false);
+  }, [postId, owner, post, loading]);
 
   return (
     <Votin
+      loading={loading}
       rate={formatRate(post.currentRate, true)}
       count={post.currentVote}
       selfVote={post.myselfData && post.myselfData.myselfVote}

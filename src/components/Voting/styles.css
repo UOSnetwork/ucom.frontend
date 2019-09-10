@@ -15,7 +15,8 @@
   cursor: pointer;
 }
 
-.voting:hover {
+.voting:hover,
+.voting.loading {
   background: rgba(80, 80, 80, 0.03);
 }
 
@@ -42,6 +43,7 @@
 }
 
 .value {
+  position: relative;
   color: #585858;
   cursor: pointer;
   text-align: center;
@@ -67,6 +69,11 @@
   opacity: 0;
 }
 
+.voting.loading .rate,
+.voting.loading .count {
+  opacity: 0;
+}
+
 .up {
   color: #7ABE5A;
   fill: #7ABE5A;
@@ -75,4 +82,18 @@
 .down {
   color: #D8352F;
   fill: #D8352F;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -8px 0 0 -8px;
+  z-index: -1;
+  opacity: 0;
+}
+
+.voting.loading .spinner {
+  z-index: 1;
+  opacity: 1;
 }

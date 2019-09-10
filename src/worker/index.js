@@ -6,6 +6,8 @@ import {
   WORKER_BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
   WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
   WORKER_ECC_SIGN,
+  WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
+  WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
 } from '../utils/constants';
 
 export default class Api {
@@ -79,5 +81,29 @@ export default class Api {
     });
 
     return sign;
+  }
+
+  static async getUpvoteContentSignedTransaction(accountName, privateKey, blockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
+      accountName,
+      privateKey,
+      blockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async getDownvoteContentSignedTransaction(accountName, privateKey, blockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
+      accountName,
+      privateKey,
+      blockchainId,
+      permission,
+    });
+
+    return signTransaction;
   }
 }
