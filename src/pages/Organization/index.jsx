@@ -1,6 +1,5 @@
 import { Route, Switch } from 'react-router';
 import { arrayMove } from 'react-sortable-hoc';
-import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Footer from '../../components/Footer';
@@ -27,6 +26,10 @@ import * as orgPageActions from '../../actions/orgPage';
 import * as orgsActions from '../../actions/organizations';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import NotFoundPage from '../NotFoundPage';
+import { postsFetch } from '../../actions/posts';
+import { POST_TYPE_MEDIA_ID } from '../../utils/constants';
+import { getContentMetaTags } from '../../utils/posts';
+import * as EntityImages from '../../utils/entityImages';
 
 const OrganizationPage = (props) => {
   const organizationId = +props.match.params.id;
@@ -189,27 +192,25 @@ const OrganizationPage = (props) => {
   );
 };
 
-OrganizationPage.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      postId: PropTypes.string,
-      id: PropTypes.string,
-    }),
-  }).isRequired,
-};
-
 export const getOrganizationPageData = async (store, params) => {
   try {
-    const [org] = await Promise.all([
+    const [org, post] = await Promise.all([
       store.dispatch(orgsActions.getOrganization(params.id)),
+      params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null,
       store.dispatch(orgPageActions.getPageData(params.id)),
     ]);
+
+    if (post.postTypeId === POST_TYPE_MEDIA_ID) {
+      return {
+        contentMetaTags: getContentMetaTags(post),
+      };
+    }
 
     return {
       contentMetaTags: {
         title: org.title,
-        description: org.about,
-        image: '',
+        description: (post && post.description) || org.about,
+        image: EntityImages.getFirstImage(post) || urls.getFileUrl(org.avatarFilename),
       },
     };
   } catch (err) {
