@@ -42,16 +42,14 @@ const GenerateSocialKey = (props) => {
             }}
             onSubmit={async (brainkey) => {
               setLoading(true);
-              setTimeout(async () => {
-                try {
-                  const socialKey = await withLoader(dispatch(authActions.recoveryByBrainkey(brainkey, props.accountName)));
-                  props.onSubmit(socialKey);
-                } catch (err) {
-                  const errors = parseResponseError(err);
-                  setError(errors[0].message);
-                }
-                setLoading(false);
-              }, 10);
+              try {
+                const socialKey = await withLoader(dispatch(authActions.recoveryByBrainkey(brainkey, props.accountName)));
+                props.onSubmit(socialKey);
+              } catch (err) {
+                const errors = parseResponseError(err);
+                setError(errors[0].message);
+              }
+              setLoading(false);
             }}
           />
         </div>

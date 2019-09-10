@@ -8,6 +8,7 @@ import { getActivePrivateKey, getOwnerPublicKeyByBrainkey, getPublicKeyByPrivate
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
 import { LIST_PER_PAGE, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import Worker from '../worker';
 
 const BLOCK_PRODUCERS = Dictionary.BlockchainNodes.typeBlockProducer();
 const CALCULATOR_NODES = Dictionary.BlockchainNodes.typeCalculator();
@@ -29,8 +30,8 @@ class Api {
   }
 
   async loginBySocialKey(socialKey, accountName) {
-    const sign = ecc.sign(accountName, socialKey);
-    const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
+    const sign = await Worker.eccSign(accountName, socialKey);
+    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
     const response = await this.actions.post('/api/v1/auth/login', {
       sign,
       account_name: accountName,
@@ -41,16 +42,16 @@ class Api {
   }
 
   async loginByBrainkey(brainkey, accountName) {
-    const activePrivateKey = getActivePrivateKey(brainkey);
-    const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
-    const socialPublicKey = getPublicKeyByPrivateKey(socialPrivateKey);
-    const sign = ecc.sign(accountName, socialPrivateKey);
+    const activeKey = await Worker.getActiveKeyByBrainKey(brainkey);
+    const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
+    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
+    const sign = await Worker.eccSign(accountName, socialKey);
     const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
 
     if (!socialKeyIsBinded) {
-      await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
+      await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
     } else {
-      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activePrivateKey);
+      await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
     }
 
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
