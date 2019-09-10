@@ -27,9 +27,11 @@ import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
-import { entityHasCover, entityGetCoverUrl } from '../../utils/entityImages';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
+import { POST_TYPE_MEDIA_ID } from '../../utils/constants';
+import { getContentMetaTags } from '../../utils/posts';
+import * as EntityImages from '../../utils/entityImages';
 
 const UserPage = (props) => {
   const userIdentity = props.match.params.userId;
@@ -119,8 +121,8 @@ const UserPage = (props) => {
         <Route path={urls.getPostUrl({ id: ':postId', entityIdFor: ':userId' })} component={PostPopup} />
       </Switch>
 
-      {user && entityHasCover(user.entityImages) &&
-        <Cover src={entityGetCoverUrl(user.entityImages)} />
+      {user && EntityImages.entityHasCover(user.entityImages) &&
+        <Cover src={EntityImages.entityGetCoverUrl(user.entityImages)} />
       }
 
       {/* TODO: Refactoring Layout/Content when governance refactoring is done */}
@@ -128,7 +130,7 @@ const UserPage = (props) => {
         className={classNames({
           'layout': true,
           'layout_profile': true,
-          'layout_cover': user && entityHasCover(user.entityImages),
+          'layout_cover': user && EntityImages.entityHasCover(user.entityImages),
         })}
       >
         <div className="layout__header">
@@ -222,13 +224,19 @@ export const getUserPageData = async (store, params) => {
   }));
 
   try {
-    const [{ user }] = await Promise.all([userPromise, postPromise, feedPromise]);
+    const [{ user }, post] = await Promise.all([userPromise, postPromise, feedPromise]);
+
+    if (post.postTypeId === POST_TYPE_MEDIA_ID) {
+      return {
+        contentMetaTags: getContentMetaTags(post),
+      };
+    }
 
     return {
       contentMetaTags: {
         title: getUserName(user),
-        description: user.about,
-        image: urls.getFileUrl(user.avatarFilename),
+        description: post.description || user.about,
+        image: EntityImages.getFirstImage(post) || urls.getFileUrl(user.avatarFilename),
       },
     };
   } catch (err) {
