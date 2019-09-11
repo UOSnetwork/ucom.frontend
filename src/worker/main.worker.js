@@ -21,6 +21,10 @@ import {
   WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
   WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
   WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
+  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
+  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
+  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
+  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
 } from '../utils/constants';
 
 const { SocialKeyApi, SocialApi } = Wallet;
@@ -98,6 +102,22 @@ registerPromiseWorker((action) => {
 
     case WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER: {
       return PublicationsApi.signUpdatePublicationFromUser(action.accountName, action.privateKey, action.content, action.blockchainId, action.permission);
+    }
+
+    case WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT: {
+      return PublicationsApi.signCreateDirectPostForAccount(action.ownerAccountName, action.ownerPrivateKey, action.userAccountName, action.postContent, action.permission);
+    }
+
+    case WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION: {
+      return PublicationsApi.signCreateDirectPostForOrganization(action.ownerAccountName, action.orgBlockchainId, action.ownerPrivateKey, action.postContent, action.permission);
+    }
+
+    case WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT: {
+      return PublicationsApi.signUpdateDirectPostForAccount(action.ownerAccountName, action.ownerPrivateKey, action.userAccountName, action.postContent, action.postBlockchainId, action.permission);
+    }
+
+    case WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION: {
+      return PublicationsApi.signUpdateDirectPostForOrganization(action.ownerAccountName, action.ownerPrivateKey, action.orgBlockchainId, action.postContent, action.postBlockchainId, action.permission);
     }
 
     default:

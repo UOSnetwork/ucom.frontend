@@ -237,7 +237,7 @@ export const createDirectPost = (
   let post;
 
   if (!orgBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForAccount(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateDirectPostForAccount(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,
@@ -245,7 +245,7 @@ export const createDirectPost = (
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateDirectPostForOrganization(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateDirectPostForOrganization(
       ownerAccountName,
       orgBlockchainId,
       ownerPrivateKey,
@@ -296,7 +296,7 @@ export const upadteDirectPost = (
   let signed_transaction;
 
   if (!orgId) {
-    signed_transaction = await PublicationsApi.signUpdateDirectPostForAccount(
+    signed_transaction = await Worker.signUpdateDirectPostForAccount(
       ownerAccountName,
       ownerPrivateKey,
       userAccountName,

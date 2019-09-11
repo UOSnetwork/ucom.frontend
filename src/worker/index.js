@@ -18,6 +18,10 @@ import {
   WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
   WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
   WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
+  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
+  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
+  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
+  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
 } from '../utils/constants';
 
 export default class Api {
@@ -235,6 +239,60 @@ export default class Api {
       privateKey,
       content,
       blockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signCreateDirectPostForAccount(ownerAccountName, ownerPrivateKey, userAccountName, postContent, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
+      postContent,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signCreateDirectPostForOrganization(ownerAccountName, orgBlockchainId, ownerPrivateKey, postContent, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
+      ownerAccountName,
+      orgBlockchainId,
+      ownerPrivateKey,
+      postContent,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signUpdateDirectPostForAccount(ownerAccountName, ownerPrivateKey, userAccountName, postContent, postBlockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
+      ownerAccountName,
+      ownerPrivateKey,
+      userAccountName,
+      postContent,
+      postBlockchainId,
+      permission,
+    });
+
+    return signTransaction;
+  }
+
+  static async signUpdateDirectPostForOrganization(ownerAccountName, ownerPrivateKey, orgBlockchainId, postContent, postBlockchainId, permission) {
+    const signTransaction = await Api.postMessage({
+      type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
+      ownerAccountName,
+      ownerPrivateKey,
+      orgBlockchainId,
+      postContent,
+      postBlockchainId,
       permission,
     });
 
