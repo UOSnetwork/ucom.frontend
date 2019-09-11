@@ -1,50 +1,42 @@
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import React, { memo, Fragment, useState } from 'react';
+import BackToAuth from './BackToAuth';
 import styles from '../../styles.css';
-import IconArrowLeft from '../../../Icons/ArrowLeft';
+import KeyForm from '../../Forms/KeyForm';
 import withLoader from '../../../../utils/withLoader';
 import * as authActions from '../../../../actions/auth';
-import BrainkeyForm from '../../Forms/BrainkeyForm';
 import { parseResponseError } from '../../../../utils/errors';
 
-const GenerateSocialKey = (props) => {
+const GenerateSocialKeyByActiveKey = (props) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   return (
     <Fragment>
-      <div
-        role="presentation"
-        className={styles.navigation}
-        onClick={props.onClickBack}
-      >
-        <span className={styles.icon}>
-          <IconArrowLeft />
-        </span>
-        <span className={styles.label}>
-          <span className={styles.navText}>Authorization</span>
-        </span>
-      </div>
+      <BackToAuth onClick={props.onClickBack} />
 
       <div className={`${styles.content} ${styles.generateKey}`}>
         <div className={styles.main}>
-          <BrainkeyForm
+          <KeyForm
             loading={loading}
             error={error}
-            title="Generate Social Key with Brainkey"
+            title="Generate Social Key with Active Key"
+            placeholder="Active Private Key"
+            submitText="Proceed"
             onChange={(value) => {
               setError('');
+
               if (props.onChange) {
                 props.onChange(value);
               }
             }}
-            onSubmit={async (brainkey) => {
+            onSubmit={(activeKey) => {
               setLoading(true);
               setTimeout(async () => {
                 try {
-                  const socialKey = await withLoader(dispatch(authActions.recoveryByBrainkey(brainkey, props.accountName)));
+                  const socialKey = await withLoader(dispatch(authActions.recoveryByActiveKey(activeKey, props.accountName)));
                   props.onSubmit(socialKey);
                 } catch (err) {
                   const errors = parseResponseError(err);
@@ -55,20 +47,30 @@ const GenerateSocialKey = (props) => {
             }}
           />
         </div>
+        <div className={styles.bottom}>
+          <span
+            className="link red-hover"
+            role="presentation"
+            onClick={props.onClickBrainkey}
+          >
+            I have Brainkey
+          </span>
+        </div>
       </div>
     </Fragment>
   );
 };
 
-GenerateSocialKey.propTypes = {
+GenerateSocialKeyByActiveKey.propTypes = {
   onClickBack: PropTypes.func.isRequired,
-  onChange: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
+  onClickBrainkey: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   accountName: PropTypes.string.isRequired,
 };
 
-GenerateSocialKey.defaultProps = {
+GenerateSocialKeyByActiveKey.defaultProps = {
   onChange: undefined,
 };
 
-export default memo(GenerateSocialKey);
+export default memo(GenerateSocialKeyByActiveKey);
