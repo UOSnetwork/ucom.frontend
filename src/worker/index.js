@@ -33,269 +33,161 @@ export default class Api {
     return promiseWorker;
   }
 
-  static async postMessage(action) {
-    const result = await Api.getPromiseWorker().postMessage(action);
-
-    return result;
+  static postMessage(action) {
+    return Api.getPromiseWorker().postMessage(action);
   }
 
-  static async getActiveKeyByBrainKey(brainkey) {
-    const activeKey = await Api.postMessage({
+  static getActiveKeyByBrainKey(...args) {
+    return Api.postMessage({
       type: WORKER_GET_ACTIVE_KEY_BY_BRAINKEY,
-      brainkey,
+      args,
     });
-
-    return activeKey;
   }
 
-  static async getSocialKeyByActiveKey(activeKey) {
-    const socialKey = await Api.postMessage({
+  static getSocialKeyByActiveKey(...args) {
+    return Api.postMessage({
       type: WORKER_GET_SOCIAL_KEY_BY_ACTIVE_KEY,
-      activeKey,
+      args,
     });
-
-    return socialKey;
   }
 
-  static async getPublicKeyByPrivateKey(privateKey) {
-    const publicKey = await Api.postMessage({
+  static getPublicKeyByPrivateKey(...args) {
+    return Api.postMessage({
       type: WORKER_GET_PUBLIC_KEY_BY_PRIVATE_KEY,
-      privateKey,
+      args,
     });
-
-    return publicKey;
   }
 
-  static async eccSign(str, privateKey) {
-    const sign = await Api.postMessage({
+  static eccSign(...args) {
+    return Api.postMessage({
       type: WORKER_ECC_SIGN,
-      str,
-      privateKey,
+      args,
     });
-
-    return sign;
   }
 
-  static async bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey) {
-    const sign = await Api.postMessage({
+  static bindSocialKeyWithSocialPermissions(...args) {
+    return Api.postMessage({
       type: WORKER_BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
-      accountName,
-      activeKey,
-      socialPublicKey,
+      args,
     });
-
-    return sign;
   }
 
-  static async addSocialPermissionsToEmissionAndProfile(accountName, activeKey) {
-    const sign = await Api.postMessage({
+  static addSocialPermissionsToEmissionAndProfile(...args) {
+    return Api.postMessage({
       type: WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
-      accountName,
-      activeKey,
+      args,
     });
-
-    return sign;
   }
 
-  static async getUpvoteContentSignedTransaction(accountName, privateKey, blockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static getUpvoteContentSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
-      accountName,
-      privateKey,
-      blockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getDownvoteContentSignedTransaction(accountName, privateKey, blockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static getDownvoteContentSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
-      accountName,
-      privateKey,
-      blockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getFollowAccountSignedTransaction(ownerAccountName, privateKey, userAccountName, permission) {
-    const signTransaction = await Api.postMessage({
+  static getFollowAccountSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
-      ownerAccountName,
-      privateKey,
-      userAccountName,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getUnfollowAccountSignedTransaction(ownerAccountName, privateKey, userAccountName, permission) {
-    const signTransaction = await Api.postMessage({
+  static getUnfollowAccountSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
-      ownerAccountName,
-      privateKey,
-      userAccountName,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getFollowOrganizationSignedTransaction(ownerAccountName, privateKey, orgBlockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static getFollowOrganizationSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
-      ownerAccountName,
-      privateKey,
-      orgBlockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getUnfollowOrganizationSignedTransaction(ownerAccountName, privateKey, orgBlockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static getUnfollowOrganizationSignedTransaction(...args) {
+    return Api.postMessage({
       type: WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
-      ownerAccountName,
-      privateKey,
-      orgBlockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getTrustUserSignedTransactionsAsJson(ownerAccountName, ownerPrivateKey, userAccountName, permission) {
-    const signTransaction = await Api.postMessage({
+  static getTrustUserSignedTransactionsAsJson(...args) {
+    return Api.postMessage({
       type: WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async getUnTrustUserSignedTransactionsAsJson(ownerAccountName, ownerPrivateKey, userAccountName, permission) {
-    const signTransaction = await Api.postMessage({
+  static getUnTrustUserSignedTransactionsAsJson(...args) {
+    return Api.postMessage({
       type: WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signCreatePublicationFromOrganization(accountName, privateKey, blockchainId, content, permission) {
-    const signTransaction = await Api.postMessage({
+  static signCreatePublicationFromOrganization(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
-      accountName,
-      privateKey,
-      blockchainId,
-      content,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signCreatePublicationFromUser(accountName, privateKey, content, permission) {
-    const signTransaction = await Api.postMessage({
+  static signCreatePublicationFromUser(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
-      accountName,
-      privateKey,
-      content,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signUpdatePublicationFromOrganization(accountName, privateKey, orgBlockchainId, content, postBlockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static signUpdatePublicationFromOrganization(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
-      accountName,
-      privateKey,
-      orgBlockchainId,
-      content,
-      postBlockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signUpdatePublicationFromUser(accountName, privateKey, content, blockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static signUpdatePublicationFromUser(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
-      accountName,
-      privateKey,
-      content,
-      blockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signCreateDirectPostForAccount(ownerAccountName, ownerPrivateKey, userAccountName, postContent, permission) {
-    const signTransaction = await Api.postMessage({
+  static signCreateDirectPostForAccount(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      postContent,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signCreateDirectPostForOrganization(ownerAccountName, orgBlockchainId, ownerPrivateKey, postContent, permission) {
-    const signTransaction = await Api.postMessage({
+  static signCreateDirectPostForOrganization(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
-      ownerAccountName,
-      orgBlockchainId,
-      ownerPrivateKey,
-      postContent,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signUpdateDirectPostForAccount(ownerAccountName, ownerPrivateKey, userAccountName, postContent, postBlockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static signUpdateDirectPostForAccount(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      postContent,
-      postBlockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 
-  static async signUpdateDirectPostForOrganization(ownerAccountName, ownerPrivateKey, orgBlockchainId, postContent, postBlockchainId, permission) {
-    const signTransaction = await Api.postMessage({
+  static signUpdateDirectPostForOrganization(...args) {
+    return Api.postMessage({
       type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
-      ownerAccountName,
-      ownerPrivateKey,
-      orgBlockchainId,
-      postContent,
-      postBlockchainId,
-      permission,
+      args,
     });
-
-    return signTransaction;
   }
 }
