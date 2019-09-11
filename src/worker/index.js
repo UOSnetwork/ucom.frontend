@@ -22,6 +22,7 @@ import {
   WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
+  WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
 } from '../utils/constants';
 
 export default class Api {
@@ -187,6 +188,13 @@ export default class Api {
   static signUpdateDirectPostForOrganization(...args) {
     return Api.postMessage({
       type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
+      args,
+    });
+  }
+
+  static signCreateRepostPostForAccount(...args) {
+    return Api.postMessage({
+      type: WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
       args,
     });
   }

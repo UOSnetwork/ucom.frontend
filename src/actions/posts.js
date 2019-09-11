@@ -335,7 +335,7 @@ export const createRepost = (
     parent_id: postId,
   };
 
-  const { signed_transaction, blockchain_id } = await PublicationsApi.signCreateRepostPostForAccount(
+  const { signed_transaction, blockchain_id } = await Worker.signCreateRepostPostForAccount(
     ownerAccountName,
     ownerPrivateKey,
     postBlockchainId,
