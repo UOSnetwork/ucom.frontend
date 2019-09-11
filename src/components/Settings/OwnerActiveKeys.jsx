@@ -27,6 +27,7 @@ const OwnerActiveKeys = () => {
   const [keys, setKeys] = useState({});
   const [formActive, setFormActive] = useState(false);
   const [formError, setFormError] = useState('');
+  const [loading, setLoading] = useState('');
   const dispatch = useDispatch();
 
   return (
@@ -73,21 +74,30 @@ const OwnerActiveKeys = () => {
               onSubmit={async (e) => {
                 e.preventDefault();
 
+                if (loading) {
+                  return;
+                }
+
                 const trimedBrainkey = brainkey.trim();
                 if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
                   setFormError(ERROR_WRONG_BRAINKEY);
                   return;
                 }
 
+                setLoading(true);
+
                 try {
                   await withLoader(dispatch(checkBrainkey(trimedBrainkey)));
                 } catch (err) {
                   const { message } = parseResponseError(err)[0];
                   setFormError(message);
+                  setLoading(false);
                   return;
                 }
 
+                setLoading(false);
                 setFormError('');
+
                 try {
                   setKeys({
                     ownerKey: getOwnerPrivateKey(brainkey),
@@ -125,7 +135,7 @@ const OwnerActiveKeys = () => {
               }
               <button
                 className={styles.button}
-                disabled={!!formError}
+                disabled={!!formError || loading}
               >
                 <IconEnter />
               </button>
