@@ -149,4 +149,8 @@ export default class Api {
   static sellRam(...args) {
     return Api.postMessage({ args, type: actions.SELL_RAM });
   }
+
+  static claimEmission(...args) {
+    return Api.claimEmission({ args, type: actions.CLAIM_EMISSION });
+  }
 }

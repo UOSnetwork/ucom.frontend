@@ -116,6 +116,9 @@ registerPromiseWorker((action) => {
     case actions.SELL_RAM:
       return WalletApi.sellRam(...action.args);
 
+    case actions.CLAIM_EMISSION:
+      return WalletApi.claimEmission(...action.args);
+
     default:
       return null;
   }

@@ -420,26 +420,8 @@ class Api {
     return humps(response.data);
   }
 
-  async getAccountState(accountName) {
-    const response = await WalletApi.getAccountState(accountName);
-
-    return humps(response);
-  }
-
-  async getAccountBalance(accountName, symbol) {
-    const response = await WalletApi.getAccountBalance(accountName, symbol);
-
-    return humps(response);
-  }
-
   async getCurrentNetAndCpuStakedTokens(accountName) {
     const response = await WalletApi.getCurrentNetAndCpuStakedTokens(accountName);
-
-    return humps(response);
-  }
-
-  async claimEmission(accountName, privateKey) {
-    const response = await WalletApi.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
 
     return humps(response);
   }

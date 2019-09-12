@@ -1,5 +1,7 @@
-import api from '../api';
+import humps from 'lodash-humps';
+import { WalletApi } from 'ucom-libs-wallet';
 import Worker from '../worker';
+import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 
 export const walletToggleBuyRam = visible => ({
   type: 'WALLET_SET_BUY_RAM_VISIBLE',
@@ -22,9 +24,9 @@ export const walletToggleSendTokens = visible => ({
 });
 
 export const walletGetAccount = accountName => async (dispatch) => {
-  const data = await api.getAccountState(accountName);
+  const data = humps(await WalletApi.getAccountState(accountName));
 
-  data.tokens.uosFutures = await api.getAccountBalance(accountName, 'UOSF');
+  data.tokens.uosFutures = humps(await WalletApi.getAccountBalance(accountName, 'UOSF'));
 
   dispatch({
     type: 'WALLET_SET_DATA',
@@ -64,11 +66,8 @@ export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, p
   return data;
 };
 
-export const walletGetEmission = (
-  accountName,
-  privateKey,
-) => async (dispatch) => {
-  const data = await api.claimEmission(accountName, privateKey);
+export const walletGetEmission = (accountName, privateKey) => async (dispatch) => {
+  const data = await Worker.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
 
   dispatch(walletGetAccount(accountName));
 
