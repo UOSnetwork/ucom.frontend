@@ -19,3 +19,15 @@ export const getReferralPostId = () => (
 export const getGrecaptchaSitekey = () => (
   config.grecaptchaSitekey
 );
+
+export const getBlockchainHost = () => (
+  config.blockchanin[process.env.NODE_ENV === 'production' ? 'production' : 'staging'].host
+);
+
+export const getBlockchainPort = () => (
+  config.blockchanin[process.env.NODE_ENV === 'production' ? 'production' : 'staging'].port
+);
+
+export const getBlockchainProtocol = () => (
+  config.blockchanin[process.env.NODE_ENV === 'production' ? 'production' : 'staging'].protocol
+);

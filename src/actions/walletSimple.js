@@ -60,10 +60,8 @@ export const walletEditStake = (
   netAmount,
   cpuAmount,
   privateKey,
-) => async (dispatch) => {
+) => async () => {
   const data = await api.stakeOrUnstakeTokens(accountName, netAmount, cpuAmount, privateKey);
-
-  dispatch(walletGetAccount(accountName));
 
   return data;
 };
@@ -74,10 +72,8 @@ export const walletSendTokens = (
   amount,
   memo,
   privateKey,
-) => async (dispatch) => {
+) => async () => {
   const data = await api.sendTokens(accountNameFrom, accountNameTo, amount, memo, privateKey);
-
-  dispatch(walletGetAccount(accountNameFrom));
 
   return data;
 };
@@ -85,10 +81,8 @@ export const walletSendTokens = (
 export const walletGetEmission = (
   accountName,
   privateKey,
-) => async (dispatch) => {
+) => async () => {
   const data = await api.claimEmission(accountName, privateKey);
-
-  dispatch(walletGetAccount(accountName));
 
   return data;
 };

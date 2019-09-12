@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import Button from '../../Button/index';
-import { walletBuyRam, walletSellRam } from '../../../actions/walletSimple';
+import { walletBuyRam, walletSellRam, walletGetAccount } from '../../../actions/walletSimple';
 import { parseResponseError } from '../../../utils/errors';
 import IconInputError from '../../Icons/InputError';
 import api from '../../../api';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { addSuccessNotification } from '../../../actions/notifications';
 import Popup, { Content } from '../../Popup';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
@@ -19,29 +19,50 @@ const TradeRam = (props) => {
   const [loading, setLoading] = useState(false);
   const [cost, setCost] = useState(null);
 
+  const onSuccess = () => {
+    setFormError(null);
+    props.dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
+    withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+    setTimeout(() => {
+      props.onSubmit();
+    }, 0);
+  };
+
+  const onError = (err) => {
+    const errors = parseResponseError(err);
+    setFormError(errors[0].message);
+  };
+
   return (
     <RequestActiveKey
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
         try {
           const submitFn = props.sell ? walletSellRam : walletBuyRam;
-          await props.dispatch(submitFn(props.owner.accountName, ram, privateKey));
-          setFormError(null);
-          props.dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
-          setTimeout(() => {
-            props.onSubmit();
-          }, 0);
-        } catch (e) {
-          const errors = parseResponseError(e);
-          setFormError(errors[0].message);
+          await withLoader(props.dispatch(submitFn(props.owner.accountName, ram, privateKey)));
+          onSuccess();
+        } catch (err) {
+          onError(err);
         }
         setLoading(false);
-        loader.done();
+      }}
+      onScatterConnect={async (scatter) => {
+        setLoading(true);
+        try {
+          if (props.sell) {
+            await withLoader(scatter.sellRam(props.owner.accountName, ram));
+          } else {
+            await withLoader(scatter.buyRam(props.owner.accountName, ram));
+          }
+          onSuccess();
+        } catch (err) {
+          onError(err);
+        }
+        setLoading(false);
       }}
     >
-      {requestActiveKey => (
+      {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={props.onClickClose}>
           <Content
             walletAction
@@ -58,7 +79,6 @@ const TradeRam = (props) => {
               <h2 className={styles.title}>{props.sell ? 'Sell' : 'Buy'} RAM</h2>
               <div className={styles.field}>
                 <TextInput
-                  touched
                   autoFocus
                   placeholder="6664"
                   label="RAM Amount, Bytes"
@@ -101,7 +121,7 @@ const TradeRam = (props) => {
                   red
                   strech
                   type="submit"
-                  disabled={!ram || loading}
+                  disabled={!ram || loading || requestLoading}
                 >
                   {props.sell ? 'Sell' : 'Buy'}
                 </Button>

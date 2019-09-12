@@ -113,7 +113,6 @@ const OwnerActiveKeys = () => {
             >
               <TextInput
                 autoFocus
-                touched
                 ymDisableKeys
                 placeholder="Brainkey"
                 value={brainkey}

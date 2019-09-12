@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleEditStake, walletEditStake } from '../../../actions/walletSimple';
+import { walletToggleEditStake, walletEditStake, walletGetAccount } from '../../../actions/walletSimple';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
 import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
 import { addSuccessNotification } from '../../../actions/notifications';
@@ -34,6 +35,20 @@ const EditStake = (props) => {
     loader.done();
   };
 
+  const onSuccess = () => {
+    setFormError(null);
+    props.dispatch(addSuccessNotification('Successfully set stake'));
+    setTimeout(() => {
+      withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+      props.dispatch(walletToggleEditStake(false));
+    }, 0);
+  };
+
+  const onError = (err) => {
+    const errors = parseResponseError(err);
+    setFormError(errors[0].message);
+  };
+
   useEffect(() => {
     if (props.wallet.editStakeVisible && props.owner.accountName) {
       getCurrentNetAndCpuStakedTokens();
@@ -49,23 +64,26 @@ const EditStake = (props) => {
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
         try {
-          await props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey));
-          setFormError(null);
-          props.dispatch(addSuccessNotification('Successfully set stake'));
-          setTimeout(() => {
-            props.dispatch(walletToggleEditStake(false));
-          }, 0);
-        } catch (e) {
-          const errors = parseResponseError(e);
-          setFormError(errors[0].message);
+          await withLoader(props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey)));
+          onSuccess();
+        } catch (err) {
+          onError(err);
         }
         setLoading(false);
-        loader.done();
+      }}
+      onScatterConnect={async (scatter) => {
+        setLoading(true);
+        try {
+          await withLoader(scatter.stakeOrUnstakeTokens(props.owner.accountName, net, cpu));
+          onSuccess();
+        } catch (err) {
+          onError(err);
+        }
+        setLoading(false);
       }}
     >
-      {requestActiveKey => (
+      {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
           <Content
             walletAction
@@ -84,7 +102,6 @@ const EditStake = (props) => {
                 <div className={styles.field}>
                   <TextInput
                     autoFocus
-                    touched
                     placeholder="6664"
                     label="UOS for CPU Time"
                     value={`${cpu}`}
@@ -96,7 +113,6 @@ const EditStake = (props) => {
                 </div>
                 <div className={styles.field}>
                   <TextInput
-                    touched
                     placeholder="6664"
                     label="UOS for Network BW"
                     value={`${net}`}
@@ -123,7 +139,7 @@ const EditStake = (props) => {
                   red
                   strech
                   type="submit"
-                  disabled={!`${cpu}`.length || !`${net}`.length || loading}
+                  disabled={!`${cpu}`.length || !`${net}`.length || loading || requestLoading}
                 >
                   Update
                 </Button>
