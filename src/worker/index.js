@@ -1,34 +1,5 @@
 import PromiseWorker from 'promise-worker';
-import {
-  WORKER_GET_ACTIVE_KEY_BY_BRAINKEY,
-  WORKER_GET_SOCIAL_KEY_BY_ACTIVE_KEY,
-  WORKER_GET_PUBLIC_KEY_BY_PRIVATE_KEY,
-  WORKER_BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
-  WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
-  WORKER_ECC_SIGN,
-  WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
-  WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
-  WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
-  WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
-  WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
-  WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
-  WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
-  WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
-  WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
-  WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
-  WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
-  WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
-  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
-  WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
-  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
-  WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
-  WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
-  WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
-  WORKER_SIGN_CREATE_COMMENT_FROM_USER,
-  WORKER_UPDATE_PROFILE,
-  WORKER_SIGN_CREATE_ORGANIZATION,
-  WORKER_SIGN_UPDATE_ORGANIZATION,
-} from '../utils/constants';
+import * as actions from './actions';
 
 export default class Api {
   static getPromiseWorker() {
@@ -45,196 +16,196 @@ export default class Api {
 
   static getActiveKeyByBrainKey(...args) {
     return Api.postMessage({
-      type: WORKER_GET_ACTIVE_KEY_BY_BRAINKEY,
+      type: actions.GET_ACTIVE_KEY_BY_BRAINKEY,
       args,
     });
   }
 
   static getSocialKeyByActiveKey(...args) {
     return Api.postMessage({
-      type: WORKER_GET_SOCIAL_KEY_BY_ACTIVE_KEY,
+      type: actions.GET_SOCIAL_KEY_BY_ACTIVE_KEY,
       args,
     });
   }
 
   static getPublicKeyByPrivateKey(...args) {
     return Api.postMessage({
-      type: WORKER_GET_PUBLIC_KEY_BY_PRIVATE_KEY,
+      type: actions.GET_PUBLIC_KEY_BY_PRIVATE_KEY,
       args,
     });
   }
 
   static eccSign(...args) {
     return Api.postMessage({
-      type: WORKER_ECC_SIGN,
+      type: actions.ECC_SIGN,
       args,
     });
   }
 
   static bindSocialKeyWithSocialPermissions(...args) {
     return Api.postMessage({
-      type: WORKER_BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
+      type: actions.BIND_SOCIAL_KEY_WITH_SOCIAL_PERMISSIONS,
       args,
     });
   }
 
   static addSocialPermissionsToEmissionAndProfile(...args) {
     return Api.postMessage({
-      type: WORKER_ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
+      type: actions.ADD_SOCIAL_PERMISSIONS_TO_EMISSION_AND_PROFILE,
       args,
     });
   }
 
   static getUpvoteContentSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
+      type: actions.GET_UPVOTE_CONTENT_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getDownvoteContentSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
+      type: actions.GET_DOWNVOTE_CONTENT_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getFollowAccountSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+      type: actions.GET_FOLLOW_ACCOUNT_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getUnfollowAccountSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
+      type: actions.GET_UNFOLLOW_ACCOUNT_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getFollowOrganizationSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+      type: actions.GET_FOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getUnfollowOrganizationSignedTransaction(...args) {
     return Api.postMessage({
-      type: WORKER_GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
+      type: actions.GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION,
       args,
     });
   }
 
   static getTrustUserSignedTransactionsAsJson(...args) {
     return Api.postMessage({
-      type: WORKER_GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+      type: actions.GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
       args,
     });
   }
 
   static getUnTrustUserSignedTransactionsAsJson(...args) {
     return Api.postMessage({
-      type: WORKER_GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
+      type: actions.GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON,
       args,
     });
   }
 
   static signCreatePublicationFromOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
+      type: actions.SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION,
       args,
     });
   }
 
   static signCreatePublicationFromUser(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_PUBLICATION_FROM_USER,
+      type: actions.SIGN_CREATE_PUBLICATION_FROM_USER,
       args,
     });
   }
 
   static signUpdatePublicationFromOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
+      type: actions.SIGN_UPDATE_PUBLICATION_FROM_ORGANIZATION,
       args,
     });
   }
 
   static signUpdatePublicationFromUser(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_UPDATE_PUBLICATION_FROM_USER,
+      type: actions.SIGN_UPDATE_PUBLICATION_FROM_USER,
       args,
     });
   }
 
   static signCreateDirectPostForAccount(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
+      type: actions.SIGN_CREATE_DIRECT_POST_FOR_ACCOUNT,
       args,
     });
   }
 
   static signCreateDirectPostForOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
+      type: actions.SIGN_CREATE_DIRECT_POST_FOR_ORGANIZATION,
       args,
     });
   }
 
   static signUpdateDirectPostForAccount(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
+      type: actions.SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
       args,
     });
   }
 
   static signUpdateDirectPostForOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
+      type: actions.SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
       args,
     });
   }
 
   static signCreateRepostPostForAccount(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
+      type: actions.SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
       args,
     });
   }
 
   static signCreateCommentFromOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
+      type: actions.SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
       args,
     });
   }
 
   static signCreateCommentFromUser(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_COMMENT_FROM_USER,
+      type: actions.SIGN_CREATE_COMMENT_FROM_USER,
       args,
     });
   }
 
   static updateProfile(...args) {
     return Api.postMessage({
-      type: WORKER_UPDATE_PROFILE,
+      type: actions.UPDATE_PROFILE,
       args,
     });
   }
 
   static signCreateOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_CREATE_ORGANIZATION,
+      type: actions.SIGN_CREATE_ORGANIZATION,
       args,
     });
   }
 
   static signUpdateOrganization(...args) {
     return Api.postMessage({
-      type: WORKER_SIGN_UPDATE_ORGANIZATION,
+      type: actions.SIGN_UPDATE_ORGANIZATION,
       args,
     });
   }
