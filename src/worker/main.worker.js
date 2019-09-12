@@ -110,6 +110,12 @@ registerPromiseWorker((action) => {
     case actions.SEND_TOKENS:
       return WalletApi.sendTokens(...action.args);
 
+    case actions.BUY_RAM:
+      return WalletApi.buyRam(...action.args);
+
+    case actions.SELL_RAM:
+      return WalletApi.sellRam(...action.args);
+
     default:
       return null;
   }

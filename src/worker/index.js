@@ -141,4 +141,12 @@ export default class Api {
   static sendTokens(...args) {
     return Api.postMessage({ args, type: actions.SEND_TOKENS });
   }
+
+  static buyRam(...args) {
+    return Api.postMessage({ args, type: actions.BUY_RAM });
+  }
+
+  static sellRam(...args) {
+    return Api.postMessage({ args, type: actions.SELL_RAM });
+  }
 }

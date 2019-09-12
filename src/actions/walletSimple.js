@@ -32,24 +32,16 @@ export const walletGetAccount = accountName => async (dispatch) => {
   });
 };
 
-export const walletBuyRam = (
-  accountName,
-  amount,
-  privateKey,
-) => async (dispatch) => {
-  const data = await api.buyRam(accountName, amount, privateKey);
+export const walletBuyRam = (accountName, amount, privateKey) => async (dispatch) => {
+  const data = await Worker.buyRam(accountName, privateKey, amount);
 
   dispatch(walletGetAccount(accountName));
 
   return data;
 };
 
-export const walletSellRam = (
-  accountName,
-  amount,
-  privateKey,
-) => async (dispatch) => {
-  const data = await api.sellRam(accountName, amount, privateKey);
+export const walletSellRam = (accountName, amount, privateKey) => async (dispatch) => {
+  const data = await Worker.sellRam(accountName, privateKey, amount);
 
   dispatch(walletGetAccount(accountName));
 

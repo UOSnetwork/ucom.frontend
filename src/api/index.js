@@ -450,18 +450,6 @@ class Api {
     return humps(response);
   }
 
-  async buyRam(accountName, bytesAmount, privateKey) {
-    const response = await WalletApi.buyRam(accountName, privateKey, bytesAmount);
-
-    return humps(response);
-  }
-
-  async sellRam(accountName, bytesAmount, privateKey) {
-    const response = await WalletApi.sellRam(accountName, privateKey, bytesAmount);
-
-    return humps(response);
-  }
-
   async getNodes() {
     const response = await this.actions.get('/api/v1/blockchain/nodes/');
 

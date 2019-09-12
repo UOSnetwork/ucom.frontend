@@ -30,3 +30,5 @@ export const STAKE_OR_UNSTAKE_TOKENS = 29;
 export const VOTE_FOR_BLOCK_PRODUCERS = 30;
 export const VOTE_FOR_CALCULATOR_NODES = 31;
 export const SEND_TOKENS = 32;
+export const BUY_RAM = 33;
+export const SELL_RAM = 34;
