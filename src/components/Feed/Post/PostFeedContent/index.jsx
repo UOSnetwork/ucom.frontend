@@ -13,7 +13,7 @@ import { getCoverImage } from '../../../../utils/entityImages';
 import Embed from '../../../Embed';
 import { POST_TYPE_DIRECT_ID } from '../../../../utils/posts';
 import equalByProps from '../../../../utils/equalByProps';
-import { restoreActiveKey } from '../../../../utils/keys';
+import { getSocialKey } from '../../../../utils/keys';
 import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
 import { authShowPopup } from '../../../../actions/auth';
 import { selectOwner, selectUserById, selectOrgById } from '../../../../store/selectors';
@@ -37,7 +37,7 @@ const PostFeedContent = ({
       return;
     }
 
-    const ownerPrivateKey = restoreActiveKey();
+    const ownerPrivateKey = getSocialKey();
 
     if (!owner.id || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());

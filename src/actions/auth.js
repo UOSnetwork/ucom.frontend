@@ -1,7 +1,7 @@
 import api from '../api';
 import snakes from '../utils/snakes';
 import { saveToken } from '../utils/token';
-import { saveActiveKey, getActivePrivateKey, getSocialPrivateKeyByActiveKey, saveSocialKey } from '../utils/keys';
+import { getActivePrivateKey, getSocialPrivateKeyByActiveKey, saveSocialKey } from '../utils/keys';
 import { selectOwner } from '../store/selectors';
 
 export const reset = () => ({ type: 'AUTH_RESET' });
@@ -32,7 +32,6 @@ export const login = (brainkey, accountName) => async (dispatch, getState) => {
   const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
 
   saveToken(data.token);
-  saveActiveKey(activePrivateKey);
   saveSocialKey(socialPrivateKey);
 
   if (redirectUrl) {
@@ -49,7 +48,6 @@ export const checkBrainkey = brainkey => async (dispatch, getState) => {
 
   const data = await api.login(snakes({ brainkey, accountName }));
   saveToken(data.token);
-  saveActiveKey(getActivePrivateKey(brainkey));
 
   return true;
 };

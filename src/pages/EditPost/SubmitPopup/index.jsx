@@ -13,7 +13,7 @@ import { authShowPopup } from '../../../actions/auth';
 import { addDiscussion } from '../../../actions/organizations';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 import * as editPostActions from '../../../actions/pages/editPost';
-import { restoreActiveKey } from '../../../utils/keys';
+import { getSocialKey } from '../../../utils/keys';
 import withLoader from '../../../utils/withLoader';
 import urls from '../../../utils/urls';
 import { selectOwner } from '../../../store/selectors';
@@ -26,9 +26,10 @@ const SubmitPopup = ({ onClickClose, location, history }) => {
   const urlSearchParams = new URLSearchParams(location.search);
   const orgId = urlSearchParams.get('organizationId');
 
+  // TODO: Move all buisnes logic to redux action
   const save = async () => {
     let postId;
-    const privateKey = restoreActiveKey();
+    const privateKey = getSocialKey();
 
     if (!owner.accountName || !privateKey) {
       dispatch(authShowPopup());

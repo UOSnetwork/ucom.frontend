@@ -22,7 +22,7 @@ import Trust from '../../components/Trust';
 import { getUserName, userIsOwner } from '../../utils/user';
 import { authShowPopup } from '../../actions/auth';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
@@ -83,15 +83,15 @@ const UserPage = (props) => {
 
   const submitTrust = async (isTrust) => {
     try {
-      const activeKey = restoreActiveKey();
+      const socialKey = getSocialKey();
 
-      if (!owner.id || !activeKey) {
+      if (!owner.id || !socialKey) {
         dispatch(authShowPopup());
         return;
       }
 
       await withLoader(dispatch(userPageActions.submitTrust(userIdentity, isTrust, {
-        activeKey,
+        socialKey,
         userId: user.id,
         userAccountName: user.accountName,
         ownerAccountName: owner.accountName,

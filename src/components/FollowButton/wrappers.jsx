@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { useCallback, memo } from 'react';
 import FollowButton from './index';
 import { selectOwner, selectUserById, selectOrgById } from '../../store/selectors';
-import { restoreActiveKey } from '../../utils/keys';
+import { getSocialKey } from '../../utils/keys';
 import { authShowPopup } from '../../actions/auth';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { followUser, unfollowUser, followOrg, unfollowOrg } from '../../actions/follow';
@@ -19,15 +19,15 @@ export const UserFollowButton = memo(({ userId, ...props }) => {
   const text = followed || userIsOwner ? 'Following' : 'Follow';
 
   const followOrUnfollow = useCallback(async () => {
-    const activeKey = restoreActiveKey();
+    const socialKey = getSocialKey();
 
-    if (!owner.id || !activeKey) {
+    if (!owner.id || !socialKey) {
       dispatch(authShowPopup());
       return;
     }
 
     try {
-      await withLoader(dispatch((followed ? unfollowUser : followUser)(owner.accountName, user.id, user.accountName, activeKey)));
+      await withLoader(dispatch((followed ? unfollowUser : followUser)(owner.accountName, user.id, user.accountName, socialKey)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -59,15 +59,15 @@ export const OrgFollowButton = memo(({ orgId, ...props }) => {
   const text = followed ? 'Joined' : 'Join';
 
   const followOrUnfollow = useCallback(async () => {
-    const activeKey = restoreActiveKey();
+    const socialKey = getSocialKey();
 
-    if (!owner.id || !activeKey) {
+    if (!owner.id || !socialKey) {
       dispatch(authShowPopup());
       return;
     }
 
     try {
-      await withLoader(dispatch((followed ? unfollowOrg : followOrg)(owner.accountName, activeKey, org.blockchainId, org.id)));
+      await withLoader(dispatch((followed ? unfollowOrg : followOrg)(owner.accountName, socialKey, org.blockchainId, org.id)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }

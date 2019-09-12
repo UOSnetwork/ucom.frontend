@@ -13,7 +13,7 @@ import { formatRate } from '../../../utils/rate';
 import withLoader from '../../../utils/withLoader';
 import { TAB_ID_ALL, TAB_ID_UP, TAB_ID_DOWN } from '../UsersPopup/Tabs';
 import urls from '../../../utils/urls';
-import { restoreActiveKey } from '../../../utils/keys';
+import { getSocialKey } from '../../../utils/keys';
 import { getUserName } from '../../../utils/user';
 import { INTERACTION_TYPE_ID_VOTING_DOWNVOTE, INTERACTION_TYPE_ID_VOTING_UPVOTE, ENTITY_NAMES_POSTS } from '../../../utils/constants';
 import equalByProps from '../../../utils/equalByProps';
@@ -83,7 +83,7 @@ const PostVotingWrapper = ({ postId }) => {
   }, []);
 
   const vote = useCallback(async (isUp) => {
-    const privateKey = restoreActiveKey();
+    const privateKey = getSocialKey();
 
     if (!owner.id || !privateKey) {
       dispatch(authShowPopup());
