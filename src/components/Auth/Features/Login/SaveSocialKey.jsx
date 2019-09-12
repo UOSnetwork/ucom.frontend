@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { memo, useState, Fragment } from 'react';
-import styles from '../styles.css';
+import styles from '../../styles.css';
 import Popup from '../../../Popup';
 import IconClose from '../../../Icons/Close';
 import Button from '../../../Button/index';

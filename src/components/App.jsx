@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { initNotificationsListeners } from '../actions/siteNotifications';
 import { fetchMyself } from '../actions/users';
 import { Page } from './Layout';
-import Auth from './Auth/Features/LoginSimple';
+import Auth from './Auth/Features/Login';
 import Notifications from './Notifications';
 import socket from '../api/socket';
 import config from '../../package.json';
@@ -29,6 +29,7 @@ import { logoutIfNeedBindSocialKey } from '../utils/auth';
 const App = () => {
   const dispatch = useDispatch();
   const wallet = useSelector(state => state.walletSimple);
+  const auth = useSelector(state => state.auth);
 
   useEffect(() => {
     loader.init(dispatch);
@@ -82,9 +83,9 @@ const App = () => {
       </Page>
 
       <SearchPopup />
-      <Auth />
       <Subscribe />
 
+      {auth.visibility && <Auth />}
       {wallet.buyRamVisible && <BuyRam />}
       {wallet.sellRamVisible && <SellRam />}
       {wallet.editStakeVisible && <EditStake />}

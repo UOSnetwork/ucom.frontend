@@ -28,25 +28,32 @@ class Api {
     return { Authorization: `Bearer ${getToken()}` };
   }
 
-  async login({ brainkey, account_name }) {
+  async loginBySocialKey(socialKey, accountName) {
+    const sign = ecc.sign(accountName, socialKey);
+    const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
+    const response = await this.actions.post('/api/v1/auth/login', {
+      sign,
+      account_name: accountName,
+      social_public_key: socialPublicKey,
+    });
+
+    return humps(response.data);
+  }
+
+  async loginByBrainkey(brainkey, accountName) {
     const activePrivateKey = getActivePrivateKey(brainkey);
     const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
     const socialPublicKey = getPublicKeyByPrivateKey(socialPrivateKey);
-    const sign = ecc.sign(account_name, socialPrivateKey);
-
-    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(account_name);
+    const sign = ecc.sign(accountName, socialPrivateKey);
+    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
 
     if (!socialKeyIsBinded) {
-      await SocialKeyApi.bindSocialKeyWithSocialPermissions(account_name, activePrivateKey, socialPublicKey);
+      await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
     } else {
-      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(account_name, activePrivateKey);
+      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activePrivateKey);
     }
 
-    const response = await this.actions.post('/api/v1/auth/login', {
-      sign,
-      account_name,
-      social_public_key: socialPublicKey,
-    });
+    const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
 
     return humps(response.data);
   }
@@ -451,7 +458,7 @@ class Api {
   }
 
   async claimEmission(accountName, privateKey) {
-    const response = await WalletApi.claimEmission(accountName, privateKey);
+    const response = await WalletApi.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
 
     return humps(response);
   }

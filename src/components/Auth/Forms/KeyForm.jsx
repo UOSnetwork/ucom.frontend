@@ -57,7 +57,7 @@ const KeyForm = (props) => {
           cap
           strech
           type="submit"
-          disabled={props.loading || props.error || formError}
+          disabled={Boolean(props.loading || props.error || formError)}
         >
           {props.submitText}
         </Button>
