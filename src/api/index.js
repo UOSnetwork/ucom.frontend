@@ -58,6 +58,23 @@ class Api {
     return humps(response.data);
   }
 
+  async loginByActiveKey(activeKey, accountName) {
+    const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
+    const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
+    const sign = ecc.sign(accountName, socialKey);
+    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
+
+    if (!socialKeyIsBinded) {
+      await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
+    } else {
+      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
+    }
+
+    const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
+
+    return humps(response.data);
+  }
+
   async register(brainkey, accountName, isTrackingAllowed) {
     const ownerPublicKey = getOwnerPublicKeyByBrainkey(brainkey);
     const activePrivateKey = getActivePrivateKey(brainkey);

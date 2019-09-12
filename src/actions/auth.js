@@ -65,6 +65,18 @@ export const recoveryByBrainkey = (brainkey, accountName) => async () => {
   return socialKey;
 };
 
+export const recoveryByActiveKey = (activeKey, accountName) => async () => {
+  try {
+    await api.loginByActiveKey(activeKey, accountName);
+  } catch (err) {
+    throw new Error('Active key is wrong');
+  }
+
+  const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
+
+  return socialKey;
+};
+
 export const checkBrainkey = brainkey => async (dispatch, getState) => {
   const state = getState();
   const owner = selectOwner(state);
