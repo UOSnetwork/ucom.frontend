@@ -127,7 +127,7 @@ export default class Scatter {
     Validator.isAccountNameAnActorOrExceptionAndLogout(this.account.name, accountName);
     Validator.isNonNegativeBytesAmountOrException(bytesAmount);
 
-    const [, price] = Promise.all([
+    const [, price] = await Promise.all([
       Validator.isAccountNameExitOrException(accountName),
       Validator.isMinUosAmountForRamOrException(bytesAmount),
     ]);
@@ -147,7 +147,7 @@ export default class Scatter {
       throw new Error('It is possible to vote up to 30 block producers');
     }
 
-    const [userInfo] = Promise.all([
+    const [userInfo] = await Promise.all([
       Validator.isAccountNameExitOrException(accountName),
       Validator.isBlockProducersExistOrExeption(producers),
     ]);
