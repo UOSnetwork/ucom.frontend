@@ -28,10 +28,13 @@ import {
   WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
   WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
   WORKER_SIGN_CREATE_COMMENT_FROM_USER,
+  WORKER_UPDATE_PROFILE,
+  WORKER_SIGN_CREATE_ORGANIZATION,
+  WORKER_SIGN_UPDATE_ORGANIZATION,
 } from '../utils/constants';
 
-const { SocialKeyApi, SocialApi } = Wallet;
-const { ContentInteractionsApi, PublicationsApi } = Wallet.Content;
+const { SocialKeyApi, SocialApi, ContentApi } = Wallet;
+const { ContentInteractionsApi, PublicationsApi, OrganizationsApi } = Wallet.Content;
 
 registerPromiseWorker((action) => {
   switch (action.type) {
@@ -109,6 +112,15 @@ registerPromiseWorker((action) => {
 
     case WORKER_SIGN_CREATE_COMMENT_FROM_USER:
       return PublicationsApi.signCreateCommentFromUser(...action.args);
+
+    case WORKER_UPDATE_PROFILE:
+      return ContentApi.updateProfile(...action.args);
+
+    case WORKER_SIGN_CREATE_ORGANIZATION:
+      return OrganizationsApi.signCreateOrganization(...action.args);
+
+    case WORKER_SIGN_UPDATE_ORGANIZATION:
+      return OrganizationsApi.signUpdateOrganization(...action.args);
 
     default:
       return null;

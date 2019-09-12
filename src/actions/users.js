@@ -1,5 +1,4 @@
 import { isNull, isEqual } from 'lodash';
-import { ContentApi } from 'ucom-libs-wallet';
 import api from '../api';
 import { getToken, removeToken } from '../utils/token';
 import loader from '../utils/loader';
@@ -12,6 +11,7 @@ import { getSocialKey } from '../utils/keys';
 import { USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 // import { enableGtm } from '../utils/gtm';
 import { getUserById, getUsersByIds } from '../store/users';
+import Worker from '../worker';
 
 export const addUsers = (data = []) => (dispatch) => {
   let users = [];
@@ -168,7 +168,7 @@ export const updateUser = userData => async (dispatch) => {
     throw new Error('UserData object is not valid');
   }
 
-  const signedTransaction = await ContentApi.updateProfile(userData.accountName, socialKey, dataAsJson, TRANSACTION_PERMISSION_SOCIAL);
+  const signedTransaction = await Worker.updateProfile(userData.accountName, socialKey, dataAsJson, TRANSACTION_PERMISSION_SOCIAL);
 
   const dataForApi = {
     ...userData,

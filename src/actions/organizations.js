@@ -1,4 +1,3 @@
-import Wallet from 'ucom-libs-wallet';
 import humps from 'lodash-humps';
 import api from '../api';
 import { addUsers } from './users';
@@ -6,8 +5,7 @@ import { selectOrgById } from '../store/selectors';
 import { getOrganizationByIds } from '../store/organizations';
 import snakes from '../utils/snakes';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
-
-const { OrganizationsApi } = Wallet.Content;
+import Worker from '../worker';
 
 export const addOrganizations = payload => (dispatch) => {
   getOrganizationByIds.cache.clear();
@@ -39,14 +37,14 @@ export const saveOrganization = (
   let org;
 
   if (!orgBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await OrganizationsApi.signCreateOrganization(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateOrganization(
       ownerAccountName,
       ownerPrivateKey,
       content,
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
-    signed_transaction = await OrganizationsApi.signUpdateOrganization(
+    signed_transaction = await Worker.signUpdateOrganization(
       ownerAccountName,
       ownerPrivateKey,
       content,

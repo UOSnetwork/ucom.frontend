@@ -25,6 +25,9 @@ import {
   WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
   WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
   WORKER_SIGN_CREATE_COMMENT_FROM_USER,
+  WORKER_UPDATE_PROFILE,
+  WORKER_SIGN_CREATE_ORGANIZATION,
+  WORKER_SIGN_UPDATE_ORGANIZATION,
 } from '../utils/constants';
 
 export default class Api {
@@ -211,6 +214,27 @@ export default class Api {
   static signCreateCommentFromUser(...args) {
     return Api.postMessage({
       type: WORKER_SIGN_CREATE_COMMENT_FROM_USER,
+      args,
+    });
+  }
+
+  static updateProfile(...args) {
+    return Api.postMessage({
+      type: WORKER_UPDATE_PROFILE,
+      args,
+    });
+  }
+
+  static signCreateOrganization(...args) {
+    return Api.postMessage({
+      type: WORKER_SIGN_CREATE_ORGANIZATION,
+      args,
+    });
+  }
+
+  static signUpdateOrganization(...args) {
+    return Api.postMessage({
+      type: WORKER_SIGN_UPDATE_ORGANIZATION,
       args,
     });
   }
