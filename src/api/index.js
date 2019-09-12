@@ -459,7 +459,7 @@ class Api {
   }
 
   async claimEmission(accountName, privateKey) {
-    const response = await WalletApi.claimEmission(accountName, privateKey);
+    const response = await WalletApi.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
 
     return humps(response);
   }

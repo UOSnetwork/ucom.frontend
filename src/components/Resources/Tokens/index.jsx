@@ -9,11 +9,13 @@ import {
   walletToggleEditStake,
   walletGetEmission,
 } from '../../../actions/walletSimple';
-import loader from '../../../utils/loader';
+
+import { authShowPopup } from '../../../actions/auth';
+import withLoader from '../../../utils/withLoader';
 import { addErrorNotification, addSuccessNotification } from '../../../actions/notifications';
 import { parseResponseError } from '../../../utils/errors';
-import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
 import formatNumber from '../../../utils/formatNumber';
+import { getSocialKey } from '../../../utils/keys';
 
 const Tokens = (props) => {
   const { tokens } = props.wallet;
@@ -42,33 +44,30 @@ const Tokens = (props) => {
         }}
       />
 
-      <RequestActiveKey
-        onSubmit={async (privateKey) => {
-          loader.start();
-          try {
-            await props.dispatch(walletGetEmission(props.owner.accountName, privateKey));
-            props.dispatch(addSuccessNotification('Successfully get emission'));
-          } catch (e) {
-            const errors = parseResponseError(e);
-            props.dispatch(addErrorNotification(errors[0].message));
-          }
-          loader.done();
+      <Token
+        value={`${formatNumber(tokens.emission)}`}
+        label="Emission, UOS"
+        action={{
+          disabled: +tokens.emission === 0,
+          title: 'Get Emission',
+          onClick: async () => {
+            const socialKey = getSocialKey();
+
+            if (!socialKey || !props.owner.accountName) {
+              props.dispatch(authShowPopup());
+              return;
+            }
+
+            try {
+              await withLoader(props.dispatch(walletGetEmission(props.owner.accountName, socialKey)));
+              props.dispatch(addSuccessNotification('Successfully get emission'));
+            } catch (err) {
+              const errors = parseResponseError(err);
+              props.dispatch(addErrorNotification(errors[0].message));
+            }
+          },
         }}
-      >
-        {requestActiveKey => (
-          <Token
-            value={`${formatNumber(tokens.emission)}`}
-            label="Emission, UOS"
-            action={{
-              disabled: +tokens.emission === 0,
-              title: 'Get Emission',
-              onClick: async () => {
-                requestActiveKey();
-              },
-            }}
-          />
-        )}
-      </RequestActiveKey>
+      />
 
       <Token
         value={`${formatNumber(tokens.uosFutures)}`}
