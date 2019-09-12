@@ -23,6 +23,8 @@ import {
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
   WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
+  WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
+  WORKER_SIGN_CREATE_COMMENT_FROM_USER,
 } from '../utils/constants';
 
 export default class Api {
@@ -195,6 +197,20 @@ export default class Api {
   static signCreateRepostPostForAccount(...args) {
     return Api.postMessage({
       type: WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
+      args,
+    });
+  }
+
+  static signCreateCommentFromOrganization(...args) {
+    return Api.postMessage({
+      type: WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
+      args,
+    });
+  }
+
+  static signCreateCommentFromUser(...args) {
+    return Api.postMessage({
+      type: WORKER_SIGN_CREATE_COMMENT_FROM_USER,
       args,
     });
   }

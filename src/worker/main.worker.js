@@ -26,6 +26,8 @@ import {
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ACCOUNT,
   WORKER_SIGN_UPDATE_DIRECT_POST_FOR_ORGANIZATION,
   WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT,
+  WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION,
+  WORKER_SIGN_CREATE_COMMENT_FROM_USER,
 } from '../utils/constants';
 
 const { SocialKeyApi, SocialApi } = Wallet;
@@ -101,6 +103,12 @@ registerPromiseWorker((action) => {
 
     case WORKER_SIGN_CREATE_REPOST_POST_FOR_ACCOUNT:
       return PublicationsApi.signCreateRepostPostForAccount(...action.args);
+
+    case WORKER_SIGN_CREATE_COMMENT_FROM_ORGANIZATION:
+      return PublicationsApi.signCreateCommentFromOrganization(...action.args);
+
+    case WORKER_SIGN_CREATE_COMMENT_FROM_USER:
+      return PublicationsApi.signCreateCommentFromUser(...action.args);
 
     default:
       return null;

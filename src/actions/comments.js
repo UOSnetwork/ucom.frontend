@@ -1,5 +1,4 @@
 import { omit } from 'lodash';
-import Wallet from 'ucom-libs-wallet';
 import api from '../api';
 import graphql from '../api/graphql';
 import loader from '../utils/loader';
@@ -7,8 +6,7 @@ import { addServerErrorNotification } from './notifications';
 import { addUsers } from './users';
 import { searchTags } from '../utils/text';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
-
-const { PublicationsApi } = Wallet.Content;
+import Worker from '../worker';
 
 export const addComments = comments => (dispatch) => {
   const users = [];
@@ -145,7 +143,7 @@ export const createComment = (
   let blockchain_id;
 
   if (orgBlockchainId && !commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
       ownerAccountName,
       ownerPrivateKey,
       postBlockchainId,
@@ -155,7 +153,7 @@ export const createComment = (
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else if (orgBlockchainId && commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromOrganization(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
       ownerAccountName,
       ownerPrivateKey,
       commentBlockchainId,
@@ -165,7 +163,7 @@ export const createComment = (
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else if (commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
       ownerAccountName,
       ownerPrivateKey,
       commentBlockchainId,
@@ -174,7 +172,7 @@ export const createComment = (
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
-    ({ signed_transaction, blockchain_id } = await PublicationsApi.signCreateCommentFromUser(
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
       ownerAccountName,
       ownerPrivateKey,
       postBlockchainId,

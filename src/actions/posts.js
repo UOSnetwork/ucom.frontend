@@ -1,4 +1,3 @@
-import Wallet from 'ucom-libs-wallet';
 import { omit } from 'lodash';
 import api, { graphql } from '../api';
 import { addUsers } from './users';
@@ -8,8 +7,6 @@ import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { searchTags } from '../utils/text';
 import Worker from '../worker';
-
-const { PublicationsApi } = Wallet.Content;
 
 export const addPosts = (postsData = []) => (dispatch) => {
   const posts = [];
@@ -305,7 +302,7 @@ export const upadteDirectPost = (
       TRANSACTION_PERMISSION_SOCIAL,
     );
   } else {
-    signed_transaction = await PublicationsApi.signUpdateDirectPostForOrganization(
+    signed_transaction = await Worker.signUpdateDirectPostForOrganization(
       ownerAccountName,
       ownerPrivateKey,
       orgBlockchainId,
