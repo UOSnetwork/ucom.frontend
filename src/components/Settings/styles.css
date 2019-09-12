@@ -133,6 +133,11 @@ h4.title {
   fill: #767676;
 }
 
+.brainkeyForm .button:disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .brainkeyForm .error {
   grid-row-start: 2;
 }
