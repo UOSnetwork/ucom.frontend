@@ -125,4 +125,20 @@ export default class Api {
   static signUpdateOrganization(...args) {
     return Api.postMessage({ args, type: actions.SIGN_UPDATE_ORGANIZATION });
   }
+
+  static stakeOrUnstakeTokens(...args) {
+    return Api.postMessage({ args, type: actions.STAKE_OR_UNSTAKE_TOKENS });
+  }
+
+  static voteForBlockProducers(...args) {
+    return Api.postMessage({ args, type: actions.VOTE_FOR_BLOCK_PRODUCERS });
+  }
+
+  static voteForCalculatorNodes(...args) {
+    return Api.postMessage({ args, type: actions.VOTE_FOR_CALCULATOR_NODES });
+  }
+
+  static sendTokens(...args) {
+    return Api.postMessage({ args, type: actions.SEND_TOKENS });
+  }
 }

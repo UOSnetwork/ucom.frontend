@@ -4,8 +4,13 @@ import registerPromiseWorker from 'promise-worker/register';
 import { getActivePrivateKey, getSocialPrivateKeyByActiveKey, getPublicKeyByPrivateKey } from '../utils/keys';
 import * as actions from './actions';
 
-const { SocialKeyApi, SocialApi, ContentApi } = Wallet;
-const { ContentInteractionsApi, PublicationsApi, OrganizationsApi } = Wallet.Content;
+const {
+  SocialKeyApi, SocialApi, ContentApi, WalletApi,
+} = Wallet;
+
+const {
+  ContentInteractionsApi, PublicationsApi, OrganizationsApi,
+} = Wallet.Content;
 
 registerPromiseWorker((action) => {
   switch (action.type) {
@@ -92,6 +97,18 @@ registerPromiseWorker((action) => {
 
     case actions.SIGN_UPDATE_ORGANIZATION:
       return OrganizationsApi.signUpdateOrganization(...action.args);
+
+    case actions.STAKE_OR_UNSTAKE_TOKENS:
+      return WalletApi.stakeOrUnstakeTokens(...action.args);
+
+    case actions.VOTE_FOR_BLOCK_PRODUCERS:
+      return WalletApi.voteForBlockProducers(...action.args);
+
+    case actions.VOTE_FOR_CALCULATOR_NODES:
+      return WalletApi.voteForCalculatorNodes(...action.args);
+
+    case actions.SEND_TOKENS:
+      return WalletApi.sendTokens(...action.args);
 
     default:
       return null;

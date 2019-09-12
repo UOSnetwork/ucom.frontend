@@ -7,7 +7,7 @@ import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
 import { addSuccessNotification } from '../../../actions/notifications';
@@ -21,17 +21,17 @@ const EditStake = (props) => {
 
   const getCurrentNetAndCpuStakedTokens = async () => {
     setLoading(true);
-    loader.start();
+
     try {
-      const data = await api.getCurrentNetAndCpuStakedTokens(props.owner.accountName);
+      const data = await withLoader(api.getCurrentNetAndCpuStakedTokens(props.owner.accountName));
       setCpu(data.cpu);
       setNet(data.net);
     } catch (e) {
       const errors = parseResponseError(e);
       setFormError(errors[0].message);
     }
+
     setLoading(false);
-    loader.done();
   };
 
   useEffect(() => {
@@ -49,9 +49,9 @@ const EditStake = (props) => {
       replace
       onSubmit={async (privateKey) => {
         setLoading(true);
-        loader.start();
+
         try {
-          await props.dispatch(walletEditStake(props.owner.accountName, net, cpu, privateKey));
+          await withLoader(props.dispatch(walletEditStake(props.owner.accountName, privateKey, net, cpu)));
           setFormError(null);
           props.dispatch(addSuccessNotification('Successfully set stake'));
           setTimeout(() => {
@@ -61,8 +61,8 @@ const EditStake = (props) => {
           const errors = parseResponseError(e);
           setFormError(errors[0].message);
         }
+
         setLoading(false);
-        loader.done();
       }}
     >
       {requestActiveKey => (

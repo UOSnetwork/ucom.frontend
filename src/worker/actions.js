@@ -26,3 +26,7 @@ export const SIGN_CREATE_COMMENT_FROM_USER = 25;
 export const UPDATE_PROFILE = 26;
 export const SIGN_CREATE_ORGANIZATION = 27;
 export const SIGN_UPDATE_ORGANIZATION = 28;
+export const STAKE_OR_UNSTAKE_TOKENS = 29;
+export const VOTE_FOR_BLOCK_PRODUCERS = 30;
+export const VOTE_FOR_CALCULATOR_NODES = 31;
+export const SEND_TOKENS = 32;

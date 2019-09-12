@@ -1,4 +1,5 @@
 import api from '../api';
+import Worker from '../worker';
 
 export const walletToggleBuyRam = visible => ({
   type: 'WALLET_SET_BUY_RAM_VISIBLE',
@@ -55,27 +56,16 @@ export const walletSellRam = (
   return data;
 };
 
-export const walletEditStake = (
-  accountName,
-  netAmount,
-  cpuAmount,
-  privateKey,
-) => async (dispatch) => {
-  const data = await api.stakeOrUnstakeTokens(accountName, netAmount, cpuAmount, privateKey);
+export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) => async (dispatch) => {
+  const data = await Worker.stakeOrUnstakeTokens(accountName, privateKey, netAmount, cpuAmount);
 
   dispatch(walletGetAccount(accountName));
 
   return data;
 };
 
-export const walletSendTokens = (
-  accountNameFrom,
-  accountNameTo,
-  amount,
-  memo,
-  privateKey,
-) => async (dispatch) => {
-  const data = await api.sendTokens(accountNameFrom, accountNameTo, amount, memo, privateKey);
+export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => async (dispatch) => {
+  const data = await Worker.sendTokens(accountNameFrom, privateKey, accountNameTo, amount, memo);
 
   dispatch(walletGetAccount(accountNameFrom));
 
