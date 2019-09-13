@@ -5,8 +5,8 @@ import Popup, { Content } from '../../../Popup';
 import Brainkey from '../../Screens/Brainkey';
 import Key from '../../Screens/Key';
 import SaveKey from '../../Screens/SaveKey';
-import { getSocialPrivateKeyByBrainkey, getSocialPrivateKeyByActiveKey } from '../../../../utils/keys';
 import { addErrorNotification } from '../../../../actions/notifications';
+import Worker from '../../../../worker';
 
 const STEP_BRAINKEY = 1;
 const STEP_ACTIVE_KEY = 2;
@@ -15,6 +15,7 @@ const STEP_SAVE_KEY = 3;
 const GenerateSocialKey = (props) => {
   const [currentStep, setCurrentStep] = useState(STEP_BRAINKEY);
   const [socialKey, setSocailKey] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   return (
     <Popup onClickClose={props.onClickClose}>
@@ -28,13 +29,19 @@ const GenerateSocialKey = (props) => {
             case STEP_ACTIVE_KEY:
               return (
                 <Key
-                  onSubmit={(activeKey) => {
+                  loading={loading}
+                  onSubmit={async (activeKey) => {
+                    setLoading(true);
+
                     try {
-                      setSocailKey(getSocialPrivateKeyByActiveKey(activeKey));
+                      const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
+                      setSocailKey(socialKey);
                       setCurrentStep(STEP_SAVE_KEY);
-                    } catch (e) {
-                      props.dispatch(addErrorNotification(e.message));
+                    } catch (err) {
+                      props.dispatch(addErrorNotification(err.message));
                     }
+
+                    setLoading(false);
                   }}
                   onClickBack={() => {
                     setSocailKey(null);
@@ -59,15 +66,23 @@ const GenerateSocialKey = (props) => {
             default:
               return (
                 <Brainkey
+                  loading={loading}
                   title="Generate Social Key with Brainkey"
                   backText="I have Private Active key"
-                  onSubmit={(brainkey) => {
+                  onSubmit={async (brainkey) => {
+                    setLoading(true);
+
                     try {
-                      setSocailKey(getSocialPrivateKeyByBrainkey(brainkey));
+                      const activeKey = await Worker.getActiveKeyByBrainKey(brainkey);
+                      const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
+
+                      setSocailKey(socialKey);
                       setCurrentStep(STEP_SAVE_KEY);
                     } catch (e) {
                       props.dispatch(addErrorNotification(e.message));
                     }
+
+                    setLoading(false);
                   }}
                   onClickBack={() => {
                     setSocailKey(null);

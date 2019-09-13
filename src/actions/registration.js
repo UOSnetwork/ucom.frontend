@@ -4,12 +4,12 @@ import api from '../api';
 import { generateBrainkey } from '../utils/brainkey';
 import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
-import { saveSocialKey, getActivePrivateKey, getSocialPrivateKeyByBrainkey } from '../utils/keys';
+import { saveSocialKey } from '../utils/keys';
 import { getPostUrl } from '../utils/posts';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import Worker from '../worker';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
-const { SocialApi, ContentApi } = require('ucom-libs-wallet');
 
 export const registrationReset = payload => ({ type: 'REGISTRATION_RESET', payload });
 export const registrationSetStep = payload => ({ type: 'REGISTRATION_SET_STEP', payload });
@@ -54,8 +54,9 @@ export const registrationGenerateBrainkey = () => (dispatch) => {
 export const registrationRegister = prevPage => async (dispatch, getState) => {
   const state = getState();
   const { brainkey, accountName, isTrackingAllowed } = state.registration;
-  const activePrivateKey = getActivePrivateKey(brainkey);
-  const socialPrivateKey = getSocialPrivateKeyByBrainkey(brainkey);
+
+  const activeKey = await Worker.getActiveKeyByBrainKey(brainkey);
+  const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
 
   dispatch(registrationSetLoading(true));
 
@@ -78,14 +79,14 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
 
   try {
     saveToken(registrationData.token);
-    saveSocialKey(socialPrivateKey);
+    saveSocialKey(socialKey);
   } catch (err) {
     console.error(err);
   }
 
   try {
     const userCreatedAt = moment().utc().format();
-    const signedTransaction = await ContentApi.createProfileAfterRegistration(accountName, activePrivateKey, isTrackingAllowed, userCreatedAt);
+    const signedTransaction = await Worker.createProfileAfterRegistration(accountName, activeKey, isTrackingAllowed, userCreatedAt);
     const signedTransactionAsJson = JSON.stringify(signedTransaction);
 
     await api.registrationProfile(signedTransactionAsJson, userCreatedAt);
@@ -102,9 +103,9 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     referralData.affiliatesActions[0].action
   ) {
     try {
-      const signedTransaction = await SocialApi.getReferralFromUserSignedTransactionAsJson(
+      const signedTransaction = await Worker.getReferralFromUserSignedTransactionAsJson(
         accountName,
-        socialPrivateKey,
+        socialKey,
         referralData.affiliatesActions[0].accountNameSource,
         TRANSACTION_PERMISSION_SOCIAL,
       );

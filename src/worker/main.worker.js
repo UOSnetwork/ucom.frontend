@@ -6,6 +6,7 @@ import {
   getSocialPrivateKeyByActiveKey,
   getPublicKeyByPrivateKey,
   getOwnerPrivateKey,
+  getActiveKeyByOwnerKey,
 } from '../utils/keys';
 import * as actions from './actions';
 
@@ -27,6 +28,12 @@ registerPromiseWorker((action) => {
 
     case actions.GET_PUBLIC_KEY_BY_PRIVATE_KEY:
       return getPublicKeyByPrivateKey(...action.args);
+
+    case actions.GET_OWNER_KEY_BY_BRAINKEY:
+      return getOwnerPrivateKey(...action.args);
+
+    case actions.GET_ACTIVE_KEY_BY_OWNER_KEY:
+      return getActiveKeyByOwnerKey(...action.args);
 
     case actions.ECC_SIGN:
       return ecc.sign(...action.args);
@@ -124,8 +131,11 @@ registerPromiseWorker((action) => {
     case actions.CLAIM_EMISSION:
       return WalletApi.claimEmission(...action.args);
 
-    case actions.GET_OWNER_KEY_BY_BRAINKEY:
-      return getOwnerPrivateKey(...action.args);
+    case actions.CREATE_PROFILE_AFTER_REGISTRATION:
+      return ContentApi.createProfileAfterRegistration(...action.args);
+
+    case actions.GET_REFERRAL_FROM_USER_SIGNED_TRANSACTION_AS_JSON:
+      return SocialApi.getReferralFromUserSignedTransactionAsJson(...action.args);
 
     default:
       return null;

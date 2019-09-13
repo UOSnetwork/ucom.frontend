@@ -19,32 +19,15 @@ export const passwordIsValid = memoize((password) => {
 });
 
 export const getOwnerPrivateKey = memoize(brainkey => ecc.seedPrivate(brainkey));
+export const getActiveKeyByOwnerKey = memoize(ownerKey => ecc.seedPrivate(ownerKey));
+export const getSocialPrivateKeyByActiveKey = memoize(activeKey => ecc.seedPrivate(activeKey));
+export const getPublicKeyByPrivateKey = memoize(privateKey => ecc.privateToPublic(privateKey));
 
 export const getActivePrivateKey = memoize((brainkey) => {
   const ownerKey = getOwnerPrivateKey(brainkey);
   const activeKey = ecc.seedPrivate(ownerKey);
   return activeKey;
 });
-
-export const getSocialPrivateKeyByBrainkey = memoize((brainkey) => {
-  const activeKey = getActivePrivateKey(brainkey);
-  const socialKey = ecc.seedPrivate(activeKey);
-  return socialKey;
-});
-
-export const getSocialPrivateKeyByActiveKey = memoize((activeKey) => {
-  const socialKey = ecc.seedPrivate(activeKey);
-  return socialKey;
-});
-
-export const getOwnerPublicKeyByBrainkey = memoize((brainkey) => {
-  const ownerKey = getOwnerPrivateKey(brainkey);
-  const ownerPublicKey = ecc.privateToPublic(ownerKey);
-  return ownerPublicKey;
-});
-
-export const getPublicKeyByPrivateKey = memoize(privateKey =>
-  ecc.privateToPublic(privateKey));
 
 export const encryptedActiveKeyIsExists = () => {
   try {

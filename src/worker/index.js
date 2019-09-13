@@ -22,6 +22,10 @@ export default class Api {
     return Api.postMessage({ args, type: actions.GET_OWNER_KEY_BY_BRAINKEY });
   }
 
+  static getActiveKeyByOwnerKey(...args) {
+    return Api.postMessage({ args, type: actions.GET_ACTIVE_KEY_BY_OWNER_KEY });
+  }
+
   static getSocialKeyByActiveKey(...args) {
     return Api.postMessage({ args, type: actions.GET_SOCIAL_KEY_BY_ACTIVE_KEY });
   }
@@ -156,5 +160,13 @@ export default class Api {
 
   static claimEmission(...args) {
     return Api.postMessage({ args, type: actions.CLAIM_EMISSION });
+  }
+
+  static createProfileAfterRegistration(...args) {
+    return Api.postMessage({ args, type: actions.CREATE_PROFILE_AFTER_REGISTRATION });
+  }
+
+  static getReferralFromUserSignedTransactionAsJson(...args) {
+    return Api.postMessage({ args, type: actions.GET_REFERRAL_FROM_USER_SIGNED_TRANSACTION_AS_JSON });
   }
 }

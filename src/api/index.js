@@ -1,10 +1,8 @@
 import { WalletApi, SocialKeyApi } from 'ucom-libs-wallet';
-import ecc from 'eosjs-ecc';
 import humps from 'lodash-humps';
 import param from 'jquery-param';
 import HttpActions from './HttpActions';
 import { getToken } from '../utils/token';
-import { getActivePrivateKey, getOwnerPublicKeyByBrainkey, getPublicKeyByPrivateKey, getSocialPrivateKeyByActiveKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
 import Worker from '../worker';
@@ -57,8 +55,8 @@ class Api {
   }
 
   async loginByActiveKey(activeKey, accountName) {
-    const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
-    const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
+    const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
+    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
     const sign = await Worker.eccSign(accountName, socialKey);
     const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
 
@@ -74,12 +72,13 @@ class Api {
   }
 
   async register(brainkey, accountName, isTrackingAllowed) {
-    const ownerPublicKey = getOwnerPublicKeyByBrainkey(brainkey);
-    const activePrivateKey = getActivePrivateKey(brainkey);
-    const activePublicKey = getPublicKeyByPrivateKey(activePrivateKey);
-    const socialPrivateKey = getSocialPrivateKeyByActiveKey(activePrivateKey);
-    const socialPublicKey = getPublicKeyByPrivateKey(socialPrivateKey);
-    const sign = ecc.sign(accountName, socialPrivateKey);
+    const ownerKey = await Worker.getOwnerKeyByBrainkey(brainkey);
+    const activeKey = await Worker.getActiveKeyByOwnerKey(ownerKey);
+    const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
+    const ownerPublicKey = await Worker.getPublicKeyByPrivateKey(ownerKey);
+    const activePublicKey = await Worker.getPublicKeyByPrivateKey(activeKey);
+    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
+    const sign = await Worker.eccSign(accountName, socialKey);
 
     const response = await this.actions.post('/api/v1/auth/registration', {
       sign,
@@ -90,8 +89,8 @@ class Api {
       account_name: accountName,
     });
 
-    await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activePrivateKey, socialPublicKey);
-    await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activePrivateKey);
+    await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
+    await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
 
     return humps(response.data);
   }
@@ -489,12 +488,7 @@ class Api {
     return humps(response.data);
   }
 
-  async referralTransaction(
-    signedTransaction,
-    accountNameSource,
-    offerId,
-    action,
-  ) {
+  async referralTransaction(signedTransaction, accountNameSource, offerId, action) {
     const data = snakes({
       signedTransaction,
       accountNameSource,
@@ -507,14 +501,8 @@ class Api {
     return humps(response.data);
   }
 
-  async registrationProfile(
-    signedTransaction,
-    userCreatedAt,
-  ) {
-    const data = snakes({
-      signedTransaction,
-      userCreatedAt,
-    });
+  async registrationProfile(signedTransaction, userCreatedAt) {
+    const data = snakes({ signedTransaction, userCreatedAt });
 
     const response = await this.actions.post('/api/v1/myself/transactions/registration-profile', data);
 
