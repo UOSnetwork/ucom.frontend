@@ -142,6 +142,11 @@
   top: -9px;
 }
 
+.containerActions.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .label {
   fill: #c4c4c4;
   cursor: pointer;

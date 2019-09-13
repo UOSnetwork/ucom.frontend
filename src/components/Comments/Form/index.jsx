@@ -25,7 +25,7 @@ import IconEnter from '../../Icons/Enter';
 import Embed from '../../Embed';
 import EmbedService from '../../../utils/embedService';
 import { getUrlsFromStr, validUrl } from '../../../utils/url';
-import loader from '../../../utils/loader';
+import withLoader from '../../../utils/withLoader';
 
 const Form = (props) => {
   const [loading, setLoading] = useState(false);
@@ -94,22 +94,24 @@ const Form = (props) => {
       return;
     }
 
-    loader.start();
+    setLoading(true);
     try {
-      const embedData = await EmbedService.getDataFromUrl(url);
+      const embedData = await withLoader(EmbedService.getDataFromUrl(url));
       addEmbed(embedData);
     } catch (err) {
       console.error(err);
     }
-    loader.done();
+    setLoading(false);
   };
 
   const onMultipleImages = async (files) => {
+    setLoading(true);
     const savedEntityImages = entityImages;
     setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
-    const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadOneImage(url)));
+    const data = await withLoader(Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadOneImage(url))));
     const urls = data.map(item => item.files[0]);
     setEntityImages(addGalleryImages(savedEntityImages, urls));
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -144,6 +146,10 @@ const Form = (props) => {
       () => setDropOnForm(true),
       () => setDropOnForm(false),
     );
+
+    if (props.autoFocus && textareaEl.current) {
+      textareaEl.current.setSelectionRange(message.length, message.length);
+    }
 
     return () => {
       if (autosizeInited) {
@@ -214,18 +220,19 @@ const Form = (props) => {
                 />
               </TributeWrapper>
             </div>
+
             <div
-              className={styles.containerActions}
+              className={classNames({
+                [styles.containerActions]: true,
+                [styles.disabled]: loading,
+              })}
             >
               <label name="img" className={styles.label}>
                 <IconClip />
                 <DropZone
-                  className={styles.labelFile}
                   multiple
-                  onDrop={async (files) => {
-                    await onMultipleImages(files);
-                  }
-                }
+                  className={styles.labelFile}
+                  onDrop={onMultipleImages}
                 />
               </label>
 
@@ -237,17 +244,19 @@ const Form = (props) => {
                 <IconEnter />
               </div>
             </div>
-            <DragAndDrop {...{
-                onMultipleImages, dropOnForm,
-              }}
+
+            <DragAndDrop
+              onMultipleImages={onMultipleImages}
+              dropOnForm={dropOnForm}
             />
           </div>
         </div>
       </div>
 
-      <PreviewImagesGrid {...{
-          isExistGalleryImages, setEntityImages, entityImages,
-        }}
+      <PreviewImagesGrid
+        isExistGalleryImages={isExistGalleryImages}
+        setEntityImages={setEntityImages}
+        entityImages={entityImages}
       />
     </div>
   );

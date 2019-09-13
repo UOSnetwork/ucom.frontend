@@ -15,8 +15,8 @@ const DropZone = (props) => {
   return (
     <div className={classNames('drop-zone', className)}>
       <DropzoneWrapper
-        multiple={multiple}
         className="drop-zone__input"
+        multiple={multiple}
         onChange={onDrop}
       >
         <Loading className="loading_small" loading={props.loading} />
