@@ -151,6 +151,6 @@ export default class Api {
   }
 
   static claimEmission(...args) {
-    return Api.claimEmission({ args, type: actions.CLAIM_EMISSION });
+    return Api.postMessage({ args, type: actions.CLAIM_EMISSION });
   }
 }

@@ -56,6 +56,10 @@ routes.forEach((route) => {
             contentMetaTags.description = escapeHtml(xss(data.contentMetaTags.description));
           }
 
+          if (isString(data.contentMetaTags.keywords)) {
+            contentMetaTags.keywords = escapeHtml(xss(data.contentMetaTags.keywords));
+          }
+
           if (isString(data.contentMetaTags.image)) {
             contentMetaTags.image = escapeHtml(xss(data.contentMetaTags.image));
             contentMetaTags.imageWidth = undefined;

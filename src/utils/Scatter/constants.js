@@ -1,0 +1,16 @@
+export const SMART_CONTRACT_EOSIO_TOKEN = 'eosio.token';
+export const SMART_CONTRACT_EISIO = 'eosio';
+export const SMART_CONTRACT_EMISSION = 'uos.calcs';
+export const ACTION_TRANSFER = 'transfer';
+export const ACTION_DELEGATE_BANDWIDTH = 'delegatebw';
+export const ACTION_UNDELEGATE_BANDWIDTH = 'undelegatebw';
+export const ACTION_WITHDRAWAL = 'withdrawal';
+export const ACTION_SELL_RAM_BYTES = 'sellram';
+export const ACTION_BUY_RAM_BYTES = 'buyrambytes';
+export const ACTION_VOTE_PRODUCER = 'voteproducer';
+export const ACTION_VOTE_PRODUCER_CALCULATORS = 'votecalc';
+export const CORE_TOKEN_NAME = 'UOS';
+export const BLOCKS_BEHIND = 3;
+export const EXPIRE_SECONDS = 30;
+export const TABLE_NAME_RAM_MARKET = 'rammarket';
+export const TABLE_ROWS_LIMIT_ALL = 999999;

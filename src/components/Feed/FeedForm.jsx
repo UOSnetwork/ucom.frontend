@@ -27,9 +27,10 @@ import { getUrlsFromStr, validUrl } from '../../utils/url';
 import api from '../../api';
 import Embed from '../Embed';
 import EmbedService from '../../utils/embedService';
-import loader from '../../utils/loader';
+import withLoader from '../../utils/withLoader';
 
 const FeedForm = (props) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const fieldEl = useRef(null);
   const initialText = props.initialText ? `#${props.initialText} ` : false;
@@ -53,12 +54,16 @@ const FeedForm = (props) => {
   );
 
   const onMultipleImages = async (files) => {
+    setLoading(true);
+
     const savedEntityImages = entityImages;
     setEntityImages(addGalleryImages(entityImages, Array(files.length).fill({ url: '' })));
     const data = await Promise.all(files.slice(0, 10 - galleryImages.length).map(url => api.uploadOneImage(url)));
     const urls = data.map(item => item.files[0]);
     const newEntityImages = addGalleryImages(savedEntityImages, urls);
     setEntityImages(newEntityImages);
+
+    setLoading(false);
 
     if (props.onEntityImages) {
       props.onEntityImages(newEntityImages);
@@ -89,14 +94,16 @@ const FeedForm = (props) => {
       return;
     }
 
-    loader.start();
+    setLoading(true);
+
     try {
-      const embedData = await EmbedService.getDataFromUrl(url);
+      const embedData = await withLoader(EmbedService.getDataFromUrl(url));
       addEmbed(embedData);
     } catch (err) {
       console.error(err);
     }
-    loader.done();
+
+    setLoading(false);
   };
 
   const onEdit = (message) => {
@@ -163,7 +170,10 @@ const FeedForm = (props) => {
       })}
       onSubmit={(e) => {
         e.preventDefault();
-        sumbitForm();
+
+        if (!loading) {
+          sumbitForm();
+        }
       }}
     >
       {entityImages.embeds && entityImages.embeds.map((embed, index) => (
@@ -211,7 +221,10 @@ const FeedForm = (props) => {
                 onKeyDown={(e) => {
                   if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
                     e.preventDefault();
-                    sumbitForm();
+
+                    if (!loading) {
+                      sumbitForm();
+                    }
                   }
 
                   if (e.keyCode === 27) {
@@ -244,7 +257,7 @@ const FeedForm = (props) => {
         <button
           type="submit"
           className="feed-form__submit"
-          disabled={message.trim().length === 0 && !isExistGalleryImages && !entityImagesHasEmbeds(entityImages)}
+          disabled={(message.trim().length === 0 && !isExistGalleryImages && !entityImagesHasEmbeds(entityImages)) || loading}
         >
           <IconEnter />
         </button>

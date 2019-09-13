@@ -34,42 +34,32 @@ export const walletGetAccount = accountName => async (dispatch) => {
   });
 };
 
-export const walletBuyRam = (accountName, amount, privateKey) => async (dispatch) => {
+export const walletBuyRam = (accountName, amount, privateKey) => async () => {
   const data = await Worker.buyRam(accountName, privateKey, amount);
 
-  dispatch(walletGetAccount(accountName));
-
   return data;
 };
 
-export const walletSellRam = (accountName, amount, privateKey) => async (dispatch) => {
+export const walletSellRam = (accountName, amount, privateKey) => async () => {
   const data = await Worker.sellRam(accountName, privateKey, amount);
 
-  dispatch(walletGetAccount(accountName));
-
   return data;
 };
 
-export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) => async (dispatch) => {
+export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) => async () => {
   const data = await Worker.stakeOrUnstakeTokens(accountName, privateKey, netAmount, cpuAmount);
 
-  dispatch(walletGetAccount(accountName));
-
   return data;
 };
 
-export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => async (dispatch) => {
+export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => async () => {
   const data = await Worker.sendTokens(accountNameFrom, privateKey, accountNameTo, amount, memo);
 
-  dispatch(walletGetAccount(accountNameFrom));
-
   return data;
 };
 
-export const walletGetEmission = (accountName, privateKey) => async (dispatch) => {
+export const walletGetEmission = (accountName, privateKey) => async () => {
   const data = await Worker.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
-
-  dispatch(walletGetAccount(accountName));
 
   return data;
 };

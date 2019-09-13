@@ -4,7 +4,8 @@ import React, { useState, memo } from 'react';
 import Popup, { Content } from '../../../Popup';
 import Account from './Account';
 import SocialKey from './SocialKey';
-import GenerateSocialKey from './GenerateSocialKey';
+import GenerateSocialKeyByBrainkey from './GenerateSocialKeyByBrainkey';
+import GenerateSocialKeyByActiveKey from './GenerateSocialKeyByActiveKey';
 import SaveSocialKey from './SaveSocialKey';
 import { fetchUser } from '../../../../actions/users';
 import withLoader from '../../../../utils/withLoader';
@@ -16,7 +17,8 @@ import { parseResponseError } from '../../../../utils/errors';
 
 const STEP_ACCOUNT = 1;
 const STEP_SOCIAL_KEY = 2;
-const STEP_NEW_SOCIAL_KEY = 3;
+const STEP_NEW_SOCIAL_KEY_BY_BRAINKEY = 3;
+const STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY = 5;
 const STEP_SAVE_SOCIAL_KEY = 4;
 const ERROR_ACCOUNT_NOT_EXIST = 'Such account does not exist in a blockchain';
 
@@ -52,7 +54,7 @@ const Auth = () => {
                   userAccountName={user.accountName}
                   userAvatarSrc={urls.getFileUrl(user.avatarFilename)}
                   onClickBack={() => setCurrentStep(STEP_ACCOUNT)}
-                  onClickNewKeys={() => setCurrentStep(STEP_NEW_SOCIAL_KEY)}
+                  onClickNewKeys={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_BRAINKEY)}
                   onChange={() => {
                     setSocialKeyError('');
                   }}
@@ -69,17 +71,30 @@ const Auth = () => {
                 />
               );
             }
-            case STEP_NEW_SOCIAL_KEY:
+            case STEP_NEW_SOCIAL_KEY_BY_BRAINKEY:
               return (
-                <GenerateSocialKey
+                <GenerateSocialKeyByBrainkey
                   accountName={user.accountName}
                   onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
+                  onClickActiveKey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY)}
                   onSubmit={(socialKey) => {
                     setSocialKey(socialKey);
                     setCurrentStep(STEP_SAVE_SOCIAL_KEY);
                   }}
                 />
               );
+            case STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY:
+                return (
+                  <GenerateSocialKeyByActiveKey
+                    accountName={user.accountName}
+                    onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
+                    onClickBrainkey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_BRAINKEY)}
+                    onSubmit={(socialKey) => {
+                      setSocialKey(socialKey);
+                      setCurrentStep(STEP_SAVE_SOCIAL_KEY);
+                    }}
+                  />
+                );
             case STEP_SAVE_SOCIAL_KEY:
               return (
                 <SaveSocialKey

@@ -2,31 +2,20 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, Fragment, useState } from 'react';
 import styles from '../../styles.css';
-import IconArrowLeft from '../../../Icons/ArrowLeft';
 import withLoader from '../../../../utils/withLoader';
 import * as authActions from '../../../../actions/auth';
 import BrainkeyForm from '../../Forms/BrainkeyForm';
 import { parseResponseError } from '../../../../utils/errors';
+import BackToAuth from './BackToAuth';
 
-const GenerateSocialKey = (props) => {
+const GenerateSocialKeyByBrainkey = (props) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   return (
     <Fragment>
-      <div
-        role="presentation"
-        className={styles.navigation}
-        onClick={props.onClickBack}
-      >
-        <span className={styles.icon}>
-          <IconArrowLeft />
-        </span>
-        <span className={styles.label}>
-          <span className={styles.navText}>Authorization</span>
-        </span>
-      </div>
+      <BackToAuth onClick={props.onClickBack} />
 
       <div className={`${styles.content} ${styles.generateKey}`}>
         <div className={styles.main}>
@@ -53,20 +42,30 @@ const GenerateSocialKey = (props) => {
             }}
           />
         </div>
+        <div className={styles.bottom}>
+          <span
+            className="link red-hover"
+            role="presentation"
+            onClick={props.onClickActiveKey}
+          >
+            I have Active Private Key
+          </span>
+        </div>
       </div>
     </Fragment>
   );
 };
 
-GenerateSocialKey.propTypes = {
+GenerateSocialKeyByBrainkey.propTypes = {
   onClickBack: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
+  onClickActiveKey: PropTypes.func.isRequired,
   accountName: PropTypes.string.isRequired,
 };
 
-GenerateSocialKey.defaultProps = {
+GenerateSocialKeyByBrainkey.defaultProps = {
   onChange: undefined,
 };
 
-export default memo(GenerateSocialKey);
+export default memo(GenerateSocialKeyByBrainkey);

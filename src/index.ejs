@@ -21,26 +21,30 @@
   <% } %>
 
   <% if (typeof contentMetaTags === 'object') { %>
-    <% if (typeof contentMetaTags.url === 'string' ) { %>
+    <% if (typeof contentMetaTags.url === 'string') { %>
       <meta property="og:url" content="<%- contentMetaTags.url %>" />
     <% } %>
-    <% if (typeof contentMetaTags.type === 'string' ) { %>
+    <% if (typeof contentMetaTags.type === 'string') { %>
       <meta property="og:type" content="<%- contentMetaTags.type %>" />
     <% } %>
-    <% if (typeof contentMetaTags.title === 'string' ) { %>
+    <% if (typeof contentMetaTags.title === 'string') { %>
       <meta property="og:title" content="<%- contentMetaTags.title %>" />
     <% } %>
-    <% if (typeof contentMetaTags.description === 'string' ) { %>
+    <% if (typeof contentMetaTags.description === 'string') { %>
       <meta property="og:description" content="<%- contentMetaTags.description %>" />
+      <meta name="description" content="<%- contentMetaTags.description %>" />
     <% } %>
-    <% if (typeof contentMetaTags.image === 'string' ) { %>
+    <% if (typeof contentMetaTags.image === 'string') { %>
       <meta property="og:image" content="<%- contentMetaTags.image %>" />
     <% } %>
-    <% if (typeof contentMetaTags.imageWidth === 'string' ) { %>
+    <% if (typeof contentMetaTags.imageWidth === 'string') { %>
       <meta property="og:image:width" content="<%- contentMetaTags.imageWidth %>" />
     <% } %>
-    <% if (typeof contentMetaTags.imageHeight === 'string' ) { %>
+    <% if (typeof contentMetaTags.imageHeight === 'string') { %>
       <meta property="og:image:height" content="<%- contentMetaTags.imageHeight %>" />
+    <% } %>
+    <% if (typeof contentMetaTags.keywords === 'string') { %>
+      <meta name="keywords" content="<%- contentMetaTags.keywords %>" />
     <% } %>
   <% } %>
 

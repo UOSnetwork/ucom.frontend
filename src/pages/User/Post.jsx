@@ -1,27 +1,28 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import { isEqual } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, memo } from 'react';
 import Popup from '../../components/Popup';
 import ModalContent from '../../components/ModalContent';
 import Post from '../../components/Feed/Post/Post';
-import { getPostById } from '../../store/posts';
-import { getUserById } from '../../store/users';
+import { selectUserById, selectPostById } from '../../store/selectors';
 import { COMMENTS_CONTAINER_ID_POST } from '../../utils/comments';
 import urls from '../../utils/urls';
 import withLoader from '../../utils/withLoader';
 import { postsFetch } from '../../actions/posts';
-import { addErrorNotification } from '../../actions/notifications';
+import { addErrorNotificationFromResponse } from '../../actions/notifications';
 
-const PostPopup = ({
-  post, user, history, match, postsFetch, addErrorNotification,
-}) => {
+const PostPopup = ({ history, match }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUserById(match.params.userId), isEqual);
+  const post = useSelector(selectPostById(match.params.postId), isEqual);
+
   const fetchData = async () => {
     try {
-      await withLoader(postsFetch({
+      await withLoader(dispatch(postsFetch({
         postId: match.params.postId,
-      }));
+      })));
     } catch (err) {
-      addErrorNotification(err.message);
+      dispatch(addErrorNotificationFromResponse(err));
     }
   };
 
@@ -50,35 +51,4 @@ const PostPopup = ({
   );
 };
 
-PostPopup.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    postTypeId: PropTypes.number.isRequired,
-  }),
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-  }),
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      postId: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  postsFetch: PropTypes.func.isRequired,
-  addErrorNotification: PropTypes.func.isRequired,
-};
-
-PostPopup.defaultProps = {
-  post: undefined,
-  user: undefined,
-};
-
-export default connect((state, props) => ({
-  post: getPostById(state.posts, props.match.params.postId),
-  user: getUserById(state.users, props.match.params.userId),
-}), {
-  postsFetch,
-  addErrorNotification,
-})(PostPopup);
+export default memo(PostPopup);

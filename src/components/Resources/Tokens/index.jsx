@@ -1,15 +1,15 @@
 import moment from 'moment';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.css';
 import Token from './Token';
 import {
   walletToggleSendTokens,
   walletToggleEditStake,
   walletGetEmission,
+  walletGetAccount,
 } from '../../../actions/walletSimple';
-
 import { authShowPopup } from '../../../actions/auth';
 import withLoader from '../../../utils/withLoader';
 import { addErrorNotification, addSuccessNotification } from '../../../actions/notifications';
@@ -19,6 +19,17 @@ import { getSocialKey } from '../../../utils/keys';
 
 const Tokens = (props) => {
   const { tokens } = props.wallet;
+  const [loading, setLoading] = useState(false);
+
+  const onSuccessGetEmission = async () => {
+    props.dispatch(addSuccessNotification('Successfully get emission'));
+    await withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+  };
+
+  const onErrorGetEmission = (err) => {
+    const errors = parseResponseError(err);
+    props.dispatch(addErrorNotification(errors[0].message));
+  };
 
   if (!tokens) {
     return null;
@@ -48,7 +59,7 @@ const Tokens = (props) => {
         value={`${formatNumber(tokens.emission)}`}
         label="Emission, UOS"
         action={{
-          disabled: +tokens.emission === 0,
+          disabled: +tokens.emission === 0 || loading,
           title: 'Get Emission',
           onClick: async () => {
             const socialKey = getSocialKey();
@@ -58,13 +69,16 @@ const Tokens = (props) => {
               return;
             }
 
+            setLoading(true);
+
             try {
               await withLoader(props.dispatch(walletGetEmission(props.owner.accountName, socialKey)));
-              props.dispatch(addSuccessNotification('Successfully get emission'));
+              onSuccessGetEmission();
             } catch (err) {
-              const errors = parseResponseError(err);
-              props.dispatch(addErrorNotification(errors[0].message));
+              onErrorGetEmission(err);
             }
+
+            setLoading(true);
           },
         }}
       />

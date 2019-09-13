@@ -7,8 +7,8 @@ import { getToken } from '../utils/token';
 import { getActivePrivateKey, getOwnerPublicKeyByBrainkey, getPublicKeyByPrivateKey, getSocialPrivateKeyByActiveKey } from '../utils/keys';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
-import { LIST_PER_PAGE, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 import Worker from '../worker';
+import { LIST_PER_PAGE, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 
 if (process.env.NODE_ENV === 'production') {
   WalletApi.initForProductionEnv();
@@ -49,6 +49,23 @@ class Api {
       await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
     } else {
       await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
+    }
+
+    const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
+
+    return humps(response.data);
+  }
+
+  async loginByActiveKey(activeKey, accountName) {
+    const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
+    const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
+    const sign = ecc.sign(accountName, socialKey);
+    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
+
+    if (!socialKeyIsBinded) {
+      await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
+    } else {
+      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
     }
 
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));

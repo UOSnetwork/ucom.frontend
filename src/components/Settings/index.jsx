@@ -128,7 +128,7 @@ const Settings = () => {
               >
                 <h3 className={styles.title}>Keys</h3>
                 {/* TODO: Enable when auth and registration by social key feature complete */}
-                {/* <div className={styles.subSection}>
+                <div className={styles.subSection}>
                   <h4 className={styles.title}>Social Keys</h4>
                   <p>The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.</p>
                   {keys.socialKey ? (
@@ -157,7 +157,7 @@ const Settings = () => {
                       </Button>
                     </div>
                   )}
-                </div> */}
+                </div>
 
                 <div className={styles.subSection}>
                   <h4 className={styles.title}>Password for Active Key</h4>

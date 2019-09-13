@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import Popup, { Content } from '../../../../components/Popup';
 import urls from '../../../../utils/urls';
-import { BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS } from '../../../../utils/constants';
+import { BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES } from '../../../../utils/constants';
 import { selectOwner, selectNodesByIds } from '../../../../store/selectors';
 import UserPickWithIcon from '../../../../components/UserPickWithIcon';
 import { TableNodes } from '../../../../components/Table';
@@ -31,14 +31,40 @@ const Cast = ({ history, match }) => {
     history.push(urls.getGovernanceVotingUrl(nodeTypeId));
   };
 
-  const vote = async (activeKey) => {
+  const onSuccess = () => {
+    dispatch(governancePageActions.setSelectedNodes(nodesToVote.map(i => i.id), nodeTypeId));
+    dispatch(addSuccessNotification('Vote for nodes is successful'));
+    history.push(urls.getGovernanceUrl());
+  };
+
+  const onError = (err) => {
+    dispatch(addErrorNotificationFromResponse(err));
+    console.error(err);
+  };
+
+  const onSubmit = async (activeKey) => {
     setLoading(true);
     try {
       await withLoader(dispatch(governancePageActions.voteForNodes(owner.accountName, nodesToVote, activeKey, nodeTypeId)));
-      dispatch(addSuccessNotification('Vote for nodes is successful'));
-      history.push(urls.getGovernanceUrl());
+      onSuccess();
     } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
+      onError(err);
+    }
+    setLoading(false);
+  };
+
+  const onScatterConnect = async (scatter) => {
+    setLoading(true);
+    try {
+      const voteFunctions = {
+        [BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS]: scatter.voteForBlockProducers.bind(scatter),
+        [BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES]: scatter.voteForCalculatorNodes.bind(scatter),
+      };
+      const nodes = nodesToVote.map(i => i.title).filter(i => i !== 'eosiomeetone');
+      await withLoader(voteFunctions[nodeTypeId](owner.accountName, nodes));
+      onSuccess();
+    } catch (err) {
+      onError(err);
     }
     setLoading(false);
   };
@@ -114,15 +140,16 @@ const Cast = ({ history, match }) => {
 
           <div className={styles.submit}>
             <RequestActiveKey
-              onSubmit={vote}
+              onSubmit={onSubmit}
+              onScatterConnect={onScatterConnect}
             >
-              {requestActiveKey => (
+              {(requestActiveKey, requestLoading) => (
                 <Button
                   red
                   big
                   cap
                   width={200}
-                  disabled={loading}
+                  disabled={loading || requestLoading}
                   onClick={() => {
                     if (!owner.id) {
                       dispatch(authShowPopup());

@@ -17,9 +17,10 @@ export const getDefaultPostData = async (store, params) => {
     const data = await store.dispatch(postsFetch({
       postId: params.postId,
     }));
-    return ({
+
+    return {
       contentMetaTags: getContentMetaTags(data),
-    });
+    };
   } catch (e) {
     throw e;
   }
