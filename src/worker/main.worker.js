@@ -18,6 +18,12 @@ const {
   ContentInteractionsApi, PublicationsApi, OrganizationsApi,
 } = Wallet.Content;
 
+if (process.env.NODE_ENV === 'production') {
+  WalletApi.initForProductionEnv();
+} else {
+  WalletApi.initForStagingEnv();
+}
+
 registerPromiseWorker((action) => {
   switch (action.type) {
     case actions.GET_ACTIVE_KEY_BY_BRAINKEY:
