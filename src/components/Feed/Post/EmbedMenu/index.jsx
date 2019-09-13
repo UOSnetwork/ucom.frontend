@@ -27,6 +27,7 @@ const EmbedMenu = (props) => {
           onClick={() => {
             setActive(!active);
           }}
+          disabled={props.disabled}
         >
           <IconPlus />
         </button>
@@ -85,10 +86,12 @@ EmbedMenu.propTypes = {
   onEmbed: PropTypes.func.isRequired,
   addErrorNotification: PropTypes.func.isRequired,
   disabledEmbed: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 EmbedMenu.defaultProps = {
   disabledEmbed: false,
+  disabled: false,
 };
 
 export default connect(null, {

@@ -171,7 +171,7 @@ const FeedForm = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
 
-        if (!loading) {
+        if (!loading && !props.loading) {
           sumbitForm();
         }
       }}
@@ -218,11 +218,12 @@ const FeedForm = (props) => {
                 placeholder="Leave a comment"
                 value={message}
                 onChange={e => onEdit(e.target.value)}
+                disabled={loading || props.loading}
                 onKeyDown={(e) => {
                   if ((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
                     e.preventDefault();
 
-                    if (!loading) {
+                    if (!loading && !props.loading) {
                       sumbitForm();
                     }
                   }
@@ -253,11 +254,12 @@ const FeedForm = (props) => {
           onImage={onMultipleImages}
           onEmbed={addEmbed}
           disabledEmbed={entityImagesHasEmbeds(entityImages)}
+          disabled={loading || props.loading}
         />
         <button
           type="submit"
           className="feed-form__submit"
-          disabled={(message.trim().length === 0 && !isExistGalleryImages && !entityImagesHasEmbeds(entityImages)) || loading}
+          disabled={(message.trim().length === 0 && !isExistGalleryImages && !entityImagesHasEmbeds(entityImages)) || loading || props.loading}
         >
           <IconEnter />
         </button>
@@ -275,6 +277,7 @@ FeedForm.propTypes = {
   initialText: PropTypes.string,
   formIsVisible: PropTypes.bool,
   onEntityImages: PropTypes.func,
+  loading: PropTypes.bool,
 };
 
 FeedForm.defaultProps = {
@@ -284,6 +287,7 @@ FeedForm.defaultProps = {
   formIsVisible: false,
   onMessage: undefined,
   onEntityImages: undefined,
+  loading: false,
 };
 
 export default FeedForm;

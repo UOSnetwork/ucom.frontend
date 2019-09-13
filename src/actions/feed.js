@@ -112,8 +112,11 @@ export const createPost = (
       orgBlockchainId,
       data,
     ));
+
     dispatch(feedPrependPostIds([post.id]));
     dispatch(feedSetLoading(false));
+
+    return post;
   } catch (err) {
     dispatch(feedSetLoading(false));
     throw err;

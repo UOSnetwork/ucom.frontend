@@ -6,10 +6,12 @@ import LoadMore from './LoadMore';
 
 const FeedView = props => (
   <div className={`feed ${props.isMobile ? 'feed-mobile' : ''}`}>
-    {props.onSubmitPostForm &&
+    {props.showForm &&
       <FeedInput
-        onSubmit={props.onSubmitPostForm}
         initialText={props.feedInputInitialText}
+        forUserId={props.forUserId}
+        forOrgId={props.forOrgId}
+        onSubmit={props.callbackOnSubmit}
       />
     }
 
@@ -51,24 +53,26 @@ FeedView.propTypes = {
   loading: PropTypes.bool.isRequired,
   loadMoreUrl: PropTypes.string,
   feedInputInitialText: PropTypes.string,
-  onSubmitPostForm: PropTypes.func,
+  showForm: PropTypes.bool,
   onClickLoadMore: PropTypes.func.isRequired,
   filter: PropTypes.func,
   isMobile: PropTypes.bool,
   originEnabled: PropTypes.bool,
   forUserId: PropTypes.number,
   forOrgId: PropTypes.number,
+  callbackOnSubmit: PropTypes.func,
 };
 
 FeedView.defaultProps = {
   loadMoreUrl: null,
-  onSubmitPostForm: null,
+  showForm: false,
   feedInputInitialText: null,
   filter: null,
   isMobile: false,
   originEnabled: true,
   forUserId: undefined,
   forOrgId: undefined,
+  callbackOnSubmit: undefined,
 };
 
 export default FeedView;

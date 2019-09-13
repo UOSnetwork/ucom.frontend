@@ -40,6 +40,11 @@
   background: white;
 }
 
+.trigger:disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .trigger svg {
   width: 10px;
   height: 10px;
