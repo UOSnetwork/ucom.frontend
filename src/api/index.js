@@ -59,13 +59,13 @@ class Api {
   async loginByActiveKey(activeKey, accountName) {
     const socialKey = getSocialPrivateKeyByActiveKey(activeKey);
     const socialPublicKey = getPublicKeyByPrivateKey(socialKey);
-    const sign = ecc.sign(accountName, socialKey);
+    const sign = await Worker.eccSign(accountName, socialKey);
     const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
 
     if (!socialKeyIsBinded) {
-      await SocialKeyApi.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
+      await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
     } else {
-      await SocialKeyApi.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
+      await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
     }
 
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
