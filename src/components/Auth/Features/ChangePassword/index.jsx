@@ -5,11 +5,12 @@ import Popup, { Content } from '../../../Popup';
 import Brainkey from '../../Screens/Brainkey';
 import Key from '../../Screens/Key';
 import Password from './Password';
-import { getActivePrivateKey, saveAndEncryptActiveKey } from '../../../../utils/keys';
+import { saveAndEncryptActiveKey } from '../../../../utils/keys';
 import { parseResponseError } from '../../../../utils/errors';
 import withLoader from '../../../../utils/withLoader';
 import { addSuccessNotification, addErrorNotification } from '../../../../actions/notifications';
 import { checkBrainkey } from '../../../../actions/auth';
+import Worker from '../../../../worker';
 
 const STEP_BRAINKEY = 1;
 const STEP_ACTIVE_KEY = 2;
@@ -48,17 +49,20 @@ const ChangePassword = (props) => {
             case STEP_PASSWORD:
               return (
                 <Password
-                  onSubmit={(password) => {
+                  onSubmit={async (password) => {
                     try {
                       let activeKey;
+
                       if (brainkey) {
-                        activeKey = getActivePrivateKey(brainkey);
+                        // activeKey = getActivePrivateKey(brainkey);
+                        activeKey = await withLoader(Worker.getActiveKeyByBrainKey(brainkey));
                       } else if (activeKeyValue) {
                         activeKey = activeKeyValue;
                       } else {
                         setCurrentStep(STEP_BRAINKEY);
                         return;
                       }
+
                       saveAndEncryptActiveKey(activeKey, password);
                       props.onSubmit();
                       dispatch(addSuccessNotification('Password for Active Key has changed'));

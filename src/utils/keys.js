@@ -43,12 +43,6 @@ export const getOwnerPublicKeyByBrainkey = memoize((brainkey) => {
   return ownerPublicKey;
 });
 
-export const getActivePublicKeyByBrainkey = memoize((brainkey) => {
-  const activeKey = getActivePrivateKey(brainkey);
-  const activePublicKey = ecc.privateToPublic(activeKey);
-  return activePublicKey;
-});
-
 export const getPublicKeyByPrivateKey = memoize(privateKey =>
   ecc.privateToPublic(privateKey));
 

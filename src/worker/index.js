@@ -18,6 +18,10 @@ export default class Api {
     return Api.postMessage({ args, type: actions.GET_ACTIVE_KEY_BY_BRAINKEY });
   }
 
+  static getOwnerKeyByBrainkey(...args) {
+    return Api.postMessage({ args, type: actions.GET_OWNER_KEY_BY_BRAINKEY });
+  }
+
   static getSocialKeyByActiveKey(...args) {
     return Api.postMessage({ args, type: actions.GET_SOCIAL_KEY_BY_ACTIVE_KEY });
   }

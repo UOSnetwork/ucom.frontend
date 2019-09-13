@@ -1,7 +1,12 @@
 import Wallet from 'ucom-libs-wallet';
 import ecc from 'eosjs-ecc';
 import registerPromiseWorker from 'promise-worker/register';
-import { getActivePrivateKey, getSocialPrivateKeyByActiveKey, getPublicKeyByPrivateKey } from '../utils/keys';
+import {
+  getActivePrivateKey,
+  getSocialPrivateKeyByActiveKey,
+  getPublicKeyByPrivateKey,
+  getOwnerPrivateKey,
+} from '../utils/keys';
 import * as actions from './actions';
 
 const {
@@ -118,6 +123,9 @@ registerPromiseWorker((action) => {
 
     case actions.CLAIM_EMISSION:
       return WalletApi.claimEmission(...action.args);
+
+    case actions.GET_OWNER_KEY_BY_BRAINKEY:
+      return getOwnerPrivateKey(...action.args);
 
     default:
       return null;

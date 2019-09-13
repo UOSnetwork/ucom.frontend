@@ -13,14 +13,9 @@ import { removeMultipleSpaces } from '../../utils/text';
 import { parseResponseError } from '../../utils/errors';
 import { checkBrainkey } from '../../actions/auth';
 import IconInputError from '../Icons/InputError';
-import {
-  getOwnerPrivateKey,
-  getActivePrivateKey,
-  getOwnerPublicKeyByBrainkey,
-  getActivePublicKeyByBrainkey,
-} from '../../utils/keys';
 import CopyPanel from '../CopyPanel';
 import withLoader from '../../utils/withLoader';
+import Worker from '../../worker';
 
 const OwnerActiveKeys = () => {
   const [brainkey, setBrainkey] = useState('');
@@ -95,20 +90,23 @@ const OwnerActiveKeys = () => {
                   return;
                 }
 
-                setLoading(false);
                 setFormError('');
 
                 try {
+                  const ownerKey = await Worker.getOwnerKeyByBrainkey(brainkey);
+                  const activeKey = await Worker.getActiveKeyByBrainKey(brainkey);
+                  const ownerPublicKey = await Worker.getPublicKeyByPrivateKey(ownerKey);
+                  const activePublicKey = await Worker.getPublicKeyByPrivateKey(activeKey);
+
                   setKeys({
-                    ownerKey: getOwnerPrivateKey(brainkey),
-                    ownerPublicKey: getOwnerPublicKeyByBrainkey(brainkey),
-                    activeKey: getActivePrivateKey(brainkey),
-                    activePublicKey: getActivePublicKeyByBrainkey(brainkey),
+                    ownerKey, ownerPublicKey, activeKey, activePublicKey,
                   });
                 } catch (e) {
                   setKeys({});
                   setFormError(e.message);
                 }
+
+                setLoading(false);
               }}
             >
               <TextInput

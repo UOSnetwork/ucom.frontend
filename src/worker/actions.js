@@ -33,3 +33,4 @@ export const SEND_TOKENS = 32;
 export const BUY_RAM = 33;
 export const SELL_RAM = 34;
 export const CLAIM_EMISSION = 35;
+export const GET_OWNER_PRIVATE_KEY_BY_BRAINKEY = 36;
