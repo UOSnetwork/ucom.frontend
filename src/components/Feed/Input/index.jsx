@@ -34,7 +34,7 @@ const FeedInput = ({
     setFormVisible(true);
   };
 
-  const submit = useCallback(async () => {
+  const submit = useCallback(async (message, entityImagesAsJson) => {
     const privateKey = getSocialKey();
 
     if (!owner.id || !owner.accountName || !privateKey) {
@@ -54,8 +54,8 @@ const FeedInput = ({
         forOrgId,
         org && org.blockchainId,
         {
-          description,
-          entityImages: JSON.stringify(entityImages),
+          description: message,
+          entityImages: entityImagesAsJson,
           postTypeId: POST_TYPE_DIRECT_ID,
         },
       )));

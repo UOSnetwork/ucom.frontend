@@ -23,7 +23,7 @@ import EmbedMenu from './Post/EmbedMenu';
 import DragAndDrop from '../DragAndDrop';
 import PreviewImagesGrid from '../PreviewImagesGrid';
 import urls from '../../utils/urls';
-import { getUrlsFromStr, validUrl } from '../../utils/url';
+import { getUrlsFromStr, validUrl, validImageUrl } from '../../utils/url';
 import api from '../../api';
 import Embed from '../Embed';
 import EmbedService from '../../utils/embedService';
@@ -90,7 +90,7 @@ const FeedForm = (props) => {
   };
 
   const parseUrlAndAddEmbed = async (url) => {
-    if (!validUrl(url)) {
+    if (!validUrl(url) || validImageUrl(url)) {
       return;
     }
 
