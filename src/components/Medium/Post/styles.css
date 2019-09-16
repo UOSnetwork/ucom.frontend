@@ -10,14 +10,14 @@
   transition: opacity 0.3s ease;
 }
 
-:global(h1.medium-post-placeholder:before) {
+:global(h1.medium-post-placeholder:not(.active-buttons):before) {
   content: 'Title';
 }
 
-:global(h2.medium-post-placeholder:before) {
+:global(h2.medium-post-placeholder:not(.active-buttons):before) {
   content: 'Lead text';
 }
 
-:global(p.medium-post-placeholder:before) {
+:global(p.medium-post-placeholder:not(.active-buttons):before) {
   content: 'Text';
 }

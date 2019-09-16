@@ -5,7 +5,11 @@ import EmbedService from '../../../utils/embedService';
 import './styles.css';
 
 class UploadButtons {
-  constructor({ onImageSelect, onVideoEmbedSelect, onSurveyEmbedSelect }) {
+  constructor({
+    onImageSelect,
+    onVideoEmbedSelect,
+    onSurveyEmbedSelect,
+  }) {
     this.currentEl = null;
     this.el = document.createElement('div');
     this.el.className = 'medium-upload';
@@ -163,7 +167,7 @@ export default class MediumUpload extends MediumEditor.Extension {
       const { startContainer } = selection.getRangeAt(0);
 
       if (startContainer.nodeType === 1) {
-        if (startContainer.tagName === 'P') {
+        if (['H1', 'H2', 'P'].includes(startContainer.tagName)) {
           this.currentEl = startContainer;
         } else if (startContainer.parentNode.tagName === 'P') {
           this.currentEl = startContainer.parentNode;
