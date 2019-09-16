@@ -10,7 +10,6 @@ import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';
 import Footer from '../../components/Footer';
 import { UserSubHeader } from '../../components/EntrySubHeader';
-import Button from '../../components/Button/index';
 import { postsFetch } from '../../actions/posts';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { commentsResetContainerDataByEntryId } from '../../actions/comments';
@@ -19,7 +18,11 @@ import urls from '../../utils/urls';
 import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
 import withLoader from '../../utils/withLoader';
 import { formatRate } from '../../utils/rate';
+import { UserCard } from '../../components/SimpleCard';
+import { UserFollowButton } from '../../components/FollowButton';
 import { selectPostById, selectOwner } from '../../store/selectors';
+import { PostView } from '../../components/Views';
+import { PostTags } from '../../components/Tags';
 import styles from './styles.css';
 
 const Post = ({ postId }) => {
@@ -48,49 +51,72 @@ const Post = ({ postId }) => {
     <LayoutBase>
       <Content>
         <div className={styles.wrapper}>
-          {post && post.user && <UserSubHeader userId={post.user.id} />}
+          {post && post.user &&
+            <UserSubHeader userId={post.user.id} />
+          }
 
           {post &&
             <div className={styles.content}>
-              <div className={styles.inner}>
-                <div className={styles.aside}>
-                  {post.user && post.user.id === owner.id &&
-                    <ButtonEdit url={urls.getPostEditUrl(postId)} />
-                  }
-                </div>
+              <div className={styles.section}>
+                <div className={styles.inner}>
+                  <div className={styles.aside}>
+                    {post.user && post.user.id === owner.id &&
+                      <ButtonEdit url={urls.getPostEditUrl(postId)} />
+                    }
+                  </div>
 
-                <div className={styles.bside}>
-                  <div className={styles.actions}>
-                    <div className={styles.rate}>
-                      <div className={styles.value}>
-                        {formatRate(post.currentRate, true)}
+                  <div className={styles.bside}>
+                    <div className={styles.actions}>
+                      <div className={styles.rate}>
+                        <div className={styles.value}>
+                          {formatRate(post.currentRate, true)}
+                        </div>
+                        <div className={styles.label}>
+                          Rate
+                        </div>
                       </div>
-                      <div className={styles.label}>
-                        Rate
+                      <div className={styles.rating}>
+                        <PostVotingWrapper postId={+postId} />
                       </div>
                     </div>
-                    <div className={styles.rating}>
-                      <PostVotingWrapper postId={+postId} />
-                    </div>
-                    <div className={styles.share}>
+                  </div>
+
+                  <div className={styles.main}>
+                    <PostContent postId={+postId} />
+                    <PostTags postId={+postId} />
+
+                    {post && post.userId &&
+                      <div className={styles.user}>
+                        <UserCard userId={post.userId} />
+
+                        {owner.id !== post.userId &&
+                          <UserFollowButton userId={post.userId} />
+                        }
+                      </div>
+                    }
+
+                    <div className={styles.stats}>
                       <Share
                         socialEnable
                         repostEnable={post.myselfData && post.myselfData.repostAvailable}
                         postId={postId}
                         link={urls.getPostUrl({ id: postId, postTypeId: POST_TYPE_MEDIA_ID })}
-                      >
-                        <Button strech>Share</Button>
-                      </Share>
+                      />
+
+                      <PostView postId={+postId} />
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className={styles.main}>
-                  <div className={styles.post}>
-                    <PostContent postId={postId} />
-                  </div>
-                  <div className={styles.comments}>
-                    <Comments postId={+postId} containerId={COMMENTS_CONTAINER_ID_POST} />
+              <hr className={styles.line} />
+
+              <div className={styles.section}>
+                <div className={styles.inner}>
+                  <div className={styles.main}>
+                    <div className={styles.comments}>
+                      <Comments postId={+postId} containerId={COMMENTS_CONTAINER_ID_POST} />
+                    </div>
                   </div>
                 </div>
               </div>

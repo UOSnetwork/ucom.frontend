@@ -1,7 +1,6 @@
 import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
 import IconComment from '../../../Icons/Comment';
-import IconShare from '../../../Icons/Share';
 import Comments from '../../../Comments/wrapper';
 import Share from '../../../Share';
 import urls from '../../../../utils/urls';
@@ -30,16 +29,7 @@ const PostFeedFooter = ({
           link={urls.getPostUrl(post)}
           repostEnable={post && post.myselfData && post.myselfData.repostAvailable}
           socialEnable={post && post.postTypeId === POST_TYPE_MEDIA_ID}
-        >
-          <div className={styles.share}>
-            <span className="inline inline_small">
-              <span className="inline__item">
-                <IconShare />
-              </span>
-              <span className="inline__item">Share</span>
-            </span>
-          </div>
-        </Share>
+        />
       </div>
       <div>
         <PostVotingWrapper postId={post.id} />

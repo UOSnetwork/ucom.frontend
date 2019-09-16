@@ -1,5 +1,6 @@
 .wrapper {
   display: inline-block;
+  outline: none;
 }
 
 .wrapper.strech {

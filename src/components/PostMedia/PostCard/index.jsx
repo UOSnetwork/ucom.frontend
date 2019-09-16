@@ -5,7 +5,6 @@ import React, { Fragment, memo } from 'react';
 import Rate from '../../Rate';
 import styles from './styles.css';
 import Avatar from '../../Avatar';
-// import Eye from '../../Icons/Eye';
 import { sanitizeText } from '../../../utils/text';
 
 const PostCard = (props) => {
@@ -57,20 +56,6 @@ const PostCard = (props) => {
               </div>
             )}
           </div>
-
-          {/* <div className={styles.infoblockSide}>
-            <Eye className={styles.eye} />
-            <span className={styles.views}>1943</span>
-
-          {props.commentsCount !== undefined && (
-            <div className="inline__item">
-              <div className={styles.shares}>
-                <Rate value={props.commentsCount} dimension="" label="Comments" />
-              </div>
-            </div>
-          )}
-          </div>
-          */}
         </div>
       </Fragment>
     </div>
@@ -84,8 +69,6 @@ PostCard.propTypes = {
   title: PropTypes.string,
   userImageUrl: PropTypes.string,
   userName: PropTypes.string,
-  // commentsCount: PropTypes.number,
-  // sharesCount: PropTypes.number,
 };
 
 PostCard.defaultProps = {

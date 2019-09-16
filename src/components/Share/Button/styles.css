@@ -1,0 +1,20 @@
+.share {
+  display: grid;
+  grid-template-columns: max-content minmax(0, max-content);
+  grid-gap: 8px;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #C4C4C4;
+  fill: #C4C4C4;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease, fill 0.2s ease,;
+  outline: none !important;
+}
+
+:global(.tippy-active).share {
+  color: #000;
+  fill: #000;
+}

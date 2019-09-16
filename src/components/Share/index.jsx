@@ -17,6 +17,7 @@ import { selectOwner, selectPostById } from '../../store/selectors';
 import equalByProps from '../../utils/equalByProps';
 import { getSocialKey } from '../../utils/keys';
 import styles from './styles.css';
+import ShareButton from './Button';
 
 const Share = ({
   children, link, directUrl, postId, repostEnable, socialEnable,
@@ -162,7 +163,7 @@ const Share = ({
         </div>
       )}
     >
-      {children}
+      {children || <ShareButton />}
     </Tippy>
   );
 };
