@@ -1,22 +1,18 @@
 import { isEqual } from 'lodash';
 import Tippy from '@tippy.js/react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import React, { memo, useRef, useCallback, Fragment } from 'react';
-import IconVoteUp from '../Icons/VoteUp';
-import IconVoteDown from '../Icons/VoteDown';
 import Details from './Details';
 import UsersPopup from './UsersPopup';
 import { formatRate } from '../../utils/rate';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS } from '../../utils/constants';
-import Spinner from '../Spinner';
-import styles from './styles.css';
+import Inner from './Inner';
 
 const Votin = ({
-  rate, count, selfVote, details, usersPopup, onClick, onClickUp, onClickDown, onShow, loading,
+  rate, count, selfVote, details, usersPopup, onClick, onClickUp, onClickDown, onShow, loading, onClickTouchDevice,
 }) => {
   const tippyInstance = useRef();
-
+  const mediaQuery = useSelector(s => s.mediaQuery);
   const hideTooltip = useCallback(() => {
     if (tippyInstance.current) {
       tippyInstance.current.hide();
@@ -27,86 +23,54 @@ const Votin = ({
     <Fragment>
       <UsersPopup {...usersPopup} />
 
-      <Tippy
-        placement="top-center"
-        arrow
-        interactive
-        theme="dropdown-dark"
-        trigger="mouseenter"
-        content={(
-          <Details
-            {...details}
-            selfVote={selfVote}
-            hideTooltip={hideTooltip}
-            onClick={() => {
-              hideTooltip();
+      {mediaQuery.hover ? (
+        <Tippy
+          arrow
+          interactive
+          placement="top-center"
+          theme="dropdown-dark"
+          trigger="mouseenter"
+          content={(
+            <Details
+              {...details}
+              selfVote={selfVote}
+              hideTooltip={hideTooltip}
+              onClick={() => {
+                hideTooltip();
 
-              if (onClick) {
-                onClick();
-              }
-            }}
-          />
-        )}
-        onCreate={(instance) => {
-          tippyInstance.current = instance;
-        }}
-        onShow={onShow}
-      >
-        <div
-          role="presentation"
-          className={classNames({
-            [styles.voting]: true,
-            [styles.loading]: loading,
-          })}
-          onClick={onClick}
+                if (onClick) {
+                  onClick();
+                }
+              }}
+            />
+          )}
+          onCreate={(instance) => {
+            tippyInstance.current = instance;
+          }}
+          onShow={onShow}
         >
-          {onClickUp &&
-            <span
-              title="Upvote"
-              role="presentation"
-              className={classNames({
-                [styles.voteBtn]: true,
-                [styles.up]: selfVote === UPVOTE_STATUS,
-              })}
-              onClick={(e) => {
-                e.stopPropagation();
-                onClickUp();
-              }}
-            >
-              <IconVoteUp />
-            </span>
-          }
-          <span className={styles.value}>
-            <span
-              className={classNames({
-                [styles.count]: true,
-                [styles.up]: count > 0,
-                [styles.down]: count < 0,
-              })}
-            >
-              {count}
-            </span>
-            <span className={styles.rate}>{rate}</span>
-            <span className={styles.spinner}><Spinner color="rgba(0,0,0,0.3)" width={6} size={16} /></span>
-          </span>
-          {onClickDown &&
-            <span
-              title="Downvote"
-              role="presentation"
-              className={classNames({
-                [styles.voteBtn]: true,
-                [styles.down]: selfVote === DOWNVOTE_STATUS,
-              })}
-              onClick={(e) => {
-                e.stopPropagation();
-                onClickDown();
-              }}
-            >
-              <IconVoteDown />
-            </span>
-          }
-        </div>
-      </Tippy>
+          <Inner
+            loading={loading}
+            onClick={onClick}
+            onClickUp={onClickUp}
+            onClickDown={onClickDown}
+            selfVote={selfVote}
+            count={count}
+            rate={rate}
+          />
+        </Tippy>
+      ) : (
+        <Inner
+          loading={loading}
+          onClick={onClickTouchDevice}
+          onClickUp={onClickUp}
+          onClickDown={onClickDown}
+          selfVote={selfVote}
+          count={count}
+          rate={rate}
+        />
+      )}
+
     </Fragment>
   );
 };
@@ -123,6 +87,7 @@ Votin.propTypes = {
   onShow: PropTypes.func,
   onClick: PropTypes.func,
   loading: PropTypes.bool,
+  onClickTouchDevice: PropTypes.func,
 };
 
 Votin.defaultProps = {
@@ -137,6 +102,7 @@ Votin.defaultProps = {
   onShow: undefined,
   onClick: undefined,
   loading: false,
+  onClickTouchDevice: undefined,
 };
 
 export * from './Wrappers';

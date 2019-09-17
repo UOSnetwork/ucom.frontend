@@ -120,6 +120,10 @@ const PostVotingWrapper = ({ postId }) => {
         getDataForPopup();
         setPopupVisible(true);
       } : undefined}
+      onClickTouchDevice={async () => {
+        getDataForPopup();
+        setPopupVisible(true);
+      }}
       details={{
         upCount,
         downCount,

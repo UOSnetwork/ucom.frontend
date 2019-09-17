@@ -26,9 +26,11 @@ import searchPopup from './searchPopup';
 import subscribe from './subscribe';
 import ieobanner from './ieobanner';
 import loader from './loader';
+import mediaQuery from './mediaQuery';
 
 export const createStore = () => {
   const reducers = redux.combineReducers({
+    mediaQuery,
     loader,
     ieobanner,
     subscribe,

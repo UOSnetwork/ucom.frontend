@@ -120,6 +120,10 @@ const CommentVotingWrapper = ({ postId, commentId }) => {
         getDataForPopup();
         setPopupVisible(true);
       } : undefined}
+      onClickTouchDevice={async () => {
+        getDataForPopup();
+        setPopupVisible(true);
+      }}
       onShow={getDataForPreview}
       details={{
         upCount,

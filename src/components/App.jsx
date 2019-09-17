@@ -25,6 +25,7 @@ import Loader from '../components/Loader';
 import urls from '../utils/urls';
 import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
+import * as mediaQueryActions from '../actions/mediaQuery';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const App = () => {
     logoutIfNeedBindSocialKey();
     dispatch(fetchMyself());
     dispatch(initNotificationsListeners());
+    dispatch(mediaQueryActions.init());
 
     const removeInitDragAndDropListeners = initDragAndDropListeners(document, () => {
       document.body.classList.add('dragenter');
