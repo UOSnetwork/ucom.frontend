@@ -26,6 +26,7 @@ import urls from '../utils/urls';
 import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
 import * as mediaQueryActions from '../actions/mediaQuery';
+import { UserWallet } from '../components/WalletNew';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -92,6 +93,8 @@ const App = () => {
       {wallet.sellRamVisible && <SellRam />}
       {wallet.editStakeVisible && <EditStake />}
       {wallet.sendTokensVisibility && <SendTokens />}
+
+      <UserWallet />
 
       <Notifications />
     </Fragment>
