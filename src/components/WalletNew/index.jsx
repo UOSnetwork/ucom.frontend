@@ -6,8 +6,12 @@ import Close from '../Close';
 import AccountCard from './AccountCard';
 import EmissionCard from './EmissionCard';
 import Transactions from './Transactions';
+import TokenCard from './TokenCard';
+import Tabs from '../Tabs';
 
-const Wallet = ({ accountCard, emissionCards, transactions }) => (
+const Wallet = ({
+  accountCard, emissionCards, transactions, tokenCards, tabs,
+}) => (
   <Popup alignTop>
     <Close top right onClick={() => {}} />
 
@@ -27,7 +31,15 @@ const Wallet = ({ accountCard, emissionCards, transactions }) => (
       </div>
       <div className={styles.main}>
         <div className={styles.inner}>
-          <AccountCard {...accountCard} />
+          <div className={styles.accountCard}>
+            <AccountCard {...accountCard} />
+          </div>
+
+          <div className={styles.tabs}>
+            <Tabs {...tabs} />
+          </div>
+
+          {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
         </div>
       </div>
     </div>
@@ -38,12 +50,16 @@ Wallet.propTypes = {
   accountCard: PropTypes.shape(AccountCard.propTypes),
   emissionCards: PropTypes.arrayOf(PropTypes.shape(EmissionCard.propTypes)),
   transactions: PropTypes.shape(Transactions.propTypes),
+  tokenCards: PropTypes.arrayOf(PropTypes.shape(TokenCard.propTypes)),
+  tabs: PropTypes.shape(Tabs.propTypes),
 };
 
 Wallet.defaultProps = {
   accountCard: AccountCard.defaultProps,
   emissionCards: [],
   transactions: Transactions.defaultProps,
+  tokenCards: [],
+  tabs: Tabs.defaultProps,
 };
 
 export * from './wrappers';

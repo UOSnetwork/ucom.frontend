@@ -17,6 +17,41 @@ export const UserWallet = () => {
         userAvatarSrc: urls.getFileUrl(owner.avatarFilename),
         userUrl: urls.getUserUrl(owner.id),
       }}
+      tabs={{
+        noBorder: true,
+        theme: 'thinBlack',
+        items: [{
+          title: 'Wallet',
+          onClick: () => {},
+          active: true,
+        }, {
+          title: 'Resources',
+          onClick: () => {},
+        }, {
+          title: 'Voting',
+          onClick: () => {},
+        }],
+      }}
+      tokenCards={[{
+        color: '#B3E1E1',
+        icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
+        tokens: [{
+          title: 'UOS 676 888 888.9999',
+          label: 'TestNet',
+        }, {
+          title: 'UOSF 888 888.9999',
+          label: '≈ $25 745.78',
+        }],
+      }, {
+        color: '#F2B554',
+        tokens: [{
+          title: 'UOS 3 123.4',
+          label: 'TestNet',
+        }, {
+          title: 'UOSF 0',
+          label: '$ 0',
+        }],
+      }]}
       emissionCards={[{
         amount: '200.66 UOS',
         label: 'GitHub Airdrop',

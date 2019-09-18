@@ -41,6 +41,14 @@
   margin: 0 -16px 33px;
 }
 
+.accountCard {
+  margin: 0 0 52px;
+}
+
+.tabs {
+  margin: 0 0 40px;
+}
+
 @media (max-width: 1100px) {
   .layout {
     grid-template-columns: 1fr;
