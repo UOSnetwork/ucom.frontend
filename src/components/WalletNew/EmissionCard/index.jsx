@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import Icon from './Icon';
+import * as Icons from '../Icons';
 
 const EmissionCard = ({
   icon, amount, label, onClick,
@@ -24,7 +24,7 @@ EmissionCard.propTypes = {
 };
 
 EmissionCard.defaultProps = {
-  icon: <Icon />,
+  icon: <Icons.Emission />,
   amount: '…',
   label: 'Your Emission',
   onClick: undefined,

@@ -6,12 +6,12 @@ const Transaction = ({
   icon, title, amount, message, onClick,
 }) => (
   <div role="presentation" className={styles.transaction} onClick={onClick}>
-    <div className={styles.icon}>{icon}</div>
-    <div className={styles.name}>{title}</div>
-    <div className={styles.amount}>{amount}</div>
-    {message &&
-      <div className={styles.message}>— {message}</div>
-    }
+    <div className={styles.content}>
+      <div className={styles.icon}>{icon}</div>
+      <div className={styles.name}>{title}</div>
+      <div className={styles.amount}>{amount}</div>
+    </div>
+    {message && <div className={styles.message}>— {message}</div>}
   </div>
 );
 

@@ -1,0 +1,18 @@
+.transactions {
+  margin: 0 0 46px;
+}
+
+.section {
+  margin: 0 0 33px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: 16px;
+  line-height: 1.25;
+  color: rgba(0,0,0,0.3);
+}

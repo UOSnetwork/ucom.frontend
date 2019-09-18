@@ -7,7 +7,8 @@ const Transactions = ({ sections }) => (
   <div className={styles.transactions}>
     {sections.map((section, index) => (
       <div className={styles.section} key={index}>
-        <div className={styles.date}>{section.title}</div>
+        <div className={styles.title}>{section.title}</div>
+
         {section.list.map((item, index) => (
           <div className={styles.item} key={index}>
             <Transaction {...item} />
