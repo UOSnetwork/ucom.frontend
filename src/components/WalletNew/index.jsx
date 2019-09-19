@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import styles from './styles.css';
 import Popup from '../Popup';
 import Close from '../Close';
@@ -8,9 +8,13 @@ import EmissionCard from './EmissionCard';
 import Transactions from './Transactions';
 import TokenCard from './TokenCard';
 import Tabs from '../Tabs';
+import Resource from './Resource';
+
+export const TAB_WALLET_ID = 1;
+export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
-  accountCard, emissionCards, transactions, tokenCards, tabs,
+  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource,
 }) => (
   <Popup alignTop>
     <Close top right onClick={() => {}} />
@@ -39,7 +43,21 @@ const Wallet = ({
             <Tabs {...tabs} />
           </div>
 
-          {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+          {activeTabId === TAB_WALLET_ID &&
+            <Fragment>
+              {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+            </Fragment>
+          }
+
+          {activeTabId === TAB_RESOURCES_ID &&
+            <Fragment>
+              <div className={styles.label}>Resources you own</div>
+              <Resource {...ramResource} />
+              <div className={styles.label}>Resources you staked for</div>
+              <Resource {...cpuTimeResource} />
+              <Resource {...networkBandwithResource} />
+            </Fragment>
+          }
         </div>
       </div>
     </div>
@@ -52,6 +70,10 @@ Wallet.propTypes = {
   transactions: PropTypes.shape(Transactions.propTypes),
   tokenCards: PropTypes.arrayOf(PropTypes.shape(TokenCard.propTypes)),
   tabs: PropTypes.shape(Tabs.propTypes),
+  activeTabId: PropTypes.oneOf([TAB_WALLET_ID, TAB_RESOURCES_ID]),
+  ramResource: PropTypes.shape(Resource.propTypes),
+  cpuTimeResource: PropTypes.shape(Resource.propTypes),
+  networkBandwithResource: PropTypes.shape(Resource.propTypes),
 };
 
 Wallet.defaultProps = {
@@ -60,6 +82,10 @@ Wallet.defaultProps = {
   transactions: Transactions.defaultProps,
   tokenCards: [],
   tabs: Tabs.defaultProps,
+  activeTabId: TAB_WALLET_ID,
+  ramResource: Resource.defaultProps,
+  cpuTimeResource: Resource.defaultProps,
+  networkBandwithResource: Resource.defaultProps,
 };
 
 export * from './wrappers';

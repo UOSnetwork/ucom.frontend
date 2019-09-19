@@ -1,0 +1,52 @@
+.resource {
+  border-radius: 12px;
+  padding: 24px;
+  background: #fff;
+  font-size: 16px;
+  box-shadow: 0px 4px 20px rgba(184, 184, 184, 0.25);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(247, 250, 252, 0.17) 100%), #FFFFFF;
+}
+
+.resource + .resource {
+  margin-top: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #585858;
+  margin: 0 0 15px;
+}
+
+.title {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #585858;
+}
+
+.progress {
+  height: 6px;
+  margin: 0 0 20px;
+  border-radius: 3px;
+  background: #EDEDED;
+}
+
+.percentage {
+  margin: 0 0 20px;
+  height: 6px;
+  background: #B3E1E1;
+  border-radius: 3px;
+}
+
+.actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-gap: 16px;
+  justify-content: flex-end;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000;
+}

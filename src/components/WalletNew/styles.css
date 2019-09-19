@@ -49,6 +49,13 @@
   margin: 0 0 40px;
 }
 
+.label {
+  margin: 24px 0 15px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: #585858;
+}
+
 @media (max-width: 1100px) {
   .layout {
     grid-template-columns: 1fr;

@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { useSelector } from 'react-redux';
-import React from 'react';
-import Wallet from './index';
+import React, { useState } from 'react';
+import Wallet, { TAB_WALLET_ID, TAB_RESOURCES_ID } from './index';
 import { selectOwner } from '../../store/selectors';
 import urls from '../../utils/urls';
 import UserPick from '../../components/UserPick';
@@ -9,6 +9,7 @@ import * as Icons from './Icons';
 
 export const UserWallet = () => {
   const owner = useSelector(selectOwner, isEqual);
+  const [activeTabId, setActiveTabId] = useState(TAB_WALLET_ID);
 
   return (
     <Wallet
@@ -17,18 +18,51 @@ export const UserWallet = () => {
         userAvatarSrc: urls.getFileUrl(owner.avatarFilename),
         userUrl: urls.getUserUrl(owner.id),
       }}
+      activeTabId={activeTabId}
       tabs={{
         noBorder: true,
         theme: 'thinBlack',
         items: [{
           title: 'Wallet',
-          onClick: () => {},
-          active: true,
+          onClick: () => {
+            setActiveTabId(TAB_WALLET_ID);
+          },
+          active: activeTabId === TAB_WALLET_ID,
         }, {
           title: 'Resources',
+          active: activeTabId === TAB_RESOURCES_ID,
+          onClick: () => {
+            setActiveTabId(TAB_RESOURCES_ID);
+          },
+        }],
+      }}
+      ramResource={{
+        title: 'RAM',
+        label: '36 kB',
+        percentage: 70,
+        actions: [{
+          title: 'Sell',
           onClick: () => {},
         }, {
-          title: 'Voting',
+          title: 'Buy',
+          onClick: () => {},
+        }],
+      }}
+      cpuTimeResource={{
+        title: 'CPU Time',
+        label: '60.47 Sec',
+        percentage: 90,
+        actions: [{
+          title: 'EDIT STAKE',
+          onClick: () => {},
+        }],
+      }}
+      networkBandwithResource={{
+        title: 'Network Bandwith',
+        label: '5.47 kB',
+        percentage: 80,
+        actions: [{
+          title: 'EDIT STAKE',
           onClick: () => {},
         }],
       }}
