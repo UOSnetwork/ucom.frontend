@@ -6,7 +6,7 @@ import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
-import { walletGetAccount } from './walletSimple';
+import { walletGetAccount } from './wallet';
 import { getSocialKey } from '../utils/keys';
 import { USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 // import { enableGtm } from '../utils/gtm';

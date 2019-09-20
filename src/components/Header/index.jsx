@@ -14,12 +14,11 @@ import { authShowPopup } from '../../actions/auth';
 import * as searchPopupActions from '../../actions/searchPopup';
 import EntryListPopup from '../EntryListPopup';
 import IconSearch from '../Icons/Search';
-import Wallet from '../Wallet';
-import IconClose from '../Icons/Close';
 import SiteNotificationsTooltip from '../SiteNotificationsTooltip';
 import Counter from '../Counter';
 import Menu from '../Menu';
 import { selectOwner, selectOrgsByIds } from '../../store/selectors';
+import * as walletActions from '../../actions/wallet';
 
 // TODO: Make header sticky, not fixed
 
@@ -29,7 +28,6 @@ const Header = ({ location }) => {
   const owner = useSelector(selectOwner, isEqual);
   const orgs = useSelector(selectOrgsByIds(owner.organizations), isEqual);
   const ieobanner = useSelector(state => state.ieobanner, isEqual);
-  const [walletPopupVisible, setWalletPopupVisible] = useState(false);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
 
   const checkScroll = throttle(() => {
@@ -122,18 +120,11 @@ const Header = ({ location }) => {
                   className={classNames({
                     [styles.icon]: true,
                     [styles.wallet]: true,
-                    [styles.active]: walletPopupVisible,
                   })}
-                  onClick={() => setWalletPopupVisible(!walletPopupVisible)}
+                  onClick={() => dispatch(walletActions.toggle(true))}
                 >
-                  {walletPopupVisible ? (
-                    <IconClose />
-                  ) : (
-                    <Fragment>
-                      <span className={styles.iconWallet}><IconWallet /></span>
-                      <span className={styles.iconBurger}><IconBurger /></span>
-                    </Fragment>
-                  )}
+                  <span className={styles.iconWallet}><IconWallet /></span>
+                  <span className={styles.iconBurger}><IconBurger /></span>
                 </span>
               </Fragment>
             ) : (
@@ -163,10 +154,6 @@ const Header = ({ location }) => {
           }))}
           onClickClose={() => setOrganizationsPopupVisible(false)}
         />
-      }
-
-      {walletPopupVisible &&
-        <Wallet onClickClose={() => setWalletPopupVisible(false)} />
       }
     </Fragment>
   );

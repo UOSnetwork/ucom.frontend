@@ -22,7 +22,7 @@
 .right,
 .left,
 .bottom {
-  position: absolute;
+  position: fixed;
 }
 
 .top {

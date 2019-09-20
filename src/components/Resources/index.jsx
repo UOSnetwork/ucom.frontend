@@ -7,7 +7,7 @@ import {
   walletToggleBuyRam,
   walletToggleSellRam,
   walletToggleEditStake,
-} from '../../actions/walletSimple';
+} from '../../actions/wallet';
 import formatNumber from '../../utils/formatNumber';
 
 const fixValue = amount => Math.round(amount * 100) / 100;
@@ -80,5 +80,5 @@ Resources.propTypes = {
 };
 
 export default connect(state => ({
-  wallet: state.walletSimple,
+  wallet: state.wallet,
 }))(Resources);

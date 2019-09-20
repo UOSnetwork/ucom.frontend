@@ -30,7 +30,7 @@ import { UserWallet } from '../components/WalletNew';
 
 const App = () => {
   const dispatch = useDispatch();
-  const wallet = useSelector(state => state.walletSimple);
+  const wallet = useSelector(state => state.wallet);
   const auth = useSelector(state => state.auth);
 
   useEffect(() => {
@@ -87,15 +87,12 @@ const App = () => {
 
       <SearchPopup />
       <Subscribe />
-
       {auth.visibility && <Auth />}
       {wallet.buyRamVisible && <BuyRam />}
       {wallet.sellRamVisible && <SellRam />}
       {wallet.editStakeVisible && <EditStake />}
       {wallet.sendTokensVisibility && <SendTokens />}
-
       <UserWallet />
-
       <Notifications />
     </Fragment>
   );

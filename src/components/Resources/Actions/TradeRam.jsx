@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import Button from '../../Button/index';
-import { walletBuyRam, walletSellRam, walletGetAccount } from '../../../actions/walletSimple';
+import { walletBuyRam, walletSellRam, walletGetAccount } from '../../../actions/wallet';
 import { parseResponseError } from '../../../utils/errors';
 import IconInputError from '../../Icons/InputError';
 import api from '../../../api';

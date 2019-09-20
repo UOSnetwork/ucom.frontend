@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleEditStake, walletEditStake, walletGetAccount } from '../../../actions/walletSimple';
+import { walletToggleEditStake, walletEditStake, walletGetAccount } from '../../../actions/wallet';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
@@ -163,5 +163,5 @@ EditStake.propTypes = {
 
 export default connect(state => ({
   owner: state.user.data,
-  wallet: state.walletSimple,
+  wallet: state.wallet,
 }))(EditStake);

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleSendTokens, walletSendTokens, walletGetAccount } from '../../../actions/walletSimple';
+import { walletToggleSendTokens, walletSendTokens, walletGetAccount } from '../../../actions/wallet';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
@@ -17,7 +17,7 @@ import { selectOwner } from '../../../store/selectors';
 const SendTokens = () => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
-  const wallet = useSelector(state => state.walletSimple);
+  const wallet = useSelector(state => state.wallet);
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const [formError, setFormError] = useState('');

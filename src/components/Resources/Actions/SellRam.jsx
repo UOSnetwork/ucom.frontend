@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import TradeRam from './TradeRam';
-import { walletToggleSellRam } from '../../../actions/walletSimple';
+import { walletToggleSellRam } from '../../../actions/wallet';
 
 const BuyRam = props => props.wallet.sellRamVisible && (
   <TradeRam
@@ -20,5 +20,5 @@ BuyRam.propTypes = {
 };
 
 export default connect(state => ({
-  wallet: state.walletSimple,
+  wallet: state.wallet,
 }))(BuyRam);

@@ -1,18 +1,26 @@
 import { isEqual } from 'lodash';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import Wallet, { TAB_WALLET_ID, TAB_RESOURCES_ID } from './index';
 import { selectOwner } from '../../store/selectors';
 import urls from '../../utils/urls';
 import UserPick from '../../components/UserPick';
+import * as walletActions from '../../actions/wallet';
 import * as Icons from './Icons';
 
 export const UserWallet = () => {
+  const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
+  const wallet = useSelector(state => state.wallet);
   const [activeTabId, setActiveTabId] = useState(TAB_WALLET_ID);
+
+  if (!wallet.visible) {
+    return null;
+  }
 
   return (
     <Wallet
+      onClickClose={() => dispatch(walletActions.toggle(false))}
       accountCard={{
         userAccountName: owner.accountName,
         userAvatarSrc: urls.getFileUrl(owner.avatarFilename),

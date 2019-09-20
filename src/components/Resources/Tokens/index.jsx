@@ -9,7 +9,7 @@ import {
   walletToggleEditStake,
   walletGetEmission,
   walletGetAccount,
-} from '../../../actions/walletSimple';
+} from '../../../actions/wallet';
 import { authShowPopup } from '../../../actions/auth';
 import withLoader from '../../../utils/withLoader';
 import { addErrorNotification, addSuccessNotification } from '../../../actions/notifications';
@@ -118,6 +118,6 @@ Tokens.propTypes = {
 };
 
 export default connect(state => ({
-  wallet: state.walletSimple,
+  wallet: state.wallet,
   owner: state.user.data,
 }))(Tokens);

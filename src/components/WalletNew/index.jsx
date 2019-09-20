@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './styles.css';
-import Popup from '../Popup';
+import Popup, { Content } from '../Popup';
 import Close from '../Close';
 import AccountCard from './AccountCard';
 import EmissionCard from './EmissionCard';
@@ -14,7 +14,7 @@ export const TAB_WALLET_ID = 1;
 export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
-  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource,
+  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose,
 }) => {
   const mainInnerRef = useRef(null);
   const [mainInnerTop, setMainInnerTop] = useState(0);
@@ -42,53 +42,55 @@ const Wallet = ({
 
   return (
     <Popup alignTop>
-      <Close top right onClick={() => {}} />
+      <Content fullHeight fullWidth screen>
+        <Close top right onClick={onClickClose} />
 
-      <div className={styles.layout}>
-        <div className={styles.side}>
-          <div className={styles.inner}>
-            {emissionCards.length > 0 &&
-              <div className={styles.emissionCards}>
-                {emissionCards.map((props, index) => (
-                  <EmissionCard key={index} {...props} />
-                ))}
+        <div className={styles.layout}>
+          <div className={styles.side}>
+            <div className={styles.inner}>
+              {emissionCards.length > 0 &&
+                <div className={styles.emissionCards}>
+                  {emissionCards.map((props, index) => (
+                    <EmissionCard key={index} {...props} />
+                  ))}
+                </div>
+              }
+
+              <Transactions {...transactions} />
+            </div>
+          </div>
+          <div className={styles.main}>
+            <div className={styles.inner} ref={mainInnerRef} style={{ top: `${mainInnerTop}px` }}>
+              <div className={styles.accountCard}>
+                <AccountCard {...accountCard} />
               </div>
-            }
 
-            <Transactions {...transactions} />
+              <div className={styles.tabs}>
+                <Tabs {...tabs} />
+              </div>
+
+              {activeTabId === TAB_WALLET_ID &&
+                <Fragment>
+                  {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+                </Fragment>
+              }
+
+              {activeTabId === TAB_RESOURCES_ID &&
+                <Fragment>
+                  <div className={styles.label}>Resources you own</div>
+                  <Resource {...ramResource} />
+                  <div className={styles.label}>Resources you staked for</div>
+                  <Resource {...cpuTimeResource} />
+                  <Resource {...networkBandwithResource} />
+                </Fragment>
+              }
+            </div>
           </div>
         </div>
-        <div className={styles.main}>
-          <div className={styles.inner} ref={mainInnerRef} style={{ top: `${mainInnerTop}px` }}>
-            <div className={styles.accountCard}>
-              <AccountCard {...accountCard} />
-            </div>
-
-            <div className={styles.tabs}>
-              <Tabs {...tabs} />
-            </div>
-
-            {activeTabId === TAB_WALLET_ID &&
-              <Fragment>
-                {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
-              </Fragment>
-            }
-
-            {activeTabId === TAB_RESOURCES_ID &&
-              <Fragment>
-                <div className={styles.label}>Resources you own</div>
-                <Resource {...ramResource} />
-                <div className={styles.label}>Resources you staked for</div>
-                <Resource {...cpuTimeResource} />
-                <Resource {...networkBandwithResource} />
-              </Fragment>
-            }
-          </div>
-        </div>
-      </div>
+      </Content>
     </Popup>
   );
-}
+};
 
 Wallet.propTypes = {
   accountCard: PropTypes.shape(AccountCard.propTypes),
@@ -100,6 +102,7 @@ Wallet.propTypes = {
   ramResource: PropTypes.shape(Resource.propTypes),
   cpuTimeResource: PropTypes.shape(Resource.propTypes),
   networkBandwithResource: PropTypes.shape(Resource.propTypes),
+  onClickClose: PropTypes.func,
 };
 
 Wallet.defaultProps = {
@@ -112,6 +115,7 @@ Wallet.defaultProps = {
   ramResource: Resource.defaultProps,
   cpuTimeResource: Resource.defaultProps,
   networkBandwithResource: Resource.defaultProps,
+  onClickClose: undefined,
 };
 
 export * from './wrappers';
