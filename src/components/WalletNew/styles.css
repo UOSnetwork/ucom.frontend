@@ -22,18 +22,12 @@
 }
 
 .side .inner  {
-  padding-bottom: 0;
   max-width: 500px;
-  height: 100vh;
-  overflow: auto;
-  scrollbar-width: none;
-}
-
-.side .inner::-webkit-scrollbar {
-  display: none;
 }
 
 .main .inner  {
+  position: sticky;
+  top: 0;
   max-width: 600px;
 }
 
@@ -67,11 +61,8 @@
     grid-row-start: 2;
   }
 
-  .side .inner  {
-    height: auto;
-  }
-
   .inner {
+    position: static !important;
     max-width: none !important;
     padding-left: 25px;
     padding-right: 25px;

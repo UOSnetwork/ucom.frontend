@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import styles from './styles.css';
 import Popup from '../Popup';
 import Close from '../Close';
@@ -15,54 +15,80 @@ export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
   accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource,
-}) => (
-  <Popup alignTop>
-    <Close top right onClick={() => {}} />
+}) => {
+  const mainInnerRef = useRef(null);
+  const [mainInnerTop, setMainInnerTop] = useState(0);
 
-    <div className={styles.layout}>
-      <div className={styles.side}>
-        <div className={styles.inner}>
-          {emissionCards.length > 0 &&
-            <div className={styles.emissionCards}>
-              {emissionCards.map((props, index) => (
-                <EmissionCard key={index} {...props} />
-              ))}
+  const calcAndSetMainInnerTop = () => {
+    const mainInnerTop = mainInnerRef.current.offsetHeight - window.innerHeight;
+
+    if (mainInnerTop > 0) {
+      setMainInnerTop(-(mainInnerRef.current.offsetHeight - window.innerHeight));
+    }
+  };
+
+  useEffect(() => {
+    calcAndSetMainInnerTop();
+  }, [activeTabId, transactions]);
+
+  useEffect(() => {
+    calcAndSetMainInnerTop();
+    window.addEventListener('resize', calcAndSetMainInnerTop);
+
+    return () => {
+      window.removeEventListener('resize', calcAndSetMainInnerTop);
+    };
+  }, []);
+
+  return (
+    <Popup alignTop>
+      <Close top right onClick={() => {}} />
+
+      <div className={styles.layout}>
+        <div className={styles.side}>
+          <div className={styles.inner}>
+            {emissionCards.length > 0 &&
+              <div className={styles.emissionCards}>
+                {emissionCards.map((props, index) => (
+                  <EmissionCard key={index} {...props} />
+                ))}
+              </div>
+            }
+
+            <Transactions {...transactions} />
+          </div>
+        </div>
+        <div className={styles.main}>
+          <div className={styles.inner} ref={mainInnerRef} style={{ top: `${mainInnerTop}px` }}>
+            <div className={styles.accountCard}>
+              <AccountCard {...accountCard} />
             </div>
-          }
 
-          <Transactions {...transactions} />
+            <div className={styles.tabs}>
+              <Tabs {...tabs} />
+            </div>
+
+            {activeTabId === TAB_WALLET_ID &&
+              <Fragment>
+                {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+              </Fragment>
+            }
+
+            {activeTabId === TAB_RESOURCES_ID &&
+              <Fragment>
+                <div className={styles.label}>Resources you own</div>
+                <Resource {...ramResource} />
+                <div className={styles.label}>Resources you staked for</div>
+                <Resource {...cpuTimeResource} />
+                <Resource {...networkBandwithResource} />
+              </Fragment>
+            }
+          </div>
         </div>
       </div>
-      <div className={styles.main}>
-        <div className={styles.inner}>
-          <div className={styles.accountCard}>
-            <AccountCard {...accountCard} />
-          </div>
-
-          <div className={styles.tabs}>
-            <Tabs {...tabs} />
-          </div>
-
-          {activeTabId === TAB_WALLET_ID &&
-            <Fragment>
-              {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
-            </Fragment>
-          }
-
-          {activeTabId === TAB_RESOURCES_ID &&
-            <Fragment>
-              <div className={styles.label}>Resources you own</div>
-              <Resource {...ramResource} />
-              <div className={styles.label}>Resources you staked for</div>
-              <Resource {...cpuTimeResource} />
-              <Resource {...networkBandwithResource} />
-            </Fragment>
-          }
-        </div>
-      </div>
-    </div>
-  </Popup>
-);
+    </Popup>
+  );
+}
 
 Wallet.propTypes = {
   accountCard: PropTypes.shape(AccountCard.propTypes),
