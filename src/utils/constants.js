@@ -99,3 +99,12 @@ export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.get
 
 export const TRANSACTION_PERMISSION_ACTIVE = 'active';
 export const TRANSACTION_PERMISSION_SOCIAL = 'social';
+
+export const TRX_TYPE_TRANSFER_FROM = 10;
+export const TRX_TYPE_TRANSFER_TO = 11;
+export const TRX_TYPE_STAKE_RESOURCES = 20;
+export const TRX_TYPE_UNSTAKING_REQUEST = 30;
+export const TRX_TYPE_VOTE_FOR_BP = 40;
+export const TRX_TYPE_CLAIM_EMISSION = 50;
+export const TRX_TYPE_BUY_RAM = 60;
+export const TRX_TYPE_SELL_RAM = 61;

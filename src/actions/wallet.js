@@ -2,8 +2,11 @@ import humps from 'lodash-humps';
 import { WalletApi } from 'ucom-libs-wallet';
 import Worker from '../worker';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import api from '../api';
 
 export const setData = payload => ({ type: 'WALLET_SET_DATA', payload });
+
+export const reset = payload => ({ type: 'WALLET_RESET', payload });
 
 export const toggle = visible => dispatch =>
   dispatch(setData({ visible }));
@@ -41,4 +44,15 @@ export const walletGetAccount = accountName => async (dispatch) => {
   data.tokens.uosFutures = await WalletApi.getAccountBalance(accountName, 'UOSF');
 
   dispatch(setData({ ...humps(data) }));
+};
+
+export const getTransactions = (page, perPage, append = false) => async (dispatch, getState) => {
+  const transactions = await api.getTransactions(page, perPage);
+  const { wallet } = getState();
+
+  if (append) {
+    transactions.data = wallet.transactions.data.concat(transactions.data);
+  }
+
+  dispatch(setData({ transactions }));
 };

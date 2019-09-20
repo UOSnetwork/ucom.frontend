@@ -6,6 +6,10 @@ const getInitialState = () => ({
   sellRamVisible: false,
   editStakeVisible: false,
   sendTokensVisibility: false,
+  transactions: {
+    data: [],
+    metadata: {},
+  },
 });
 
 export default (state = getInitialState(), action) => {

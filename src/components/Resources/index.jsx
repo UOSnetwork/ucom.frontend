@@ -1,3 +1,4 @@
+import { round } from 'lodash';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,7 +11,6 @@ import {
 } from '../../actions/wallet';
 import formatNumber from '../../utils/formatNumber';
 
-const fixValue = amount => Math.round(amount * 100) / 100;
 const getPercent = (free, total) => (free * 100) / total;
 
 const Resources = (props) => {
@@ -24,8 +24,8 @@ const Resources = (props) => {
     <div className={styles.resources}>
       {ram &&
         <Resource
-          value={`${formatNumber(fixValue(ram.free))} ${ram.dimension} Free`}
-          total={`${formatNumber(fixValue(ram.total))} ${ram.dimension}`}
+          value={`${formatNumber(round(ram.free, 2))} ${ram.dimension} Free`}
+          total={`${formatNumber(round(ram.total, 2))} ${ram.dimension}`}
           title="RAM"
           progress={getPercent(ram.free, ram.total)}
           actions={[{
@@ -39,8 +39,8 @@ const Resources = (props) => {
       }
       {cpu &&
         <Resource
-          value={`${formatNumber(fixValue(cpu.free))} ${cpu.dimension}`}
-          total={`${formatNumber(fixValue(cpu.total))} ${cpu.dimension}`}
+          value={`${formatNumber(round(cpu.free, 2))} ${cpu.dimension}`}
+          total={`${formatNumber(round(cpu.total, 2))} ${cpu.dimension}`}
           title="CPU Time"
           progress={getPercent(cpu.free, cpu.total)}
           actions={[{
@@ -51,8 +51,8 @@ const Resources = (props) => {
       }
       {net &&
         <Resource
-          value={`${formatNumber(fixValue(net.free))} ${net.dimension}`}
-          total={`${formatNumber(fixValue(net.total))} ${net.dimension}`}
+          value={`${formatNumber(round(net.free, 2))} ${net.dimension}`}
+          total={`${formatNumber(round(net.total, 2))} ${net.dimension}`}
           title="Network BW"
           progress={getPercent(net.free, net.total)}
           actions={[{
