@@ -1,14 +1,14 @@
-:local(.wrapper) {
+.wrapper {
   position: relative;
   margin: 49px 0 0;
 }
 
-:local(.wrapperOffer) {
+.wrapperOffer {
   position: relative;
   margin: 100px 0 0;
 }
 
-:local(.subHeader) {
+.subHeader {
   position: absolute;
   bottom: 100%;
   left: 0;
@@ -26,32 +26,32 @@
   transition: transform 0.2s ease;
 }
 
-:local(.subHeader:hover) {
+.subHeader:hover {
   transform: none;
 }
 
-:local(.subHeader:hover .followLink) {
+.subHeader:hover .followLink {
   opacity: 1;
 }
 
-:local(.subHeader:hover .userPick) {
+.subHeader:hover .userPick {
   transform: none;
 }
 
-:local(.subHeader:hover .name) {
+.subHeader:hover .name {
   transform: none;
 }
 
-:local(.subHeader:hover .rate) {
+.subHeader:hover .rate {
   transform: none;
   opacity: 1;
 }
 
-:local(.subHeader.subHeaderSquare) {
+.subHeader.subHeaderSquare {
   border-radius: 0;
 }
 
-:local(.userPick) {
+.userPick {
   position: absolute;
   top: 16px;
   left: 40px;
@@ -62,7 +62,7 @@
   transition: transform 0.2s ease;
 }
 
-:local(.name) {
+.name {
   position: absolute;
   top: 18px;
   left: 85px;
@@ -74,7 +74,7 @@
   transition: transform 0.2s ease;
 }
 
-:local(.name) :global(a) {
+.name a {
   display: inline-block;
   max-width: 100%;
   text-overflow: ellipsis;
@@ -82,7 +82,7 @@
   white-space: nowrap;
 }
 
-:local(.rate) {
+.rate {
   position: absolute;
   top: 38px;
   left: 85px;
@@ -95,7 +95,7 @@
   transform-origin: left top;
 }
 
-:local(.followLink) {
+.followLink {
   position: absolute;
   right: 40px;
   top: 50%;
@@ -108,29 +108,29 @@
 }
 
 @media (max-width: 767px) {
-  :local(.userPick) {
+  .userPick {
     left: 20px;
   }
 
-  :local(.name) {
+  .name {
     left: 65px;
   }
 
-  :local(.rate) {
+  .rate {
     left: 65px;
   }
 
-  :local(.followLink) {
+  .followLink {
     right: 20px;
   }
 }
 
 @media (max-width: 414px) {
-  :local(.subHeaderSquare) {
+  .subHeaderSquare {
     margin: 0 -14px;
   }
 
-  :local(.wrapperOffer) {
+  .wrapperOffer {
     margin: 73px 0 0;
   }
 }
