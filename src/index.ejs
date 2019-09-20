@@ -16,43 +16,43 @@
 
   <% if (typeof contentMetaTags === 'object' && typeof contentMetaTags.title === 'string') { %>
     <title><%- contentMetaTags.title %></title>
+    <meta property="og:title" content="<%- contentMetaTags.title %>" />
   <% } else { %>
     <title>U°Community</title>
+    <meta property="og:title" content="U°Community" />
   <% } %>
 
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:site_name" content="U°Community">
 
   <% if (typeof contentMetaTags === 'object') { %>
     <% if (typeof contentMetaTags.url === 'string' && contentMetaTags.url.length) { %>
       <meta property="og:url" content="<%- contentMetaTags.url %>" />
-      <meta name="twitter:site" content="<%- contentMetaTags.url %>" />
     <% } %>
+
     <% if (typeof contentMetaTags.type === 'string' && contentMetaTags.type.length) { %>
       <meta property="og:type" content="<%- contentMetaTags.type %>" />
     <% } %>
-    <% if (typeof contentMetaTags.title === 'string' && contentMetaTags.title.length) { %>
-      <meta property="og:title" content="<%- contentMetaTags.title %>" />
-    <% } %>
+
     <% if (typeof contentMetaTags.description === 'string' && contentMetaTags.description.length) { %>
-      <meta property="og:description" content="<%- contentMetaTags.description %>" />
       <meta name="description" content="<%- contentMetaTags.description %>" />
+      <meta property="og:description" content="<%- contentMetaTags.description %>" />
     <% } %>
+
     <% if (typeof contentMetaTags.image === 'string' && contentMetaTags.image.length) { %>
       <meta property="og:image" content="<%- contentMetaTags.image %>" />
-      <meta name="twitter:image" content="<%- contentMetaTags.image %>" />
     <% } %>
+
     <% if (typeof contentMetaTags.imageWidth === 'string' && contentMetaTags.imageWidth.length) { %>
       <meta property="og:image:width" content="<%- contentMetaTags.imageWidth %>" />
     <% } %>
+
     <% if (typeof contentMetaTags.imageHeight === 'string' && contentMetaTags.imageHeight.length) { %>
       <meta property="og:image:height" content="<%- contentMetaTags.imageHeight %>" />
     <% } %>
+
     <% if (typeof contentMetaTags.keywords === 'string' && contentMetaTags.keywords.length) { %>
       <meta name="keywords" content="<%- contentMetaTags.keywords %>" />
-    <% } %>
-
-    <% if (typeof contentMetaTags.author === 'string' && contentMetaTags.author.length) { %>
-      <meta name="twitter:creator" content="<%- contentMetaTags.author %>" />
     <% } %>
   <% } %>
 
