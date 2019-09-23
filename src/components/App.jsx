@@ -87,12 +87,12 @@ const App = () => {
 
       <SearchPopup />
       <Subscribe />
+      <UserWallet />
       {auth.visibility && <Auth />}
       {wallet.buyRamVisible && <BuyRam />}
       {wallet.sellRamVisible && <SellRam />}
       {wallet.editStakeVisible && <EditStake />}
       {wallet.sendTokensVisibility && <SendTokens />}
-      <UserWallet />
       <Notifications />
     </Fragment>
   );

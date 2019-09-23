@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
 
-const TokenCard = ({ tokens, icon, color }) => (
+const TokenCard = ({
+  tokens, icon, color, actions,
+}) => (
   <div className={styles.tokenCard}>
     <div
       className={classNames({
@@ -36,12 +38,11 @@ const TokenCard = ({ tokens, icon, color }) => (
     </div>
 
     <div className={styles.actions}>
-      <div className={styles.action}>
-        <span className="link red-hover">Send</span>
-      </div>
-      <div className={styles.action}>
-        <span className="link red-hover">Buy</span>
-      </div>
+      {actions.map((item, index) => (
+        <div className={styles.action} key={index}>
+          <span role="presentation" onClick={item.onClick} className="link red-hover">{item.title}</span>
+        </div>
+      ))}
     </div>
   </div>
 );
@@ -53,12 +54,17 @@ TokenCard.propTypes = {
   })),
   icon: PropTypes.node,
   color: PropTypes.string,
+  actions: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+  })),
 };
 
 TokenCard.defaultProps = {
   tokens: [],
   icon: undefined,
   color: undefined,
+  actions: [],
 };
 
 export default TokenCard;

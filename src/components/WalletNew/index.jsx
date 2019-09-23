@@ -88,11 +88,20 @@ const Wallet = ({
 
               {activeTabId === TAB_RESOURCES_ID &&
                 <Fragment>
-                  <div className={styles.label}>Resources you own</div>
-                  <Resource {...ramResource} />
-                  <div className={styles.label}>Resources you staked for</div>
-                  <Resource {...cpuTimeResource} />
-                  <Resource {...networkBandwithResource} />
+                  {ramResource &&
+                    <Fragment>
+                      <div className={styles.label}>Resources you own</div>
+                      {ramResource && <Resource {...ramResource} />}
+                    </Fragment>
+                  }
+
+                  {(cpuTimeResource || networkBandwithResource) &&
+                    <Fragment>
+                      <div className={styles.label}>Resources you staked for</div>
+                      {cpuTimeResource && <Resource {...cpuTimeResource} />}
+                      {networkBandwithResource && <Resource {...networkBandwithResource} />}
+                    </Fragment>
+                  }
                 </Fragment>
               }
             </div>

@@ -23,19 +23,19 @@ export const walletToggleEditStake = editStakeVisible => dispatch =>
 export const walletToggleSendTokens = sendTokensVisibility => dispatch =>
   dispatch(setData({ sendTokensVisibility }));
 
-export const walletBuyRam = (accountName, amount, privateKey) =>
+export const walletBuyRam = (accountName, amount, privateKey) => () =>
   Worker.buyRam(accountName, privateKey, amount);
 
-export const walletSellRam = (accountName, amount, privateKey) =>
+export const walletSellRam = (accountName, amount, privateKey) => () =>
   Worker.sellRam(accountName, privateKey, amount);
 
-export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) =>
+export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) => () =>
   Worker.stakeOrUnstakeTokens(accountName, privateKey, netAmount, cpuAmount);
 
-export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) =>
+export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => () =>
   Worker.sendTokens(accountNameFrom, privateKey, accountNameTo, amount, memo);
 
-export const walletGetEmission = (accountName, privateKey) =>
+export const walletGetEmission = (accountName, privateKey) => () =>
   Worker.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
 
 export const walletGetAccount = accountName => async (dispatch) => {

@@ -16,8 +16,8 @@ const Resource = ({
     {actions.length > 0 &&
       <div className={styles.actions}>
         {actions.map((action, index) => (
-          <div role="presentation" className={styles.action} onClick={action.onClick} key={index}>
-            <span className="link red-hover">{action.title}</span>
+          <div className={styles.action} key={index}>
+            <span onClick={action.onClick} role="presentation" className="link red-hover">{action.title}</span>
           </div>
         ))}
       </div>

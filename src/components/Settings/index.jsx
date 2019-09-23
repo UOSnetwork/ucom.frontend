@@ -25,6 +25,7 @@ import IconInputComplete from '../Icons/InputComplete';
 import urls from '../../utils/urls';
 import withLoader from '../../utils/withLoader';
 import { selectOwner } from '../../store/selectors';
+import * as walletActions from '../../actions/wallet';
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ const Settings = () => {
 
   useEffect(() => {
     restoreKeys();
+    withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
 
     return () => {
       dispatch(settingsActions.reset());

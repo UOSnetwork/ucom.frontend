@@ -21,6 +21,7 @@ import {
   TRX_TYPE_SELL_RAM,
   TRX_TYPE_VOTE_FOR_CALC,
 } from '../../utils/constants';
+import percent from '../../utils/percent';
 
 const TRANSACTIONS_PER_PAGE = 50;
 
@@ -48,8 +49,10 @@ export const UserWallet = memo(() => {
     date.setHours(0, 0, 0, 0);
     return date.getTime();
   });
-
   const tokenCards = [];
+  let ramResource = null;
+  let cpuTimeResource = null;
+  let networkBandwithResource = null;
 
   if (wallet.tokens && wallet.tokens.active) {
     tokenCards.push({
@@ -61,11 +64,55 @@ export const UserWallet = memo(() => {
       }, {
         title: `UOSF ${formatNumber(wallet.tokens.uosFutures)}`,
       }],
+      actions: [{
+        title: 'Send',
+        onClick: () => dispatch(walletActions.walletToggleSendTokens(true)),
+      }],
     });
+  }
+
+  if (wallet.resources && wallet.resources.ram) {
+    ramResource = {
+      title: 'RAM',
+      label: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension}`,
+      percentage: percent(wallet.resources.ram.free, wallet.resources.ram.total),
+      actions: [{
+        title: 'Sell',
+        onClick: () => dispatch(walletActions.walletToggleSellRam(true)),
+      }, {
+        title: 'Buy',
+        onClick: () => dispatch(walletActions.walletToggleBuyRam(true)),
+      }],
+    };
+  }
+
+  if (wallet.resources && wallet.resources.cpu) {
+    cpuTimeResource = {
+      title: 'CPU Time',
+      label: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension}`,
+      percentage: percent(wallet.resources.cpu.free, wallet.resources.cpu.total),
+      actions: [{
+        title: 'Edit Stake',
+        onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
+      }],
+    };
+  }
+
+  if (wallet.resources && wallet.resources.net) {
+    networkBandwithResource = {
+      title: 'Network Bandwith',
+      label: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension}`,
+      percentage: percent(wallet.resources.net.free, wallet.resources.net.total),
+      actions: [{
+        title: 'Edit Stake',
+        onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
+      }],
+    };
   }
 
   const getInitialData = async () => {
     setLoading(true);
+    await withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
     await withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE)));
     setLoading(false);
   };
@@ -96,8 +143,6 @@ export const UserWallet = memo(() => {
     return null;
   }
 
-  console.log(wallet);
-
   // TODO: Add memo for popup
   return (
     <Wallet
@@ -126,42 +171,15 @@ export const UserWallet = memo(() => {
           },
         }],
       }}
-      ramResource={{
-        title: 'RAM',
-        label: '36 kB',
-        percentage: 70,
-        actions: [{
-          title: 'Sell',
-          onClick: () => {},
-        }, {
-          title: 'Buy',
-          onClick: () => {},
-        }],
-      }}
-      cpuTimeResource={{
-        title: 'CPU Time',
-        label: '60.47 Sec',
-        percentage: 90,
-        actions: [{
-          title: 'EDIT STAKE',
-          onClick: () => {},
-        }],
-      }}
-      networkBandwithResource={{
-        title: 'Network Bandwith',
-        label: '5.47 kB',
-        percentage: 80,
-        actions: [{
-          title: 'EDIT STAKE',
-          onClick: () => {},
-        }],
-      }}
       emissionCards={[{
         amount: '200.66 UOS',
         label: 'GitHub Airdrop',
       }, {
         amount: '1 913.66 UOS',
       }]}
+      ramResource={ramResource}
+      cpuTimeResource={cpuTimeResource}
+      networkBandwithResource={networkBandwithResource}
       tokenCards={tokenCards}
       transactions={{
         showLoader: wallet.transactions.metadata.hasMore,
