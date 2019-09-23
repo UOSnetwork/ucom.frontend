@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { WalletCommentIcon } from '../../Icons/WalletIcons';
-import Panel from '../../Panel/Panel';
+import Panel from '../../Panel';
 
 // TODO: Less to css modules
 // TODO: PropTypes

@@ -168,11 +168,18 @@ export const UserWallet = memo(() => {
         sections: Object.keys(transactionsGroups).map(time => ({
           title: moment(+time).format('D MMMM'),
           list: transactionsGroups[time].map((trx) => {
+            const commonProps = {
+              date: moment(trx.updatedAt).format('DD MMMM YYYY HH:mm:ss'),
+              details: JSON.stringify(trx.rawTrData, null, 4),
+            };
+
             switch (trx.trType) {
               case TRX_TYPE_TRANSFER_FROM:
               case TRX_TYPE_TRANSFER_TO:
                 return ({
-                  icon: <UserPick src={urls.getFileUrl(trx.user.avatarFilename)} size={40} />,
+                  ...commonProps,
+                  type: 'Transfer',
+                  avatarSrc: urls.getFileUrl(trx.user.avatarFilename),
                   title: `@${trx.user.accountName}`,
                   amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
                   message: trx.memo,
@@ -193,8 +200,6 @@ export const UserWallet = memo(() => {
                   cpu = round(trx.resources.cpu.unstakingRequest.amount, 2);
                 }
 
-                const amount = `${trx.trType === TRX_TYPE_STAKE_RESOURCES ? '– ' : ''}${cpu && net ? cpu + net : cpu || net} ${trx.resources.net.tokens.currency}`;
-
                 if (net && cpu) {
                   icon = <Icons.St />;
                 } else if (cpu) {
@@ -214,12 +219,18 @@ export const UserWallet = memo(() => {
                 }
 
                 return ({
-                  icon, title, amount,
+                  ...commonProps,
+                  icon,
+                  title,
+                  amount: `${trx.trType === TRX_TYPE_STAKE_RESOURCES ? '– ' : ''}${cpu && net ? cpu + net : cpu || net} ${trx.resources.net.tokens.currency}`,
+                  type: trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Stake' : 'Unstake',
                 });
               }
 
               case TRX_TYPE_CLAIM_EMISSION:
                 return ({
+                  ...commonProps,
+                  type: 'Withdraw',
                   icon: <Icons.Emission />,
                   title: 'Recieved emission',
                   amount: `${round(trx.tokens.emission, 2)} ${trx.tokens.currency}`,
@@ -228,6 +239,8 @@ export const UserWallet = memo(() => {
               case TRX_TYPE_BUY_RAM:
               case TRX_TYPE_SELL_RAM:
                 return ({
+                  ...commonProps,
+                  type: trx.trType === TRX_TYPE_BUY_RAM ? 'Buy RAM' : 'Sell RAM',
                   icon: <Icons.Ram />,
                   title: `${trx.trType === TRX_TYPE_BUY_RAM ? 'Bought' : 'Sold'} RAM`,
                   amount: `${trx.trType === TRX_TYPE_BUY_RAM ? '– ' : ''}${round(trx.resources.ram.tokens.amount, 2)} ${trx.resources.ram.tokens.currency}`,
@@ -238,6 +251,8 @@ export const UserWallet = memo(() => {
                 const nodes = trx.trType === TRX_TYPE_VOTE_FOR_BP ? trx.producers : trx.calculators;
 
                 return ({
+                  ...commonProps,
+                  type: 'Vote',
                   icon: <Icons.Vote />,
                   title: nodes.length ? `Voted for ${nodes.map(item => item).join(', ')}` : 'Not voted for anyone',
                 });
