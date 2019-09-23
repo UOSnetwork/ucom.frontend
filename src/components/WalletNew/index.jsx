@@ -1,5 +1,6 @@
+import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
 import styles from './styles.css';
 import Popup, { Content } from '../Popup';
 import Close from '../Close';
@@ -14,9 +15,10 @@ export const TAB_WALLET_ID = 1;
 export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
-  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose,
+  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose, onLoadMore,
 }) => {
   const mainInnerRef = useRef(null);
+  const layoutRef = useRef(null);
   const [mainInnerTop, setMainInnerTop] = useState(0);
 
   const calcAndSetMainInnerTop = () => {
@@ -26,6 +28,12 @@ const Wallet = ({
       setMainInnerTop(-(mainInnerRef.current.offsetHeight - window.innerHeight));
     }
   };
+
+  const onScroll = useCallback(throttle((container) => {
+    if (onLoadMore && container.scrollTop + container.offsetHeight + 400 > layoutRef.current.offsetHeight) {
+      onLoadMore();
+    }
+  }, 100), [layoutRef, onLoadMore]);
 
   useEffect(() => {
     calcAndSetMainInnerTop();
@@ -41,11 +49,14 @@ const Wallet = ({
   }, []);
 
   return (
-    <Popup alignTop>
+    <Popup
+      alignTop
+      onScroll={e => onScroll(e.target)}
+    >
       <Content fullHeight fullWidth screen>
         <Close top right onClick={onClickClose} />
 
-        <div className={styles.layout}>
+        <div className={styles.layout} ref={layoutRef}>
           <div className={styles.side}>
             <div className={styles.inner}>
               {emissionCards.length > 0 &&
@@ -103,6 +114,7 @@ Wallet.propTypes = {
   cpuTimeResource: PropTypes.shape(Resource.propTypes),
   networkBandwithResource: PropTypes.shape(Resource.propTypes),
   onClickClose: PropTypes.func,
+  onLoadMore: PropTypes.func,
 };
 
 Wallet.defaultProps = {
@@ -116,6 +128,7 @@ Wallet.defaultProps = {
   cpuTimeResource: Resource.defaultProps,
   networkBandwithResource: Resource.defaultProps,
   onClickClose: undefined,
+  onLoadMore: undefined,
 };
 
 export * from './wrappers';

@@ -26,7 +26,7 @@ Transaction.propTypes = {
 Transaction.defaultProps = {
   icon: undefined,
   title: '…',
-  amount: '…',
+  amount: undefined,
   message: undefined,
   onClick: undefined,
 };

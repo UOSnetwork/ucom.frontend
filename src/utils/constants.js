@@ -105,6 +105,7 @@ export const TRX_TYPE_TRANSFER_TO = 11;
 export const TRX_TYPE_STAKE_RESOURCES = 20;
 export const TRX_TYPE_UNSTAKING_REQUEST = 30;
 export const TRX_TYPE_VOTE_FOR_BP = 40;
+export const TRX_TYPE_VOTE_FOR_CALC = 41;
 export const TRX_TYPE_CLAIM_EMISSION = 50;
 export const TRX_TYPE_BUY_RAM = 60;
 export const TRX_TYPE_SELL_RAM = 61;

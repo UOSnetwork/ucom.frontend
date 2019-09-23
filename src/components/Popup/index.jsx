@@ -59,6 +59,7 @@ const Popup = (props) => {
           props.onClickClose();
         }
       }}
+      onScroll={props.onScroll}
     >
       {props.onClickClose && props.showCloseIcon &&
         <span
@@ -84,6 +85,7 @@ Popup.propTypes = {
   alignTop: PropTypes.bool,
   onClickClose: PropTypes.func,
   dark: PropTypes.bool,
+  onScroll: PropTypes.func,
 };
 
 Popup.defaultProps = {
@@ -95,6 +97,7 @@ Popup.defaultProps = {
   alignTop: false,
   onClickClose: null,
   dark: false,
+  onScroll: undefined,
 };
 
 export { default as Content } from './Content';
