@@ -7,6 +7,7 @@ import { selectOwner } from '../../store/selectors';
 import urls from '../../utils/urls';
 import UserPick from '../../components/UserPick';
 import withLoader from '../../utils/withLoader';
+import formatNumber from '../../utils/formatNumber';
 import * as walletActions from '../../actions/wallet';
 import * as Icons from './Icons';
 import {
@@ -48,6 +49,21 @@ export const UserWallet = memo(() => {
     return date.getTime();
   });
 
+  const tokenCards = [];
+
+  if (wallet.tokens && wallet.tokens.active) {
+    tokenCards.push({
+      color: '#B3E1E1',
+      icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
+      tokens: [{
+        title: `UOS ${formatNumber(wallet.tokens.active)}`,
+        label: 'TestNet',
+      }, {
+        title: `UOSF ${formatNumber(wallet.tokens.uosFutures)}`,
+      }],
+    });
+  }
+
   const getInitialData = async () => {
     setLoading(true);
     await withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE)));
@@ -80,6 +96,9 @@ export const UserWallet = memo(() => {
     return null;
   }
 
+  console.log(wallet);
+
+  // TODO: Add memo for popup
   return (
     <Wallet
       onClickClose={() => dispatch(walletActions.toggle(false))}
@@ -137,32 +156,13 @@ export const UserWallet = memo(() => {
           onClick: () => {},
         }],
       }}
-      tokenCards={[{
-        color: '#B3E1E1',
-        icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
-        tokens: [{
-          title: 'UOS 676 888 888.9999',
-          label: 'TestNet',
-        }, {
-          title: 'UOSF 888 888.9999',
-          label: '≈ $25 745.78',
-        }],
-      }, {
-        color: '#F2B554',
-        tokens: [{
-          title: 'UOS 3 123.4',
-          label: 'TestNet',
-        }, {
-          title: 'UOSF 0',
-          label: '$ 0',
-        }],
-      }]}
       emissionCards={[{
         amount: '200.66 UOS',
         label: 'GitHub Airdrop',
       }, {
         amount: '1 913.66 UOS',
       }]}
+      tokenCards={tokenCards}
       transactions={{
         showLoader: wallet.transactions.metadata.hasMore,
         sections: Object.keys(transactionsGroups).map(time => ({
