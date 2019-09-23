@@ -164,6 +164,7 @@ export const UserWallet = memo(() => {
         amount: '1 913.66 UOS',
       }]}
       transactions={{
+        showLoader: wallet.transactions.metadata.hasMore,
         sections: Object.keys(transactionsGroups).map(time => ({
           title: moment(+time).format('D MMMM'),
           list: transactionsGroups[time].map((trx) => {
