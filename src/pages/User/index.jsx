@@ -8,7 +8,7 @@ import LayoutBase from '../../components/Layout/LayoutBase';
 import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
 import { validUrl } from '../../utils/url';
-import Feed from '../../components/Feed/FeedUser';
+import FeedUser from '../../components/Feed/FeedUser';
 import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
 import { feedGetUserPosts } from '../../actions/feed';
 import NotFoundPage from '../NotFoundPage';
@@ -166,7 +166,7 @@ const UserPage = (props) => {
           }
 
           {user && user.id &&
-            <Feed
+            <FeedUser
               userId={user.id}
               feedTypeId={USER_WALL_FEED_ID}
               originEnabled={false}

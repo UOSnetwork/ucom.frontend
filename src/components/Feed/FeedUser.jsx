@@ -60,6 +60,21 @@ const FeedUser = (props) => {
       originEnabled={props.originEnabled}
       forUserId={props.userId}
       forOrgId={props.organizationId}
+      filters={{
+        items: [{
+          title: 'All',
+          active: true,
+          onClick: () => {},
+        }, {
+          title: 'Media-posts',
+          totalCount: 42,
+          onClick: () => {},
+        }, {
+          title: 'Updates',
+          totalCount: 21,
+          onClick: () => {},
+        }],
+      }}
     />
   );
 };
