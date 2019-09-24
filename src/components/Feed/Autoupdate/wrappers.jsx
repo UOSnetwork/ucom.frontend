@@ -8,6 +8,7 @@ import { EVENT_ID_USER_TRUSTS_YOU, EVENT_ID_USER_UNTRUSTS_YOU, getUserName, urls
 
 const getEventId = post => (post && post.jsonData && post.jsonData.metaData && post.jsonData.metaData.eventId) || null;
 const getTargetEntity = post => (post && post.jsonData && post.jsonData.targetEntity) || null;
+const getData = post => (post && post.jsonData && post.jsonData.data) || null;
 const getLabelByEventId = (eventId) => {
   switch (eventId) {
     case EVENT_ID_USER_TRUSTS_YOU:
@@ -23,8 +24,9 @@ export const PostAutoupdate = ({ postId, ...props }) => {
   const post = useSelector(selectPostById(postId), isEqual);
   const eventId = getEventId(post);
   const targetEntity = getTargetEntity(post);
+  const data = getData(post);
 
-  if (!post || !eventId || !targetEntity) {
+  if (!post || !eventId || !targetEntity || !data || !data.user) {
     return null;
   }
 
@@ -52,6 +54,10 @@ export const PostAutoupdate = ({ postId, ...props }) => {
       commentsCount={post.commentsCount}
       label={getLabelByEventId(eventId)}
       content={content}
+      userName={getUserName(data.user)}
+      userUrl={urls.getUserUrl(data.user.id)}
+      userAvatarSrc={urls.getFileUrl(data.user.avatarFilename)}
+      createdAt={post.createdAt}
     />
   );
 };

@@ -10,3 +10,26 @@
   line-height: 1.25;
   color: rgba(0,0,0,0.6);
 }
+
+.userHeader {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 4px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(0,0,0,0.58);
+}
+
+.userHeader .text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userHeader :global(.link) {
+  font-weight: bold;
+}
