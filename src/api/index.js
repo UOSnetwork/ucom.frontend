@@ -266,14 +266,20 @@ class Api {
     return response;
   }
 
-  async trustUser(userId, signed_transaction) {
-    const response = await this.actions.post(`/api/v1/users/${userId}/trust`, { signed_transaction });
+  async trustUser(userId, blockchainId, signedTransactionAsJson) {
+    const response = await this.actions.post(`/api/v1/users/${userId}/trust`, {
+      blockchain_id: blockchainId,
+      signed_transaction: signedTransactionAsJson,
+    });
 
     return humps(response.data);
   }
 
-  async untrustUser(userId, signed_transaction) {
-    const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, { signed_transaction });
+  async untrustUser(userId, blockchainId, signedTransactionAsJson) {
+    const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, {
+      blockchain_id: blockchainId,
+      signed_transaction: signedTransactionAsJson,
+    });
 
     return humps(response.data);
   }

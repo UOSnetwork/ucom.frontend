@@ -68,11 +68,11 @@ registerPromiseWorker((action) => {
     case actions.GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION:
       return SocialApi.getUnfollowOrganizationSignedTransaction(...action.args);
 
-    case actions.GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON:
-      return SocialApi.getTrustUserSignedTransactionsAsJson(...action.args);
+    case actions.GET_TRUST_USER_WITH_AUTO_UPDATE_SIGNED_TRANSACTION:
+      return SocialApi.getTrustUserWithAutoUpdateSignedTransaction(...action.args);
 
-    case actions.GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON:
-      return SocialApi.getUnTrustUserSignedTransactionsAsJson(...action.args);
+    case actions.GET_UNTRUST_USER_WITH_AUTO_UPDATE_SIGNED_TRANSACTION:
+      return SocialApi.getUntrustUserWithAutoUpdateSignedTransaction(...action.args);
 
     case actions.SIGN_CREATE_PUBLICATION_FROM_ORGANIZATION:
       return PublicationsApi.signCreatePublicationFromOrganization(...action.args);

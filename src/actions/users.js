@@ -194,14 +194,15 @@ export const trustUserOrShowErrorNotification = (userId, userAccountName) => asy
       return;
     }
 
-    const signedTransaction = await Worker.getTrustUserSignedTransactionsAsJson(
+
+    const { blockchain_id, signed_transaction } = await Worker.getTrustUserWithAutoUpdateSignedTransaction(
       ownerCredentials.accountName,
       ownerCredentials.socialKey,
       userAccountName,
       TRANSACTION_PERMISSION_SOCIAL,
     );
 
-    await api.trustUser(userId, signedTransaction);
+    await api.trustUser(userId, blockchain_id, JSON.stringify(signed_transaction));
     await dispatch(fetchUser(userId));
   } catch (err) {
     dispatch(addErrorNotificationFromResponse(err));
@@ -216,14 +217,14 @@ export const untrustUserOrShowErrorNotification = (userId, userAccountName) => a
       return;
     }
 
-    const signedTransaction = await Worker.getUnTrustUserSignedTransactionsAsJson(
+    const { blockchain_id, signed_transaction } = await Worker.getUntrustUserWithAutoUpdateSignedTransaction(
       ownerCredentials.accountName,
       ownerCredentials.socialKey,
       userAccountName,
       TRANSACTION_PERMISSION_SOCIAL,
     );
 
-    await api.untrustUser(userId, signedTransaction);
+    await api.untrustUser(userId, blockchain_id, JSON.stringify(signed_transaction));
     await dispatch(fetchUser(userId));
   } catch (err) {
     dispatch(addErrorNotificationFromResponse(err));
