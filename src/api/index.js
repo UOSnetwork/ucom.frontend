@@ -6,7 +6,7 @@ import { getToken } from '../utils/token';
 import { getBackendConfig } from '../utils/config';
 import snakes from '../utils/snakes';
 import Worker from '../worker';
-import { LIST_PER_PAGE, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { LIST_PER_PAGE } from '../utils/constants';
 
 if (process.env.NODE_ENV === 'production') {
   WalletApi.initForProductionEnv();
@@ -266,32 +266,14 @@ class Api {
     return response;
   }
 
-  // TODO: Move sign transaction to redux action
-  async trustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
-    const signedTransaction = await Worker.getTrustUserSignedTransactionsAsJson(
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      TRANSACTION_PERMISSION_SOCIAL,
-    );
-    const response = await this.actions.post(`/api/v1/users/${userId}/trust`, {
-      signed_transaction: signedTransaction,
-    });
+  async trustUser(userId, signed_transaction) {
+    const response = await this.actions.post(`/api/v1/users/${userId}/trust`, { signed_transaction });
 
     return humps(response.data);
   }
 
-  // TODO: Move sign transaction to redux action
-  async untrustUser(ownerAccountName, userAccountName, userId, ownerPrivateKey) {
-    const signedTransaction = await Worker.getUnTrustUserSignedTransactionsAsJson(
-      ownerAccountName,
-      ownerPrivateKey,
-      userAccountName,
-      TRANSACTION_PERMISSION_SOCIAL,
-    );
-    const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, {
-      signed_transaction: signedTransaction,
-    });
+  async untrustUser(userId, signed_transaction) {
+    const response = await this.actions.post(`/api/v1/users/${userId}/untrust`, { signed_transaction });
 
     return humps(response.data);
   }

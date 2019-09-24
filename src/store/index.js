@@ -71,3 +71,5 @@ export const createStore = () => {
     composeWithDevTools(redux.applyMiddleware(...middlewares)),
   );
 };
+
+export * from './selectors';

@@ -1,6 +1,6 @@
 import { memoize } from 'lodash';
 import * as overviewUtils from './overview';
-import { POST_TYPE_MEDIA_ID } from './posts';
+import { POST_TYPE_MEDIA_ID } from './constants';
 import { getBackendConfig } from './config';
 
 const urls = {

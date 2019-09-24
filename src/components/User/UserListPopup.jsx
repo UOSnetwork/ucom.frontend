@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import UserCard from '../UserCard';
 import { UserFollowButton } from '../FollowButton';
-import { selectUser } from '../../store/selectors/user';
+import { selectUser } from '../../store/selectors';
 import { getUsersByIds } from '../../store/users';
 import { getUserName } from '../../utils/user';
 import urls from '../../utils/urls';

@@ -17,5 +17,4 @@ export const selectNodesByIds = (ids = []) => state => getNodesByIds(state.nodes
 export const selectCommentById = id => state => getCommentById(state.comments, id);
 export const selectCommentsByIds = ids => state => getCommentsByIds(state.comments, ids);
 export const selectCommentsByContainerId = (containerId, entryId) => state => getCommentsByContainer(state, containerId, entryId);
-
-export * from './user';
+export const selectUser = state => state.user.data;

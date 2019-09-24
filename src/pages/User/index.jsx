@@ -18,11 +18,9 @@ import EntryCreatedAt from '../../components/EntryCreatedAt';
 import EntryContacts from '../../components/EntryContacts';
 import EntryAbout from '../../components/EntryAbout';
 import { EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
-import Trust from '../../components/Trust';
+import { UserTrust } from '../../components/Trust';
 import { getUserName, userIsOwner } from '../../utils/user';
-import { authShowPopup } from '../../actions/auth';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
-import { getSocialKey } from '../../utils/keys';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
@@ -76,26 +74,6 @@ const UserPage = (props) => {
   const orgsPopupOnChangePage = async (page) => {
     try {
       await withLoader(dispatch(userPageActions.getOrgsPopup(userIdentity, page)));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
-    }
-  };
-
-  const submitTrust = async (isTrust) => {
-    try {
-      const socialKey = getSocialKey();
-
-      if (!owner.id || !socialKey) {
-        dispatch(authShowPopup());
-        return;
-      }
-
-      await withLoader(dispatch(userPageActions.submitTrust(userIdentity, isTrust, {
-        socialKey,
-        userId: user.id,
-        userAccountName: user.accountName,
-        ownerAccountName: owner.accountName,
-      })));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -179,14 +157,7 @@ const UserPage = (props) => {
           }
 
           {user && !userIsOwner(user, owner) &&
-            <Trust
-              loading={state.trustLoading}
-              trusted={user && user.myselfData && user.myselfData.trust}
-              userName={getUserName(user)}
-              userAvtarUrl={urls.getFileUrl(user.avatarFilename)}
-              onClickTrust={() => submitTrust(true)}
-              onClickUntrust={() => submitTrust(false)}
-            />
+            <UserTrust userId={user.id} onSuccess={() => dispatch(userPageActions.getTrustedBy(user.id))} />
           }
         </div>
         <div className="layout__main">

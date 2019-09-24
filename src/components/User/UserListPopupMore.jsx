@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import UserCard from '../UserCard';
 import Rate from '../Rate';
 import { UserFollowButton } from '../FollowButton';
-import { selectUser } from '../../store/selectors/user';
+import { selectUser } from '../../store/selectors';
 import { getUserName } from '../../utils/user';
 import urls from '../../utils/urls';
 import api from '../../api';
