@@ -186,10 +186,8 @@ const OfferSidebar = (props) => {
       <div className={styles.created}>Created <span>{props.createdAt}</span></div>
 
       <Share
-        socialEnable
         postId={props.postId}
         link={props.link}
-        repostEnable={props.repostAvailable}
       >
         <div className={styles.share}>
           <IconShareCircle />
@@ -221,7 +219,6 @@ OfferSidebar.propTypes = {
   startedAt: PropTypes.string,
   finishedAt: PropTypes.string,
   link: PropTypes.string.isRequired,
-  repostAvailable: PropTypes.bool,
   cookie: PropTypes.string,
   gitHubAuthLink: PropTypes.string,
   organizationId: PropTypes.number,
@@ -229,7 +226,6 @@ OfferSidebar.propTypes = {
 
 OfferSidebar.defaultProps = {
   rate: 0,
-  repostAvailable: false,
   cookie: null,
   conditions: null,
   gitHubAuthLink: '',

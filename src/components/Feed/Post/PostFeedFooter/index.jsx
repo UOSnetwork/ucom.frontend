@@ -7,7 +7,6 @@ import urls from '../../../../utils/urls';
 import styles from './styles.css';
 import { PostVotingWrapper } from '../../../Voting';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../../utils/comments';
-import { POST_TYPE_MEDIA_ID } from '../../../../utils/posts';
 
 const PostFeedFooter = ({
   post, commentsCount, commentsContainerId,
@@ -27,8 +26,6 @@ const PostFeedFooter = ({
         <Share
           postId={post.id}
           link={urls.getPostUrl(post)}
-          repostEnable={post && post.myselfData && post.myselfData.repostAvailable}
-          socialEnable={post && post.postTypeId === POST_TYPE_MEDIA_ID}
         />
       </div>
       <div>

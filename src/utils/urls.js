@@ -48,33 +48,27 @@ const urls = {
     return `${urls.getGovernanceVotingUrl(id)}/cast`;
   },
 
-  getPostUrl: memoize(
-    ({
-      id,
-      postTypeId,
-      entityNameFor,
-      entityIdFor,
-    }) => {
-      if (!id) {
-        return null;
-      }
-
-      if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
-        return `/posts/${id}`;
-      }
-
-      if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
-        return `/communities/${entityIdFor}/${id}`;
-      }
-
-      if (entityIdFor) {
-        return `/user/${entityIdFor}/${id}`;
-      }
-
+  getPostUrl: memoize(({
+    id, postTypeId, entityNameFor, entityIdFor,
+  } = {}) => {
+    if (!id) {
       return null;
-    },
-    params => Object.values(params).join(),
-  ),
+    }
+
+    if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
+      return `/posts/${id}`;
+    }
+
+    if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
+      return `/communities/${entityIdFor}/${id}`;
+    }
+
+    if (entityIdFor) {
+      return `/user/${entityIdFor}/${id}`;
+    }
+
+    return null;
+  }, params => Object.values(params).join()),
 
   getFeedPostUrl: memoize(
     ({ id, entityIdFor, entityNameFor }) => {
