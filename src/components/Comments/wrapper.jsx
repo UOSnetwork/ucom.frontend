@@ -64,6 +64,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
 
     if (!owner.id || !owner.accountName || !ownerPrivateKey) {
       dispatch(authShowPopup());
+      return;
     }
 
     try {
