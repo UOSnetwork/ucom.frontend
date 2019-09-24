@@ -24,7 +24,7 @@ const interactionTypesByTabId = {
   [TAB_ID_DOWN]: INTERACTION_TYPE_ID_VOTING_DOWNVOTE,
 };
 
-const PostVotingWrapper = ({ postId }) => {
+const PostVoting = ({ postId }) => {
   const dispatch = useDispatch();
   const [upCount, setUpCount] = useState(0);
   const [downCount, setDownCount] = useState(0);
@@ -185,8 +185,8 @@ const PostVotingWrapper = ({ postId }) => {
   );
 };
 
-PostVotingWrapper.propTypes = {
+PostVoting.propTypes = {
   postId: PropTypes.number.isRequired,
 };
 
-export default memo(PostVotingWrapper);
+export default memo(PostVoting);

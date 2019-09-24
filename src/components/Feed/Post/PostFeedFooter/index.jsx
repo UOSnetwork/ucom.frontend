@@ -5,7 +5,7 @@ import Comments from '../../../Comments/wrapper';
 import Share from '../../../Share';
 import urls from '../../../../utils/urls';
 import styles from './styles.css';
-import { PostVotingWrapper } from '../../../Voting';
+import { PostVoting } from '../../../Voting';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../../utils/comments';
 
 const PostFeedFooter = ({
@@ -29,7 +29,7 @@ const PostFeedFooter = ({
         />
       </div>
       <div>
-        <PostVotingWrapper postId={post.id} />
+        <PostVoting postId={post.id} />
       </div>
     </div>
 

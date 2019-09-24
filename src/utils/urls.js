@@ -70,20 +70,19 @@ const urls = {
     return null;
   }, params => Object.values(params).join()),
 
-  getFeedPostUrl: memoize(
-    ({ id, entityIdFor, entityNameFor }) => {
-      if (!id || !entityIdFor || !entityNameFor) {
-        return null;
-      }
+  getFeedPostUrl: memoize(({
+    id, entityIdFor, entityNameFor,
+  } = {}) => {
+    if (!id || !entityIdFor || !entityNameFor) {
+      return null;
+    }
 
-      if (entityNameFor.trim() === 'org') {
-        return `/communities/${entityIdFor}/${id}`;
-      }
+    if (entityNameFor.trim() === 'org') {
+      return `/communities/${entityIdFor}/${id}`;
+    }
 
-      return `/user/${entityIdFor}/${id}`;
-    },
-    params => Object.values(params).join(),
-  ),
+    return `/user/${entityIdFor}/${id}`;
+  }, params => Object.values(params).join()),
 
   getPostEditUrl(postId) {
     if (!postId) {
