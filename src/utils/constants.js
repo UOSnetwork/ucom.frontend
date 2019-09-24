@@ -1,3 +1,5 @@
+import { EventsIdsDictionary } from 'ucom.libs.common';
+
 const { Dictionary } = require('ucom-libs-wallet');
 const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
 const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
@@ -82,6 +84,7 @@ export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
 export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
 export const POST_TYPE_OFFER_ID = PostTypes.OFFER;
 export const POST_TYPE_REPOST_ID = PostTypes.REPOST;
+export const POST_TYPE_AUTOUPDATE_ID = 12;
 
 export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
 export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
@@ -99,3 +102,6 @@ export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.get
 
 export const TRANSACTION_PERMISSION_ACTIVE = 'active';
 export const TRANSACTION_PERMISSION_SOCIAL = 'social';
+
+export const EVENT_ID_USER_TRUSTS_YOU = EventsIdsDictionary.getUserTrustsYou();
+export const EVENT_ID_USER_UNTRUSTS_YOU = EventsIdsDictionary.getUserUntrustsYou();

@@ -1,0 +1,12 @@
+.container {
+  padding: 17px 20px;
+  box-shadow: 0px 0px 3px #DBE2E2;
+  background: #fff;
+}
+
+.label {
+  margin: 0 0 20px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: rgba(0,0,0,0.6);
+}

@@ -1,26 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import IconComment from '../../Icons/Comment';
-import Share from '../../Share';
-import { PostVoting } from '../../Voting';
+import PostFeedFooter from '../Post/PostFeedFooter';
 
 const Autoupdate = ({
-  label, commentsCount, postId, content,
+  label, commentsCount, postId, content, commentsContainerId,
 }) => (
   <div className={styles.autoupdate}>
-    <div className={styles.label}>{label}</div>
-    <div className={styles.content}>{content}</div>
-    <div className={styles.footer}>
-      <div className={styles.commentsCount}>
-        <IconComment />
-        {commentsCount}
-      </div>
-      <div className={styles.share}>
-        <Share postId={postId} />
-      </div>
-      <div className={styles.voting}>
-        <PostVoting postId={postId} />
+    <div className={styles.container}>
+      <div className={styles.label}>{label}</div>
+      <div className={styles.content}>{content}</div>
+      <div className={styles.footer}>
+        <PostFeedFooter
+          postId={postId}
+          commentsCount={commentsCount}
+          commentsContainerId={commentsContainerId}
+        />
       </div>
     </div>
   </div>
@@ -31,6 +26,7 @@ Autoupdate.propTypes = {
   content: PropTypes.node.isRequired,
   commentsCount: PropTypes.number,
   postId: PropTypes.number.isRequired,
+  commentsContainerId: PropTypes.number.isRequired,
 };
 
 Autoupdate.defaultProps = {
@@ -38,4 +34,6 @@ Autoupdate.defaultProps = {
   commentsCount: 0,
 };
 
+export * from './wrappers';
+export * from './Content';
 export default Autoupdate;

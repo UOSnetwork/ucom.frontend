@@ -1,0 +1,13 @@
+.trust .title {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.333;
+}
+
+.photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

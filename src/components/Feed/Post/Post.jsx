@@ -4,10 +4,11 @@ import React, { memo } from 'react';
 import Direct from './Direct';
 import Repost from './Repost';
 import Media from './Media';
-import { POST_TYPE_REPOST_ID, POST_TYPE_MEDIA_ID } from '../../../utils/posts';
+import { POST_TYPE_AUTOUPDATE_ID, POST_TYPE_REPOST_ID, POST_TYPE_MEDIA_ID } from '../../../utils';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import equalByProps from '../../../utils/equalByProps';
 import { selectPostById, selectUserById, selectOwner } from '../../../store/selectors';
+import { PostAutoupdate } from '../Autoupdate';
 
 const Post = ({
   commentsContainerId, id, feedTypeId, originEnabled, forUserId, forOrgId,
@@ -27,6 +28,9 @@ const Post = ({
   const owner = useSelector(selectOwner, equalByProps(['id']));
 
   switch (post.postTypeId) {
+    case POST_TYPE_AUTOUPDATE_ID:
+      return <PostAutoupdate postId={id} commentsContainerId={commentsContainerId} />;
+
     case POST_TYPE_REPOST_ID:
       return (
         <Repost
