@@ -230,6 +230,7 @@ export const UserWallet = memo(() => {
                 return ({
                   ...commonProps,
                   type: 'Transfer',
+                  // TODO: Fix for no avatar
                   avatarSrc: urls.getFileUrl(trx.user.avatarFilename),
                   title: `@${trx.user.accountName}`,
                   amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
