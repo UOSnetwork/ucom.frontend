@@ -17,9 +17,17 @@
   margin-top: 4px;
 }
 
-.emissionCard:hover {
+.emissionCard.disabled {
+  cursor: default;
+}
+
+.emissionCard:hover:not(.disabled) {
   transform: scale(1.03);
   z-index: 1;
+}
+
+.emissionCard.disabled .icon {
+  filter: grayscale(1);
 }
 
 .icon {

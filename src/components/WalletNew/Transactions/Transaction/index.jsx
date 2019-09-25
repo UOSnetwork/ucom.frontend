@@ -13,7 +13,7 @@ const Transaction = ({
     <Fragment>
       <div role="presentation" className={styles.transaction} onClick={() => setPopupVisible(true)}>
         <div className={styles.content}>
-          {avatarSrc ? (
+          {typeof avatarSrc === 'string' ? (
             <UserPick src={avatarSrc} size={40} />
           ) : (
             <div className={styles.icon}>{icon}</div>

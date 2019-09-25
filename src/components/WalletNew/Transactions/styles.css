@@ -1,3 +1,7 @@
+.transactions {
+  position: relative;
+}
+
 .section {
   margin: 0 0 33px;
 }
@@ -17,4 +21,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.emptyLabel {
+  position: absolute;
+  top: 115px;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 }

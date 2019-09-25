@@ -1,8 +1,10 @@
 import humps from 'lodash-humps';
 import { WalletApi } from 'ucom-libs-wallet';
 import Worker from '../worker';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { TRANSACTION_PERMISSION_SOCIAL } from '../utils';
 import api from '../api';
+import { getOwnerCredentialsOrShowAuthPopup } from './users';
+import { addErrorNotificationFromResponse, addSuccessNotification } from './notifications';
 
 export const setData = payload => ({ type: 'WALLET_SET_DATA', payload });
 
@@ -35,9 +37,6 @@ export const walletEditStake = (accountName, privateKey, netAmount, cpuAmount) =
 export const walletSendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => () =>
   Worker.sendTokens(accountNameFrom, privateKey, accountNameTo, amount, memo);
 
-export const walletGetEmission = (accountName, privateKey) => () =>
-  Worker.claimEmission(accountName, privateKey, TRANSACTION_PERMISSION_SOCIAL);
-
 export const walletGetAccount = accountName => async (dispatch) => {
   const data = await WalletApi.getAccountState(accountName);
 
@@ -55,4 +54,20 @@ export const getTransactions = (page, perPage, append = false) => async (dispatc
   }
 
   dispatch(setData({ transactions }));
+};
+
+export const getEmissionAndShowNotification = () => async (dispatch) => {
+  try {
+    const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+    if (!ownerCredentials) {
+      return;
+    }
+
+    await Worker.claimEmission(ownerCredentials.accountName, ownerCredentials.socialKey, TRANSACTION_PERMISSION_SOCIAL);
+    await dispatch(walletGetAccount(ownerCredentials.accountName));
+    dispatch(addSuccessNotification('Successfully get emission'));
+  } catch (err) {
+    dispatch(addErrorNotificationFromResponse(err));
+  }
 };

@@ -22,10 +22,6 @@ import {
   TRX_TYPE_VOTE_FOR_CALC,
 } from '../../utils/constants';
 import percent from '../../utils/percent';
-import { getSocialKey } from '../../utils/keys';
-import { authShowPopup } from '../../actions/auth';
-import { addErrorNotification, addSuccessNotification } from '../../actions/notifications';
-import { parseResponseError } from '../../utils/errors';
 
 const TRANSACTIONS_PER_PAGE = 50;
 
@@ -47,6 +43,7 @@ export const UserWallet = memo(() => {
   const wallet = useSelector(state => state.wallet, isEqual);
   const [activeTabId, setActiveTabId] = useState(TAB_WALLET_ID);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [emissionLoading, setEmissionLoading] = useState(false);
   const validTransactionsData = wallet.transactions.data.filter(i => transactionTypes.includes(i.trType));
   const transactionsGroups = groupBy(validTransactionsData, (trx) => {
@@ -54,11 +51,16 @@ export const UserWallet = memo(() => {
     date.setHours(0, 0, 0, 0);
     return date.getTime();
   });
+  const transactionsGroupsKeys = Object.keys(transactionsGroups);
   const tokenCards = [];
   let ramResource = null;
   let cpuTimeResource = null;
   let networkBandwithResource = null;
-  const emissionCards = [];
+  let emissionCards = [{
+    disabled: true,
+    amount: '0 UOS',
+    label: 'Your Emission',
+  }];
 
   if (wallet.tokens && wallet.tokens.active) {
     tokenCards.push({
@@ -117,7 +119,8 @@ export const UserWallet = memo(() => {
   }
 
   if (wallet.tokens) {
-    emissionCards.push({
+    emissionCards = [{
+      disabled: wallet.tokens.emission === 0,
       amount: `${formatNumber(wallet.tokens.emission)} UOS`,
       label: 'Your Emission',
       onClick: async () => {
@@ -125,34 +128,20 @@ export const UserWallet = memo(() => {
           return;
         }
 
-        const socialKey = getSocialKey();
-
-        if (!socialKey || !owner.accountName) {
-          dispatch(authShowPopup());
-          return;
-        }
-
         setEmissionLoading(true);
-
-        try {
-          await withLoader(dispatch(walletActions.walletGetEmission(owner.accountName, socialKey)));
-          await withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
-          dispatch(addSuccessNotification('Successfully get emission'));
-        } catch (err) {
-          const errors = parseResponseError(err);
-          dispatch(addErrorNotification(errors[0].message));
-        }
-
+        await dispatch(walletActions.getEmissionAndShowNotification());
         setEmissionLoading(false);
       },
-    });
+    }];
   }
 
   const getInitialData = async () => {
     setLoading(true);
+    setInitialLoading(true);
     await withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
     await withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE)));
     setLoading(false);
+    setInitialLoading(false);
   };
 
   const getNextTransactions = useCallback(async () => {
@@ -214,9 +203,12 @@ export const UserWallet = memo(() => {
       cpuTimeResource={cpuTimeResource}
       networkBandwithResource={networkBandwithResource}
       tokenCards={tokenCards}
+      sidebarBlocked={initialLoading || (!initialLoading && transactionsGroupsKeys.length === 0)}
       transactions={{
+        showEmptyLabel: !initialLoading && transactionsGroupsKeys.length === 0,
+        showPlaceholder: initialLoading,
         showLoader: wallet.transactions.metadata.hasMore,
-        sections: Object.keys(transactionsGroups).map(time => ({
+        sections: transactionsGroupsKeys.map(time => ({
           title: moment(+time).format('D MMMM'),
           list: transactionsGroups[time].map((trx) => {
             const commonProps = {
@@ -230,8 +222,7 @@ export const UserWallet = memo(() => {
                 return ({
                   ...commonProps,
                   type: 'Transfer',
-                  // TODO: Fix for no avatar
-                  avatarSrc: urls.getFileUrl(trx.user.avatarFilename),
+                  avatarSrc: urls.getFileUrl(trx.user.avatarFilename) || '',
                   title: `@${trx.user.accountName}`,
                   amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
                   message: trx.memo,

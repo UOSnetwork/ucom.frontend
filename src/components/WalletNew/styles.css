@@ -21,6 +21,11 @@
   padding: 46px 50px;
 }
 
+.inner.blocked {
+  overflow: hidden;
+  max-height: 100vh;
+}
+
 .side .inner  {
   max-width: 500px;
 }

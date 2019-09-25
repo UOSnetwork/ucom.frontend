@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
@@ -15,7 +16,7 @@ export const TAB_WALLET_ID = 1;
 export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
-  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose, onLoadMore,
+  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose, onLoadMore, sidebarBlocked,
 }) => {
   const mainInnerRef = useRef(null);
   const layoutRef = useRef(null);
@@ -58,7 +59,12 @@ const Wallet = ({
 
         <div className={styles.layout} ref={layoutRef}>
           <div className={styles.side}>
-            <div className={styles.inner}>
+            <div
+              className={classNames({
+                [styles.inner]: true,
+                [styles.blocked]: sidebarBlocked,
+              })}
+            >
               {emissionCards.length > 0 &&
                 <div className={styles.emissionCards}>
                   {emissionCards.map((props, index) => (
@@ -124,6 +130,7 @@ Wallet.propTypes = {
   networkBandwithResource: PropTypes.shape(Resource.propTypes),
   onClickClose: PropTypes.func,
   onLoadMore: PropTypes.func,
+  sidebarBlocked: PropTypes.bool,
 };
 
 Wallet.defaultProps = {
@@ -138,6 +145,7 @@ Wallet.defaultProps = {
   networkBandwithResource: Resource.defaultProps,
   onClickClose: undefined,
   onLoadMore: undefined,
+  sidebarBlocked: true,
 };
 
 export * from './wrappers';
