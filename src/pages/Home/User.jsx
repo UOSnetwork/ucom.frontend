@@ -5,7 +5,7 @@ import Footer from '../../components/Footer';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import { EntryListSectionUsersWrapper, EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
 import FeedUser from '../../components/Feed/FeedUser';
-import { FEED_TYPE_ID_USER_NEWS } from '../../utils/feed';
+import { FEED_TYPE_ID_USER_NEWS } from '../../utils';
 import { PostsGridWrapper } from '../../components/PostsGrid';
 import withLoader from '../../utils/withLoader';
 import * as mainPageUserActions from '../../actions/mainPageUser';

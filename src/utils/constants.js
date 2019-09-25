@@ -109,3 +109,10 @@ export const EVENT_ID_USER_UNTRUSTS_YOU = EventsIdsDictionary.getUserUntrustsYou
 export const FEED_EXCLUDE_FILTER_ID_ALL = 1;
 export const FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS = 2;
 export const FEED_EXCLUDE_FILTER_ID_UPDATES = 3;
+
+export const FEED_TYPE_ID_USER_NEWS = 1;
+export const FEED_TYPE_ID_USER_WALL = 2;
+export const FEED_TYPE_ID_ORGANIZATION = 3;
+export const FEED_TYPE_ID_TAG = 4;
+export const FEED_TYPE_ID_MAIN = 5;
+export const FEED_PER_PAGE = 10;

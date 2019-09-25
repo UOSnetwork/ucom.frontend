@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import React, { useEffect, memo, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { feedReset, feedGetUserPosts, feedSetExcludeFilterId } from '../../actions/feed';
-import { FEED_PER_PAGE, FEED_TYPE_ID_USER_NEWS, FEED_TYPE_ID_USER_WALL } from '../../utils/feed';
 import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
@@ -14,33 +13,10 @@ import {
   FEED_EXCLUDE_FILTER_ID_ALL,
   FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS,
   FEED_EXCLUDE_FILTER_ID_UPDATES,
-  POST_TYPE_MEDIA_ID,
-  POST_TYPE_DIRECT_ID,
-  POST_TYPE_OFFER_ID,
-  POST_TYPE_REPOST_ID,
-  POST_TYPE_AUTOUPDATE_ID,
+  FEED_PER_PAGE,
+  getFeedExcludePostTypeIdsByExcludeFilterId,
+  isFeedExcludeFilterIsEnabledByFeedTypeId,
 } from '../../utils';
-
-const getExcludePostTypeIdsByFilterId = (filterId) => {
-  switch (filterId) {
-    case FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS:
-      return [POST_TYPE_DIRECT_ID, POST_TYPE_OFFER_ID, POST_TYPE_REPOST_ID, POST_TYPE_AUTOUPDATE_ID];
-    case FEED_EXCLUDE_FILTER_ID_UPDATES:
-      return [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID, POST_TYPE_OFFER_ID, POST_TYPE_REPOST_ID];
-    default:
-      return [];
-  }
-};
-
-const filtersIsEnabledByFeedTypeId = (feedTypeId) => {
-  switch (feedTypeId) {
-    case FEED_TYPE_ID_USER_NEWS:
-    case FEED_TYPE_ID_USER_WALL:
-      return true;
-    default:
-      return false;
-  }
-};
 
 const FeedUser = (props) => {
   const dispatch = useDispatch();
@@ -55,7 +31,7 @@ const FeedUser = (props) => {
       organizationId: props.organizationId,
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
-      excludePostTypeIds: getExcludePostTypeIdsByFilterId(excludeFilterId),
+      excludePostTypeIds: getFeedExcludePostTypeIdsByExcludeFilterId(excludeFilterId),
     })));
   }, [props.feedTypeId, feed, props.userId, props.organizationId, props.tagIdentity]);
 
@@ -68,7 +44,7 @@ const FeedUser = (props) => {
       organizationId: props.organizationId,
       tagIdentity: props.tagIdentity,
       userIdentity: props.userId,
-      excludePostTypeIds: getExcludePostTypeIdsByFilterId(feed.excludeFilterId),
+      excludePostTypeIds: getFeedExcludePostTypeIdsByExcludeFilterId(feed.excludeFilterId),
     })));
   }, [props.feedTypeId, feed, props.userId, props.organizationId, props.tagIdentity]);
 
@@ -77,15 +53,17 @@ const FeedUser = (props) => {
     loadInitial(filterId);
   };
 
+  const reset = () => {
+    dispatch(feedReset());
+    dispatch(commentsResetContainerDataById({
+      containerId: COMMENTS_CONTAINER_ID_FEED_POST,
+    }));
+  };
+
   useEffect(() => {
     loadInitial();
 
-    return () => {
-      dispatch(feedReset());
-      dispatch(commentsResetContainerDataById({
-        containerId: COMMENTS_CONTAINER_ID_FEED_POST,
-      }));
-    };
+    return reset;
   }, [props.userId, props.organizationId, props.tagIdentity]);
 
   return (
@@ -102,7 +80,7 @@ const FeedUser = (props) => {
       originEnabled={props.originEnabled}
       forUserId={props.userId}
       forOrgId={props.organizationId}
-      filters={filtersIsEnabledByFeedTypeId(props.feedTypeId) ? {
+      filters={isFeedExcludeFilterIsEnabledByFeedTypeId(props.feedTypeId) ? {
         items: [{
           title: 'All',
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_ALL,

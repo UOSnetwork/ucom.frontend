@@ -8,7 +8,7 @@ import { selectOwner, selectOrgById } from '../../store/selectors';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import urls from '../../utils/urls';
 import FeedUser from '../../components/Feed/FeedUser';
-import { FEED_TYPE_ID_ORGANIZATION } from '../../utils/feed';
+import { FEED_TYPE_ID_ORGANIZATION } from '../../utils';
 import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryLocation from '../../components/EntryLocation';
 import EntryCreatedAt from '../../components/EntryCreatedAt';

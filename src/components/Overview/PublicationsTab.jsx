@@ -7,7 +7,7 @@ import OrganizationList from '../Organization/OrganizationList';
 // import TagList from './../Tag/TagList';
 import * as overviewUtils from '../../utils/overview';
 import * as feedActions from '../../actions/feed';
-import { FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_PER_PAGE } from '../../utils';
 import loader from '../../utils/loader';
 import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
 

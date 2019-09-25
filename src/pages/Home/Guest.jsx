@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, Fragment } from 'react';
 import Tabs, { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
 import FeedView from '../../components/Feed/FeedView';
-import { FEED_TYPE_ID_MAIN } from '../../utils/feed';
+import { FEED_TYPE_ID_MAIN } from '../../utils';
 import { addErrorNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
 import { EntryListSectionUsersWrapper, EntryListSectionOrgsWrapper, EntryListSectionTagsWrapper } from '../../components/EntryListSection';

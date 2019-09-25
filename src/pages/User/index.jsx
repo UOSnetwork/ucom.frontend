@@ -9,7 +9,7 @@ import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
 import { validUrl } from '../../utils/url';
 import FeedUser from '../../components/Feed/FeedUser';
-import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE, POST_TYPE_MEDIA_ID } from '../../utils';
 import { feedGetUserPosts } from '../../actions/feed';
 import NotFoundPage from '../NotFoundPage';
 import Footer from '../../components/Footer';
@@ -27,7 +27,6 @@ import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
-import { POST_TYPE_MEDIA_ID } from '../../utils/constants';
 import { getContentMetaTags } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 

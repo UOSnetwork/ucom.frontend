@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import LayoutBase from '../components/Layout/LayoutBase';
 import FeedUser from '../components/Feed/FeedUser';
-import { FEED_TYPE_ID_TAG } from '../utils/feed';
+import { FEED_TYPE_ID_TAG } from '../utils';
 import api from '../api';
 import { addTags } from '../actions/tags';
 import { existHashTag } from '../utils/text';

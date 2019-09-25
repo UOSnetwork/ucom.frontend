@@ -1,13 +1,12 @@
 import * as overviewUtils from '../utils/overview';
 import { addUsers } from './users';
 import { addOrganizations } from './organizations';
-
 import {
   FEED_TYPE_ID_USER_NEWS,
   FEED_TYPE_ID_USER_WALL,
   FEED_TYPE_ID_ORGANIZATION,
   FEED_TYPE_ID_TAG,
-} from '../utils/feed';
+} from '../utils';
 import { COMMENTS_INITIAL_COUNT_USER_WALL_FEED, COMMENTS_CONTAINER_ID_FEED_POST } from '../utils/comments';
 import graphql from '../api/graphql';
 import { addPosts, createDirectPost } from './posts';

@@ -6,7 +6,7 @@ import TagsList from './TagsList';
 import * as overviewUtils from '../../utils/overview';
 import * as feedActions from '../../actions/tagsFeed';
 import loader from '../../utils/loader';
-import { FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_PER_PAGE } from '../../utils';
 // import { feedGetSide } from '../../actions/feed';
 
 // const LIST_LIMIT = 5;

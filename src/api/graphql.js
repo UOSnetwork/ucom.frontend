@@ -5,7 +5,7 @@ import snakes from '../utils/snakes';
 import { getBackendConfig } from '../utils/config';
 import { getToken } from '../utils/token';
 import { COMMENTS_PER_PAGE } from '../utils/comments';
-import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
+import { FEED_PER_PAGE } from '../utils';
 import {
   LIST_ORDER_BY_RATE,
   LIST_PER_PAGE,
@@ -637,7 +637,7 @@ const api = {
 
   async getOverviewSide({
     page = 1,
-    perPage = OVERVIEW_SIDE_PER_PAGE,
+    perPage = 50,
     filter,
     tab,
     side,
