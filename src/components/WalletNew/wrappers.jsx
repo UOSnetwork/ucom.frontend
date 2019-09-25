@@ -138,8 +138,10 @@ export const UserWallet = memo(() => {
   const getInitialData = async () => {
     setLoading(true);
     setInitialLoading(true);
-    await withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
-    await withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE)));
+    await Promise.all([
+      withLoader(dispatch(walletActions.walletGetAccount(owner.accountName))),
+      withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE))),
+    ]);
     setLoading(false);
     setInitialLoading(false);
   };
