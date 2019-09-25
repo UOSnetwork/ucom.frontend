@@ -335,13 +335,21 @@ const api = {
     perPage = FEED_PER_PAGE,
     commentsPage = 1,
     commentsPerPage = COMMENTS_PER_PAGE,
+    excludePostTypeIds = [],
   }) {
-    const query = GraphQLSchema.getUserNewsFeed(
-      page,
-      perPage,
-      commentsPage,
-      commentsPerPage,
-    );
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      GraphQLSchema.getUserNewsFeedQueryPart({
+        filters: {
+          exclude_post_type_ids: excludePostTypeIds,
+        },
+        page,
+        per_page: perPage,
+        comments: {
+          page: commentsPage,
+          per_page: commentsPerPage,
+        },
+      }),
+    ]);
 
     try {
       const data = await request({ query });

@@ -3,10 +3,10 @@ import { addUsers } from './users';
 import { addOrganizations } from './organizations';
 
 import {
-  USER_NEWS_FEED_ID,
-  USER_WALL_FEED_ID,
-  ORGANIZATION_FEED_ID,
-  TAG_FEED_ID,
+  FEED_TYPE_ID_USER_NEWS,
+  FEED_TYPE_ID_USER_WALL,
+  FEED_TYPE_ID_ORGANIZATION,
+  FEED_TYPE_ID_TAG,
 } from '../utils/feed';
 import { COMMENTS_INITIAL_COUNT_USER_WALL_FEED, COMMENTS_CONTAINER_ID_FEED_POST } from '../utils/comments';
 import graphql from '../api/graphql';
@@ -65,10 +65,10 @@ export const feedGetUserPosts = ({
   excludePostTypeIds,
 }) => async (dispatch) => {
   const getFeedFunctions = {
-    [USER_NEWS_FEED_ID]: graphql.getUserNewsFeed,
-    [USER_WALL_FEED_ID]: graphql.getUserWallFeed,
-    [ORGANIZATION_FEED_ID]: graphql.getOrganizationWallFeed,
-    [TAG_FEED_ID]: graphql.getTagWallFeed,
+    [FEED_TYPE_ID_USER_NEWS]: graphql.getUserNewsFeed,
+    [FEED_TYPE_ID_USER_WALL]: graphql.getUserWallFeed,
+    [FEED_TYPE_ID_ORGANIZATION]: graphql.getOrganizationWallFeed,
+    [FEED_TYPE_ID_TAG]: graphql.getTagWallFeed,
   };
 
   dispatch(feedSetLoading(true));

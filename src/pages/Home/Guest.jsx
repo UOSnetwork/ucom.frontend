@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, Fragment } from 'react';
 import Tabs, { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
 import FeedView from '../../components/Feed/FeedView';
-import { MAIN_FEED_ID } from '../../utils/feed';
+import { FEED_TYPE_ID_MAIN } from '../../utils/feed';
 import { addErrorNotification } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
 import { EntryListSectionUsersWrapper, EntryListSectionOrgsWrapper, EntryListSectionTagsWrapper } from '../../components/EntryListSection';
@@ -115,7 +115,7 @@ const Guest = () => {
           <div className="grid grid_content">
             <div className="grid__item grid__item_main">
               <FeedView
-                feedTypeId={MAIN_FEED_ID}
+                feedTypeId={FEED_TYPE_ID_MAIN}
                 postIds={state.feed.postsIds}
                 loading={state.feed.loading}
                 hasMore={state.feed.hasMore}

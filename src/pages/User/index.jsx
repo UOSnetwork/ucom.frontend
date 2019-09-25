@@ -9,7 +9,7 @@ import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
 import { validUrl } from '../../utils/url';
 import FeedUser from '../../components/Feed/FeedUser';
-import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE } from '../../utils/feed';
 import { feedGetUserPosts } from '../../actions/feed';
 import NotFoundPage from '../NotFoundPage';
 import Footer from '../../components/Footer';
@@ -168,7 +168,7 @@ const UserPage = (props) => {
           {user && user.id &&
             <FeedUser
               userId={user.id}
-              feedTypeId={USER_WALL_FEED_ID}
+              feedTypeId={FEED_TYPE_ID_USER_WALL}
               originEnabled={false}
             />
           }
@@ -187,7 +187,7 @@ export const getUserPageData = async (store, params) => {
   const userPromise = store.dispatch(userPageActions.getPageData(params.userId));
   const postPromise = params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null;
   const feedPromise = store.dispatch(feedGetUserPosts({
-    feedTypeId: USER_WALL_FEED_ID,
+    feedTypeId: FEED_TYPE_ID_USER_WALL,
     page: 1,
     perPage: FEED_PER_PAGE,
     userId: params.userId,

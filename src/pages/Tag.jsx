@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import LayoutBase from '../components/Layout/LayoutBase';
 import FeedUser from '../components/Feed/FeedUser';
-import { TAG_FEED_ID } from '../utils/feed';
+import { FEED_TYPE_ID_TAG } from '../utils/feed';
 import api from '../api';
 import { addTags } from '../actions/tags';
 import { existHashTag } from '../utils/text';
@@ -144,7 +144,7 @@ const Tag = (props) => {
         <div className="layout__main">
           {tagTitle &&
             <FeedUser
-              feedTypeId={TAG_FEED_ID}
+              feedTypeId={FEED_TYPE_ID_TAG}
               userId={props.user.data.id}
               tagIdentity={tagTitle}
               feedInputInitialText={tagTitle}

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, memo, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { feedReset, feedGetUserPosts, feedSetExcludeFilterId } from '../../actions/feed';
-import { FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_PER_PAGE, FEED_TYPE_ID_USER_NEWS, FEED_TYPE_ID_USER_WALL } from '../../utils/feed';
 import FeedView from './FeedView';
 import { commentsResetContainerDataById } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
@@ -29,6 +29,16 @@ const getExcludePostTypeIdsByFilterId = (filterId) => {
       return [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID, POST_TYPE_OFFER_ID, POST_TYPE_REPOST_ID];
     default:
       return [];
+  }
+};
+
+const filtersIsEnabledByFeedTypeId = (feedTypeId) => {
+  switch (feedTypeId) {
+    case FEED_TYPE_ID_USER_NEWS:
+    case FEED_TYPE_ID_USER_WALL:
+      return true;
+    default:
+      return false;
   }
 };
 
@@ -92,7 +102,7 @@ const FeedUser = (props) => {
       originEnabled={props.originEnabled}
       forUserId={props.userId}
       forOrgId={props.organizationId}
-      filters={{
+      filters={filtersIsEnabledByFeedTypeId(props.feedTypeId) ? {
         items: [{
           title: 'All',
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_ALL,
@@ -106,7 +116,7 @@ const FeedUser = (props) => {
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_UPDATES,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_UPDATES),
         }],
-      }}
+      } : undefined}
     />
   );
 };
