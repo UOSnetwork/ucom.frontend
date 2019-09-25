@@ -5,38 +5,30 @@ import classNames from 'classnames';
 import styles from './styles.css';
 import UserPick from '../UserPick';
 import { UserFollowButton, OrgFollowButton } from '../FollowButton';
-import { formatScaledImportance, formatRate } from '../../utils/rate';
 
-const EntrySubHeader = props => (
+const EntrySubHeader = ({
+  square, name, url, rate, userId, orgId, showFollow, avatarSrc,
+}) => (
   <div
-    className={classNames(
-      `${styles.subHeader}`,
-      { [styles.subHeaderSquare]: props.organization },
-    )}
+    className={classNames({
+      [styles.subHeader]: true,
+      [styles.subHeaderSquare]: square,
+    })}
   >
     <div className={styles.userPick}>
-      <UserPick
-        organization={props.organization}
-        shadow
-        stretch
-        url={props.userUrl}
-        alt={props.userName}
-        src={props.userAvatarUrl}
-      />
+      <UserPick shadow stretch organization={!!orgId} url={url} alt={name} src={avatarSrc} />
     </div>
     <div className={styles.name}>
-      <Link className="link red-hover" to={props.userUrl}>{props.userName}</Link>
+      <Link className="link red-hover" to={url}>{name}</Link>
     </div>
-    <div className={styles.rate}>
-      {props.organization ? formatRate(props.userRate, true) : formatScaledImportance(props.userRate)}
-    </div>
+    <div className={styles.rate}>{rate}</div>
 
-    {props.showFollow &&
+    {showFollow && (userId || orgId) &&
       <div className={styles.followLink}>
-        {props.organization ? (
-          <OrgFollowButton asLink orgId={+props.userId} />
+        {orgId ? (
+          <OrgFollowButton asLink orgId={orgId} />
         ) : (
-          <UserFollowButton asLink userId={props.userId} />
+          <UserFollowButton asLink userId={userId} />
         )}
       </div>
     }
@@ -44,20 +36,25 @@ const EntrySubHeader = props => (
 );
 
 EntrySubHeader.propTypes = {
-  userUrl: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
-  userAvatarUrl: PropTypes.string,
-  userId: PropTypes.number.isRequired,
-  userRate: PropTypes.number,
+  square: PropTypes.bool,
+  avatarSrc: PropTypes.string,
+  name: PropTypes.string,
+  url: PropTypes.string,
+  rate: PropTypes.string,
+  userId: PropTypes.number,
+  orgId: PropTypes.number,
   showFollow: PropTypes.bool,
-  organization: PropTypes.bool,
 };
 
 EntrySubHeader.defaultProps = {
-  userRate: 0,
-  showFollow: false,
-  organization: false,
-  userAvatarUrl: undefined,
+  square: false,
+  avatarSrc: undefined,
+  name: undefined,
+  url: undefined,
+  rate: undefined,
+  userId: undefined,
+  orgId: undefined,
+  showFollow: true,
 };
 
 export * from './wrappers';

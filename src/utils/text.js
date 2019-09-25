@@ -2,6 +2,7 @@ import { memoize } from 'lodash';
 import sanitizeHtml from 'sanitize-html';
 import urls from './urls';
 import { allowedVideoHosts } from '../../package.json';
+import Navigator from './navigator';
 
 export const URL_REGEX = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 
@@ -139,7 +140,18 @@ export const copyToClipboard = (str) => {
   const el = document.createElement('textarea');
   el.value = str;
   document.body.appendChild(el);
-  el.select();
+
+  if (Navigator.isIos()) {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    el.setSelectionRange(0, 999999);
+  } else {
+    el.select();
+  }
+
   document.execCommand('copy');
   document.body.removeChild(el);
 };

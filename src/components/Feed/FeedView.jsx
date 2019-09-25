@@ -3,6 +3,7 @@ import React from 'react';
 import FeedInput from './Input';
 import Post from './Post/Post';
 import LoadMore from './LoadMore';
+import Filters from './Filters';
 
 const FeedView = props => (
   <div className={`feed ${props.isMobile ? 'feed-mobile' : ''}`}>
@@ -14,6 +15,8 @@ const FeedView = props => (
         onSubmit={props.callbackOnSubmit}
       />
     }
+
+    <Filters {...props.filters} />
 
     {props.postIds.length > 0 &&
       <div className="feed__list">
@@ -61,6 +64,7 @@ FeedView.propTypes = {
   forUserId: PropTypes.number,
   forOrgId: PropTypes.number,
   callbackOnSubmit: PropTypes.func,
+  filters: PropTypes.shape(Filters.propTypes),
 };
 
 FeedView.defaultProps = {
@@ -73,6 +77,7 @@ FeedView.defaultProps = {
   forUserId: undefined,
   forOrgId: undefined,
   callbackOnSubmit: undefined,
+  filters: Filters.defaultProps,
 };
 
 export default FeedView;

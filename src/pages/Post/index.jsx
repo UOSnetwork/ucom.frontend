@@ -1,15 +1,15 @@
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import ButtonEdit from '../../components/ButtonEdit';
 import PostContent from './Content';
-import { PostVotingWrapper } from '../../components/Voting';
+import { PostVoting } from '../../components/Voting';
 import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';
 import Footer from '../../components/Footer';
-import { UserSubHeader } from '../../components/EntrySubHeader';
+import { UserSubHeader, OrgSubHeader } from '../../components/EntrySubHeader';
 import { postsFetch } from '../../actions/posts';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { commentsResetContainerDataByEntryId } from '../../actions/comments';
@@ -51,8 +51,14 @@ const Post = ({ postId }) => {
     <LayoutBase>
       <Content>
         <div className={styles.wrapper}>
-          {post && post.user &&
-            <UserSubHeader userId={post.user.id} />
+          {post &&
+            <Fragment>
+              {post.organizationId ? (
+                <OrgSubHeader orgId={post.organizationId} />
+              ) : (
+                <UserSubHeader userId={post.userId} />
+              )}
+            </Fragment>
           }
 
           {post &&
@@ -76,7 +82,7 @@ const Post = ({ postId }) => {
                         </div>
                       </div>
                       <div className={styles.rating}>
-                        <PostVotingWrapper postId={+postId} />
+                        <PostVoting postId={+postId} />
                       </div>
                     </div>
                   </div>
@@ -97,8 +103,6 @@ const Post = ({ postId }) => {
 
                     <div className={styles.stats}>
                       <Share
-                        socialEnable
-                        repostEnable={post.myselfData && post.myselfData.repostAvailable}
                         postId={postId}
                         link={urls.getPostUrl({ id: postId, postTypeId: POST_TYPE_MEDIA_ID })}
                       />

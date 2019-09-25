@@ -43,9 +43,8 @@ const Media = ({
       />
 
       <PostFeedFooter
-        post={post}
+        postId={post.id}
         commentsCount={post.commentsCount}
-        postTypeId={post.postTypeId}
         commentsContainerId={commentsContainerId}
       />
     </div>

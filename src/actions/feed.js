@@ -1,15 +1,13 @@
 import * as overviewUtils from '../utils/overview';
 import { addUsers } from './users';
 import { addOrganizations } from './organizations';
-
 import {
-  USER_NEWS_FEED_ID,
-  USER_WALL_FEED_ID,
-  ORGANIZATION_FEED_ID,
-  TAG_FEED_ID,
-} from '../utils/feed';
+  FEED_TYPE_ID_USER_NEWS,
+  FEED_TYPE_ID_USER_WALL,
+  FEED_TYPE_ID_ORGANIZATION,
+  FEED_TYPE_ID_TAG,
+} from '../utils';
 import { COMMENTS_INITIAL_COUNT_USER_WALL_FEED, COMMENTS_CONTAINER_ID_FEED_POST } from '../utils/comments';
-// import api from '../api';
 import graphql from '../api/graphql';
 import { addPosts, createDirectPost } from './posts';
 import { commentsAddContainerData } from './comments';
@@ -23,6 +21,7 @@ export const feedAppendPostIds = payload => ({ type: 'POSTS_FEED_APPEND_POST_IDS
 export const feedSetSideUsers = payload => ({ type: 'POSTS_FEED_SET_SIDE_USERS', payload });
 export const feedSetSideOrganizations = payload => ({ type: 'POSTS_FEED_SET_SIDE_ORGANIZATIONS', payload });
 export const feedSetSideTags = payload => ({ type: 'POSTS_FEED_SET_SIDE_TAGS', payload });
+export const feedSetExcludeFilterId = payload => ({ type: 'POSTS_FEED_SET_EXCLUDE_FILTER_ID', payload });
 
 export const addPostsAndComments = (posts = []) => (dispatch) => {
   posts.forEach((post) => {
@@ -46,7 +45,11 @@ export const parseFeedData = ({
   metadata,
 }) => (dispatch) => {
   dispatch(addPostsAndComments(posts));
-  dispatch(feedAppendPostIds(posts.map(i => i.id)));
+  if (metadata.page > 1) {
+    dispatch(feedAppendPostIds(posts.map(i => i.id)));
+  } else {
+    dispatch(feedSetPostIds(posts.map(i => i.id)));
+  }
   dispatch(feedSetMetadata(metadata));
 };
 
@@ -58,12 +61,13 @@ export const feedGetUserPosts = ({
   organizationId,
   tagIdentity,
   userIdentity,
+  excludePostTypeIds,
 }) => async (dispatch) => {
   const getFeedFunctions = {
-    [USER_NEWS_FEED_ID]: graphql.getUserNewsFeed,
-    [USER_WALL_FEED_ID]: graphql.getUserWallFeed,
-    [ORGANIZATION_FEED_ID]: graphql.getOrganizationWallFeed,
-    [TAG_FEED_ID]: graphql.getTagWallFeed,
+    [FEED_TYPE_ID_USER_NEWS]: graphql.getUserNewsFeed,
+    [FEED_TYPE_ID_USER_WALL]: graphql.getUserWallFeed,
+    [FEED_TYPE_ID_ORGANIZATION]: graphql.getOrganizationWallFeed,
+    [FEED_TYPE_ID_TAG]: graphql.getTagWallFeed,
   };
 
   dispatch(feedSetLoading(true));
@@ -77,6 +81,7 @@ export const feedGetUserPosts = ({
       tagIdentity,
       userIdentity,
       commentsPerPage: COMMENTS_INITIAL_COUNT_USER_WALL_FEED,
+      excludePostTypeIds,
     });
     dispatch(parseFeedData({
       posts: data.data,

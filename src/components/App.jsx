@@ -25,6 +25,7 @@ import Loader from '../components/Loader';
 import urls from '../utils/urls';
 import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
+import withLoader from '../utils/withLoader';
 import * as mediaQueryActions from '../actions/mediaQuery';
 import { UserWallet } from '../components/WalletNew';
 
@@ -41,7 +42,7 @@ const App = () => {
     }
 
     logoutIfNeedBindSocialKey();
-    dispatch(fetchMyself());
+    withLoader(dispatch(fetchMyself()));
     dispatch(initNotificationsListeners());
     dispatch(mediaQueryActions.init());
 

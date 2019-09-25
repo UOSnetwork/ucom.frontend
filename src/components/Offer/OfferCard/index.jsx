@@ -11,7 +11,8 @@ import Countdown from '../../Countdown';
 import Followers from '../../Followers';
 import Popup, { Content } from '../../Popup';
 import UserListAirdrop from '../../User/UsersListAirdrop';
-import { mapUserDataToFollowersProps } from '../../../utils/user';
+import urls from '../../../utils/urls';
+import { getUserName } from '../../../utils';
 import { authShowPopup } from '../../../actions/auth';
 
 const { AirdropStatuses } = require('ucom.libs.common').Airdrop.Dictionary;
@@ -129,7 +130,15 @@ const OfferCard = (props) => {
             <Followers
               colorLight
               onClick={() => setPopupVisible(true)}
-              users={(props.users).map(mapUserDataToFollowersProps)}
+              users={(props.users).map(user => ({
+                id: user.id,
+                follow: true,
+                avatarSrc: urls.getFileUrl(user.avatarFilename),
+                url: urls.getUserUrl(user.id),
+                title: getUserName(user),
+                nickname: user.accountName,
+                scaledImportance: user.scaledImportance,
+              }))}
               title="Participants"
               count={+props.count}
             />

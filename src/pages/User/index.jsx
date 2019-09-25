@@ -8,8 +8,8 @@ import LayoutBase from '../../components/Layout/LayoutBase';
 import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
 import { validUrl } from '../../utils/url';
-import Feed from '../../components/Feed/FeedUser';
-import { USER_WALL_FEED_ID, FEED_PER_PAGE } from '../../utils/feed';
+import FeedUser from '../../components/Feed/FeedUser';
+import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE, POST_TYPE_MEDIA_ID } from '../../utils';
 import { feedGetUserPosts } from '../../actions/feed';
 import NotFoundPage from '../NotFoundPage';
 import Footer from '../../components/Footer';
@@ -18,18 +18,15 @@ import EntryCreatedAt from '../../components/EntryCreatedAt';
 import EntryContacts from '../../components/EntryContacts';
 import EntryAbout from '../../components/EntryAbout';
 import { EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
-import Trust from '../../components/Trust';
+import { UserTrust } from '../../components/Trust';
 import { getUserName, userIsOwner } from '../../utils/user';
-import { authShowPopup } from '../../actions/auth';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
-import { getSocialKey } from '../../utils/keys';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
 import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
-import { POST_TYPE_MEDIA_ID } from '../../utils/constants';
 import { getContentMetaTags } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 
@@ -76,26 +73,6 @@ const UserPage = (props) => {
   const orgsPopupOnChangePage = async (page) => {
     try {
       await withLoader(dispatch(userPageActions.getOrgsPopup(userIdentity, page)));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
-    }
-  };
-
-  const submitTrust = async (isTrust) => {
-    try {
-      const socialKey = getSocialKey();
-
-      if (!owner.id || !socialKey) {
-        dispatch(authShowPopup());
-        return;
-      }
-
-      await withLoader(dispatch(userPageActions.submitTrust(userIdentity, isTrust, {
-        socialKey,
-        userId: user.id,
-        userAccountName: user.accountName,
-        ownerAccountName: owner.accountName,
-      })));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -179,14 +156,7 @@ const UserPage = (props) => {
           }
 
           {user && !userIsOwner(user, owner) &&
-            <Trust
-              loading={state.trustLoading}
-              trusted={user && user.myselfData && user.myselfData.trust}
-              userName={getUserName(user)}
-              userAvtarUrl={urls.getFileUrl(user.avatarFilename)}
-              onClickTrust={() => submitTrust(true)}
-              onClickUntrust={() => submitTrust(false)}
-            />
+            <UserTrust userId={user.id} onSuccess={() => dispatch(userPageActions.getTrustedBy(user.id))} />
           }
         </div>
         <div className="layout__main">
@@ -195,9 +165,9 @@ const UserPage = (props) => {
           }
 
           {user && user.id &&
-            <Feed
+            <FeedUser
               userId={user.id}
-              feedTypeId={USER_WALL_FEED_ID}
+              feedTypeId={FEED_TYPE_ID_USER_WALL}
               originEnabled={false}
             />
           }
@@ -216,7 +186,7 @@ export const getUserPageData = async (store, params) => {
   const userPromise = store.dispatch(userPageActions.getPageData(params.userId));
   const postPromise = params.postId ? store.dispatch(postsFetch({ postId: params.postId })) : null;
   const feedPromise = store.dispatch(feedGetUserPosts({
-    feedTypeId: USER_WALL_FEED_ID,
+    feedTypeId: FEED_TYPE_ID_USER_WALL,
     page: 1,
     perPage: FEED_PER_PAGE,
     userId: params.userId,

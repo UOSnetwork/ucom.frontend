@@ -45,6 +45,7 @@ const PostPopup = ({ history, match }) => {
           id={post.id}
           postTypeId={post.postTypeId}
           commentsContainerId={COMMENTS_CONTAINER_ID_POST}
+          headerColor="#fff"
         />
       </ModalContent>
     </Popup>

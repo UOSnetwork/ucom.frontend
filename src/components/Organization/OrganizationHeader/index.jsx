@@ -12,8 +12,7 @@ import ButtonEdit from '../../ButtonEdit';
 import Avatar from '../../EntryHeader/Avatar';
 import { formatRate } from '../../../utils/rate';
 import Menu from '../../EntryHeader/Menu';
-import { getUserName } from '../../../utils/user';
-import EntrySubHeader from '../../EntrySubHeader';
+import { UserSubHeader } from '../../EntrySubHeader';
 import { sanitizeText } from '../../../utils/text';
 import { entityHasCover, entityGetCoverUrl } from '../../../utils/entityImages';
 import * as selectors from '../../../store/selectors';
@@ -27,17 +26,9 @@ const OrganizationHeader = (props) => {
   }
 
   return (
-    // TOOD: Add component EntrySubHeader/Wrapper
     <div className={subHeaderStyles.wrapper}>
       {organization.user &&
-        <EntrySubHeader
-          userUrl={urls.getUserUrl(organization.user.id)}
-          userName={getUserName(organization.user)}
-          userAvatarUrl={urls.getFileUrl(organization.user.avatarFilename)}
-          userId={+organization.user.id}
-          userRate={organization.user.scaledImportance}
-          showFollow={!userIsAdmin(owner, organization)}
-        />
+        <UserSubHeader userId={organization.user.id} />
       }
 
 

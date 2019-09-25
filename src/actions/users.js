@@ -1,17 +1,16 @@
 import { isNull, isEqual } from 'lodash';
 import api from '../api';
-import { getToken, removeToken } from '../utils/token';
-import loader from '../utils/loader';
 import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
 import { walletGetAccount } from './wallet';
-import { getSocialKey } from '../utils/keys';
-import { USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
-// import { enableGtm } from '../utils/gtm';
 import { getUserById, getUsersByIds } from '../store/users';
 import Worker from '../worker';
+import { getSocialKey, getToken, removeToken, USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils';
+import { selectOwner } from '../store';
+import { authShowPopup } from './auth';
+import { addErrorNotificationFromResponse } from './notifications';
 
 export const addUsers = (data = []) => (dispatch) => {
   let users = [];
@@ -23,15 +22,14 @@ export const addUsers = (data = []) => (dispatch) => {
       delete user.followedBy;
     }
 
-    // TODO: Remove when backend remove this field from response
     if (isNull(user.iFollow)) {
       delete user.iFollow;
     }
 
-    // TODO: Remove when backend remove this field from response
     if (isNull(user.myselfData)) {
       delete user.myselfData;
     }
+    // End remove
 
     if (user.followedBy) {
       users = users.concat(user.followedBy);
@@ -67,7 +65,6 @@ export const fetchMyself = () => async (dispatch) => {
   }
   let data;
   dispatch(setUserLoading(true));
-  loader.start();
 
   try {
     data = await api.getMyself(token);
@@ -76,18 +73,12 @@ export const fetchMyself = () => async (dispatch) => {
     dispatch(setUser(data));
     dispatch(siteNotificationsSetUnreadAmount(data.unreadMessagesCount));
     dispatch(walletGetAccount(data.accountName));
-
-    // TODO: Сделать disable
-    // if (process.env.NODE_ENV === 'production' && data.isTrackingAllowed) {
-    //   enableGtm();
-    // }
   } catch (e) {
     console.error(e);
     removeToken();
   }
 
   dispatch(setUserLoading(false));
-  loader.done();
 
   return data;
 };
@@ -100,9 +91,7 @@ export const fetchUser = userIdentity => async (dispatch) => {
   return data;
 };
 
-export const fetchUserPageData = ({
-  userIdentity,
-}) => async (dispatch) => {
+export const fetchUserPageData = ({ userIdentity }) => async (dispatch) => {
   const data = await graphql.getUserPageData({
     userIdentity,
   });
@@ -115,16 +104,10 @@ export const fetchUserPageData = ({
 };
 
 export const fetchUserTrustedBy = ({
-  userIdentity,
-  orderBy,
-  perPage,
-  page,
+  userIdentity, orderBy, perPage, page,
 }) => async (dispatch) => {
   const data = await graphql.getUserTrustedBy({
-    userIdentity,
-    orderBy,
-    perPage,
-    page,
+    userIdentity, orderBy, perPage, page,
   });
 
   dispatch(addUsers(data.data));
@@ -133,16 +116,10 @@ export const fetchUserTrustedBy = ({
 };
 
 export const fetchUserFollowsOrganizations = ({
-  userIdentity,
-  orderBy,
-  perPage,
-  page,
+  userIdentity, orderBy, perPage, page,
 }) => async (dispatch) => {
   const data = await graphql.getUserFollowsOrganizations({
-    userIdentity,
-    orderBy,
-    perPage,
-    page,
+    userIdentity, orderBy, perPage, page,
   });
 
   dispatch(addOrganizations(data.data));
@@ -181,18 +158,10 @@ export const updateUser = userData => async (dispatch) => {
 };
 
 export const getManyUsersAirdrop = ({
-  airdropFilter,
-  orderBy,
-  page,
-  perPage,
-  isMyself,
+  airdropFilter, orderBy, page, perPage, isMyself,
 }) => async (dispatch) => {
   const data = await graphql.getManyUsersAirdrop({
-    airdropFilter,
-    orderBy,
-    page,
-    perPage,
-    isMyself,
+    airdropFilter, orderBy, page, perPage, isMyself,
   });
 
   dispatch(addUsers([data]));
@@ -200,46 +169,64 @@ export const getManyUsersAirdrop = ({
   return data;
 };
 
-export const trustUser = ({
-  userId,
-  userAccountName,
-  ownerAccountName,
-  socialKey,
-}) => async (dispatch) => {
-  await api.trustUser(
-    ownerAccountName,
-    userAccountName,
-    userId,
-    socialKey,
-  );
+export const getOwnerCredentialsOrShowAuthPopup = () => (dispatch, getState) => {
+  const state = getState();
+  const socialKey = getSocialKey();
+  const owner = selectOwner(state);
 
-  dispatch({
-    type: 'USERS_SET_TRUST',
-    payload: {
-      userId,
-      trust: true,
-    },
-  });
+  if (!owner || !owner.id || !owner.accountName || !socialKey) {
+    dispatch(authShowPopup());
+    return null;
+  }
+
+  return {
+    socialKey,
+    id: owner.id,
+    accountName: owner.accountName,
+  };
 };
 
-export const untrustUser = ({
-  userId,
-  userAccountName,
-  ownerAccountName,
-  socialKey,
-}) => async (dispatch) => {
-  await api.untrustUser(
-    ownerAccountName,
-    userAccountName,
-    userId,
-    socialKey,
-  );
+export const trustUserOrShowErrorNotification = (userId, userAccountName) => async (dispatch) => {
+  try {
+    const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
 
-  dispatch({
-    type: 'USERS_SET_TRUST',
-    payload: {
-      userId,
-      trust: false,
-    },
-  });
+    if (!ownerCredentials) {
+      return;
+    }
+
+
+    const { blockchain_id, signed_transaction } = await Worker.getTrustUserWithAutoUpdateSignedTransaction(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      userAccountName,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
+
+    await api.trustUser(userId, blockchain_id, JSON.stringify(signed_transaction));
+    await dispatch(fetchUser(userId));
+  } catch (err) {
+    dispatch(addErrorNotificationFromResponse(err));
+  }
+};
+
+export const untrustUserOrShowErrorNotification = (userId, userAccountName) => async (dispatch) => {
+  try {
+    const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+    if (!ownerCredentials) {
+      return;
+    }
+
+    const { blockchain_id, signed_transaction } = await Worker.getUntrustUserWithAutoUpdateSignedTransaction(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      userAccountName,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
+
+    await api.untrustUser(userId, blockchain_id, JSON.stringify(signed_transaction));
+    await dispatch(fetchUser(userId));
+  } catch (err) {
+    dispatch(addErrorNotificationFromResponse(err));
+  }
 };

@@ -1,3 +1,5 @@
+import { EventsIdsDictionary } from 'ucom.libs.common';
+
 const { Dictionary } = require('ucom-libs-wallet');
 const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
 const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
@@ -82,6 +84,7 @@ export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
 export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
 export const POST_TYPE_OFFER_ID = PostTypes.OFFER;
 export const POST_TYPE_REPOST_ID = PostTypes.REPOST;
+export const POST_TYPE_AUTOUPDATE_ID = 12;
 
 export const ENTITY_IMAGES_SYMBOLS_LIMIT = 5000;
 export const ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR = 'Maximum number of embeds exceeded';
@@ -109,3 +112,17 @@ export const TRX_TYPE_VOTE_FOR_CALC = 41;
 export const TRX_TYPE_CLAIM_EMISSION = 50;
 export const TRX_TYPE_BUY_RAM = 60;
 export const TRX_TYPE_SELL_RAM = 61;
+
+export const EVENT_ID_USER_TRUSTS_YOU = EventsIdsDictionary.getUserTrustsYou();
+export const EVENT_ID_USER_UNTRUSTS_YOU = EventsIdsDictionary.getUserUntrustsYou();
+
+export const FEED_EXCLUDE_FILTER_ID_ALL = 1;
+export const FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS = 2;
+export const FEED_EXCLUDE_FILTER_ID_UPDATES = 3;
+
+export const FEED_TYPE_ID_USER_NEWS = 1;
+export const FEED_TYPE_ID_USER_WALL = 2;
+export const FEED_TYPE_ID_ORGANIZATION = 3;
+export const FEED_TYPE_ID_TAG = 4;
+export const FEED_TYPE_ID_MAIN = 5;
+export const FEED_PER_PAGE = 10;

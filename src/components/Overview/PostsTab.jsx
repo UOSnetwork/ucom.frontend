@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import React from 'react';
 import { withRouter } from 'react-router';
-import Feed from '../Feed/FeedView';
+import FeedView from '../Feed/FeedView';
 import UserList from '../User/UserList';
 import OrganizationList from '../Organization/OrganizationList';
 // import TagList from './../Tag/TagList';
 import * as overviewUtils from '../../utils/overview';
 import * as feedActions from '../../actions/feed';
-import { FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_PER_PAGE } from '../../utils';
 import loader from '../../utils/loader';
 import { POST_TYPE_DIRECT_ID } from '../../utils/posts';
 
@@ -49,7 +49,7 @@ const Publications = (props) => {
   return (
     <div className="grid grid_publications">
       <div className="grid__item grid__item_main">
-        <Feed
+        <FeedView
           hasMore={props.feed.metadata.hasMore}
           postIds={props.feed.postIds}
           loading={props.feed.loading}

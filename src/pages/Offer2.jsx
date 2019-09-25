@@ -19,11 +19,11 @@ import OfferContent from '../components/Offer/OfferContent';
 import { getToken, getCookie } from '../utils/token';
 import { getManyUsersAirdrop, fetchMyself } from '../actions/users';
 import api from '../api';
-import EntrySubHeader from '../components/EntrySubHeader';
+import { OrgSubHeader } from '../components/EntrySubHeader';
 import stylesSubHeader from '../components/EntrySubHeader/styles.css';
 import { getOrganization } from '../actions/organizations';
 import { airdropId_2, getAirdropOfferId_2, getGitHubAuthLink } from '../utils/airdrop';
-import { selectUser } from '../store/selectors/user';
+import { selectUser } from '../store/selectors';
 import { addErrorNotification } from '../actions/notifications';
 
 const { CommonHeaders } = require('ucom.libs.common').Common.Dictionary;
@@ -125,15 +125,8 @@ const Offer = (props) => {
     <LayoutBase gray>
       <div className={styles.container}>
         <div className={stylesSubHeader.wrapperOffer}>
-          <EntrySubHeader
-            organization
-            showFollow
-            userUrl={urls.getOrganizationUrl(post.organization.id)}
-            userName={post.organization.title}
-            userAvatarUrl={urls.getFileUrl(post.organization.avatarFilename)}
-            userId={+post.organization.id}
-            userRate={+post.organization.currentRate}
-          />
+          <OrgSubHeader square orgId={post.organization.id} />
+
           <OfferCard
             postId={postId}
             coverUrl={getPostCover(post)}

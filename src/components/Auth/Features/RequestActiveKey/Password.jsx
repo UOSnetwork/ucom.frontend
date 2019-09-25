@@ -4,7 +4,8 @@ import TextInput from '../../../TextInput';
 import IconInputError from '../../../Icons/InputError';
 import Button from '../../../Button/index';
 import styles from '../../../Resources/Actions/styles.css';
-import { passwordIsValid, restoreEncryptedActiveKey } from '../../../../utils/keys';
+import { restoreEncryptedActiveKey } from '../../../../utils/keys';
+import { passwordIsValid } from '../../../../utils/password';
 
 const PASSWORD_ERROR = 'Wrong password format';
 

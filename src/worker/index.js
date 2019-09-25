@@ -70,12 +70,12 @@ export default class Api {
     return Api.postMessage({ args, type: actions.GET_UNFOLLOW_ORGANIZATION_SIGNED_TRANSACTION });
   }
 
-  static getTrustUserSignedTransactionsAsJson(...args) {
-    return Api.postMessage({ args, type: actions.GET_TRUST_USER_SIGNED_TRANSACTIONS_AS_JSON });
+  static getTrustUserWithAutoUpdateSignedTransaction(...args) {
+    return Api.postMessage({ args, type: actions.GET_TRUST_USER_WITH_AUTO_UPDATE_SIGNED_TRANSACTION });
   }
 
-  static getUnTrustUserSignedTransactionsAsJson(...args) {
-    return Api.postMessage({ args, type: actions.GET_UNTRUST_USER_SIGNED_TRANSACTIONS_AS_JSON });
+  static getUntrustUserWithAutoUpdateSignedTransaction(...args) {
+    return Api.postMessage({ args, type: actions.GET_UNTRUST_USER_WITH_AUTO_UPDATE_SIGNED_TRANSACTION });
   }
 
   static signCreatePublicationFromOrganization(...args) {

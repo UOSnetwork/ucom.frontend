@@ -5,7 +5,7 @@ import snakes from '../utils/snakes';
 import { getBackendConfig } from '../utils/config';
 import { getToken } from '../utils/token';
 import { COMMENTS_PER_PAGE } from '../utils/comments';
-import { FEED_PER_PAGE, OVERVIEW_SIDE_PER_PAGE } from '../utils/feed';
+import { FEED_PER_PAGE } from '../utils';
 import {
   LIST_ORDER_BY_RATE,
   LIST_PER_PAGE,
@@ -305,11 +305,13 @@ const api = {
     perPage = FEED_PER_PAGE,
     commentsPage = 1,
     commentsPerPage = COMMENTS_PER_PAGE,
+    excludePostTypeIds = [],
   }) {
     const query = GraphQLSchema.getQueryMadeFromParts([
       GraphQLSchema.getUserWallFeedQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
+          exclude_post_type_ids: excludePostTypeIds,
         },
         page,
         per_page: perPage,
@@ -333,13 +335,21 @@ const api = {
     perPage = FEED_PER_PAGE,
     commentsPage = 1,
     commentsPerPage = COMMENTS_PER_PAGE,
+    excludePostTypeIds = [],
   }) {
-    const query = GraphQLSchema.getUserNewsFeed(
-      page,
-      perPage,
-      commentsPage,
-      commentsPerPage,
-    );
+    const query = GraphQLSchema.getQueryMadeFromParts([
+      GraphQLSchema.getUserNewsFeedQueryPart({
+        filters: {
+          exclude_post_type_ids: excludePostTypeIds,
+        },
+        page,
+        per_page: perPage,
+        comments: {
+          page: commentsPage,
+          per_page: commentsPerPage,
+        },
+      }),
+    ]);
 
     try {
       const data = await request({ query });
@@ -627,7 +637,7 @@ const api = {
 
   async getOverviewSide({
     page = 1,
-    perPage = OVERVIEW_SIDE_PER_PAGE,
+    perPage = 50,
     filter,
     tab,
     side,

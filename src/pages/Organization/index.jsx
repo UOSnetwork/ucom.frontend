@@ -7,8 +7,8 @@ import OrganizationHeader from '../../components/Organization/OrganizationHeader
 import { selectOwner, selectOrgById } from '../../store/selectors';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import urls from '../../utils/urls';
-import Feed from '../../components/Feed/FeedUser';
-import { ORGANIZATION_FEED_ID } from '../../utils/feed';
+import FeedUser from '../../components/Feed/FeedUser';
+import { FEED_TYPE_ID_ORGANIZATION } from '../../utils';
 import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryLocation from '../../components/EntryLocation';
 import EntryCreatedAt from '../../components/EntryCreatedAt';
@@ -182,7 +182,7 @@ const OrganizationPage = (props) => {
             />
           }
 
-          <Feed organizationId={organizationId} feedTypeId={ORGANIZATION_FEED_ID} />
+          <FeedUser organizationId={organizationId} feedTypeId={FEED_TYPE_ID_ORGANIZATION} />
         </div>
         <div className="layout__footer">
           <Footer />

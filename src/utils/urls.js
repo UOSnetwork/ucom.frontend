@@ -1,6 +1,6 @@
 import { memoize } from 'lodash';
 import * as overviewUtils from './overview';
-import { POST_TYPE_MEDIA_ID } from './posts';
+import { POST_TYPE_MEDIA_ID } from './constants';
 import { getBackendConfig } from './config';
 
 const urls = {
@@ -48,48 +48,41 @@ const urls = {
     return `${urls.getGovernanceVotingUrl(id)}/cast`;
   },
 
-  getPostUrl: memoize(
-    ({
-      id,
-      postTypeId,
-      entityNameFor,
-      entityIdFor,
-    }) => {
-      if (!id) {
-        return null;
-      }
-
-      if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
-        return `/posts/${id}`;
-      }
-
-      if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
-        return `/communities/${entityIdFor}/${id}`;
-      }
-
-      if (entityIdFor) {
-        return `/user/${entityIdFor}/${id}`;
-      }
-
+  getPostUrl: memoize(({
+    id, postTypeId, entityNameFor, entityIdFor,
+  } = {}) => {
+    if (!id) {
       return null;
-    },
-    params => Object.values(params).join(),
-  ),
+    }
 
-  getFeedPostUrl: memoize(
-    ({ id, entityIdFor, entityNameFor }) => {
-      if (!id || !entityIdFor || !entityNameFor) {
-        return null;
-      }
+    if ((!postTypeId && !entityNameFor && !entityIdFor) || postTypeId === POST_TYPE_MEDIA_ID) {
+      return `/posts/${id}`;
+    }
 
-      if (entityNameFor.trim() === 'org') {
-        return `/communities/${entityIdFor}/${id}`;
-      }
+    if (entityNameFor && entityNameFor.trim() === 'org' && entityIdFor) {
+      return `/communities/${entityIdFor}/${id}`;
+    }
 
+    if (entityIdFor) {
       return `/user/${entityIdFor}/${id}`;
-    },
-    params => Object.values(params).join(),
-  ),
+    }
+
+    return null;
+  }, params => Object.values(params).join()),
+
+  getFeedPostUrl: memoize(({
+    id, entityIdFor, entityNameFor,
+  } = {}) => {
+    if (!id || !entityIdFor || !entityNameFor) {
+      return null;
+    }
+
+    if (entityNameFor.trim() === 'org') {
+      return `/communities/${entityIdFor}/${id}`;
+    }
+
+    return `/user/${entityIdFor}/${id}`;
+  }, params => Object.values(params).join()),
 
   getPostEditUrl(postId) {
     if (!postId) {
