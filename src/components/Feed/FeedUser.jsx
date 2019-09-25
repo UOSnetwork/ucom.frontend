@@ -86,7 +86,7 @@ const FeedUser = (props) => {
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_ALL,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_ALL),
         }, {
-          title: 'Media-posts',
+          title: 'Publications',
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS),
         }, {
