@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import Tokens from '../Resources/Tokens';
-import Transfers from '../Resources/Transfers';
 import styles from './styles.css';
 import urls from '../../utils/urls';
 import Menu from '../Menu';
@@ -63,10 +62,6 @@ const Wallet = ({ location, onClickClose }) => {
           </div>
           <div className={`${styles.section} ${styles.wide}`}>
             <ReferralBanner />
-          </div>
-          <div className={styles.section}>
-            <h2 className={styles.title}>Transfers</h2>
-            <Transfers />
           </div>
         </div>
       </Content>
