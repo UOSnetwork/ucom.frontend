@@ -1,10 +1,9 @@
-import { range } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import styles from './styles.css';
 import Transaction from './Transaction';
 import Spinner from '../../Spinner';
-import EmptyTransaction from './EmptyTransaction';
+import Placeholder from './Placeholder';
 
 const Transactions = ({
   sections, showLoader, showPlaceholder, showEmptyLabel,
@@ -12,11 +11,7 @@ const Transactions = ({
   <div className={styles.transactions}>
     {showPlaceholder ? (
       <Fragment>
-        {range(20).map(i => (
-          <div className={styles.item} key={i}>
-            <EmptyTransaction circlePick={Boolean(i % 2)} />
-          </div>
-        ))}
+        <Placeholder />
         {showEmptyLabel &&
           <div className={styles.emptyLabel}>No transactions to display at the moment</div>
         }
