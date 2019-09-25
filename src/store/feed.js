@@ -1,4 +1,5 @@
 import { merge, uniq } from 'lodash';
+import { FEED_EXCLUDE_FILTER_ID_ALL } from '../utils';
 
 const getInitialState = () => ({
   loading: false,
@@ -10,12 +11,16 @@ const getInitialState = () => ({
   manyUsers: [],
   manyOrganizations: [],
   manyTags: [],
+  excludeFilterId: FEED_EXCLUDE_FILTER_ID_ALL,
 });
 
 export default (state = getInitialState(), action) => {
   switch (action.type) {
     case 'POSTS_FEED_RESET':
       return getInitialState();
+
+    case 'POSTS_FEED_SET_EXCLUDE_FILTER_ID':
+      return { ...state, excludeFilterId: action.payload };
 
     case 'POSTS_FEED_SET_POST_IDS':
       return { ...state, postIds: action.payload };

@@ -105,3 +105,7 @@ export const TRANSACTION_PERMISSION_SOCIAL = 'social';
 
 export const EVENT_ID_USER_TRUSTS_YOU = EventsIdsDictionary.getUserTrustsYou();
 export const EVENT_ID_USER_UNTRUSTS_YOU = EventsIdsDictionary.getUserUntrustsYou();
+
+export const FEED_EXCLUDE_FILTER_ID_ALL = 1;
+export const FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS = 2;
+export const FEED_EXCLUDE_FILTER_ID_UPDATES = 3;

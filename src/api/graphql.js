@@ -305,11 +305,13 @@ const api = {
     perPage = FEED_PER_PAGE,
     commentsPage = 1,
     commentsPerPage = COMMENTS_PER_PAGE,
+    excludePostTypeIds = [],
   }) {
     const query = GraphQLSchema.getQueryMadeFromParts([
       GraphQLSchema.getUserWallFeedQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
+          exclude_post_type_ids: excludePostTypeIds,
         },
         page,
         per_page: perPage,

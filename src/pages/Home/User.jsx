@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import Footer from '../../components/Footer';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import { EntryListSectionUsersWrapper, EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
-import Feed from '../../components/Feed/FeedUser';
+import FeedUser from '../../components/Feed/FeedUser';
 import { USER_NEWS_FEED_ID } from '../../utils/feed';
 import { PostsGridWrapper } from '../../components/PostsGrid';
 import withLoader from '../../utils/withLoader';
@@ -61,7 +61,7 @@ const HomeUserPage = () => {
           <div className="grid grid_content">
             <div className="grid__item grid__item_main">
               {owner && owner.id &&
-                <Feed userId={owner.id} feedTypeId={USER_NEWS_FEED_ID} />
+                <FeedUser userId={owner.id} feedTypeId={USER_NEWS_FEED_ID} />
               }
             </div>
 

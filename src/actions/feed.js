@@ -9,7 +9,6 @@ import {
   TAG_FEED_ID,
 } from '../utils/feed';
 import { COMMENTS_INITIAL_COUNT_USER_WALL_FEED, COMMENTS_CONTAINER_ID_FEED_POST } from '../utils/comments';
-// import api from '../api';
 import graphql from '../api/graphql';
 import { addPosts, createDirectPost } from './posts';
 import { commentsAddContainerData } from './comments';
@@ -23,6 +22,7 @@ export const feedAppendPostIds = payload => ({ type: 'POSTS_FEED_APPEND_POST_IDS
 export const feedSetSideUsers = payload => ({ type: 'POSTS_FEED_SET_SIDE_USERS', payload });
 export const feedSetSideOrganizations = payload => ({ type: 'POSTS_FEED_SET_SIDE_ORGANIZATIONS', payload });
 export const feedSetSideTags = payload => ({ type: 'POSTS_FEED_SET_SIDE_TAGS', payload });
+export const feedSetExcludeFilterId = payload => ({ type: 'POSTS_FEED_SET_EXCLUDE_FILTER_ID', payload });
 
 export const addPostsAndComments = (posts = []) => (dispatch) => {
   posts.forEach((post) => {
@@ -46,7 +46,11 @@ export const parseFeedData = ({
   metadata,
 }) => (dispatch) => {
   dispatch(addPostsAndComments(posts));
-  dispatch(feedAppendPostIds(posts.map(i => i.id)));
+  if (metadata.page > 1) {
+    dispatch(feedAppendPostIds(posts.map(i => i.id)));
+  } else {
+    dispatch(feedSetPostIds(posts.map(i => i.id)));
+  }
   dispatch(feedSetMetadata(metadata));
 };
 
@@ -58,6 +62,7 @@ export const feedGetUserPosts = ({
   organizationId,
   tagIdentity,
   userIdentity,
+  excludePostTypeIds,
 }) => async (dispatch) => {
   const getFeedFunctions = {
     [USER_NEWS_FEED_ID]: graphql.getUserNewsFeed,
@@ -77,6 +82,7 @@ export const feedGetUserPosts = ({
       tagIdentity,
       userIdentity,
       commentsPerPage: COMMENTS_INITIAL_COUNT_USER_WALL_FEED,
+      excludePostTypeIds,
     });
     dispatch(parseFeedData({
       posts: data.data,
