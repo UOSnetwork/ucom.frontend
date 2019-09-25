@@ -1,3 +1,4 @@
+// TODO: Move to pages/home
 import { range } from 'lodash';
 import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';

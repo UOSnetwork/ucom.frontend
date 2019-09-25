@@ -3,47 +3,36 @@ import PropTypes from 'prop-types';
 import IconComment from '../../../Icons/Comment';
 import Comments from '../../../Comments/wrapper';
 import Share from '../../../Share';
-import urls from '../../../../utils/urls';
 import styles from './styles.css';
-import { PostVotingWrapper } from '../../../Voting';
+import { PostVoting } from '../../../Voting';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../../utils/comments';
-import { POST_TYPE_MEDIA_ID } from '../../../../utils/posts';
 
 const PostFeedFooter = ({
-  post, commentsCount, commentsContainerId,
+  postId, commentsCount, commentsContainerId,
 }) => (
   <Fragment>
     <div className={styles.footer}>
       <div className={styles.infoBlock}>
         <span className={styles.commentСount}>
-          <span className="inline inline_small">
-            <span className="inline__item">
-              <IconComment />
-            </span>
-            <span className="inline__item">{commentsCount}</span>
-          </span>
+          <IconComment />
+          {commentsCount}
         </span>
 
-        <Share
-          postId={post.id}
-          link={urls.getPostUrl(post)}
-          repostEnable={post && post.myselfData && post.myselfData.repostAvailable}
-          socialEnable={post && post.postTypeId === POST_TYPE_MEDIA_ID}
-        />
+        <Share postId={postId} />
       </div>
       <div>
-        <PostVotingWrapper postId={post.id} />
+        <PostVoting postId={postId} />
       </div>
     </div>
 
     <div className={styles.comments}>
-      <Comments postId={post.id} containerId={commentsContainerId} />
+      <Comments postId={postId} containerId={commentsContainerId} />
     </div>
   </Fragment>
 );
 
 PostFeedFooter.propTypes = {
-  post: PropTypes.objectOf(PropTypes.any).isRequired,
+  postId: PropTypes.number.isRequired,
   commentsCount: PropTypes.number,
   commentsContainerId: PropTypes.number,
 };

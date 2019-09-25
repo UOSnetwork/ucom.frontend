@@ -1,18 +1,11 @@
 import CryptoJS from 'crypto-js';
 import ecc from 'eosjs-ecc';
 import { memoize } from 'lodash';
+import { passwordIsValid } from './password';
 
 export const privateKeyIsValid = memoize((value) => {
   try {
     return ecc.isValidPrivate(value);
-  } catch (e) {
-    return false;
-  }
-});
-
-export const passwordIsValid = memoize((password) => {
-  try {
-    return password.length > 0;
   } catch (e) {
     return false;
   }
@@ -160,12 +153,3 @@ export const removeSocialKey = () => {
     console.error(err);
   }
 };
-
-if (typeof localStorage !== 'undefined') {
-  try {
-    localStorage.removeItem('activeKey');
-    localStorage.removeItem('brainkey');
-  } catch (err) {
-    console.error(err);
-  }
-}

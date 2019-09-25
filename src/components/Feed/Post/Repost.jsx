@@ -75,9 +75,8 @@ const Repost = ({
       </div>
 
       <PostFeedFooter
+        postId={post.id}
         commentsCount={post.commentsCount}
-        post={post}
-        postTypeId={post.postTypeId}
         commentsContainerId={commentsContainerId}
       />
     </div>

@@ -23,7 +23,7 @@ import { OrgSubHeader } from '../components/EntrySubHeader';
 import stylesSubHeader from '../components/EntrySubHeader/styles.css';
 import { getOrganization } from '../actions/organizations';
 import { airdropId_1, getAirdropOfferId_1, getGitHubAuthLink } from '../utils/airdrop';
-import { selectUser } from '../store/selectors/user';
+import { selectUser } from '../store/selectors';
 import { addErrorNotification } from '../actions/notifications';
 
 const { CommonHeaders } = require('ucom.libs.common').Common.Dictionary;

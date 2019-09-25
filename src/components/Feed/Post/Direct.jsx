@@ -51,10 +51,9 @@ const Direct = ({
           </div>
           <div className={styles.post} id={`post-${post.id}`}>
             <PostFeedFooter
-              post={post}
+              postId={post.id}
               formIsVisible={formIsVisible}
               commentsCount={post.commentsCount}
-              postTypeId={post.postTypeId}
             />
           </div>
         </Fragment>
@@ -79,9 +78,8 @@ const Direct = ({
             hideForm={() => setFormIsVisible(false)}
           />
           <PostFeedFooter
+            postId={post.id}
             commentsCount={post.commentsCount}
-            post={post}
-            postTypeId={post.postTypeId}
             commentsContainerId={commentsContainerId}
           />
         </div>

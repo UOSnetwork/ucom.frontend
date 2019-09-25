@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, useRef, Fragment, memo } from 'react';
+import React, { useState, useRef, Fragment, memo, useEffect } from 'react';
 import Tippy from '@tippy.js/react';
 import { useDispatch, useSelector } from 'react-redux';
 import IconFacebook from '../Icons/Socials/Share/Facebook';
@@ -16,26 +16,25 @@ import { authShowPopup } from '../../actions/auth';
 import { selectOwner, selectPostById } from '../../store/selectors';
 import equalByProps from '../../utils/equalByProps';
 import { getSocialKey } from '../../utils/keys';
+import urls from '../../utils/urls';
 import styles from './styles.css';
 import ShareButton from './Button';
 
 const Share = ({
-  children, link, directUrl, postId, repostEnable, socialEnable,
+  children, directUrl, postId,
 }) => {
   const dispatch = useDispatch();
-  const [url, setUrl] = useState('');
   const tippyInstance = useRef();
+  const [origin, setOrigin] = useState(null);
   const owner = useSelector(selectOwner, equalByProps(['accountName']));
-  const post = useSelector(selectPostById(postId), equalByProps(['blockchainId']));
+  const post = useSelector(selectPostById(postId), equalByProps(['blockchainId', 'myselfData']));
+  const repostEnable = post && post.myselfData && post.myselfData.repostAvailable;
+  const url = directUrl || `${origin}${urls.getPostUrl(post)}`;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (directUrl) {
-      setUrl(directUrl);
-    } else if (link) {
-      setUrl(`${window.location.origin}${link}`);
-    }
-  }, [link, directUrl]);
+    setOrigin(window.location.origin);
+  }, []);
 
   const createRepost = async () => {
     if (loading) {
@@ -71,6 +70,10 @@ const Share = ({
     setLoading(false);
   };
 
+  if (!url) {
+    return null;
+  }
+
   return (
     <Tippy
       onCreate={(instance) => {
@@ -98,53 +101,44 @@ const Share = ({
             </Fragment>
           }
 
-          {socialEnable &&
-            <Fragment>
-              <div className={styles.title}>Share to</div>
+          <Fragment>
+            <div className={styles.title}>Share to</div>
 
-              <div className={styles.icons}>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.icon}
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}
-                >
-                  <IconFacebook />
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.icon}
-                  href={`https://twitter.com/intent/tweet?url=${url}`}
-                >
-                  <IconTwitter />
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.icon}
-                  href={`https://telegram.me/share/url?url=${url}`}
-                >
-                  <IconTelegram />
-                </a>
-              </div>
+            <div className={styles.icons}>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.icon}
+                href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}
+              >
+                <IconFacebook />
+              </a>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.icon}
+                href={`https://twitter.com/intent/tweet?url=${url}`}
+              >
+                <IconTwitter />
+              </a>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.icon}
+                href={`https://telegram.me/share/url?url=${url}`}
+              >
+                <IconTelegram />
+              </a>
+            </div>
 
-              <hr className={styles.line} />
-            </Fragment>
-          }
+            <hr className={styles.line} />
+          </Fragment>
 
           <div className={styles.title}>Copy link</div>
 
           <div className={styles.copy}>
             <span className={styles.text}>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link red"
-                href={url}
-              >
-                {url}
-              </a>
+              <a target="_blank" rel="noopener noreferrer" className="link red" href={url}>{url}</a>
             </span>
             <span
               role="presentation"
@@ -169,19 +163,13 @@ const Share = ({
 };
 
 Share.propTypes = {
-  link: PropTypes.string,
   directUrl: PropTypes.string,
   postId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  repostEnable: PropTypes.bool,
-  socialEnable: PropTypes.bool,
 };
 
 Share.defaultProps = {
-  link: undefined,
   directUrl: undefined,
   postId: undefined,
-  repostEnable: false,
-  socialEnable: false,
 };
 
 export default memo(Share);

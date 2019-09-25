@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formatRate } from '../../../utils/rate';
-import { PostVotingWrapper } from '../../Voting';
+import { PostVoting } from '../../Voting';
 import One from '../../Icons/Airdrop/One';
 import Two from '../../Icons/Airdrop/Two';
 import Three from '../../Icons/Airdrop/Three';
@@ -47,7 +47,7 @@ const OfferSidebar = (props) => {
     <Fragment>
       <div className={styles.rateVote}>
         <div className={styles.rate}>{formatRate(props.rate)}°</div>
-        <PostVotingWrapper postId={props.postId} />
+        <PostVoting postId={props.postId} />
       </div>
       {conditions && ((conditions.airdropStatus === AirdropStatuses.PENDING ||
         conditions.airdropStatus === AirdropStatuses.RECEIVED) ||
@@ -186,10 +186,8 @@ const OfferSidebar = (props) => {
       <div className={styles.created}>Created <span>{props.createdAt}</span></div>
 
       <Share
-        socialEnable
         postId={props.postId}
         link={props.link}
-        repostEnable={props.repostAvailable}
       >
         <div className={styles.share}>
           <IconShareCircle />
@@ -221,7 +219,6 @@ OfferSidebar.propTypes = {
   startedAt: PropTypes.string,
   finishedAt: PropTypes.string,
   link: PropTypes.string.isRequired,
-  repostAvailable: PropTypes.bool,
   cookie: PropTypes.string,
   gitHubAuthLink: PropTypes.string,
   organizationId: PropTypes.number,
@@ -229,7 +226,6 @@ OfferSidebar.propTypes = {
 
 OfferSidebar.defaultProps = {
   rate: 0,
-  repostAvailable: false,
   cookie: null,
   conditions: null,
   gitHubAuthLink: '',

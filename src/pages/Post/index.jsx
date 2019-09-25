@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import ButtonEdit from '../../components/ButtonEdit';
 import PostContent from './Content';
-import { PostVotingWrapper } from '../../components/Voting';
+import { PostVoting } from '../../components/Voting';
 import Comments from '../../components/Comments/wrapper';
 import Share from '../../components/Share';
 import Footer from '../../components/Footer';
@@ -82,7 +82,7 @@ const Post = ({ postId }) => {
                         </div>
                       </div>
                       <div className={styles.rating}>
-                        <PostVotingWrapper postId={+postId} />
+                        <PostVoting postId={+postId} />
                       </div>
                     </div>
                   </div>
@@ -103,8 +103,6 @@ const Post = ({ postId }) => {
 
                     <div className={styles.stats}>
                       <Share
-                        socialEnable
-                        repostEnable={post.myselfData && post.myselfData.repostAvailable}
                         postId={postId}
                         link={urls.getPostUrl({ id: postId, postTypeId: POST_TYPE_MEDIA_ID })}
                       />

@@ -22,10 +22,7 @@ const ReferralBanner = () => {
         <div className={styles.text}>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get 10% the importance they acquire.</div>
         <div className={styles.actions}>
           {owner && owner.affiliates && owner.affiliates.referralRedirectUrl &&
-            <Share
-              directUrl={owner.affiliates.referralRedirectUrl}
-              socialEnable
-            >
+            <Share directUrl={owner.affiliates.referralRedirectUrl}>
               <Button red>Share Referral Link</Button>
             </Share>
           }

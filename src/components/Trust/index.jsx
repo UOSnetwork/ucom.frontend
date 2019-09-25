@@ -7,25 +7,38 @@ import UserPick from '../UserPick';
 import DropdownMenu from '../DropdownMenu';
 import Popup from '../Popup';
 
-const Trust = (props) => {
+const Trust = ({
+  userName, userAvtarUrl, trusted, onClickTrust, onClickUntrust, loading,
+}) => {
   const [untrustPopupVisible, setUntrustPopupVisible] = useState(false);
   const [acceptCardVisible, setAcceptCardVisible] = useState(false);
 
+  const showAcceptCard = () => {
+    scroller.scrollTo('trust', {
+      duration: 1000,
+      delay: 100,
+      offset: -70,
+      smooth: true,
+    });
+    setAcceptCardVisible(true);
+  };
+
+  const hideAcceptCard = () => {
+    setAcceptCardVisible(false);
+  };
+
   useEffect(() => {
-    if (props.trusted) {
+    if (trusted) {
       setAcceptCardVisible(false);
     } else {
       setUntrustPopupVisible(false);
     }
-  }, [props.trusted]);
+  }, [trusted]);
 
   return (
     <Fragment>
       {untrustPopupVisible &&
-        <Popup
-          showCloseIcon
-          onClickClose={() => setUntrustPopupVisible(false)}
-        >
+        <Popup showCloseIcon onClickClose={() => setUntrustPopupVisible(false)}>
           <div className={styles.untrust}>
             <h2 className={styles.title}>You are revoking your trust</h2>
             <ol className={styles.rules}>
@@ -34,22 +47,13 @@ const Trust = (props) => {
               <li>This trust revoke transaction will be put in your profile feed and the feed of your followers.</li>
             </ol>
 
-            <Button
-              big
-              cap
-              red
-              strech
-              disabled={props.loading}
-              onClick={props.onClickUntrust}
-            >
-              Revoke trust
-            </Button>
+            <Button big cap red strech disabled={loading} onClick={onClickUntrust}>Revoke trust</Button>
           </div>
         </Popup>
       }
 
       <Element name="trust" className={styles.trust}>
-        {props.trusted &&
+        {trusted &&
           <div className={styles.trusted}>
             <DropdownMenu
               distance={15}
@@ -61,54 +65,27 @@ const Trust = (props) => {
             >
               <span className={styles.trigger}>
                 You Trust&nbsp;
-                <UserPick
-                  size={24}
-                  alt={props.userName}
-                  src={props.userAvtarUrl}
-                  shadow
-                />
-                &nbsp;<span title={props.userName}>{props.userName}</span>
+                <UserPick shadow size={24} alt={userName} src={userAvtarUrl} />
+                &nbsp;<span title={userName}>{userName}</span>
               </span>
             </DropdownMenu>
           </div>
         }
 
-        {!props.trusted && !acceptCardVisible &&
-          <Button
-            strech
-            grayBorder
-            onClick={() => {
-              scroller.scrollTo('trust', {
-                duration: 1000,
-                delay: 100,
-                offset: -70,
-                smooth: true,
-              });
-              setAcceptCardVisible(true);
-            }}
-          >
+        {!trusted && !acceptCardVisible &&
+          <Button strech grayBorder onClick={showAcceptCard}>
             Trust&nbsp;
-            <UserPick
-              size={24}
-              alt={props.userName}
-              src={props.userAvtarUrl}
-              shadow
-            />
-            &nbsp;<span title={props.userName}>{props.userName}</span>
+            <UserPick shadow size={24} alt={userName} src={userAvtarUrl} />
+            &nbsp;<span title={userName}>{userName}</span>
           </Button>
         }
 
-        {!props.trusted && acceptCardVisible &&
+        {!trusted && acceptCardVisible &&
           <div className={styles.acceptCard}>
             <h3 className={styles.title}>
               I Trust&nbsp;
-              <UserPick
-                size={32}
-                alt={props.userName}
-                src={props.userAvtarUrl}
-                shadow
-              />
-              &nbsp;<span title={props.userName}>{props.userName}</span>
+              <UserPick shadow size={32} alt={userName} src={userAvtarUrl} />
+              &nbsp;<span title={userName}>{userName}</span>
             </h3>
 
             <ol className={styles.rules}>
@@ -120,25 +97,11 @@ const Trust = (props) => {
             </ol>
 
             <div className={styles.action}>
-              <Button
-                strech
-                red
-                onClick={props.onClickTrust}
-                disabled={props.loading}
-              >
-                Trust
-              </Button>
+              <Button strech red onClick={onClickTrust} disabled={loading}>Trust</Button>
             </div>
 
             <div className={styles.action}>
-              <Button
-                strech
-                transparent
-                disabled={props.loading}
-                onClick={() => setAcceptCardVisible(false)}
-              >
-                Cancel
-              </Button>
+              <Button strech transparent disabled={loading} onClick={hideAcceptCard}>Cancel</Button>
             </div>
           </div>
         }
@@ -150,10 +113,10 @@ const Trust = (props) => {
 Trust.propTypes = {
   userName: PropTypes.string.isRequired,
   userAvtarUrl: PropTypes.string.isRequired,
-  trusted: PropTypes.bool,
   onClickTrust: PropTypes.func.isRequired,
   onClickUntrust: PropTypes.func.isRequired,
   loading: PropTypes.bool,
+  trusted: PropTypes.bool,
 };
 
 Trust.defaultProps = {
@@ -161,4 +124,5 @@ Trust.defaultProps = {
   loading: false,
 };
 
+export * from './wrappers';
 export default memo(Trust);

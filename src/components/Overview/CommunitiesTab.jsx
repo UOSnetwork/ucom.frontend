@@ -6,7 +6,7 @@ import * as overviewUtils from '../../utils/overview';
 import * as feedActions from '../../actions/communityFeed';
 // import { feedGetSide } from '../../actions/feed';
 import loader from '../../utils/loader';
-import { FEED_PER_PAGE } from '../../utils/feed';
+import { FEED_PER_PAGE } from '../../utils';
 // import UserList from './../User/UserList';
 
 // const LIST_LIMIT = 5;
