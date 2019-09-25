@@ -11,7 +11,7 @@ import { selectPostById, selectUserById, selectOwner } from '../../../store/sele
 import { PostAutoupdate } from '../Autoupdate';
 
 const Post = ({
-  commentsContainerId, id, feedTypeId, originEnabled, forUserId, forOrgId,
+  commentsContainerId, id, feedTypeId, originEnabled, forUserId, forOrgId, ...props
 }) => {
   const post = useSelector(selectPostById(id), equalByProps(['description', 'entityImages']));
 
@@ -29,7 +29,13 @@ const Post = ({
 
   switch (post.postTypeId) {
     case POST_TYPE_AUTOUPDATE_ID:
-      return <PostAutoupdate postId={id} commentsContainerId={commentsContainerId} />;
+      return (
+        <PostAutoupdate
+          {...props}
+          postId={id}
+          commentsContainerId={commentsContainerId}
+        />
+      );
 
     case POST_TYPE_REPOST_ID:
       return (

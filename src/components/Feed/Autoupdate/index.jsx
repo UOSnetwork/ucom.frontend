@@ -7,10 +7,13 @@ import PostFeedFooter from '../Post/PostFeedFooter';
 import UserPick from '../../UserPick';
 
 const Autoupdate = ({
-  label, commentsCount, postId, content, commentsContainerId, userName, userUrl, userAvatarSrc, createdAt,
+  label, commentsCount, postId, content, commentsContainerId, userName, userUrl, userAvatarSrc, createdAt, headerColor,
 }) => (
   <div className={styles.autoupdate}>
-    <div className={styles.userHeader}>
+    <div
+      className={styles.userHeader}
+      style={{ color: headerColor }}
+    >
       <UserPick src={userAvatarSrc} url={userUrl} size={24} />
       <span className={styles.text}>
         <Link to={userUrl} className="link red-hover">{userName}</Link>&nbsp;made an update a {moment(createdAt).fromNow()}
@@ -40,12 +43,14 @@ Autoupdate.propTypes = {
   userUrl: PropTypes.string.isRequired,
   userAvatarSrc: PropTypes.string,
   createdAt: PropTypes.string.isRequired,
+  headerColor: PropTypes.string,
 };
 
 Autoupdate.defaultProps = {
   label: undefined,
   commentsCount: 0,
   userAvatarSrc: undefined,
+  headerColor: 'rgba(0,0,0,0.58)',
 };
 
 export * from './wrappers';
