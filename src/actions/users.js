@@ -139,6 +139,9 @@ export const updateUser = userData => async (dispatch) => {
     throw new Error('UserData must contain all editable props');
   }
 
+  // Remove lastName for old profiles
+  userData.lastName = '';
+
   try {
     dataAsJson = JSON.stringify(userData);
   } catch (err) {

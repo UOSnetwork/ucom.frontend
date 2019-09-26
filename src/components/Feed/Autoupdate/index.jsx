@@ -22,7 +22,7 @@ const Autoupdate = ({
     >
       <UserPick src={userAvatarSrc} url={userUrl} size={24} />
       <span className={styles.text}>
-        <Link to={userUrl} className="link red-hover">{userName}</Link>&nbsp;made an update a {moment(createdAt).fromNow()}
+        <Link to={userUrl} className="link red-hover">{userName}</Link>&nbsp;made an update {moment(createdAt).fromNow()}
       </span>
     </div>
     <div className={styles.container}>
