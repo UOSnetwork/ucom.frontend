@@ -109,7 +109,8 @@
 
 .post.withCover .count {
   color: #fff;
-  fill: #fff;
+  stroke: #fff;
+  fill: none;
 }
 
 .post.withCover .cover:after {
@@ -240,7 +241,8 @@
   font-size: 12px;
   font-weight: bold;
   color: rgba(88,88,88,0.71);
-  fill: rgba(88,88,88,0.71);
+  stroke: rgba(88,88,88,0.71);
+  fill: none;
 }
 
 .link {
@@ -250,4 +252,11 @@
 
 .link:hover {
   text-decoration: none;
+}
+
+.data {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  grid-gap: 20px;
 }

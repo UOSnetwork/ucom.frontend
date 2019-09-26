@@ -9,6 +9,7 @@ import { getUserName } from '../../../utils/user';
 import urls from '../../../utils/urls';
 import IconComment from '../../Icons/Comment';
 import { getCoverImage } from '../../../utils/entityImages';
+// import { PostView } from '../../Views';
 
 const Post = ({ post, index }) => {
   const cover = getCoverImage(post);
@@ -55,6 +56,8 @@ const Post = ({ post, index }) => {
                 <IconComment />
                 {post.commentsCount}
               </span>
+
+              {/* <PostView postId={post.id} /> */}
             </div>
           </div>
         </div>
