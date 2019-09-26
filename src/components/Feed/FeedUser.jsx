@@ -11,8 +11,9 @@ import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../utils/comments';
 import {
   withLoader,
   FEED_EXCLUDE_FILTER_ID_ALL,
-  FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS,
+  FEED_EXCLUDE_FILTER_ID_PUBLICATIONS,
   FEED_EXCLUDE_FILTER_ID_UPDATES,
+  FEED_EXCLUDE_FILTER_ID_POSTS,
   FEED_PER_PAGE,
   getFeedExcludePostTypeIdsByExcludeFilterId,
   isFeedExcludeFilterIsEnabledByFeedTypeId,
@@ -86,9 +87,13 @@ const FeedUser = (props) => {
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_ALL,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_ALL),
         }, {
+          title: 'Posts',
+          active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_POSTS,
+          onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_POSTS),
+        }, {
           title: 'Publications',
-          active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS,
-          onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS),
+          active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_PUBLICATIONS,
+          onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_PUBLICATIONS),
         }, {
           title: 'Updates',
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_UPDATES,
