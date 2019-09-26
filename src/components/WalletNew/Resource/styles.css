@@ -1,4 +1,4 @@
-.resource {
+.container {
   border-radius: 12px;
   padding: 24px;
   background: #fff;
@@ -7,21 +7,16 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(247, 250, 252, 0.17) 100%), #FFFFFF;
 }
 
-.resource + .resource {
-  margin-top: 24px;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
   font-size: 16px;
   color: #585858;
-  margin: 0 0 15px;
+  margin: 0 0 6px;
 }
 
 .title {
   font-weight: bold;
-  text-transform: uppercase;
   color: #585858;
 }
 
@@ -39,6 +34,18 @@
   border-radius: 3px;
 }
 
+.percentage.green {
+  background: #91D91C;
+}
+
+.percentage.yellow {
+  background: #FDB909;
+}
+
+.percentage.red {
+  background: #E83030;
+}
+
 .actions {
   display: grid;
   grid-auto-flow: column;
@@ -49,4 +56,14 @@
   font-weight: bold;
   text-transform: uppercase;
   color: #000;
+}
+
+.total {
+  color: #000;
+}
+
+.used {
+  font-size: 14px;
+  margin: 0 0 15px;
+  color: rgba(0,0,0,0.33);
 }

@@ -17,7 +17,7 @@ const TransactionPopup = ({
             {type && <span className={styles.type}>{type}</span>}
           </div>
         }
-        {avatarSrc ? (
+        {typeof avatarSrc === 'string' ? (
           <div className={styles.userPic}>
             <UserPick src={avatarSrc} size={80} />
           </div>

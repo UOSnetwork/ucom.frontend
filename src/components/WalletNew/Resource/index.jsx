@@ -1,44 +1,50 @@
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
+import Panel from '../Panel';
 
 const Resource = ({
-  title, label, percentage, actions,
+  title, total, percentage, actions, used,
 }) => (
-  <div className={styles.resource}>
-    <div className={styles.header}>
-      <div className={styles.title}>{title}</div>
-      <div className={styles.label}>{label}</div>
-    </div>
-    <div className={styles.progress}>
-      <div className={styles.percentage} style={{ width: `${percentage}%` }} />
-    </div>
-    {actions.length > 0 &&
-      <div className={styles.actions}>
-        {actions.map((action, index) => (
-          <div className={styles.action} key={index}>
-            <span onClick={action.onClick} role="presentation" className="link red-hover">{action.title}</span>
-          </div>
-        ))}
+  <Panel className={styles.resource} actions={actions}>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.title}>{title}</div>
+        <div className={styles.total}>{total}</div>
       </div>
-    }
-  </div>
+      {used && <div className={styles.used}>{used}</div>}
+      <div className={styles.progress}>
+        <div
+          className={classNames({
+            [styles.percentage]: true,
+            [styles.green]: percentage < 50,
+            [styles.yellow]: percentage >= 50 && percentage < 90,
+            [styles.red]: percentage >= 90,
+          })}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  </Panel>
 );
 
 Resource.propTypes = {
   title: PropTypes.string.isRequired,
-  label: PropTypes.string,
+  total: PropTypes.string,
   percentage: PropTypes.number,
   actions: PropTypes.arrayOf(PropTypes.shape({
     onClick: PropTypes.func,
     title: PropTypes.string,
   })),
+  used: PropTypes.string,
 };
 
 Resource.defaultProps = {
-  label: undefined,
+  total: undefined,
   percentage: 0,
   actions: [],
+  used: undefined,
 };
 
 export default Resource;

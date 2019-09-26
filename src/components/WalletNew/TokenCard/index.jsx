@@ -2,11 +2,12 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
+import Panel from '../Panel';
 
 const TokenCard = ({
   tokens, icon, color, actions,
 }) => (
-  <div className={styles.tokenCard}>
+  <Panel actions={actions}>
     <div
       className={classNames({
         [styles.container]: true,
@@ -36,15 +37,7 @@ const TokenCard = ({
         {color && <div className={styles.circle} style={{ borderColor: color }} />}
       </div>
     </div>
-
-    <div className={styles.actions}>
-      {actions.map((item, index) => (
-        <div className={styles.action} key={index}>
-          <span role="presentation" onClick={item.onClick} className="link red-hover">{item.title}</span>
-        </div>
-      ))}
-    </div>
-  </div>
+  </Panel>
 );
 
 TokenCard.propTypes = {
@@ -54,17 +47,14 @@ TokenCard.propTypes = {
   })),
   icon: PropTypes.node,
   color: PropTypes.string,
-  actions: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-  })),
+  actions: Panel.propTypes.actions,
 };
 
 TokenCard.defaultProps = {
   tokens: [],
   icon: undefined,
   color: undefined,
-  actions: [],
+  actions: Panel.defaultProps.actions,
 };
 
 export default TokenCard;

@@ -84,11 +84,7 @@ const EditStake = (props) => {
     >
       {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
-          <Content
-            walletAction
-            roundBorders={false}
-            onClickClose={() => props.dispatch(walletToggleEditStake(false))}
-          >
+          <Content walletAction onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
             <form
               className={styles.content}
               onSubmit={async (e) => {

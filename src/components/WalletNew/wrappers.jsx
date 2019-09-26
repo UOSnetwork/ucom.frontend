@@ -82,8 +82,9 @@ export const UserWallet = memo(() => {
   if (wallet.resources && wallet.resources.ram) {
     ramResource = {
       title: 'RAM',
-      label: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension}`,
-      percentage: percent(wallet.resources.ram.free, wallet.resources.ram.total),
+      total: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension} Available`,
+      used: `${formatNumber(round(wallet.resources.ram.used, 2))} ${wallet.resources.ram.dimension}`,
+      percentage: percent(wallet.resources.ram.used, wallet.resources.ram.total),
       actions: [{
         title: 'Sell',
         onClick: () => dispatch(walletActions.walletToggleSellRam(true)),
@@ -97,10 +98,11 @@ export const UserWallet = memo(() => {
   if (wallet.resources && wallet.resources.cpu) {
     cpuTimeResource = {
       title: 'CPU Time',
-      label: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension}`,
-      percentage: percent(wallet.resources.cpu.free, wallet.resources.cpu.total),
+      total: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension} Available`,
+      used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.ram.dimension}`,
+      percentage: percent(wallet.resources.cpu.used, wallet.resources.cpu.total),
       actions: [{
-        title: 'Edit Stake',
+        title: 'Set',
         onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
       }],
     };
@@ -109,10 +111,11 @@ export const UserWallet = memo(() => {
   if (wallet.resources && wallet.resources.net) {
     networkBandwithResource = {
       title: 'Network Bandwith',
-      label: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension}`,
-      percentage: percent(wallet.resources.net.free, wallet.resources.net.total),
+      total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
+      used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.ram.dimension}`,
+      percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
       actions: [{
-        title: 'Edit Stake',
+        title: 'Set',
         onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
       }],
     };

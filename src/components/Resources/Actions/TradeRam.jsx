@@ -64,11 +64,7 @@ const TradeRam = (props) => {
     >
       {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={props.onClickClose}>
-          <Content
-            walletAction
-            roundBorders={false}
-            onClickClose={props.onClickClose}
-          >
+          <Content walletAction onClickClose={props.onClickClose}>
             <form
               className={styles.content}
               onSubmit={async (e) => {

@@ -68,11 +68,7 @@ const SendTokens = () => {
     >
       {(requestActiveKey, requestLoading) => (
         <Popup onClickClose={() => dispatch(walletToggleSendTokens(false))}>
-          <Content
-            walletAction
-            roundBorders={false}
-            onClickClose={() => dispatch(walletToggleSendTokens(false))}
-          >
+          <Content walletAction onClickClose={() => dispatch(walletToggleSendTokens(false))}>
             <form
               className={styles.content}
               onSubmit={async (e) => {
