@@ -72,14 +72,25 @@
   transform: scale(0.8) translate(-15px, 0);
   transform-origin: left top;
   transition: transform 0.2s ease;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  align-items: baseline;
+  grid-gap: 15px;
 }
 
 .name a {
-  display: inline-block;
-  max-width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.label {
+  font-weight: normal;
+  font-size: 14px;
+  white-space: nowrap;
+  color: rgba(0,0,0,0.6);
+  transition: opacity 0.2s ease;
 }
 
 .rate {
@@ -114,6 +125,7 @@
 
   .name {
     left: 65px;
+    right: 0;
   }
 
   .rate {
@@ -122,6 +134,10 @@
 
   .followLink {
     right: 20px;
+  }
+
+  .subHeader:hover .label {
+    opacity: 0;
   }
 }
 

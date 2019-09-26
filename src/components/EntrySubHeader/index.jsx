@@ -7,7 +7,7 @@ import UserPick from '../UserPick';
 import { UserFollowButton, OrgFollowButton } from '../FollowButton';
 
 const EntrySubHeader = ({
-  square, name, url, rate, userId, orgId, showFollow, avatarSrc,
+  square, name, url, rate, userId, orgId, showFollow, avatarSrc, label,
 }) => (
   <div
     className={classNames({
@@ -20,6 +20,7 @@ const EntrySubHeader = ({
     </div>
     <div className={styles.name}>
       <Link className="link red-hover" to={url}>{name}</Link>
+      {label && <span className={styles.label}>{label}</span>}
     </div>
     <div className={styles.rate}>{rate}</div>
 
@@ -44,6 +45,7 @@ EntrySubHeader.propTypes = {
   userId: PropTypes.number,
   orgId: PropTypes.number,
   showFollow: PropTypes.bool,
+  label: PropTypes.string,
 };
 
 EntrySubHeader.defaultProps = {
@@ -55,6 +57,7 @@ EntrySubHeader.defaultProps = {
   userId: undefined,
   orgId: undefined,
   showFollow: true,
+  label: undefined,
 };
 
 export * from './wrappers';
