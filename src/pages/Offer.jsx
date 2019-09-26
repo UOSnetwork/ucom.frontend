@@ -7,7 +7,7 @@ import LayoutBase from '../components/Layout/LayoutBase';
 import { postsFetch, getOnePostOffer, getOnePostOfferWithUserAirdrop } from '../actions/posts';
 import { getPostById } from '../store/posts';
 import OfferCard from '../components/Offer/OfferCard';
-import { getPostCover, getContentMetaTags } from '../utils/posts';
+import { getPostCover, getPublicationMetaTags } from '../utils/posts';
 import { getUserName } from '../utils/user';
 import urls from '../utils/urls';
 import styles from './Offer.css';
@@ -248,7 +248,7 @@ export const getPostOfferData = async (store) => {
       },
     }));
     return ({
-      contentMetaTags: getContentMetaTags(data.onePostOffer),
+      contentMetaTags: getPublicationMetaTags(data.onePostOffer),
     });
   } catch (e) {
     throw e;

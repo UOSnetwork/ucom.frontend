@@ -16,7 +16,7 @@ import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { commentsResetContainerDataByEntryId } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../../utils/comments';
 import urls from '../../utils/urls';
-import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
+import { POST_TYPE_MEDIA_ID } from '../../utils';
 import withLoader from '../../utils/withLoader';
 import { formatRate } from '../../utils/rate';
 import { UserCard } from '../../components/SimpleCard';

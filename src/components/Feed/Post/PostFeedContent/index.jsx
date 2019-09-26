@@ -11,7 +11,7 @@ import styles from './styles.css';
 import urls from '../../../../utils/urls';
 import { getCoverImage } from '../../../../utils/entityImages';
 import Embed from '../../../Embed';
-import { POST_TYPE_DIRECT_ID } from '../../../../utils/posts';
+import { POST_TYPE_DIRECT_ID } from '../../../../utils';
 import equalByProps from '../../../../utils/equalByProps';
 import { getSocialKey } from '../../../../utils/keys';
 import { addErrorNotificationFromResponse } from '../../../../actions/notifications';

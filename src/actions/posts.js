@@ -2,7 +2,7 @@ import { omit } from 'lodash';
 import api, { graphql } from '../api';
 import { addUsers } from './users';
 import { addOrganizations, getOrganization } from './organizations';
-import { POST_TYPE_MEDIA_ID, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { POST_TYPE_MEDIA_ID, TRANSACTION_PERMISSION_SOCIAL } from '../utils';
 import { commentsAddContainerData } from './comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../utils/comments';
 import { searchTags } from '../utils/text';

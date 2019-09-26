@@ -1,7 +1,7 @@
 import React from 'react';
 import Post from './index';
 import { postsFetch } from '../../actions/posts';
-import { getContentMetaTags } from '../../utils/posts';
+import { getPublicationMetaTags } from '../../utils/posts';
 import { getEosPostId } from '../../utils/config';
 
 export const DefaultPost = ({ match }) => (
@@ -19,7 +19,7 @@ export const getDefaultPostData = async (store, params) => {
     }));
 
     return {
-      contentMetaTags: getContentMetaTags(data),
+      contentMetaTags: getPublicationMetaTags(data),
     };
   } catch (e) {
     throw e;
