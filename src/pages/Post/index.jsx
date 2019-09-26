@@ -1,6 +1,7 @@
+import moment from 'moment';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, useMemo, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutBase, Content } from '../../components/Layout';
 import ButtonEdit from '../../components/ButtonEdit';
@@ -15,7 +16,7 @@ import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import { commentsResetContainerDataByEntryId } from '../../actions/comments';
 import { COMMENTS_CONTAINER_ID_POST } from '../../utils/comments';
 import urls from '../../utils/urls';
-import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
+import { POST_TYPE_MEDIA_ID } from '../../utils';
 import withLoader from '../../utils/withLoader';
 import { formatRate } from '../../utils/rate';
 import { UserCard } from '../../components/SimpleCard';
@@ -29,6 +30,7 @@ const Post = ({ postId }) => {
   const dispatch = useDispatch();
   const post = useSelector(selectPostById(postId), isEqual);
   const owner = useSelector(selectOwner);
+  const createdAt = useMemo(() => moment(post.createdAt).format('MMMM D, YYYY'), [post.createdAt]);
 
   const getData = async () => {
     dispatch(commentsResetContainerDataByEntryId({
@@ -54,9 +56,9 @@ const Post = ({ postId }) => {
           {post &&
             <Fragment>
               {post.organizationId ? (
-                <OrgSubHeader orgId={post.organizationId} />
+                <OrgSubHeader orgId={post.organizationId} label={createdAt} />
               ) : (
-                <UserSubHeader userId={post.userId} />
+                <UserSubHeader userId={post.userId} label={createdAt} />
               )}
             </Fragment>
           }
@@ -89,6 +91,7 @@ const Post = ({ postId }) => {
 
                   <div className={styles.main}>
                     <PostContent postId={+postId} />
+
                     <PostTags postId={+postId} />
 
                     {post && post.userId &&

@@ -8,7 +8,7 @@ import { selectOwner, selectOrgById } from '../../store/selectors';
 import LayoutBase from '../../components/Layout/LayoutBase';
 import urls from '../../utils/urls';
 import FeedUser from '../../components/Feed/FeedUser';
-import { FEED_TYPE_ID_ORGANIZATION } from '../../utils';
+import { FEED_TYPE_ID_ORGANIZATION, POST_TYPE_MEDIA_ID } from '../../utils';
 import EntrySocialNetworks from '../../components/EntrySocialNetworks';
 import EntryLocation from '../../components/EntryLocation';
 import EntryCreatedAt from '../../components/EntryCreatedAt';
@@ -27,8 +27,7 @@ import * as orgsActions from '../../actions/organizations';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import NotFoundPage from '../NotFoundPage';
 import { postsFetch } from '../../actions/posts';
-import { POST_TYPE_MEDIA_ID } from '../../utils/constants';
-import { getContentMetaTags } from '../../utils/posts';
+import { getPublicationMetaTags } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 
 const OrganizationPage = (props) => {
@@ -202,7 +201,7 @@ export const getOrganizationPageData = async (store, params) => {
 
     if (post.postTypeId === POST_TYPE_MEDIA_ID) {
       return {
-        contentMetaTags: getContentMetaTags(post),
+        contentMetaTags: getPublicationMetaTags(post),
       };
     }
 

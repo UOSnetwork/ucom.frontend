@@ -13,8 +13,7 @@ import NotFoundPage from './NotFoundPage';
 import * as feedActions from '../actions/feed';
 import { communityFeedGet } from '../actions/communityFeed';
 import { tagsFeedGet } from '../actions/tagsFeed';
-import { FEED_PER_PAGE } from '../utils';
-import { POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils/posts';
+import { FEED_PER_PAGE, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils';
 import Tabs from '../components/Tabs';
 
 const Overview = (props) => {

@@ -9,9 +9,9 @@ import urls from '../../../../utils/urls';
 import { addSuccessNotification } from '../../../../actions/notifications';
 import styles from './styles.css';
 import UserPick from '../../../UserPick';
-import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, postIsEditable, POST_EDIT_TIME_LIMIT } from '../../../../utils/posts';
+import { postIsEditable } from '../../../../utils/posts';
+import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE, POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, POST_EDIT_TIME_LIMIT } from '../../../../utils';
 import { copyToClipboard } from '../../../../utils/text';
-import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../../../utils/constants';
 import fromNow from '../../../../utils/fromNow';
 
 const PostFeedHeader = ({ post, ...props }) => {

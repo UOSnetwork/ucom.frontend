@@ -1,6 +1,8 @@
+import { without } from 'lodash';
 import {
-  FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS,
+  FEED_EXCLUDE_FILTER_ID_PUBLICATIONS,
   FEED_EXCLUDE_FILTER_ID_UPDATES,
+  FEED_EXCLUDE_FILTER_ID_POSTS,
   POST_TYPE_MEDIA_ID,
   POST_TYPE_DIRECT_ID,
   POST_TYPE_OFFER_ID,
@@ -10,12 +12,25 @@ import {
   FEED_TYPE_ID_USER_WALL,
 } from './index';
 
+const postTypes = [
+  POST_TYPE_MEDIA_ID,
+  POST_TYPE_DIRECT_ID,
+  POST_TYPE_OFFER_ID,
+  POST_TYPE_REPOST_ID,
+  POST_TYPE_AUTOUPDATE_ID,
+];
+
 export const getFeedExcludePostTypeIdsByExcludeFilterId = (filterId) => {
   switch (filterId) {
-    case FEED_EXCLUDE_FILTER_ID_MEDIA_POSTS:
-      return [POST_TYPE_DIRECT_ID, POST_TYPE_OFFER_ID, POST_TYPE_REPOST_ID, POST_TYPE_AUTOUPDATE_ID];
+    case FEED_EXCLUDE_FILTER_ID_PUBLICATIONS:
+      return without(postTypes, POST_TYPE_MEDIA_ID);
+
+    case FEED_EXCLUDE_FILTER_ID_POSTS:
+      return without(postTypes, POST_TYPE_DIRECT_ID);
+
     case FEED_EXCLUDE_FILTER_ID_UPDATES:
-      return [POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID, POST_TYPE_OFFER_ID, POST_TYPE_REPOST_ID];
+      return without(postTypes, POST_TYPE_AUTOUPDATE_ID);
+
     default:
       return [];
   }

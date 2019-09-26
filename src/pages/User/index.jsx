@@ -9,7 +9,7 @@ import { postsFetch } from '../../actions/posts';
 import urls from '../../utils/urls';
 import { validUrl } from '../../utils/url';
 import FeedUser from '../../components/Feed/FeedUser';
-import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE, POST_TYPE_MEDIA_ID } from '../../utils';
+import { FEED_TYPE_ID_USER_WALL, FEED_PER_PAGE, POST_TYPE_MEDIA_ID, POST_TYPE_AUTOUPDATE_ID } from '../../utils';
 import { feedGetUserPosts } from '../../actions/feed';
 import NotFoundPage from '../NotFoundPage';
 import Footer from '../../components/Footer';
@@ -19,7 +19,7 @@ import EntryContacts from '../../components/EntryContacts';
 import EntryAbout from '../../components/EntryAbout';
 import { EntryListSectionOrgsWrapper } from '../../components/EntryListSection';
 import { UserTrust } from '../../components/Trust';
-import { getUserName, userIsOwner } from '../../utils/user';
+import { userIsOwner } from '../../utils/user';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import PostPopup from './Post';
 import ProfilePopup from './Profile';
@@ -27,7 +27,7 @@ import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
-import { getContentMetaTags } from '../../utils/posts';
+import { getPublicationMetaTags, getAutoupdateMetatagsForUserPage, getPostPopupMetatagsForUserPage, getMetatagsForUserPage } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 
 const UserPage = (props) => {
@@ -196,19 +196,26 @@ export const getUserPageData = async (store, params) => {
   try {
     const [{ user }, post] = await Promise.all([userPromise, postPromise, feedPromise]);
 
-    if (post.postTypeId === POST_TYPE_MEDIA_ID) {
+    if (!post) {
       return {
-        contentMetaTags: getContentMetaTags(post),
+        contentMetaTags: getMetatagsForUserPage(user),
       };
     }
 
-    return {
-      contentMetaTags: {
-        title: getUserName(user),
-        description: (post && post.description) || user.about,
-        image: EntityImages.getFirstImage(post) || urls.getFileUrl(user.avatarFilename),
-      },
-    };
+    switch (post.postTypeId) {
+      case POST_TYPE_MEDIA_ID:
+        return {
+          contentMetaTags: getPublicationMetaTags(post),
+        };
+      case POST_TYPE_AUTOUPDATE_ID:
+        return {
+          contentMetaTags: getAutoupdateMetatagsForUserPage(post, user),
+        };
+      default:
+        return {
+          contentMetaTags: getPostPopupMetatagsForUserPage(post, user),
+        };
+    }
   } catch (err) {
     throw err;
   }

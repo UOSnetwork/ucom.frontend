@@ -6,7 +6,7 @@ import loader from '../../utils/loader';
 import { addPosts } from '../../actions/posts';
 import LoadMore from './LoadMore';
 import Post from './Post/Post';
-import { POST_TYPE_MEDIA_ID } from '../../utils/posts';
+import { POST_TYPE_MEDIA_ID } from '../../utils';
 import * as overviewUtils from '../../utils/overview';
 
 const paramsForCategories = {

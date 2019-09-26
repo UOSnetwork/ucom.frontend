@@ -1,41 +1,37 @@
 import { truncate, memoize } from 'lodash';
 import { removeLineBreaksMultipleSpacesAndTrim, searchTags } from '../utils/text';
-import urls from './urls';
-
-const { PostTypes } = require('ucom.libs.common').Posts.Dictionary;
-
-// TODO: Move all constants to utils/constants.js
-
-export const POST_TYPE_MEDIA_ID = PostTypes.MEDIA;
-export const POST_TYPE_DIRECT_ID = PostTypes.DIRECT;
-export const POST_TYPE_OFFER_ID = 2;
-export const POST_TYPE_REPOST_ID = 11;
-
-export const POSTS_CATREGORIES_HOT_ID = 1;
-export const POSTS_CATREGORIES_TRENDING_ID = 2;
-export const POSTS_CATREGORIES_FRESH_ID = 3;
-export const POSTS_CATREGORIES_TOP_ID = 4;
+import {
+  EVENT_ID_USER_TRUSTS_YOU,
+  EVENT_ID_USER_UNTRUSTS_YOU,
+  POST_TYPE_MEDIA_ID,
+  POST_TYPE_DIRECT_ID,
+  POST_TYPE_OFFER_ID,
+  POST_TYPE_REPOST_ID,
+  getUserName,
+  urls,
+  getAutoupdateEventId,
+  getAutoupdateTargetEntity,
+} from './index';
+import * as EntityImages from './entityImages';
 
 export const POSTS_TITLE_MAX_LENGTH = 255;
 export const POSTS_LEADING_TEXT_MAX_LENGTH = 255;
+export const POSTS_DESCRIPTION_PREVIEW_LIMIT = 400;
+export const POST_EDIT_TIME_LIMIT = 60 * 1000 * 15;
 
 export const POSTS_DRAFT_LOCALSTORAGE_KEY = 'post_data_v_1';
 
-export const POSTS_DESCRIPTION_PREVIEW_LIMIT = 400;
-
-export const POST_EDIT_TIME_LIMIT = 60 * 1000 * 15;
-
 export const POSTS_CATREGORIES = [{
-  id: POSTS_CATREGORIES_TRENDING_ID,
+  id: 2,
   name: 'trending',
 }, {
-  id: POSTS_CATREGORIES_HOT_ID,
+  id: 1,
   name: 'hot',
 }, {
-  id: POSTS_CATREGORIES_FRESH_ID,
+  id: 3,
   name: 'fresh',
 }, {
-  id: POSTS_CATREGORIES_TOP_ID,
+  id: 4,
   name: 'top',
 }];
 
@@ -167,7 +163,7 @@ export const mediumHasContent = (html = '') => {
   return hasTextContent || hasImagesOrIframes;
 };
 
-export const getContentMetaTags = (post) => {
+export const getPublicationMetaTags = (post) => {
   const articleTitle = post.entityImages && post.entityImages.articleTitle;
   const image = articleTitle && articleTitle[0] && articleTitle[0].url;
 
@@ -178,6 +174,39 @@ export const getContentMetaTags = (post) => {
     description: post.leadingText,
     path: urls.getPostUrl(post),
     keywords: searchTags(post.description).join(','),
+  };
+};
+
+export const getMetatagsForUserPage = user => ({
+  title: getUserName(user),
+  description: user.about,
+  image: urls.getFileUrl(user.avatarFilename),
+});
+
+export const getPostPopupMetatagsForUserPage = (post, user) => ({
+  title: getUserName(user),
+  description: (post && post.description) || user.about,
+  image: EntityImages.getFirstImage(post) || urls.getFileUrl(user.avatarFilename),
+});
+
+export const getAutoupdateMetatagsForUserPage = (post, user) => {
+  const eventId = getAutoupdateEventId(post);
+  const targetEntity = getAutoupdateTargetEntity(post);
+  const description = (() => {
+    switch (eventId) {
+      case EVENT_ID_USER_TRUSTS_YOU:
+        return `Trsut ${getUserName(targetEntity.user)}`;
+      case EVENT_ID_USER_UNTRUSTS_YOU:
+        return `Untrsut ${getUserName(targetEntity.user)}`;
+      default:
+        return user.about;
+    }
+  })();
+
+  return {
+    description,
+    title: getUserName(user),
+    image: urls.getFileUrl(user.avatarFilename),
   };
 };
 

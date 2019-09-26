@@ -1,5 +1,4 @@
 import humps from 'lodash-humps';
-import { isObject, isArray } from 'lodash';
 import { validUrl } from './url';
 import { isBrainkeySymbolsValid, isBrainkeyLengthValid } from './brainkey';
 import {
@@ -193,7 +192,12 @@ export default class Validate {
   }
 
   static isResponseErrors(response) {
-    return isObject(response) && isObject(response.data) && isArray(response.data.errors);
+    try {
+      const errors = JSON.parse(response.data.errors);
+      return Array.isArray(errors.errors);
+    } catch (err) {
+      return response && response.data && Array.isArray(response.data.errors);
+    }
   }
 
   static parseResponseError(response) {
@@ -201,7 +205,15 @@ export default class Validate {
       return {};
     }
 
-    return humps(response.data.errors.reduce((obj, item) => ({
+    let errors;
+
+    try {
+      ({ errors } = JSON.parse(response.data.errors));
+    } catch (err) {
+      ({ errors } = response.data);
+    }
+
+    return humps(errors.reduce((obj, item) => ({
       ...obj,
       [item.field]: item.message,
     }), {}));
