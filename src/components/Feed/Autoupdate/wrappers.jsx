@@ -46,6 +46,7 @@ export const PostAutoupdate = ({ postId, ...props }) => {
     <Autoupdate
       {...props}
       postId={postId}
+      url={urls.getFeedPostUrl(post)}
       commentsCount={post.commentsCount}
       label={getAutoupdateLabelByEventId(eventId)}
       content={content}

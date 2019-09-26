@@ -8,7 +8,7 @@ import PostFeedFooter from '../Post/PostFeedFooter';
 import UserPick from '../../UserPick';
 
 const Autoupdate = ({
-  label, commentsCount, postId, content, commentsContainerId, userName, userUrl, userAvatarSrc, createdAt, headerColor, showFooter, flat,
+  label, commentsCount, postId, content, commentsContainerId, userName, userUrl, userAvatarSrc, createdAt, headerColor, showFooter, flat, url,
 }) => (
   <div
     className={classNames({
@@ -26,7 +26,9 @@ const Autoupdate = ({
       </span>
     </div>
     <div className={styles.container}>
-      <div className={styles.label}>{label}</div>
+      <div className={styles.label}>
+        <Link to={url}>{label}</Link>
+      </div>
       <div className={styles.content}>{content}</div>
       {showFooter &&
         <div className={styles.footer}>
