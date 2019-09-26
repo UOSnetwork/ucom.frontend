@@ -177,6 +177,12 @@ export const getPublicationMetaTags = (post) => {
   };
 };
 
+export const getMetatagsForUserPage = user => ({
+  title: getUserName(user),
+  description: user.about,
+  image: urls.getFileUrl(user.avatarFilename),
+});
+
 export const getPostPopupMetatagsForUserPage = (post, user) => ({
   title: getUserName(user),
   description: (post && post.description) || user.about,

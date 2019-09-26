@@ -27,7 +27,7 @@ import withLoader from '../../utils/withLoader';
 import Cover from '../../components/Cover';
 import * as userPageActions from '../../actions/userPage';
 import { selectUserById, selectOwner } from '../../store/selectors';
-import { getPublicationMetaTags, getAutoupdateMetatagsForUserPage, getPostPopupMetatagsForUserPage } from '../../utils/posts';
+import { getPublicationMetaTags, getAutoupdateMetatagsForUserPage, getPostPopupMetatagsForUserPage, getMetatagsForUserPage } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 
 const UserPage = (props) => {
@@ -195,6 +195,12 @@ export const getUserPageData = async (store, params) => {
 
   try {
     const [{ user }, post] = await Promise.all([userPromise, postPromise, feedPromise]);
+
+    if (!post) {
+      return {
+        contentMetaTags: getMetatagsForUserPage(user),
+      };
+    }
 
     switch (post.postTypeId) {
       case POST_TYPE_MEDIA_ID:
