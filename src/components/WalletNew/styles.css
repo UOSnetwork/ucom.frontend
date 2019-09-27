@@ -36,6 +36,11 @@
   max-width: 600px;
 }
 
+.menu {
+  display: none;
+  padding: 25px;
+}
+
 .emissionCards {
   margin: 0 -16px 33px;
 }
@@ -71,5 +76,15 @@
     max-width: none !important;
     padding-left: 25px;
     padding-right: 25px;
+  }
+}
+
+@media (max-width: 767px) {
+  .menu {
+    display: block;
+  }
+
+  .side {
+    grid-row-start: 3;
   }
 }

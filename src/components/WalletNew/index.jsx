@@ -11,12 +11,25 @@ import Transactions from './Transactions';
 import TokenCard from './TokenCard';
 import Tabs from '../Tabs';
 import Resource from './Resource';
+import Menu from '../Menu';
 
 export const TAB_WALLET_ID = 1;
 export const TAB_RESOURCES_ID = 2;
 
 const Wallet = ({
-  accountCard, emissionCards, transactions, tokenCards, tabs, activeTabId, ramResource, cpuTimeResource, networkBandwithResource, onClickClose, onLoadMore, sidebarBlocked,
+  accountCard,
+  emissionCards,
+  transactions,
+  tokenCards,
+  tabs,
+  activeTabId,
+  ramResource,
+  cpuTimeResource,
+  networkBandwithResource,
+  onClickClose,
+  onLoadMore,
+  sidebarBlocked,
+  menu,
 }) => {
   const mainInnerRef = useRef(null);
   const layoutRef = useRef(null);
@@ -54,10 +67,13 @@ const Wallet = ({
       alignTop
       onScroll={e => onScroll(e.target)}
     >
-      <Content fullHeight fullWidth screen>
+      <Content fullHeight fullWidth screen roundBorders={false}>
         <Close top right onClick={onClickClose} />
 
         <div className={styles.layout} ref={layoutRef}>
+          <div className={styles.menu}>
+            <Menu {...menu} />
+          </div>
           <div className={styles.side}>
             <div
               className={classNames({
@@ -131,6 +147,7 @@ Wallet.propTypes = {
   onClickClose: PropTypes.func,
   onLoadMore: PropTypes.func,
   sidebarBlocked: PropTypes.bool,
+  menu: PropTypes.shape(Menu.propTypes),
 };
 
 Wallet.defaultProps = {
@@ -146,6 +163,7 @@ Wallet.defaultProps = {
   onClickClose: undefined,
   onLoadMore: undefined,
   sidebarBlocked: true,
+  menu: Menu.defaultProps,
 };
 
 export * from './wrappers';

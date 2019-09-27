@@ -1,3 +1,4 @@
+import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { isEqual, groupBy, round } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
@@ -22,6 +23,8 @@ import {
   TRX_TYPE_VOTE_FOR_CALC,
 } from '../../utils/constants';
 import percent from '../../utils/percent';
+import * as searchPopupActions from '../../actions/searchPopup';
+import { logout } from '../../utils/auth';
 
 const TRANSACTIONS_PER_PAGE = 50;
 
@@ -37,7 +40,7 @@ const transactionTypes = [
   TRX_TYPE_VOTE_FOR_CALC,
 ];
 
-export const UserWallet = memo(() => {
+export const UserWallet = withRouter(memo(({ location }) => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
   const wallet = useSelector(state => state.wallet, isEqual);
@@ -99,7 +102,7 @@ export const UserWallet = memo(() => {
     cpuTimeResource = {
       title: 'CPU Time',
       total: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension} Available`,
-      used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.ram.dimension}`,
+      used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.cpu.dimension}`,
       percentage: percent(wallet.resources.cpu.used, wallet.resources.cpu.total),
       actions: [{
         title: 'Set',
@@ -112,7 +115,7 @@ export const UserWallet = memo(() => {
     networkBandwithResource = {
       title: 'Network Bandwith',
       total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
-      used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.ram.dimension}`,
+      used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.net.dimension}`,
       percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
       actions: [{
         title: 'Set',
@@ -180,6 +183,33 @@ export const UserWallet = memo(() => {
     <Wallet
       onClickClose={() => dispatch(walletActions.toggle(false))}
       onLoadMore={() => getNextTransactions()}
+      menu={{
+        items: [{
+          title: 'Search',
+          onClick: () => {
+            dispatch(walletActions.toggle(false));
+            dispatch(searchPopupActions.show());
+          },
+        }, {
+          to: urls.getUsersUrl(),
+          isActive: () => location.pathname === urls.getUsersUrl(),
+          title: 'People',
+        }, {
+          to: urls.getOverviewCategoryUrl(),
+          isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
+          title: 'Overview',
+        }, {
+          to: urls.getGovernanceUrl(),
+          isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
+          title: 'Governance',
+        }, {
+          title: 'Settings',
+          href: urls.getSettingsUrl(),
+        }, {
+          title: 'Log Out',
+          onClick: () => logout(),
+        }],
+      }}
       accountCard={{
         userAccountName: owner.accountName,
         userAvatarSrc: urls.getFileUrl(owner.avatarFilename),
@@ -316,4 +346,4 @@ export const UserWallet = memo(() => {
       }}
     />
   );
-});
+}));
