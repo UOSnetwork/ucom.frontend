@@ -237,6 +237,7 @@ export const UserWallet = withRouter(memo(({ location }) => {
       ramResource={ramResource}
       cpuTimeResource={cpuTimeResource}
       networkBandwithResource={networkBandwithResource}
+      showTokenCardsPlaceholder={initialLoading}
       tokenCards={tokenCards}
       sidebarBlocked={initialLoading || (!initialLoading && transactionsGroupsKeys.length === 0)}
       transactions={{

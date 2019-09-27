@@ -8,7 +8,7 @@ import Close from '../Close';
 import AccountCard from './AccountCard';
 import EmissionCard from './EmissionCard';
 import Transactions from './Transactions';
-import TokenCard from './TokenCard';
+import TokenCard, { Placeholder as TokenCardPlaceholder } from './TokenCard';
 import Tabs from '../Tabs';
 import Resource from './Resource';
 import Menu from '../Menu';
@@ -21,6 +21,7 @@ const Wallet = ({
   emissionCards,
   transactions,
   tokenCards,
+  showTokenCardsPlaceholder,
   tabs,
   activeTabId,
   ramResource,
@@ -104,7 +105,9 @@ const Wallet = ({
 
               {activeTabId === TAB_WALLET_ID &&
                 <Fragment>
-                  {tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+                  {showTokenCardsPlaceholder ?
+                    <TokenCardPlaceholder /> :
+                    tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
                 </Fragment>
               }
 
@@ -148,6 +151,7 @@ Wallet.propTypes = {
   onLoadMore: PropTypes.func,
   sidebarBlocked: PropTypes.bool,
   menu: PropTypes.shape(Menu.propTypes),
+  showTokenCardsPlaceholder: PropTypes.bool,
 };
 
 Wallet.defaultProps = {
@@ -164,6 +168,7 @@ Wallet.defaultProps = {
   onLoadMore: undefined,
   sidebarBlocked: true,
   menu: Menu.defaultProps,
+  showTokenCardsPlaceholder: false,
 };
 
 export * from './wrappers';
