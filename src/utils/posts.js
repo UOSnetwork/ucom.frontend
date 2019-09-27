@@ -17,7 +17,6 @@ import * as EntityImages from './entityImages';
 export const POSTS_TITLE_MAX_LENGTH = 255;
 export const POSTS_LEADING_TEXT_MAX_LENGTH = 255;
 export const POSTS_DESCRIPTION_PREVIEW_LIMIT = 400;
-export const POST_EDIT_TIME_LIMIT = 60 * 1000 * 15;
 
 export const POSTS_DRAFT_LOCALSTORAGE_KEY = 'post_data_v_1';
 
