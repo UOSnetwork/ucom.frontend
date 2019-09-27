@@ -8,7 +8,6 @@ import CopyPanel from '../CopyPanel';
 import Button from '../Button/index';
 import VerticalMenu from '../VerticalMenu/index';
 import { EntryListSectionUsersWrapper } from '../EntryListSection';
-import Resources from '../Resources';
 import ChangePassword from '../Auth/Features/ChangePassword';
 import GenerateSocialKey from '../Auth/Features/GenerateSocialKey';
 import {
@@ -37,7 +36,7 @@ const Settings = () => {
   const [keys, setKeys] = useState({});
 
   const sections = [
-    { title: 'Resources', name: 'Resources' },
+    // { title: 'Resources', name: 'Resources' },
     { title: 'Keys', name: 'Keys' },
   ];
 
@@ -119,17 +118,11 @@ const Settings = () => {
                 <p>This section contains settings of your blockchain account.</p>
               </div>
 
-              <Element className={styles.section} name="Resources">
-                <h3 className={styles.title}>Resources</h3>
-                <Resources />
-              </Element>
-
               <Element
                 name="Keys"
                 className={styles.section}
               >
                 <h3 className={styles.title}>Keys</h3>
-                {/* TODO: Enable when auth and registration by social key feature complete */}
                 <div className={styles.subSection}>
                   <h4 className={styles.title}>Social Keys</h4>
                   <p>The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.</p>
