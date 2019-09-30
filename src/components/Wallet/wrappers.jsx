@@ -65,19 +65,17 @@ export const UserWallet = withRouter(memo(({ location }) => {
     label: 'Your Emission',
   }];
 
-  if (wallet.tokens && wallet.tokens.active) {
+  if (wallet.tokens) {
     tokenCards.push({
       color: '#B3E1E1',
       icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
       tokens: [{
-        title: `UOS ${formatNumber(wallet.tokens.active)}`,
+        title: `UOS ${formatNumber(wallet.tokens.active || 0)}`,
         label: 'TestNet',
       }, {
-        title: `UOSF ${formatNumber(wallet.tokens.uosFutures)}`,
-      }],
-      actions: [{
-        title: 'Send',
-        onClick: () => dispatch(walletActions.walletToggleSendTokens(true)),
+        title: `staked UOS ${formatNumber(wallet.tokens.staked || 0)}`,
+      }, {
+        title: `UOSF ${formatNumber(wallet.tokens.uosFutures || 0)}`,
       }],
     });
   }

@@ -1,4 +1,8 @@
 .token {
+  margin: 0 0 10px;
+}
+
+.token.main {
   margin: 0 0 24px;
 }
 
