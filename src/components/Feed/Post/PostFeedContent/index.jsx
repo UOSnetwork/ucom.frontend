@@ -73,6 +73,7 @@ const PostFeedContent = ({
   return props.formIsVisible ? (
     <div className={styles.form}>
       <FeedForm
+        loading={loading}
         message={post.description}
         entityImages={post.entityImages}
         onCancel={props.hideForm}
