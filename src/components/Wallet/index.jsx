@@ -1,67 +1,116 @@
+import classNames from 'classnames';
+import { throttle } from 'lodash';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import React from 'react';
-import Tokens from '../Resources/Tokens';
+import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
 import styles from './styles.css';
-import urls from '../../utils/urls';
-import Menu from '../Menu';
-import ReferralBanner from '../ReferralBanner';
-import { logout } from '../../utils/auth';
-import * as searchPopup from '../../actions/searchPopup';
 import Popup, { Content } from '../Popup';
+import Close from '../Close';
+import AccountCard from './AccountCard';
+import EmissionCard from './EmissionCard';
+import Transactions from './Transactions';
+import TokenCard, { Placeholder as TokenCardPlaceholder } from './TokenCard';
+import Tabs from '../Tabs';
+import Menu from '../Menu';
+import Resources from './Resources';
 
-const Wallet = ({ location, onClickClose }) => {
-  const dispatch = useDispatch();
+export const TAB_WALLET_ID = 1;
+export const TAB_RESOURCES_ID = 2;
+
+const Wallet = ({
+  accountCard,
+  emissionCards,
+  transactions,
+  tokenCards,
+  showTokenCardsPlaceholder,
+  tabs,
+  activeTabId,
+  resources,
+  onClickClose,
+  onLoadMore,
+  sidebarBlocked,
+  menu,
+}) => {
+  const mainInnerRef = useRef(null);
+  const layoutRef = useRef(null);
+  const [mainInnerTop, setMainInnerTop] = useState(0);
+
+  const calcAndSetMainInnerTop = () => {
+    const mainInnerTop = mainInnerRef.current.offsetHeight - window.innerHeight;
+
+    if (mainInnerTop > 0) {
+      setMainInnerTop(-(mainInnerRef.current.offsetHeight - window.innerHeight));
+    }
+  };
+
+  const onScroll = useCallback(throttle((container) => {
+    if (onLoadMore && container.scrollTop + container.offsetHeight + 400 > layoutRef.current.offsetHeight) {
+      onLoadMore();
+    }
+  }, 100), [layoutRef, onLoadMore]);
+
+  useEffect(() => {
+    calcAndSetMainInnerTop();
+  }, [activeTabId, transactions]);
+
+  useEffect(() => {
+    calcAndSetMainInnerTop();
+    window.addEventListener('resize', calcAndSetMainInnerTop);
+
+    return () => {
+      window.removeEventListener('resize', calcAndSetMainInnerTop);
+    };
+  }, []);
 
   return (
     <Popup
-      transparent
-      mod="wallet"
-      onClickClose={onClickClose}
+      alignTop
+      onScroll={e => onScroll(e.target)}
     >
-      <Content
-        screen
-        fullHeight
-        fullWidth
-        roundBorders={false}
-      >
-        <div className={styles.wallet}>
-          <div className={`${styles.section} ${styles.menu}`}>
-            <Menu
-              items={[{
-                title: 'Search',
-                onClick: () => {
-                  onClickClose();
-                  dispatch(searchPopup.show());
-                },
-              }, {
-                to: urls.getUsersUrl(),
-                isActive: () => location.pathname === urls.getUsersUrl(),
-                title: 'People',
-              }, {
-                to: urls.getOverviewCategoryUrl(),
-                isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
-                title: 'Overview',
-              }, {
-                to: urls.getGovernanceUrl(),
-                isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
-                title: 'Governance',
-              }, {
-                title: 'Settings',
-                href: urls.getSettingsUrl(),
-              }, {
-                title: 'Log Out',
-                onClick: () => logout(),
-              }]}
-            />
+      <Content fullHeight fullWidth screen roundBorders={false}>
+        <Close top right onClick={onClickClose} />
+
+        <div className={styles.layout} ref={layoutRef}>
+          <div className={styles.menu}>
+            <Menu {...menu} />
           </div>
-          <div className={styles.section}>
-            <h2 className={styles.title}>Wallet</h2>
-            <Tokens />
+          <div className={styles.side}>
+            <div
+              className={classNames({
+                [styles.inner]: true,
+                [styles.blocked]: sidebarBlocked,
+              })}
+            >
+              {emissionCards.length > 0 &&
+                <div className={styles.emissionCards}>
+                  {emissionCards.map((props, index) => (
+                    <EmissionCard key={index} {...props} />
+                  ))}
+                </div>
+              }
+
+              <Transactions {...transactions} />
+            </div>
           </div>
-          <div className={`${styles.section} ${styles.wide}`}>
-            <ReferralBanner />
+          <div className={styles.main}>
+            <div className={styles.inner} ref={mainInnerRef} style={{ top: `${mainInnerTop}px` }}>
+              <div className={styles.accountCard}>
+                <AccountCard {...accountCard} />
+              </div>
+
+              <div className={styles.tabs}>
+                <Tabs {...tabs} />
+              </div>
+
+              {activeTabId === TAB_WALLET_ID &&
+                <Fragment>
+                  {showTokenCardsPlaceholder ? <TokenCardPlaceholder /> : tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+                </Fragment>
+              }
+
+              {activeTabId === TAB_RESOURCES_ID &&
+                <Resources {...resources} />
+              }
+            </div>
           </div>
         </div>
       </Content>
@@ -70,7 +119,35 @@ const Wallet = ({ location, onClickClose }) => {
 };
 
 Wallet.propTypes = {
-  onClickClose: PropTypes.func.isRequired,
+  accountCard: PropTypes.shape(AccountCard.propTypes),
+  emissionCards: PropTypes.arrayOf(PropTypes.shape(EmissionCard.propTypes)),
+  transactions: PropTypes.shape(Transactions.propTypes),
+  tokenCards: PropTypes.arrayOf(PropTypes.shape(TokenCard.propTypes)),
+  tabs: PropTypes.shape(Tabs.propTypes),
+  activeTabId: PropTypes.oneOf([TAB_WALLET_ID, TAB_RESOURCES_ID]),
+  resources: PropTypes.shape(Resources.propTypes),
+  onClickClose: PropTypes.func,
+  onLoadMore: PropTypes.func,
+  sidebarBlocked: PropTypes.bool,
+  menu: PropTypes.shape(Menu.propTypes),
+  showTokenCardsPlaceholder: PropTypes.bool,
 };
 
-export default withRouter(Wallet);
+Wallet.defaultProps = {
+  accountCard: AccountCard.defaultProps,
+  emissionCards: [],
+  transactions: Transactions.defaultProps,
+  tokenCards: [],
+  tabs: Tabs.defaultProps,
+  activeTabId: TAB_WALLET_ID,
+  resources: Resources.defaultProps,
+  onClickClose: undefined,
+  onLoadMore: undefined,
+  sidebarBlocked: true,
+  menu: Menu.defaultProps,
+  showTokenCardsPlaceholder: false,
+};
+
+export * from './Actions';
+export * from './wrappers';
+export default Wallet;

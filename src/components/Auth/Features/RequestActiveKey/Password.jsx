@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import TextInput from '../../../TextInput';
 import IconInputError from '../../../Icons/InputError';
 import Button from '../../../Button/index';
-import styles from '../../../Resources/Actions/styles.css';
+import styles from '../../../Wallet/Actions/styles.css'; // TODO: Incapsulate styles
 import { restoreEncryptedActiveKey } from '../../../../utils/keys';
 import { passwordIsValid } from '../../../../utils/password';
 
