@@ -184,7 +184,6 @@ export const UserWallet = withRouter(memo(({ location }) => {
     return null;
   }
 
-  // TODO: Add memo for popup
   return (
     <Wallet
       onClickClose={() => dispatch(walletActions.toggle(false))}

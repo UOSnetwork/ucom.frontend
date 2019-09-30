@@ -53,3 +53,26 @@ export const Default = () => (
     <rect width="40" height="40" rx="11" fill="#CFD3D7" />
   </svg>
 );
+
+export const Message = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_d)">
+      <path d="M10.8286 21C10.7059 21 10.5422 20.9592 10.4194 20.8776C10.1739 20.7551 10.0102 20.4694 10.0102 20.1837V17.7755H9.19182C7.43222 17.7755 6 16.3469 6 14.5918V8.18367C6 6.42857 7.43222 5 9.19182 5H18.8082C20.5678 5 22 6.42857 22 8.18367V14.5918C22 16.3469 20.5678 17.7755 18.8082 17.7755H16.6394L11.1969 20.8776C11.0742 20.9592 10.9514 21 10.8286 21Z" fill="white" />
+      <path d="M9.51023 20.1837C9.51023 20.6294 9.75333 21.0894 10.169 21.3109C10.3776 21.4411 10.6272 21.5 10.8286 21.5C11.0615 21.5 11.2735 21.4235 11.4579 21.3043L16.7719 18.2755H18.8082C20.8427 18.2755 22.5 16.6243 22.5 14.5918V8.18367C22.5 6.15123 20.8427 4.5 18.8082 4.5H9.19182C7.15729 4.5 5.5 6.15123 5.5 8.18367V14.5918C5.5 16.6243 7.15729 18.2755 9.19182 18.2755H9.51023V20.1837Z" stroke="#1E2122" strokeOpacity="0.03" />
+    </g>
+    <circle cx="11" cy="12" r="1" fill="black" />
+    <circle cx="14" cy="12" r="1" fill="black" />
+    <circle cx="17" cy="12" r="1" fill="black" />
+    <defs>
+      <filter id="filter0_d" x="0" y="0" width="28" height="28" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+        <feOffset dy="1" />
+        <feGaussianBlur stdDeviation="2.5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.114097 0 0 0 0 0.121933 0 0 0 0 0.129167 0 0 0 0.13 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+      </filter>
+    </defs>
+  </svg>
+);

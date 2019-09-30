@@ -3,6 +3,8 @@ import React, { Fragment, useState } from 'react';
 import styles from './styles.css';
 import Popup from '../Popup';
 import UserPick from '../../../UserPick';
+import UserPickWithIcon from '../../../UserPickWithIcon';
+import * as Icons from '../../Icons';
 
 const Transaction = ({
   icon, title, amount, message, date, type, details, avatarSrc,
@@ -14,7 +16,22 @@ const Transaction = ({
       <div role="presentation" className={styles.transaction} onClick={() => setPopupVisible(true)}>
         <div className={styles.content}>
           {typeof avatarSrc === 'string' ? (
-            <UserPick src={avatarSrc} size={40} />
+            <div className={styles.userPick}>
+              {message ? (
+                <UserPickWithIcon
+                  icon={<Icons.Message />}
+                  iconSize={32}
+                  iconX="50%"
+                  iconY="-50%"
+                  userPick={{
+                    src: avatarSrc,
+                    size: 40,
+                  }}
+                />
+              ) : (
+                <UserPick src={avatarSrc} size={40} />
+              )}
+            </div>
           ) : (
             <div className={styles.icon}>{icon}</div>
           )}
@@ -33,6 +50,7 @@ const Transaction = ({
           amount={amount}
           details={details}
           avatarSrc={avatarSrc}
+          message={message}
         />
       }
     </Fragment>
