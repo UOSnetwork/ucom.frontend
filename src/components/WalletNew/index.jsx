@@ -10,8 +10,8 @@ import EmissionCard from './EmissionCard';
 import Transactions from './Transactions';
 import TokenCard, { Placeholder as TokenCardPlaceholder } from './TokenCard';
 import Tabs from '../Tabs';
-import Resource from './Resource';
 import Menu from '../Menu';
+import Resources from './Resources';
 
 export const TAB_WALLET_ID = 1;
 export const TAB_RESOURCES_ID = 2;
@@ -24,9 +24,7 @@ const Wallet = ({
   showTokenCardsPlaceholder,
   tabs,
   activeTabId,
-  ramResource,
-  cpuTimeResource,
-  networkBandwithResource,
+  resources,
   onClickClose,
   onLoadMore,
   sidebarBlocked,
@@ -105,29 +103,12 @@ const Wallet = ({
 
               {activeTabId === TAB_WALLET_ID &&
                 <Fragment>
-                  {showTokenCardsPlaceholder ?
-                    <TokenCardPlaceholder /> :
-                    tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
+                  {showTokenCardsPlaceholder ? <TokenCardPlaceholder /> : tokenCards.map((props, index) => <TokenCard key={index} {...props} />)}
                 </Fragment>
               }
 
               {activeTabId === TAB_RESOURCES_ID &&
-                <Fragment>
-                  {ramResource &&
-                    <Fragment>
-                      <div className={styles.label}>Resources you own</div>
-                      {ramResource && <Resource {...ramResource} />}
-                    </Fragment>
-                  }
-
-                  {(cpuTimeResource || networkBandwithResource) &&
-                    <Fragment>
-                      <div className={styles.label}>Resources you staked for</div>
-                      {cpuTimeResource && <Resource {...cpuTimeResource} />}
-                      {networkBandwithResource && <Resource {...networkBandwithResource} />}
-                    </Fragment>
-                  }
-                </Fragment>
+                <Resources {...resources} />
               }
             </div>
           </div>
@@ -144,9 +125,7 @@ Wallet.propTypes = {
   tokenCards: PropTypes.arrayOf(PropTypes.shape(TokenCard.propTypes)),
   tabs: PropTypes.shape(Tabs.propTypes),
   activeTabId: PropTypes.oneOf([TAB_WALLET_ID, TAB_RESOURCES_ID]),
-  ramResource: PropTypes.shape(Resource.propTypes),
-  cpuTimeResource: PropTypes.shape(Resource.propTypes),
-  networkBandwithResource: PropTypes.shape(Resource.propTypes),
+  resources: PropTypes.shape(Resources.propTypes),
   onClickClose: PropTypes.func,
   onLoadMore: PropTypes.func,
   sidebarBlocked: PropTypes.bool,
@@ -161,9 +140,7 @@ Wallet.defaultProps = {
   tokenCards: [],
   tabs: Tabs.defaultProps,
   activeTabId: TAB_WALLET_ID,
-  ramResource: Resource.defaultProps,
-  cpuTimeResource: Resource.defaultProps,
-  networkBandwithResource: Resource.defaultProps,
+  resources: Resources.defaultProps,
   onClickClose: undefined,
   onLoadMore: undefined,
   sidebarBlocked: true,

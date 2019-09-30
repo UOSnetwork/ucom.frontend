@@ -3,7 +3,9 @@ import React from 'react';
 import styles from './styles.css';
 
 const Panel = ({ children, actions }) => (
-  <div className={styles.panel}>
+  <div
+    className={styles.panel}
+  >
     <div className={styles.content}>{children}</div>
     <div className={styles.actions}>
       {actions.map((item, index) => (

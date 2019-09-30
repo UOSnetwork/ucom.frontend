@@ -56,9 +56,9 @@ export const UserWallet = withRouter(memo(({ location }) => {
   });
   const transactionsGroupsKeys = Object.keys(transactionsGroups);
   const tokenCards = [];
-  let ramResource = null;
-  let cpuTimeResource = null;
-  let networkBandwithResource = null;
+  const resources = {
+    sections: [],
+  };
   let emissionCards = [{
     disabled: true,
     amount: '0 UOS',
@@ -83,11 +83,8 @@ export const UserWallet = withRouter(memo(({ location }) => {
   }
 
   if (wallet.resources && wallet.resources.ram) {
-    ramResource = {
-      title: 'RAM',
-      total: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension} Available`,
-      used: `${formatNumber(round(wallet.resources.ram.used, 2))} ${wallet.resources.ram.dimension}`,
-      percentage: percent(wallet.resources.ram.used, wallet.resources.ram.total),
+    resources.sections.push({
+      title: 'Resources you own:',
       actions: [{
         title: 'Sell',
         onClick: () => dispatch(walletActions.walletToggleSellRam(true)),
@@ -95,33 +92,44 @@ export const UserWallet = withRouter(memo(({ location }) => {
         title: 'Buy',
         onClick: () => dispatch(walletActions.walletToggleBuyRam(true)),
       }],
-    };
+      list: [{
+        title: 'RAM',
+        total: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension} Available`,
+        used: `${formatNumber(round(wallet.resources.ram.used, 2))} ${wallet.resources.ram.dimension}`,
+        percentage: percent(wallet.resources.ram.used, wallet.resources.ram.total),
+      }],
+    });
   }
 
-  if (wallet.resources && wallet.resources.cpu) {
-    cpuTimeResource = {
-      title: 'CPU Time',
-      total: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension} Available`,
-      used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.cpu.dimension}`,
-      percentage: percent(wallet.resources.cpu.used, wallet.resources.cpu.total),
+  if (wallet.resources && (wallet.resources.cpu || wallet.resources.net)) {
+    const list = [];
+
+    if (wallet.resources.net) {
+      list.push({
+        title: 'Network Bandwith',
+        total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
+        used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.net.dimension}`,
+        percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
+      });
+    }
+
+    if (wallet.resources.cpu) {
+      list.push({
+        title: 'CPU Time',
+        total: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension} Available`,
+        used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.cpu.dimension}`,
+        percentage: percent(wallet.resources.cpu.used, wallet.resources.cpu.total),
+      });
+    }
+
+    resources.sections.push({
+      title: <span>Resources you staked<strong>{wallet.tokens ? ` UOS ${wallet.tokens.staked}` : ''}</strong> for:</span>,
       actions: [{
         title: 'Set',
         onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
       }],
-    };
-  }
-
-  if (wallet.resources && wallet.resources.net) {
-    networkBandwithResource = {
-      title: 'Network Bandwith',
-      total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
-      used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.net.dimension}`,
-      percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
-      actions: [{
-        title: 'Set',
-        onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
-      }],
-    };
+      list,
+    });
   }
 
   if (wallet.tokens) {
@@ -234,9 +242,7 @@ export const UserWallet = withRouter(memo(({ location }) => {
         }],
       }}
       emissionCards={emissionCards}
-      ramResource={ramResource}
-      cpuTimeResource={cpuTimeResource}
-      networkBandwithResource={networkBandwithResource}
+      resources={resources}
       showTokenCardsPlaceholder={initialLoading}
       tokenCards={tokenCards}
       sidebarBlocked={initialLoading || (!initialLoading && transactionsGroupsKeys.length === 0)}
