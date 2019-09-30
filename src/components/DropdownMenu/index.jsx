@@ -31,6 +31,16 @@ const DropdownMenu = (props) => {
           props.onHidden();
         }
       }}
+      onShow={() => {
+        if (props.onShow) {
+          props.onShow();
+        }
+      }}
+      onHide={() => {
+        if (props.onHide) {
+          props.onHide();
+        }
+      }}
       content={(
         <div className={styles.tooltipMenu}>
           {props.items.map((item, id) => {
@@ -104,6 +114,8 @@ DropdownMenu.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   onHidden: PropTypes.func,
+  onShow: PropTypes.func,
+  onHide: PropTypes.func,
 };
 
 DropdownMenu.defaultProps = {
@@ -113,10 +125,9 @@ DropdownMenu.defaultProps = {
   position: 'bottom-center',
   distance: 10,
   onHidden: undefined,
+  onShow: undefined,
+  onHide: undefined,
 };
 
 export { default as DropdownMenuIcon } from './Icon';
-
-export default withRouter(memo(DropdownMenu, (perv, next) => (
-  isEqual(perv.items, next.items)
-)));
+export default withRouter(memo(DropdownMenu, isEqual));
