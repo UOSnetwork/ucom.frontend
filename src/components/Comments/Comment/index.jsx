@@ -56,6 +56,7 @@ const Comment = (props) => {
         {editFormVisible ? (
           <div className={styles.editForm}>
             <Form
+              hideUserPick
               message={props.text}
               containerId={props.containerId}
               postId={props.postId}

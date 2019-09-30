@@ -182,9 +182,11 @@ const Form = (props) => {
         </div>
       ))}
       <div className={styles.formMain}>
-        <div className={styles.userPick}>
-          <UserPick src={props.userImageUrl} url={props.userPageUrl} alt={props.userName} />
-        </div>
+        {!props.hideUserPick &&
+          <div className={styles.userPick}>
+            <UserPick src={props.userImageUrl} url={props.userPageUrl} alt={props.userName} />
+          </div>
+        }
 
         <div className={styles.content}>
           <div
@@ -285,6 +287,7 @@ Form.propTypes = {
     })),
   }),
   onError: PropTypes.func.isRequired,
+  hideUserPick: PropTypes.bool,
 };
 
 Form.defaultProps = {
@@ -298,6 +301,7 @@ Form.defaultProps = {
   userName: null,
   onReset: null,
   entityImages: { gallery: [] },
+  hideUserPick: false,
 };
 
 export default Form;
