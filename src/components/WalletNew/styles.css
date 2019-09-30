@@ -42,7 +42,16 @@
 }
 
 .emissionCards {
-  margin: 0 -16px 33px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: -46px -16px 0;
+  padding: 46px 0 33px 0;
+  background: #f4f4f4;
+}
+
+.inner.blocked .emissionCards {
+  padding-top: 0;
 }
 
 .accountCard {
