@@ -123,7 +123,7 @@ export const UserWallet = withRouter(memo(({ location }) => {
     }
 
     resources.sections.push({
-      title: <span>Resources you staked<strong>{wallet.tokens ? ` UOS ${wallet.tokens.staked}` : ''}</strong> for:</span>,
+      title: <span>Resources you staked<strong>{wallet.tokens ? ` UOS ${formatNumber(wallet.tokens.staked)}` : ''}</strong> for:</span>,
       actions: [{
         title: 'Set',
         onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
