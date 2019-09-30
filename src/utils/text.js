@@ -88,7 +88,7 @@ export const getTextContent = memoize((content) => {
 });
 
 export const sanitizePostText = memoize(html => sanitizeHtml(html, {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'figure', 'h2', 'h1', 'span']),
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'figure', 'h2', 'h1', 'span', 'pre']),
   allowedIframeHostnames: allowedVideoHosts,
   allowedSchemes: ['http', 'https'],
   allowedAttributes: {
