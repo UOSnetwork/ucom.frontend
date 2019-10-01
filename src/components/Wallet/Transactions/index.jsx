@@ -20,7 +20,9 @@ const Transactions = ({
       <Fragment>
         {sections.map((section, index) => (
           <div className={styles.section} key={index}>
-            <div className={styles.title}>{section.title}</div>
+            {section.title &&
+              <div className={styles.title}>{section.title}</div>
+            }
 
             {section.list.map((item, index) => (
               <div className={styles.item} key={index}>
@@ -41,7 +43,7 @@ const Transactions = ({
 
 Transactions.propTypes = {
   sections: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
     list: PropTypes.arrayOf(PropTypes.shape(Transaction.propTypes)),
   })),
   showLoader: PropTypes.bool,

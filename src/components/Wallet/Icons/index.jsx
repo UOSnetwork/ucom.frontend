@@ -76,3 +76,25 @@ export const Message = () => (
     </defs>
   </svg>
 );
+
+export const Deferred = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g filter="url(#filter0_d)">
+      <circle cx="14" cy="13" r="8" fill="white" />
+      <circle cx="14" cy="13" r="8.5" stroke="#1E2122" strokeOpacity="0.03" />
+    </g>
+    <rect x="13" y="8" width="2" height="6" rx="1" fill="black" />
+    <rect x="13" y="12" width="5" height="2" rx="1" fill="black" />
+    <defs>
+      <filter id="filter0_d" x="0" y="0" width="28" height="28" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+        <feOffset dy="1" />
+        <feGaussianBlur stdDeviation="2.5" />
+        <feColorMatrix type="matrix" values="0 0 0 0 0.114097 0 0 0 0 0.121933 0 0 0 0 0.129167 0 0 0 0.13 0" />
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+      </filter>
+    </defs>
+  </svg>
+);

@@ -3,14 +3,14 @@ import moment from 'moment';
 import { isEqual, groupBy, round } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect, memo, useCallback } from 'react';
-import Wallet, { TAB_WALLET_ID, TAB_RESOURCES_ID } from './index';
-import { selectOwner } from '../../store/selectors';
-import urls from '../../utils/urls';
-import UserPick from '../../components/UserPick';
-import withLoader from '../../utils/withLoader';
-import formatNumber from '../../utils/formatNumber';
-import * as walletActions from '../../actions/wallet';
-import * as Icons from './Icons';
+import Wallet, { TAB_WALLET_ID, TAB_RESOURCES_ID } from '../../index';
+import { selectOwner } from '../../../../store/selectors';
+import urls from '../../../../utils/urls';
+import UserPick from '../../../../components/UserPick';
+import withLoader from '../../../../utils/withLoader';
+import formatNumber from '../../../../utils/formatNumber';
+import * as walletActions from '../../../../actions/wallet';
+import * as Icons from '../../Icons';
 import {
   TRX_TYPE_TRANSFER_FROM,
   TRX_TYPE_TRANSFER_TO,
@@ -21,10 +21,10 @@ import {
   TRX_TYPE_BUY_RAM,
   TRX_TYPE_SELL_RAM,
   TRX_TYPE_VOTE_FOR_CALC,
-} from '../../utils/constants';
-import percent from '../../utils/percent';
-import * as searchPopupActions from '../../actions/searchPopup';
-import { logout } from '../../utils/auth';
+} from '../../../../utils/constants';
+import percent from '../../../../utils/percent';
+import * as searchPopupActions from '../../../../actions/searchPopup';
+import { logout } from '../../../../utils/auth';
 
 const TRANSACTIONS_PER_PAGE = 50;
 
@@ -40,7 +40,7 @@ const transactionTypes = [
   TRX_TYPE_VOTE_FOR_CALC,
 ];
 
-export const UserWallet = withRouter(memo(({ location }) => {
+const UserWallet = ({ location }) => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
   const wallet = useSelector(state => state.wallet, isEqual);
@@ -55,6 +55,15 @@ export const UserWallet = withRouter(memo(({ location }) => {
     return date.getTime();
   });
   const transactionsGroupsKeys = Object.keys(transactionsGroups);
+  const unstakingRequestTransactionsSection = wallet && wallet.tokens && wallet.tokens.unstakingRequest && wallet.tokens.unstakingRequest.requestDatetime ? ({
+    list: [{
+      icon: <Icons.St />,
+      title: `Unstaking ${wallet.tokens.unstakingRequest.requestDatetime ? `(${moment(wallet.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
+      amount: `${formatNumber(wallet.tokens.unstakingRequest.amount)} ${wallet.tokens.unstakingRequest.currency}`,
+      disablePopup: true,
+      deferred: true,
+    }],
+  }) : null;
   const tokenCards = [];
   const resources = {
     sections: [],
@@ -247,107 +256,110 @@ export const UserWallet = withRouter(memo(({ location }) => {
         showEmptyLabel: !initialLoading && transactionsGroupsKeys.length === 0,
         showPlaceholder: initialLoading,
         showLoader: wallet.transactions.metadata.hasMore,
-        sections: transactionsGroupsKeys.map(time => ({
-          title: moment(+time).format('D MMMM'),
-          list: transactionsGroups[time].map((trx) => {
-            const commonProps = {
-              date: moment(trx.updatedAt).format('DD MMMM YYYY HH:mm:ss'),
-              details: JSON.stringify(trx.rawTrData, null, 4),
-            };
+        sections: (unstakingRequestTransactionsSection ? [unstakingRequestTransactionsSection] : [])
+          .concat(transactionsGroupsKeys.map(time => ({
+            title: moment(+time).format('D MMMM'),
+            list: transactionsGroups[time].map((trx) => {
+              const commonProps = {
+                date: moment(trx.updatedAt).format('DD MMMM YYYY HH:mm:ss'),
+                details: JSON.stringify(trx.rawTrData, null, 4),
+              };
 
-            switch (trx.trType) {
-              case TRX_TYPE_TRANSFER_FROM:
-              case TRX_TYPE_TRANSFER_TO:
-                return ({
-                  ...commonProps,
-                  type: 'Transfer',
-                  avatarSrc: urls.getFileUrl(trx.user.avatarFilename) || '',
-                  title: `@${trx.user.accountName}`,
-                  amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
-                  message: trx.memo,
-                });
+              switch (trx.trType) {
+                case TRX_TYPE_TRANSFER_FROM:
+                case TRX_TYPE_TRANSFER_TO:
+                  return ({
+                    ...commonProps,
+                    type: 'Transfer',
+                    avatarSrc: urls.getFileUrl(trx.user.avatarFilename) || '',
+                    title: `@${trx.user.accountName}`,
+                    amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
+                    message: trx.memo,
+                  });
 
-              case TRX_TYPE_STAKE_RESOURCES:
-              case TRX_TYPE_UNSTAKING_REQUEST: {
-                let net;
-                let cpu;
-                let icon;
-                let title;
+                case TRX_TYPE_STAKE_RESOURCES:
+                case TRX_TYPE_UNSTAKING_REQUEST: {
+                  let net;
+                  let cpu;
+                  let icon;
+                  let title;
 
-                if (trx.trType === TRX_TYPE_STAKE_RESOURCES) {
-                  net = round(trx.resources.net.tokens.selfDelegated, 2);
-                  cpu = round(trx.resources.cpu.tokens.selfDelegated, 2);
-                } else {
-                  net = round(trx.resources.net.unstakingRequest.amount, 2);
-                  cpu = round(trx.resources.cpu.unstakingRequest.amount, 2);
+                  if (trx.trType === TRX_TYPE_STAKE_RESOURCES) {
+                    net = round(trx.resources.net.tokens.selfDelegated, 2);
+                    cpu = round(trx.resources.cpu.tokens.selfDelegated, 2);
+                  } else {
+                    net = round(trx.resources.net.unstakingRequest.amount, 2);
+                    cpu = round(trx.resources.cpu.unstakingRequest.amount, 2);
+                  }
+
+                  if (net && cpu) {
+                    icon = <Icons.St />;
+                  } else if (cpu) {
+                    icon = <Icons.Cpu />;
+                  } else {
+                    icon = <Icons.Net />;
+                  }
+
+                  const titleAction = trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Staked' : 'Unstaking';
+
+                  if (cpu && net) {
+                    title = `${titleAction} for Network BW and CPU Time`;
+                  } else if (cpu) {
+                    title = `${titleAction} for CPU Time`;
+                  } else {
+                    title = `${titleAction} for Network BW`;
+                  }
+
+                  return ({
+                    ...commonProps,
+                    icon,
+                    title,
+                    amount: `${trx.trType === TRX_TYPE_STAKE_RESOURCES ? '– ' : ''}${cpu && net ? cpu + net : cpu || net} ${trx.resources.net.tokens.currency}`,
+                    type: trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Stake' : 'Unstake',
+                  });
                 }
 
-                if (net && cpu) {
-                  icon = <Icons.St />;
-                } else if (cpu) {
-                  icon = <Icons.Cpu />;
-                } else {
-                  icon = <Icons.Net />;
+                case TRX_TYPE_CLAIM_EMISSION:
+                  return ({
+                    ...commonProps,
+                    type: 'Withdraw',
+                    icon: <Icons.Emission />,
+                    title: 'Recieved emission',
+                    amount: `${round(trx.tokens.emission, 2)} ${trx.tokens.currency}`,
+                  });
+
+                case TRX_TYPE_BUY_RAM:
+                case TRX_TYPE_SELL_RAM:
+                  return ({
+                    ...commonProps,
+                    type: trx.trType === TRX_TYPE_BUY_RAM ? 'Buy RAM' : 'Sell RAM',
+                    icon: <Icons.Ram />,
+                    title: `${trx.trType === TRX_TYPE_BUY_RAM ? 'Bought' : 'Sold'} RAM`,
+                    amount: `${trx.trType === TRX_TYPE_BUY_RAM ? '– ' : ''}${round(trx.resources.ram.tokens.amount, 2)} ${trx.resources.ram.tokens.currency}`,
+                  });
+
+                case TRX_TYPE_VOTE_FOR_BP:
+                case TRX_TYPE_VOTE_FOR_CALC: {
+                  const nodes = trx.trType === TRX_TYPE_VOTE_FOR_BP ? trx.producers : trx.calculators;
+
+                  return ({
+                    ...commonProps,
+                    type: 'Vote',
+                    icon: <Icons.Vote />,
+                    title: nodes.length ? `Voted for ${nodes.map(item => item).join(', ')}` : 'Not voted for anyone',
+                  });
                 }
 
-                const titleAction = trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Staked' : 'Unstaking';
-
-                if (cpu && net) {
-                  title = `${titleAction} for Network BW and CPU Time`;
-                } else if (cpu) {
-                  title = `${titleAction} for CPU Time`;
-                } else {
-                  title = `${titleAction} for Network BW`;
-                }
-
-                return ({
-                  ...commonProps,
-                  icon,
-                  title,
-                  amount: `${trx.trType === TRX_TYPE_STAKE_RESOURCES ? '– ' : ''}${cpu && net ? cpu + net : cpu || net} ${trx.resources.net.tokens.currency}`,
-                  type: trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Stake' : 'Unstake',
-                });
+                default:
+                  return ({
+                    icon: <Icons.Default />,
+                  });
               }
-
-              case TRX_TYPE_CLAIM_EMISSION:
-                return ({
-                  ...commonProps,
-                  type: 'Withdraw',
-                  icon: <Icons.Emission />,
-                  title: 'Recieved emission',
-                  amount: `${round(trx.tokens.emission, 2)} ${trx.tokens.currency}`,
-                });
-
-              case TRX_TYPE_BUY_RAM:
-              case TRX_TYPE_SELL_RAM:
-                return ({
-                  ...commonProps,
-                  type: trx.trType === TRX_TYPE_BUY_RAM ? 'Buy RAM' : 'Sell RAM',
-                  icon: <Icons.Ram />,
-                  title: `${trx.trType === TRX_TYPE_BUY_RAM ? 'Bought' : 'Sold'} RAM`,
-                  amount: `${trx.trType === TRX_TYPE_BUY_RAM ? '– ' : ''}${round(trx.resources.ram.tokens.amount, 2)} ${trx.resources.ram.tokens.currency}`,
-                });
-
-              case TRX_TYPE_VOTE_FOR_BP:
-              case TRX_TYPE_VOTE_FOR_CALC: {
-                const nodes = trx.trType === TRX_TYPE_VOTE_FOR_BP ? trx.producers : trx.calculators;
-
-                return ({
-                  ...commonProps,
-                  type: 'Vote',
-                  icon: <Icons.Vote />,
-                  title: nodes.length ? `Voted for ${nodes.map(item => item).join(', ')}` : 'Not voted for anyone',
-                });
-              }
-
-              default:
-                return ({
-                  icon: <Icons.Default />,
-                });
-            }
-          }),
-        })),
+            }),
+          }))),
       }}
     />
   );
-}));
+};
+
+export default withRouter(memo(UserWallet));

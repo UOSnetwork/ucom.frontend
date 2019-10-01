@@ -4,11 +4,14 @@
   font-size: 14px;
   line-height: 1.2;
   border-radius: 12px;
-  cursor: pointer;
   transition: background 0.2s ease;
 }
 
-.transaction:hover {
+.transaction.active {
+  cursor: pointer;
+}
+
+.transaction.active:hover {
   background: #eee;
 }
 
@@ -35,4 +38,19 @@
 
 .userPick {
   fill: #fff;
+}
+
+.iconType {
+  position: relative;
+}
+
+.iconDeferred {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  fill: none;
+}
+
+.amount.deferred {
+  color: rgba(0,0,0,0.33);
 }
