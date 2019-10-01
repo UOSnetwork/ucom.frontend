@@ -117,7 +117,7 @@ const UserWallet = ({ location }) => {
 
     if (wallet.resources.net) {
       list.push({
-        title: 'Network Bandwith',
+        title: 'Network bandwidth',
         total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
         used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.net.dimension}`,
         percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
