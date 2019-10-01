@@ -75,3 +75,9 @@
 .embed {
   margin: 0 0 20px;
 }
+
+.limit {
+  font-size: 12px;
+  color: #000000;
+  opacity: 0.6;
+}

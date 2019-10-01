@@ -15,7 +15,7 @@ import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
-import { createComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
+import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
 import { getOrganization } from '../../actions/organizations';
 import { authShowPopup } from '../../actions/auth';
@@ -42,6 +42,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
         ...c,
         text: c.description,
         date: fromNow(c.createdAt),
+        createdAt: c.createdAt,
         userAccountName: user && user.accountName,
         nextDepthTotalAmount: c.metadata.nextDepthTotalAmount,
         parentId: c.parentId || 0,
@@ -102,6 +103,15 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     }
   };
 
+  const onUpdate = async ({ commentId, data }) => {
+    try {
+      await withLoader(dispatch(updateComment(commentId, data)));
+    } catch (err) {
+      console.error(err);
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
   const onClickShowNext = ({
     containerId,
     postId,
@@ -153,6 +163,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
       onClickShowNext={onClickShowNext}
       onClickShowReplies={onClickShowReplies}
       onError={onError}
+      onUpdate={onUpdate}
     />
   );
 };

@@ -169,4 +169,12 @@ export default class Api {
   static getReferralFromUserSignedTransactionAsJson(...args) {
     return Api.postMessage({ args, type: actions.GET_REFERRAL_FROM_USER_SIGNED_TRANSACTION_AS_JSON });
   }
+
+  static signUpdateCommentFromAccount(...args) {
+    return Api.postMessage({ args, type: actions.SIGN_UPDATE_COMMENT_FROM_ACCOUNT });
+  }
+
+  static signUpdateCommentFromOrganization(...args) {
+    return Api.postMessage({ args, type: actions.SIGN_UPDATE_COMMENT_FROM_ORGANIZATION });
+  }
 }
