@@ -277,7 +277,7 @@ const UserWallet = ({ location }) => {
                     type: 'Transfer',
                     avatarSrc: urls.getFileUrl(trx.user.avatarFilename) || '',
                     title: `@${trx.user.accountName}`,
-                    amount: `${trx.trType === TRX_TYPE_TRANSFER_TO ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
+                    amount: `${trx.trType === TRX_TYPE_TRANSFER_FROM ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
                     message: trx.memo,
                   });
 

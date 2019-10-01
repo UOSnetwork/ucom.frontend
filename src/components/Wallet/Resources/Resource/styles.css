@@ -8,11 +8,15 @@
 }
 
 .header {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 20px;
   justify-content: space-between;
   font-size: 16px;
   color: #585858;
   margin: 0 0 6px;
+  white-space: nowrap;
 }
 
 .title {
@@ -59,6 +63,8 @@
 }
 
 .total {
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: #000;
 }
 
