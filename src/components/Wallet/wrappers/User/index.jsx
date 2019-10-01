@@ -55,7 +55,7 @@ const UserWallet = ({ location }) => {
     return date.getTime();
   });
   const transactionsGroupsKeys = Object.keys(transactionsGroups);
-  const unstakingRequestTransactionsSection = wallet && wallet.tokens && wallet.tokens.unstakingRequest && wallet.tokens.unstakingRequest.requestDatetime ? ({
+  const unstakingRequestTransactionsSection = wallet.tokens && wallet.tokens.unstakingRequest && wallet.tokens.unstakingRequest.requestDatetime ? ({
     list: [{
       icon: <Icons.St />,
       title: `Unstaking ${wallet.tokens.unstakingRequest.requestDatetime ? `(${moment(wallet.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
@@ -85,6 +85,10 @@ const UserWallet = ({ location }) => {
         title: `staked UOS ${formatNumber(wallet.tokens.staked || 0)}`,
       }, {
         title: `UOSF ${formatNumber(wallet.tokens.uosFutures || 0)}`,
+      }],
+      actions: [{
+        title: 'Send',
+        onClick: () => dispatch(walletActions.walletToggleSendTokens(true)),
       }],
     });
   }
