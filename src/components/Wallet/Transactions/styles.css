@@ -1,0 +1,38 @@
+.transactions {
+  position: relative;
+}
+
+.section {
+  margin: 0 0 33px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.title {
+  position: sticky;
+  top: 151px;
+  z-index: 1;
+  padding: 0 0 4px;
+  font-size: 16px;
+  line-height: 1.25;
+  color: rgba(0,0,0,0.3);
+  background: #f4f4f4;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyLabel {
+  position: absolute;
+  top: 115px;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}

@@ -4,7 +4,7 @@ import React, { Fragment } from 'react';
 import { LayoutBase, Content } from '../../components/Layout';
 import VerticalMenu from '../../components/VerticalMenu';
 import Footer from '../../components/Footer';
-import { PanelHashWrapper } from '../../components/Panel/Panel';
+import { PanelHashWrapper } from '../../components/Panel';
 import { getUosGroupId } from '../../utils/config';
 import urls from '../../utils/urls';
 import styles from './styles.css';

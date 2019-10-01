@@ -7,6 +7,7 @@ import * as authActions from '../../../actions/auth';
 import { hideNotificationTooltip } from '../../../actions/siteNotifications';
 import * as searchPopupActions from '../../../actions/searchPopup';
 import * as subscribeActions from '../../../actions/subscribe';
+import * as walletActions from '../../../actions/wallet';
 import styles from './styles.css';
 
 const Page = ({ location, children }) => {
@@ -18,6 +19,7 @@ const Page = ({ location, children }) => {
     dispatch(searchPopupActions.hide());
     dispatch(hideNotificationTooltip());
     dispatch(subscribeActions.hide());
+    dispatch(walletActions.toggle(false));
   }, [location]);
 
   return (

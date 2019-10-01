@@ -1,0 +1,16 @@
+.memo {
+  margin: 0 0 32px;
+}
+
+.header {
+  display: grid;
+  align-items: center;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-gap: 8px;
+  margin: 0 0 9px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #767676;
+  fill: none;
+}
