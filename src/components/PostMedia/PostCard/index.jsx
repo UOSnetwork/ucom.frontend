@@ -69,6 +69,9 @@ PostCard.propTypes = {
   title: PropTypes.string,
   userImageUrl: PropTypes.string,
   userName: PropTypes.string,
+  userUrl: PropTypes.string,
+  onFeed: PropTypes.bool,
+  repost: PropTypes.bool,
 };
 
 PostCard.defaultProps = {
@@ -78,6 +81,9 @@ PostCard.defaultProps = {
   title: undefined,
   userImageUrl: undefined,
   userName: undefined,
+  userUrl: undefined,
+  onFeed: false,
+  repost: false,
 };
 
 export default memo(PostCard, () => true);

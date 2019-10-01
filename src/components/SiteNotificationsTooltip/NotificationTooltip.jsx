@@ -160,6 +160,13 @@ NotificationTooltip.propTypes = {
   list: PropTypes.objectOf(PropTypes.any),
   notificationsMetadata: PropTypes.objectOf(PropTypes.any),
   loading: PropTypes.bool,
+  hideTooltip: PropTypes.func.isRequired,
+};
+
+NotificationTooltip.defaultProps = {
+  list: undefined,
+  notificationsMetadata: undefined,
+  loading: false,
 };
 
 export default connect(

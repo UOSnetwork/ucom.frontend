@@ -91,7 +91,6 @@ const ChangePassword = (props) => {
                       setBrainkey(brainkey);
                       setCurrentStep(STEP_PASSWORD);
                     } catch (err) {
-                      console.dir(err);
                       const { message } = parseResponseError(err)[0];
                       setBrainkeyError(message);
                     }

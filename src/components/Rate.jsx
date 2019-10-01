@@ -37,6 +37,8 @@ Rate.defaultProps = {
   dimension: '°',
   label: 'Rate',
   disableRateFormat: false,
+  className: undefined,
+  value: 0,
 };
 
 export default Rate;
