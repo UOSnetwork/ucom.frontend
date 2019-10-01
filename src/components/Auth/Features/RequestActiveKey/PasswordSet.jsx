@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from '../../../Button/index';
-import styles from '../../../Resources/Actions/styles.css';
+import styles from '../../../Wallet/Actions/styles.css'; // TODO: Incapsulate styles
 
 const PasswordSet = props => (
   <form

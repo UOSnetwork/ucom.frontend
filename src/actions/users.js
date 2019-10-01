@@ -4,7 +4,7 @@ import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
-import { walletGetAccount } from './walletSimple';
+import { walletGetAccount } from './wallet';
 import { getUserById, getUsersByIds } from '../store/users';
 import Worker from '../worker';
 import { getSocialKey, getToken, removeToken, USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils';

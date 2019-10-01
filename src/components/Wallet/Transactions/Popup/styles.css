@@ -1,0 +1,66 @@
+.content {
+  box-sizing: border-box;
+  width: 768px;
+  padding: 40px;
+}
+
+.header {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 20px;
+  margin: 0 0 70px;
+  font-size: 12px;
+  color: #767676;
+}
+
+.type {
+  text-transform: uppercase;
+  color: #1B1E1E;
+}
+
+.icon,
+.userPic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 16px;
+}
+
+.icon svg {
+  width: 80px;
+  height: 80px;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.amount {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.details {
+  margin: 48px 0 0;
+}
+
+.json {
+  margin: 20px 0 0;
+  white-space: pre-wrap;
+  background-color: #eff0f1;
+  border-radius: 5px;
+  padding: 20px;
+  word-break: break-word;
+}
+
+@media (max-width: 767px) {
+  .content {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

@@ -12,10 +12,6 @@ import { enableGtm } from '../utils/gtm';
 import { initDragAndDropListeners } from '../utils/dragAndDrop';
 import routes from '../routes';
 import Settings from '../components/Settings';
-import BuyRam from '../components/Resources/Actions/BuyRam';
-import SellRam from '../components/Resources/Actions/SellRam';
-import EditStake from '../components/Resources/Actions/EditStake';
-import SendTokens from '../components/Resources/Actions/SendTokens';
 import { addMaintenanceNotification } from '../actions/notifications';
 import HashRouter from '../components/HashRouter';
 import CreateOrg from '../pages/Organization/Create';
@@ -27,10 +23,11 @@ import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
 import withLoader from '../utils/withLoader';
 import * as mediaQueryActions from '../actions/mediaQuery';
+import { UserWallet, BuyRam, SellRam, EditStake, SendTokens } from '../components/Wallet';
 
 const App = () => {
   const dispatch = useDispatch();
-  const wallet = useSelector(state => state.walletSimple);
+  const wallet = useSelector(state => state.wallet);
   const auth = useSelector(state => state.auth);
 
   useEffect(() => {
@@ -87,13 +84,12 @@ const App = () => {
 
       <SearchPopup />
       <Subscribe />
-
+      <UserWallet />
       {auth.visibility && <Auth />}
       {wallet.buyRamVisible && <BuyRam />}
       {wallet.sellRamVisible && <SellRam />}
       {wallet.editStakeVisible && <EditStake />}
       {wallet.sendTokensVisibility && <SendTokens />}
-
       <Notifications />
     </Fragment>
   );

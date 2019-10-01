@@ -10,7 +10,7 @@ import { TableNodes } from '../../../../components/Table';
 import IconDone from '../../../../components/Icons/Done';
 import IconFail from '../../../../components/Icons/Fail';
 import Button from '../../../../components/Button/index';
-import PanelWrapper from '../../../../components/Panel/PanelWrapper';
+import { PanelWrapper } from '../../../../components/Panel';
 import RequestActiveKey from '../../../../components/Auth/Features/RequestActiveKey';
 import { addErrorNotificationFromResponse, addSuccessNotification } from '../../../../actions/notifications';
 import { authShowPopup } from '../../../../actions/auth';

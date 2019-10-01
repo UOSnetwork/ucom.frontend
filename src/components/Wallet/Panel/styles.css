@@ -1,0 +1,36 @@
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 100%) minmax(50px, max-content);
+  grid-gap: 22px;
+}
+
+.panel + .panel:not(.flat) {
+  margin-top: 24px;
+}
+
+.actions {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: max-content;
+  grid-gap: 14px;
+  padding: 36px 0 0;
+}
+
+.action {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+  .panel {
+    grid-template-columns: 100%;
+  }
+
+  .actions {
+    padding-top: 0;
+    grid-auto-columns: max-content;
+    grid-auto-flow: column;
+    justify-content: flex-end;
+  }
+}

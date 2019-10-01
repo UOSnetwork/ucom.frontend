@@ -1,0 +1,27 @@
+.emptyTransaction {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-gap: 10px;
+  align-items: center;
+  margin: 0 0 24px;
+}
+
+.pick {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: #ebebeb;
+  animation-name: blink;
+}
+
+.pick.circle {
+  border-radius: 50%;
+}
+
+.block {
+  display: block;
+  height: 10px;
+  width: 150px;
+  background: #ebebeb;
+  border-radius: 1px;
+}

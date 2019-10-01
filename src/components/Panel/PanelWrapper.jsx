@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import Panel from './Panel';
+import Panel from './index';
 
 const PanelWrapper = (props) => {
   const [active, setActive] = useState(false);

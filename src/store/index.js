@@ -14,7 +14,7 @@ import tags from './tags';
 import communityFeed from './communityFeed';
 import tagsFeed from './tagsFeed';
 import user from './user';
-import walletSimple from './walletSimple';
+import wallet from './wallet';
 import mainPage from './mainPage';
 import mainPageUser from './mainPageUser';
 import userPage from './userPage';
@@ -54,7 +54,7 @@ export const createStore = () => {
     tags,
     communityFeed,
     tagsFeed,
-    walletSimple,
+    wallet,
     nodes,
   });
   const middlewares = [thunk];
