@@ -154,7 +154,7 @@ const UserWallet = ({ location }) => {
         }
 
         setEmissionLoading(true);
-        await dispatch(walletActions.getEmissionAndShowNotification());
+        await withLoader(dispatch(walletActions.getEmissionAndShowNotification()));
         setEmissionLoading(false);
       },
     }];
