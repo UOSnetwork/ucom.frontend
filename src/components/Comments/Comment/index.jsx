@@ -121,7 +121,7 @@ const Comment = (props) => {
                 role="presentation"
                 className={styles.reply}
                 onClick={() => {
-                  if (props.depth < 2) {
+                  if (props.depth < 1) {
                     setFormVisible({ visible: true, name: '' });
                   } else if (props.onClickReply) {
                     props.onClickReply();
