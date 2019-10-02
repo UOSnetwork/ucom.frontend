@@ -20,6 +20,7 @@ class Medium extends PureComponent {
     const MediumNav = require('./Nav/index');
     const FileDragging = require('./FileDragging');
     const ImageFromLink = require('./ImageFromLink');
+    const CodePaste = require('./CodePaste');
 
     this.mediumEditor = new MediumEditor(this.el, {
       toolbar: {
@@ -42,6 +43,7 @@ class Medium extends PureComponent {
             this.props.onEmbed(data);
           },
         }),
+        codePaste: new CodePaste.default(),
       },
     });
 

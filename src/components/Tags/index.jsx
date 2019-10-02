@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './styles.css';
 
 const Tags = ({ tags }) => {
-  if (!tags) {
+  if (!tags.length) {
     return null;
   }
 

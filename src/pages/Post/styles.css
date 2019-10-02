@@ -15,7 +15,7 @@
 
 .section .inner {
   display: grid;
-  grid-template-columns: 1fr 7fr 2fr;
+  grid-template-columns: 1fr minmax(0, 7fr) 2fr;
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -35,7 +35,7 @@
   grid-column-start: 2;
   grid-column-end: 3;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   grid-gap: 46px;
 }
 
