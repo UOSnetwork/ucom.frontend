@@ -30,7 +30,14 @@ const Post = ({ postId }) => {
   const dispatch = useDispatch();
   const post = useSelector(selectPostById(postId), isEqual);
   const owner = useSelector(selectOwner);
-  const createdAt = useMemo(() => moment(post.createdAt).format('MMMM D, YYYY'), [post.createdAt]);
+
+  const createdAt = useMemo(() => {
+    if (!post || !post.createdAt) {
+      return '';
+    }
+
+    return moment(post.createdAt).format('MMMM D, YYYY');
+  }, [post]);
 
   const getData = async () => {
     dispatch(commentsResetContainerDataByEntryId({

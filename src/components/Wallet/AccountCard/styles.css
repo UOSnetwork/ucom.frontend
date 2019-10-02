@@ -1,0 +1,22 @@
+.accountCard {
+  display: grid;
+  grid-template-columns: max-content minmax(0, max-content);
+  grid-gap: 12px;
+  align-items: center;
+}
+
+.name {
+  margin: 0 0 7px;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 1.25;
+  color: #585858;
+}

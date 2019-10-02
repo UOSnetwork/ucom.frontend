@@ -3,9 +3,10 @@ import api from '../api';
 import graphql from '../api/graphql';
 import loader from '../utils/loader';
 import { addServerErrorNotification } from './notifications';
-import { addUsers } from './users';
+import { addUsers, getOwnerCredentialsOrShowAuthPopup } from './users';
 import { searchTags } from '../utils/text';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { selectCommentById, selectPostById, selectOrgById } from '../store';
 import Worker from '../worker';
 
 export const addComments = comments => (dispatch) => {
@@ -122,6 +123,7 @@ export const getCommentsOnComment = ({
   loader.done();
 };
 
+// TODO: Refactoring like updateComment
 export const createComment = (
   ownerId,
   ownerAccountName,
@@ -199,4 +201,88 @@ export const createComment = (
   }));
 
   return comment;
+};
+
+export const updateComment = (
+  commentId,
+  commentData,
+) => async (dispatch, getState) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return;
+  }
+
+  const state = getState();
+  const comment = selectCommentById(commentId)(state);
+
+  if (!comment) {
+    throw new Error('Comment not found.');
+  }
+
+  const post = selectPostById(comment.commentableId)(state);
+
+  if (!post) {
+    throw new Error('Post not found.');
+  }
+
+  let parentComment;
+
+  if (comment.parentId) {
+    parentComment = selectCommentById(comment.parentId)(state);
+  }
+
+  if (comment.parentId && !parentComment) {
+    throw new Error('Parent comment not found.');
+  }
+
+  let org;
+
+  if (post.organizationId) {
+    org = selectOrgById(post.organizationId)(state);
+  }
+
+  if (post.organizationId && !org) {
+    throw new Error('Organization not found.');
+  }
+
+  const commentContent = {
+    description: commentData.description,
+    entity_images: commentData.entityImages,
+    entity_tags: searchTags(commentData.description),
+  };
+
+  let signed_transaction;
+
+  if (!org) {
+    signed_transaction = await Worker.signUpdateCommentFromAccount(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      commentContent,
+      comment.blockchainId,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
+  } else {
+    signed_transaction = await Worker.signUpdateCommentFromOrganization(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      org.blockchainId,
+      commentContent,
+      comment.blockchainId,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
+  }
+
+  const data = {
+    ...omit(commentContent, ['entity_tags']),
+    signed_transaction: JSON.stringify(signed_transaction),
+  };
+
+  const result = await api.updateComment(data, commentId);
+
+  dispatch(addComments([result]));
 };

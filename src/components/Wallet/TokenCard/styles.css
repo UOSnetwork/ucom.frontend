@@ -1,0 +1,24 @@
+.token {
+  margin: 0 0 10px;
+}
+
+.token.main {
+  margin: 0 0 24px;
+}
+
+.token.main .title {
+  font-size: 24px;
+}
+
+.title {
+  margin: 0 0 4px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 1.25;
+  color: #585858;
+}

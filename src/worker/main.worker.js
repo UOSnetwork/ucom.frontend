@@ -143,6 +143,12 @@ registerPromiseWorker((action) => {
     case actions.GET_REFERRAL_FROM_USER_SIGNED_TRANSACTION_AS_JSON:
       return SocialApi.getReferralFromUserSignedTransactionAsJson(...action.args);
 
+    case actions.SIGN_UPDATE_COMMENT_FROM_ACCOUNT:
+      return PublicationsApi.signUpdateCommentFromAccount(...action.args);
+
+    case actions.SIGN_UPDATE_COMMENT_FROM_ORGANIZATION:
+      return PublicationsApi.signUpdateCommentFromOrganization(...action.args);
+
     default:
       return null;
   }

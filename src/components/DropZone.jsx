@@ -32,13 +32,14 @@ DropZone.propTypes = {
   multiple: PropTypes.bool,
   onDrop: PropTypes.func.isRequired,
   className: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 DropZone.defaultProps = {
   text: '',
   multiple: false,
   className: '',
-
+  loading: false,
 };
 
 export default DropZone;

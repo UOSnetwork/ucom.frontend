@@ -1,0 +1,30 @@
+.placeholder {
+  box-sizing: border-box;
+  padding: 24px;
+  height: 130px;
+}
+
+.title,
+.used,
+.progress {
+  width: 100px;
+  height: 10px;
+  border-radius: 1px;
+  background: rgba(0,0,0,0.03);
+}
+
+.title {
+  margin: 0 0 10px;
+}
+
+.used {
+  width: 50px;
+  margin: 0 0 30px;
+}
+
+.progress {
+  width: 100%;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.03);
+}

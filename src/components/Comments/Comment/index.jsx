@@ -1,3 +1,5 @@
+import moment from 'moment';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useState, Fragment } from 'react';
 import styles from './styles.css';
@@ -6,70 +8,136 @@ import Gallery from '../../Gallery';
 import Form from '../Form';
 import ShowReplies from '../ShowReplies';
 import { CommentVotingWrapper } from '../../Voting';
-import Embed from '../../Embed';
-
+// import Embed from '../../Embed';
+import DropdownMenu from '../../DropdownMenu';
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
+import { COMMENT_EDIT_TIME_LIMIT } from '../../../utils';
 import { sanitizeCommentText, checkMentionTag, checkHashTag } from '../../../utils/text';
+import entityIsEditable from '../../../utils/entityIsEditable';
 
 const Comment = (props) => {
+  const [active, setActive] = useState(false);
+  const [editFormVisible, setEditFormVisible] = useState(false);
   const [formVisible, setFormVisible] = useState({ visible: false, name: '' });
   const newReplys = props.replys.filter(i => i.isNew);
   const replys = props.replys.filter(i => newReplys.every(j => j.id !== i.id));
 
+  // TODO: Refactoring (unification with post edit menut)
+  const isEditable = entityIsEditable(props.createdAt, COMMENT_EDIT_TIME_LIMIT);
+  const calcTimeLeft = () => 15 - moment().diff(props.createdAt, 'm');
+  const [leftTime, setLeftTime] = useState(null);
+
   return (
     <Fragment>
-      <div className={styles.comment} depth={props.depth} id={`comment-${props.id}`}>
-        <div className={styles.userCard}>
-          <UserCard
-            userId={props.userId}
-            isOwner={props.ownerId === props.userId}
+      {editFormVisible ? (
+        <div className={styles.editForm}>
+          <Form
+            message={props.text}
+            containerId={props.containerId}
+            postId={props.postId}
+            depth={props.depth}
+            autoFocus
+            userImageUrl={props.ownerImageUrl}
+            userPageUrl={props.ownerPageUrl}
+            userName={props.ownerName}
+            onSubmit={async (params) => {
+              await props.onUpdate({
+                commentId: props.id,
+                data: {
+                  description: params.message,
+                  entityImages: params.entityImages,
+                },
+              });
+            }}
+            onReset={() => setEditFormVisible(false)}
+            entityImages={props.entityImages}
+            onError={props.onError}
           />
         </div>
-
-        <div className={styles.content}>
-          {props.entityImages.embeds && props.entityImages.embeds.map((embed, index) => (
-            <div className={styles.embed} key={index}>
-              <Embed {...embed} />
-            </div>
-          ))}
-          {props.images && props.images.length > 0 &&
-            <div className={styles.gallery}>
-              <Gallery
-                images={props.images}
-                userId={props.userId}
-                date={props.date}
+      ) : (
+        <div
+          id={`comment-${props.id}`}
+          depth={props.depth}
+          className={classNames({
+            [styles.comment]: true,
+            [styles.active]: active,
+          })}
+        >
+          {props.ownerId === props.userId &&
+            <div className={styles.menu}>
+              <DropdownMenu
+                position="bottom-end"
+                onShow={() => {
+                  setLeftTime(calcTimeLeft());
+                  setActive(true);
+                }}
+                onHide={() => {
+                  setActive(false);
+                }}
+                items={[{
+                  title: isEditable ? (
+                    <span>Edit <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
+                  ) : (
+                    <span className={styles.limit}>Can only edit in first 15 min</span>
+                  ),
+                  onClick: () => isEditable && setEditFormVisible(true),
+                  disabled: !isEditable,
+                }]}
               />
             </div>
           }
+          <div className={styles.userCard}>
+            <UserCard
+              userId={props.userId}
+              isOwner={props.ownerId === props.userId}
+            />
+          </div>
 
-          <div
-            className={styles.text}
-            dangerouslySetInnerHTML={{
-              __html: sanitizeCommentText(checkMentionTag(checkHashTag(props.text))),
-            }}
-          />
+          <div className={styles.content}>
+            {/* {props.entityImages.embeds && props.entityImages.embeds.map((embed, index) => (
+              <div className={styles.embed} key={index}>
+                <Embed {...embed} />
+              </div>
+            ))} */}
+            {props.images && props.images.length > 0 &&
+              <div className={styles.gallery}>
+                <Gallery
+                  images={props.images}
+                  userId={props.userId}
+                  date={props.date}
+                />
+              </div>
+            }
 
-          <div className={styles.actions}>
             <div
-              role="presentation"
-              className={styles.reply}
-              onClick={() => {
-                if (props.depth < 2) {
-                  setFormVisible({ visible: true, name: '' });
-                } else if (props.onClickReply) {
-                  props.onClickReply();
-                }
+              className={styles.text}
+              dangerouslySetInnerHTML={{
+                __html: sanitizeCommentText(checkMentionTag(checkHashTag(props.text))),
               }}
-            >
-              Reply
-            </div>
-            <div className={styles.date}>{props.date}</div>
-            <div className={styles.rating}>
-              <CommentVotingWrapper postId={props.postId} commentId={props.id} />
+            />
+
+            <div className={styles.actions}>
+              <div
+                role="presentation"
+                className={styles.reply}
+                onClick={() => {
+                  if (props.depth < 1) {
+                    setFormVisible({ visible: true, name: '' });
+                  } else if (props.onClickReply) {
+                    props.onClickReply();
+                  }
+                }}
+              >
+                Reply
+              </div>
+              <div className={styles.date}>{props.date}</div>
+              <div className={styles.rating}>
+                <CommentVotingWrapper postId={props.postId} commentId={props.id} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {replys.map(comment => (
         <Comment
@@ -96,6 +164,9 @@ const Comment = (props) => {
           onClickReply={() => {
             setFormVisible({ visible: true, name: comment.userAccountName });
           }}
+          onError={props.onError}
+          onUpdate={props.onUpdate}
+          createdAt={comment.createdAt}
         />
       ))}
 
@@ -138,12 +209,16 @@ const Comment = (props) => {
           onClickReply={() => {
             setFormVisible({ visible: true, name: comment.userAccountName });
           }}
+          onError={props.onError}
+          onUpdate={props.onUpdate}
+          createdAt={comment.createdAt}
         />
       ))}
 
       {formVisible && formVisible.visible &&
         <Form
           {...props}
+          entityImages={undefined}
           depth={props.depth + 1}
           commentId={props.id}
           autoFocus
@@ -152,6 +227,7 @@ const Comment = (props) => {
           userName={props.ownerName}
           onReset={() => setFormVisible({ visible: false, name: '' })}
           message={formVisible.visible && formVisible.name !== '' ? `@${formVisible.name} ` : `@${props.userAccountName} `}
+          onError={props.onError}
         />
       }
     </Fragment>
@@ -187,6 +263,7 @@ Comment.propTypes = {
     userId: PropTypes.number.isRequired,
     parentId: PropTypes.number.isRequired,
     isNew: PropTypes.bool.isRequired,
+    createdAt: PropTypes.string.isRequired,
   })),
   metadata: PropTypes.objectOf(PropTypes.shape({
     hasMore: PropTypes.bool,
@@ -194,6 +271,9 @@ Comment.propTypes = {
     perPage: PropTypes.number,
   })).isRequired,
   entityImages: PropTypes.objectOf(PropTypes.any),
+  onError: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  createdAt: PropTypes.string.isRequired,
 };
 
 Comment.defaultProps = {

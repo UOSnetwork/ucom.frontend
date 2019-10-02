@@ -1,12 +1,8 @@
-import { connect } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import UserCard from '../UserCard';
+import { UserCard } from '../EntryCard';
 import Rate from '../Rate';
 import { UserFollowButton } from '../FollowButton';
-import { selectUser } from '../../store/selectors';
-import { getUserName } from '../../utils/user';
-import urls from '../../utils/urls';
 import api from '../../api';
 import loader from '../../utils/loader';
 import LoadMore from '../Feed/LoadMore';
@@ -58,14 +54,7 @@ const UserListPopupMore = (props) => {
         {users.map(item => (
           <div className="entry-list__item" key={item.id}>
             <div className="entry-list__card">
-              <UserCard
-                className="user-card_text_left"
-                userName={getUserName(item)}
-                accountName={item.accountName}
-                avatarUrl={urls.getFileUrl(item.avatarFilename)}
-                profileLink={urls.getUserUrl(item.id)}
-                sign={props.noSign ? '' : '@'}
-              />
+              <UserCard disableRate userId={item.id} />
             </div>
 
             <div className="entry-list__rate">
@@ -107,16 +96,16 @@ const UserListPopupMore = (props) => {
 
 UserListPopupMore.propTypes = {
   title: PropTypes.string,
-  noSign: PropTypes.bool,
   tagTitle: PropTypes.string,
+  userId: PropTypes.number,
+  organizationId: PropTypes.number,
 };
 
-UserListPopupMore.defaultTypes = {
+UserListPopupMore.defaultProps = {
   title: 'Followers',
+  tagTitle: undefined,
+  userId: undefined,
+  organizationId: undefined,
 };
 
-export default connect(state => ({
-  users: state.users,
-  user: selectUser(state),
-  tags: state.tags,
-}))(UserListPopupMore);
+export default UserListPopupMore;

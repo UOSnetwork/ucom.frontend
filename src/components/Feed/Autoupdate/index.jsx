@@ -56,6 +56,7 @@ Autoupdate.propTypes = {
   headerColor: PropTypes.string,
   showFooter: PropTypes.bool,
   flat: PropTypes.bool,
+  url: PropTypes.string,
 };
 
 Autoupdate.defaultProps = {
@@ -65,6 +66,7 @@ Autoupdate.defaultProps = {
   headerColor: 'rgba(0,0,0,0.58)',
   showFooter: true,
   flat: false,
+  url: undefined,
 };
 
 export * from './wrappers';

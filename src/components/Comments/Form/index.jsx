@@ -30,7 +30,7 @@ import withLoader from '../../../utils/withLoader';
 const Form = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(props.message);
-  const [entityImages, setEntityImages] = useState({ gallery: [] });
+  const [entityImages, setEntityImages] = useState(props.entityImages || ({ gallery: [] }));
   const [dropOnForm, setDropOnForm] = useState(false);
   const fieldEl = useRef(null);
   const textareaEl = useRef(null);
@@ -149,6 +149,10 @@ const Form = (props) => {
 
     if (props.autoFocus && textareaEl.current) {
       textareaEl.current.setSelectionRange(message.length, message.length);
+    }
+
+    if (props.message) {
+      initializeAutosize();
     }
 
     return () => {
@@ -280,7 +284,7 @@ Form.propTypes = {
       url: PropTypes.string.isRequired,
     })),
   }),
-  onError: PropTypes.func,
+  onError: PropTypes.func.isRequired,
 };
 
 Form.defaultProps = {
@@ -294,7 +298,6 @@ Form.defaultProps = {
   userName: null,
   onReset: null,
   entityImages: { gallery: [] },
-  onError: undefined,
 };
 
 export default Form;

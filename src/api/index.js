@@ -302,6 +302,13 @@ class Api {
     return humps(response.data);
   }
 
+  async updateComment(data, commentId) {
+    const url = `/api/v1/posts/comments/${commentId}`;
+    const response = await this.actions.patch(url, data);
+
+    return humps(response.data);
+  }
+
   async createOrganization(data) {
     const url = '/api/v1/organizations';
     const response = await this.actions.post(url, snakes(data));
@@ -442,7 +449,7 @@ class Api {
     return humps(response.data);
   }
 
-  async getTransactions(perPage, page) {
+  async getTransactions(page, perPage) {
     const response = await this.actions.get(`/api/v1/myself/blockchain/transactions?per_page=${perPage}&page=${page}`);
 
     return humps(response.data);

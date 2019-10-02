@@ -1,0 +1,42 @@
+.close {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items: center;
+  grid-gap: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.top,
+.right,
+.left,
+.bottom {
+  position: fixed;
+}
+
+.top {
+  top: 20px;
+}
+
+.right {
+  right: 20px;
+}
+
+.left {
+  left: 20px;
+}
+
+.bottom {
+  bottom: 20px;
+}

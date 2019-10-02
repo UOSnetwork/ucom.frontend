@@ -56,6 +56,7 @@ Media.propTypes = {
   feedTypeId: PropTypes.number.isRequired,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
+  owner: PropTypes.objectOf(PropTypes.any),
   commentsContainerId: PropTypes.number,
   originEnabled: PropTypes.bool,
 };
@@ -63,6 +64,7 @@ Media.propTypes = {
 Media.defaultProps = {
   commentsContainerId: COMMENTS_CONTAINER_ID_FEED_POST,
   originEnabled: true,
+  owner: undefined,
 };
 
 export default memo(Media);

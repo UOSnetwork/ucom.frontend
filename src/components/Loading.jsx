@@ -21,4 +21,10 @@ LoadingScreen.propTypes = {
   className: PropTypes.string,
 };
 
+LoadingScreen.defaultProps = {
+  loading: false,
+  appear: false,
+  className: undefined,
+};
+
 export default LoadingScreen;

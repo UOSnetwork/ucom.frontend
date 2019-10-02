@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Checkbox = ({ isChecked = false, onChange, isDisabled }) => (
+const Checkbox = ({ isChecked, onChange, isDisabled }) => (
   <div className={`checkbox-input ${isDisabled ? 'checkbox-input_disabled' : ''}`}>
     <label className="checkbox-input__label">
       <input
@@ -26,6 +26,12 @@ Checkbox.propTypes = {
   isChecked: PropTypes.bool,
   onChange: PropTypes.func,
   isDisabled: PropTypes.bool,
+};
+
+Checkbox.defaultProps = {
+  isChecked: false,
+  onChange: undefined,
+  isDisabled: false,
 };
 
 export default Checkbox;

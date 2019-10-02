@@ -9,7 +9,7 @@ import urls from '../../../../utils/urls';
 import { addSuccessNotification } from '../../../../actions/notifications';
 import styles from './styles.css';
 import UserPick from '../../../UserPick';
-import { postIsEditable } from '../../../../utils/posts';
+import entityIsEditable from '../../../../utils/entityIsEditable';
 import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE, POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, POST_EDIT_TIME_LIMIT } from '../../../../utils';
 import { copyToClipboard } from '../../../../utils/text';
 import fromNow from '../../../../utils/fromNow';
@@ -31,8 +31,9 @@ const PostFeedHeader = ({ post, ...props }) => {
   }];
 
   if (props.user && props.user.id === post.userId && post.postTypeId !== POST_TYPE_REPOST_ID) {
-    const isEditable = postIsEditable(post.createdAt, POST_EDIT_TIME_LIMIT);
+    const isEditable = entityIsEditable(post.createdAt, POST_EDIT_TIME_LIMIT);
 
+    // TODO: Refactoring (unification with comment edit menut)
     items.unshift({
       title: isEditable ? (
         <span>Edit <span className={styles.leftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>

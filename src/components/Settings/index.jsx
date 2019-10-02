@@ -8,7 +8,6 @@ import CopyPanel from '../CopyPanel';
 import Button from '../Button/index';
 import VerticalMenu from '../VerticalMenu/index';
 import { EntryListSectionUsersWrapper } from '../EntryListSection';
-import Resources from '../Resources';
 import ChangePassword from '../Auth/Features/ChangePassword';
 import GenerateSocialKey from '../Auth/Features/GenerateSocialKey';
 import {
@@ -36,7 +35,6 @@ const Settings = () => {
   const [keys, setKeys] = useState({});
 
   const sections = [
-    { title: 'Resources', name: 'Resources' },
     { title: 'Keys', name: 'Keys' },
   ];
 
@@ -117,27 +115,18 @@ const Settings = () => {
                 <p>This section contains settings of your blockchain account.</p>
               </div>
 
-              <Element className={styles.section} name="Resources">
-                <h3 className={styles.title}>Resources</h3>
-                <Resources />
-              </Element>
-
               <Element
                 name="Keys"
                 className={styles.section}
               >
                 <h3 className={styles.title}>Keys</h3>
-                {/* TODO: Enable when auth and registration by social key feature complete */}
                 <div className={styles.subSection}>
                   <h4 className={styles.title}>Social Keys</h4>
                   <p>The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.</p>
                   {keys.socialKey ? (
                     <Fragment>
                       <div className={styles.copy}>
-                        <CopyPanel
-                          label="Private"
-                          value={keys.socialKey}
-                        />
+                        <CopyPanel label="Private" value={keys.socialKey} />
                       </div>
                       <div className={styles.copy}>
                         <CopyPanel
@@ -148,11 +137,7 @@ const Settings = () => {
                     </Fragment>
                   ) : (
                     <div className={styles.action}>
-                      <Button
-                        strech
-                        small
-                        onClick={() => setGenerateSocialKeyVisible(true)}
-                      >
+                      <Button strech small onClick={() => setGenerateSocialKeyVisible(true)}>
                         Generate Social Key
                       </Button>
                     </div>
@@ -164,11 +149,7 @@ const Settings = () => {
                   <p>You can set a Password to save a pair of encrypted Active Keys in your browser. This allows you to send the transactions, that require Active Keys, using your Password instead. You will need to enter the Brainkey to unlock your Active Keys.</p>
                   {!passwordIsSet ? (
                     <div className={styles.action}>
-                      <Button
-                        strech
-                        small
-                        onClick={() => setChangePasswordVisible(true)}
-                      >
+                      <Button strech small onClick={() => setChangePasswordVisible(true)}>
                         Set Password
                       </Button>
                     </div>
@@ -179,11 +160,7 @@ const Settings = () => {
                         <span className={styles.text}>Password set</span>
                       </div>
 
-                      <Button
-                        strech
-                        small
-                        onClick={() => setChangePasswordVisible(true)}
-                      >
+                      <Button strech small onClick={() => setChangePasswordVisible(true)}>
                         Reset password
                       </Button>
                     </div>
@@ -196,10 +173,7 @@ const Settings = () => {
               </Element>
 
               {owner.affiliates && owner.affiliates.referralRedirectUrl &&
-                <Element
-                  name="Referral"
-                  className={styles.section}
-                >
+                <Element name="Referral" className={styles.section}>
                   <h3 className={styles.title}>Referral Link</h3>
 
                   <div className={styles.subSection}>
@@ -241,10 +215,7 @@ const Settings = () => {
 
             <div className={styles.footer}>
               Go to&nbsp;
-              <Link
-                className="link red"
-                to={urls.getUserEditProfileUrl(owner.id)}
-              >
+              <Link className="link red" to={urls.getUserEditProfileUrl(owner.id)}>
                 Profile Edit
               </Link>
             </div>

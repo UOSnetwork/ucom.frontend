@@ -1,0 +1,63 @@
+.emissionCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-gap: 10px;
+  align-items: center;
+  padding: 16px;
+  box-shadow: 0px 0px 10px rgba(184, 184, 184, 0.25);
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transform: none;
+  transition: transform 0.2s ease;
+}
+
+.emissionCard + .emissionCard {
+  margin-top: 4px;
+}
+
+.emissionCard.disabled {
+  cursor: default;
+}
+
+.emissionCard:hover:not(.disabled) {
+  transform: scale(1.03);
+  z-index: 1;
+}
+
+.emissionCard.disabled .icon {
+  filter: grayscale(1);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.amount {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.5;
+  color: #585858;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 1.25;
+  color: #585858;
+}
+
+.action {
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}

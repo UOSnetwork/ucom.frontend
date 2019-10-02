@@ -1,0 +1,78 @@
+.resource {
+  padding: 24px;
+  font-size: 16px;
+}
+
+.resource + .resource {
+  border-top: 1px solid #eee;
+}
+
+.header {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 20px;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #585858;
+  margin: 0 0 6px;
+  white-space: nowrap;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+  color: #585858;
+}
+
+.progress {
+  height: 6px;
+  margin: 0 0 20px;
+  border-radius: 3px;
+  background: #EDEDED;
+}
+
+.percentage {
+  margin: 0 0 20px;
+  height: 6px;
+  background: #B3E1E1;
+  border-radius: 3px;
+}
+
+.percentage.green {
+  background: #91D91C;
+}
+
+.percentage.yellow {
+  background: #FDB909;
+}
+
+.percentage.red {
+  background: #E83030;
+}
+
+.actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  grid-gap: 16px;
+  justify-content: flex-end;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.total {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #000;
+}
+
+.used {
+  font-size: 14px;
+  margin: 0 0 15px;
+  color: rgba(0,0,0,0.33);
+}

@@ -4,7 +4,6 @@ import { setUser, setUserLoading } from './';
 import { siteNotificationsSetUnreadAmount } from './siteNotifications';
 import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
-import { walletGetAccount } from './walletSimple';
 import { getUserById, getUsersByIds } from '../store/users';
 import Worker from '../worker';
 import { getSocialKey, getToken, removeToken, USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils';
@@ -72,7 +71,6 @@ export const fetchMyself = () => async (dispatch) => {
     dispatch(addUsers([data]));
     dispatch(setUser(data));
     dispatch(siteNotificationsSetUnreadAmount(data.unreadMessagesCount));
-    dispatch(walletGetAccount(data.accountName));
   } catch (e) {
     console.error(e);
     removeToken();

@@ -73,7 +73,6 @@ const CommunityCard = (props) => {
   );
 };
 
-
 export default connect(state => ({
   organizations: state.organizations,
 }), dispatch => bindActionCreators({

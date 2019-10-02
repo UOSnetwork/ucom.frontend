@@ -45,6 +45,7 @@ const Comments = (props) => {
         userImageUrl={props.ownerImageUrl}
         userPageUrl={props.ownerPageUrl}
         userName={props.ownerName}
+        onError={props.onError}
       />
     </div>
   );
@@ -75,6 +76,7 @@ Comments.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onClickShowNext: PropTypes.func.isRequired,
   onClickShowReplies: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 Comments.defaultProps = {

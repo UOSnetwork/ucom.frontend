@@ -1,36 +1,29 @@
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import React from 'react';
 import PropTypes from 'prop-types';
-import UserCard from '../UserCard';
+import { UserCard } from '../EntryCard';
 import { UserFollowButton } from '../FollowButton';
-import { selectUser } from '../../store/selectors';
-import { getUsersByIds } from '../../store/users';
-import { getUserName } from '../../utils/user';
-import urls from '../../utils/urls';
+import { selectUsersByIds } from '../../store';
 
 // TODO: Remove
-const UserListPopup = (props) => {
-  if (!props.usersIds) {
+const UserListPopup = ({ title, usersIds }) => {
+  if (!usersIds) {
     return null;
   }
 
-  const users = getUsersByIds(props.users, props.usersIds);
+  const users = useSelector(selectUsersByIds(usersIds));
 
   return (
     <div className="entry-list">
-      <div className="entry-list__title">{props.title}</div>
+      <div className="entry-list__title">{title}</div>
 
       <div className="entry-list__list">
         {users.map(item => (
           <div className="entry-list__item" key={item.id}>
             <div className="entry-list__card">
               <UserCard
-                className="user-card_text_left"
-                userName={getUserName(item)}
-                accountName={item.accountName}
-                avatarUrl={urls.getFileUrl(item.avatarFilename)}
-                profileLink={urls.getUserUrl(item.id)}
-                sign={props.noSign ? '' : '@'}
+                disableRate
+                userId={item.id}
               />
             </div>
 
@@ -48,15 +41,12 @@ const UserListPopup = (props) => {
 
 UserListPopup.propTypes = {
   title: PropTypes.string,
-  noSign: PropTypes.bool,
   usersIds: PropTypes.arrayOf(PropTypes.number),
 };
 
-UserListPopup.defaultTypes = {
+UserListPopup.defaultProps = {
   title: 'Followers',
+  usersIds: [],
 };
 
-export default connect(state => ({
-  users: state.users,
-  user: selectUser(state),
-}))(UserListPopup);
+export default UserListPopup;
