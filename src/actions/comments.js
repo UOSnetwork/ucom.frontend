@@ -217,13 +217,13 @@ export const updateComment = (
   const comment = selectCommentById(commentId)(state);
 
   if (!comment) {
-    throw new Error('Comment not found');
+    throw new Error('Comment not found.');
   }
 
   const post = selectPostById(comment.commentableId)(state);
 
   if (!post) {
-    throw new Error('Post not found');
+    throw new Error('Post not found.');
   }
 
   let parentComment;
@@ -232,10 +232,18 @@ export const updateComment = (
     parentComment = selectCommentById(comment.parentId)(state);
   }
 
+  if (comment.parentId && !parentComment) {
+    throw new Error('Parent comment not found.');
+  }
+
   let org;
 
   if (post.organizationId) {
     org = selectOrgById(post.organizationId)(state);
+  }
+
+  if (post.organizationId && !org) {
+    throw new Error('Organization not found.');
   }
 
   const commentContent = {
