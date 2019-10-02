@@ -80,9 +80,7 @@ const UserWallet = ({ location }) => {
       icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
       tokens: [{
         title: `UOS ${formatNumber(wallet.tokens.active || 0)}`,
-        label: 'TestNet',
-      }, {
-        title: `staked UOS ${formatNumber(wallet.tokens.staked || 0)}`,
+        label: `staked UOS ${formatNumber(wallet.tokens.staked || 0)}`,
       }, {
         title: `UOSF ${formatNumber(wallet.tokens.uosFutures || 0)}`,
       }],
