@@ -24,7 +24,6 @@ import IconInputComplete from '../Icons/InputComplete';
 import urls from '../../utils/urls';
 import withLoader from '../../utils/withLoader';
 import { selectOwner } from '../../store/selectors';
-import * as walletActions from '../../actions/wallet';
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -36,7 +35,6 @@ const Settings = () => {
   const [keys, setKeys] = useState({});
 
   const sections = [
-    // { title: 'Resources', name: 'Resources' },
     { title: 'Keys', name: 'Keys' },
   ];
 
@@ -73,7 +71,6 @@ const Settings = () => {
 
   useEffect(() => {
     restoreKeys();
-    withLoader(dispatch(walletActions.walletGetAccount(owner.accountName)));
 
     return () => {
       dispatch(settingsActions.reset());
@@ -129,10 +126,7 @@ const Settings = () => {
                   {keys.socialKey ? (
                     <Fragment>
                       <div className={styles.copy}>
-                        <CopyPanel
-                          label="Private"
-                          value={keys.socialKey}
-                        />
+                        <CopyPanel label="Private" value={keys.socialKey} />
                       </div>
                       <div className={styles.copy}>
                         <CopyPanel
@@ -143,11 +137,7 @@ const Settings = () => {
                     </Fragment>
                   ) : (
                     <div className={styles.action}>
-                      <Button
-                        strech
-                        small
-                        onClick={() => setGenerateSocialKeyVisible(true)}
-                      >
+                      <Button strech small onClick={() => setGenerateSocialKeyVisible(true)}>
                         Generate Social Key
                       </Button>
                     </div>
@@ -159,11 +149,7 @@ const Settings = () => {
                   <p>You can set a Password to save a pair of encrypted Active Keys in your browser. This allows you to send the transactions, that require Active Keys, using your Password instead. You will need to enter the Brainkey to unlock your Active Keys.</p>
                   {!passwordIsSet ? (
                     <div className={styles.action}>
-                      <Button
-                        strech
-                        small
-                        onClick={() => setChangePasswordVisible(true)}
-                      >
+                      <Button strech small onClick={() => setChangePasswordVisible(true)}>
                         Set Password
                       </Button>
                     </div>
@@ -174,11 +160,7 @@ const Settings = () => {
                         <span className={styles.text}>Password set</span>
                       </div>
 
-                      <Button
-                        strech
-                        small
-                        onClick={() => setChangePasswordVisible(true)}
-                      >
+                      <Button strech small onClick={() => setChangePasswordVisible(true)}>
                         Reset password
                       </Button>
                     </div>
@@ -191,10 +173,7 @@ const Settings = () => {
               </Element>
 
               {owner.affiliates && owner.affiliates.referralRedirectUrl &&
-                <Element
-                  name="Referral"
-                  className={styles.section}
-                >
+                <Element name="Referral" className={styles.section}>
                   <h3 className={styles.title}>Referral Link</h3>
 
                   <div className={styles.subSection}>
@@ -236,10 +215,7 @@ const Settings = () => {
 
             <div className={styles.footer}>
               Go to&nbsp;
-              <Link
-                className="link red"
-                to={urls.getUserEditProfileUrl(owner.id)}
-              >
+              <Link className="link red" to={urls.getUserEditProfileUrl(owner.id)}>
                 Profile Edit
               </Link>
             </div>

@@ -66,6 +66,7 @@ const UserWallet = ({ location }) => {
   }) : null;
   const tokenCards = [];
   const resources = {
+    showPlaceholder: initialLoading,
     sections: [],
   };
   let emissionCards = [{
