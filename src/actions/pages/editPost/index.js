@@ -4,6 +4,8 @@ import { createMediaPost, updateMediaPost } from '../../posts';
 import { parseMediumContent, mediumHasContent } from '../../../utils/posts';
 import * as entityImagesUtils from '../../../utils/entityImages';
 import { ENTITY_IMAGES_SYMBOLS_LIMIT, ENTITY_IMAGES_SYMBOLS_LIMIT_ERROR, POSTS_DRAFT_LOCALSTORAGE_KEY } from '../../../utils/constants';
+import { getOwnerCredentialsOrShowAuthPopup } from '../../users';
+import { addDiscussion } from '../../organizations';
 
 export const reset = () => ({ type: 'EDIT_POST_PAGE_RESET' });
 
@@ -27,7 +29,13 @@ export const fetch = postId => async (dispatch) => {
   }
 };
 
-export const save = (accountName, privateKey) => async (dispatch, getState) => {
+export const save = orgId => async (dispatch, getState) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return null;
+  }
+
   const state = getState();
   const pageState = state.pages.editPost;
   const savePostAction = pageState.data.id ? updateMediaPost : createMediaPost;
@@ -50,10 +58,17 @@ export const save = (accountName, privateKey) => async (dispatch, getState) => {
 
   try {
     dispatch(setLoading(true));
-    const result = await dispatch(savePostAction(postData, accountName, privateKey));
-    dispatch(setLoading(false));
+
+    const result = await dispatch(savePostAction(postData, ownerCredentials.accountName, ownerCredentials.socialKey));
+    const postId = result.id || result.postId;
+
+    if (orgId) {
+      await dispatch(addDiscussion(postId, orgId));
+    }
+
     localStorage.removeItem(POSTS_DRAFT_LOCALSTORAGE_KEY);
-    return result.id || result.postId;
+    dispatch(setLoading(false));
+    return postId;
   } catch (err) {
     dispatch(setLoading(false));
     throw err;
