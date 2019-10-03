@@ -247,7 +247,7 @@ export const entityGetCoverUrl = (entityImages) => {
   }
 };
 
-export const getPostCoverUrl = (entityImages) => {
+export const getPostCoverUrlUrl = (entityImages) => {
   try {
     return entityImages.articleTitle[0].url;
   } catch (err) {

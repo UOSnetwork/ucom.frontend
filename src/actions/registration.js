@@ -5,7 +5,6 @@ import { generateBrainkey } from '../utils/brainkey';
 import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
 import { saveSocialKey } from '../utils/keys';
-import { getPostUrl } from '../utils/posts';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 import Worker from '../worker';
 
@@ -122,7 +121,7 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
   }
 
   if (prevPage !== undefined && prevPage !== null && !Number.isNaN(prevPage)) {
-    window.location.replace(getPostUrl(prevPage));
+    window.location.replace(urls.getPublicationUrl(prevPage));
   } else if (registrationData && registrationData.user && registrationData.user.id) {
     window.location.replace(urls.getUserEditProfileUrl(registrationData.user.id));
   } else {

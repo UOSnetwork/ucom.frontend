@@ -6,8 +6,7 @@ import urls from '../../../utils/urls';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
 import PostFeedFooter from './PostFeedFooter';
-import PostCard from '../../PostMedia/PostCard';
-import { getPostUrl, getPostTypeById, getPostCover } from '../../../utils/posts';
+import { PublicationCardWrapper } from '../PublicationCard';
 import { POST_TYPE_AUTOUPDATE_ID, POST_TYPE_MEDIA_ID } from '../../../utils';
 import styles from './Post.css';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
@@ -56,21 +55,7 @@ const Repost = ({
             />
 
             {post.post.postTypeId === POST_TYPE_MEDIA_ID ? (
-              <PostCard
-                onFeed
-                repost
-                coverUrl={getPostCover(post.post)}
-                rate={post.post.currentRate}
-                title={post.post.title || post.post.leadingText}
-                url={getPostUrl(post.post.id)}
-                userUrl={urls.getUserUrl(post.post.user && post.post.user.id)}
-                userImageUrl={urls.getFileUrl(post.post.user && post.post.user.avatarFilename)}
-                userName={getUserName(post.post.user)}
-                accountName={post.post.user && post.post.user.accountName}
-                tags={post.post.postTypeId && [getPostTypeById(post.post.postTypeId)]}
-                commentsCount={post.postTypeId && post.commentsCount}
-                sharesCount={post.postTypeId && post.sharesCount}
-              />
+              <PublicationCardWrapper postId={post.post.id} />
             ) : (
               <PostFeedContent
                 post={post.post}

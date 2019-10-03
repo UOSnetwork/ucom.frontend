@@ -1,0 +1,152 @@
+.publicationCard {
+  position: relative;
+  z-index: 0;
+  margin: 0 -20px;
+  color: #fff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background: #F9F9F9;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+}
+
+.publicationCard.noCover {
+  margin: 0 -10px;
+  color: #1B1E1E;
+  text-shadow: none;
+}
+
+.inner {
+  box-sizing: border-box;
+}
+
+.cover {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+.rate {
+  font-size: 16px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.user {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, max-content);
+  grid-gap: 8px;
+  align-items: center;
+  font-size: 16px;
+}
+
+.userName {
+  font-weight: bold;
+}
+
+.by {
+  font-size: 12px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .publicationCard {
+    padding-top: 65%;
+  }
+
+  .inner {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rate {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+  }
+
+  .user {
+    position: absolute;
+    bottom: 44px;
+    left: 40px;
+  }
+
+  .title {
+    position: absolute;
+    bottom: 83px;
+    left: 40px;
+    display: -webkit-box;
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    max-height: 5.5em;
+    max-width: calc(100% - 80px);
+  }
+
+  .title.small {
+    font-size: 18px;
+    line-height: 1.7;
+    max-height: 8.5em;
+    -webkit-line-clamp: 5;
+  }
+
+  .title.large {
+    font-size: 48px;
+    line-height: 1.2;
+    max-height: 3.7em;
+    -webkit-line-clamp: 3;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .publicationCard {
+    display: flex;
+    min-height: 280px;
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .rate {
+    flex: 1 1 auto;
+    margin-bottom: 15px;
+    text-align: right;
+  }
+
+  .title {
+    display: block;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 425px) {
+  .title {
+    font-size: 18px;
+    line-height: 1.7;
+  }
+}

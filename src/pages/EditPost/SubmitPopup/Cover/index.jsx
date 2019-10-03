@@ -4,7 +4,7 @@ import React, { Fragment, memo } from 'react';
 import DropzoneWrapper from '../../../../components/DropzoneWrapper';
 import IconClose from '../../../../components/Icons/Close';
 import IconCover from '../../../../components/Icons/Cover';
-import { getPostCoverUrl, removePostCover } from '../../../../utils/entityImages';
+import { getPostCoverUrlUrl, removePostCover } from '../../../../utils/entityImages';
 import withLoader from '../../../../utils/withLoader';
 import { addErrorNotificationFromResponse } from '../../../../actions/notifications';
 import * as editPostAction from '../../../../actions/pages/editPost';
@@ -13,7 +13,7 @@ import styles from './styles.css';
 const Cover = () => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.pages.editPost, isEqual);
-  const postCoverUrl = getPostCoverUrl(state.data.entityImages);
+  const postCoverUrl = getPostCoverUrlUrl(state.data.entityImages);
 
   const change = async (file) => {
     try {

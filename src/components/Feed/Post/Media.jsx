@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import React, { memo } from 'react';
-import { getUserName } from '../../../utils/user';
-import { getPostCover } from '../../../utils/posts';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedFooter from './PostFeedFooter';
-import PostCard from '../../PostMedia/PostCard';
-import urls from '../../../utils/urls';
 import { COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import styles from './Post.css';
+import { PublicationCardWrapper } from '../PublicationCard';
 
 const Media = ({
   post, user, owner, commentsContainerId, ...props
@@ -28,19 +25,7 @@ const Media = ({
         originEnabled={props.originEnabled}
       />
 
-      <PostCard
-        onFeed
-        coverUrl={getPostCover(post)}
-        rate={post.currentRate}
-        title={post.title || post.leadingText}
-        url={urls.getPostUrl(post)}
-        userImageUrl={urls.getFileUrl(user.avatarFilename)}
-        userName={getUserName(post.user)}
-        accountName={post.user && post.user.accountName}
-        commentsCount={post.postTypeId && post.commentsCount}
-        sharesCount={post.postTypeId && post.sharesCount}
-        userUrl={urls.getUserUrl(user.id)}
-      />
+      <PublicationCardWrapper postId={post.id} />
 
       <PostFeedFooter
         postId={post.id}

@@ -48,6 +48,14 @@ const urls = {
     return `${urls.getGovernanceVotingUrl(id)}/cast`;
   },
 
+  getPublicationUrl(postId) {
+    if (!postId) {
+      return null;
+    }
+
+    return `/posts/${postId}`;
+  },
+
   getPostUrl: memoize(({
     id, postTypeId, entityNameFor, entityIdFor,
   } = {}) => {

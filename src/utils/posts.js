@@ -34,22 +34,6 @@ export const POSTS_CATREGORIES = [{
   name: 'top',
 }];
 
-export const getPostUrl = (postId) => {
-  if (!postId) {
-    return null;
-  }
-
-  return `/posts/${postId}`;
-};
-
-export const getPostEditUrl = (postId) => {
-  if (!postId) {
-    return null;
-  }
-
-  return `/posts/${postId}/edit`;
-};
-
 export const getPostTypeById = (postTypeId) => {
   switch (postTypeId) {
     case POST_TYPE_DIRECT_ID:
@@ -94,7 +78,7 @@ export const getPostBody = ({
   return postBody;
 };
 
-export const getPostCover = (post) => {
+export const getPostCoverUrl = (post) => {
   try {
     return post.entityImages.articleTitle[0].url;
   } catch (e) {
