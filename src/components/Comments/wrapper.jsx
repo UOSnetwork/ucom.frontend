@@ -8,8 +8,6 @@ import {
   selectCommentsByIds,
   selectUsersByIds,
   selectOwner,
-  selectPostById,
-  selectOrgById,
 } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
@@ -17,10 +15,7 @@ import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
-import { getOrganization } from '../../actions/organizations';
-import { authShowPopup } from '../../actions/auth';
 import withLoader from '../../utils/withLoader';
-import { getSocialKey } from '../../utils/keys';
 
 const Wrapper = ({ containerId, postId, ...props }) => {
   const dispatch = useDispatch();
@@ -28,8 +23,6 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const commentsByContainerId = useSelector(selectCommentsByContainerId(containerId, postId), isEqual);
   const comments = useSelector(selectCommentsByIds(commentsByContainerId && commentsByContainerId.commentIds), isEqual);
   const users = useSelector(selectUsersByIds(comments && comments.map(c => c.user)), isEqual);
-  const post = useSelector(selectPostById(postId), isEqual);
-  const org = useSelector(selectOrgById(post && post.organizationId), isEqual);
 
   let commentsTree = [];
   let metadata = {};
@@ -55,49 +48,17 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   }
 
   const onSubmit = async ({
-    message,
     postId,
+    message,
     commentId,
     containerId,
     entityImages,
   }) => {
-    const ownerPrivateKey = getSocialKey();
-
-    if (!owner.id || !owner.accountName || !ownerPrivateKey) {
-      dispatch(authShowPopup());
-      return;
-    }
-
     try {
-      let comment;
-      let orgBlockchainId;
-
-      if (commentId) {
-        comment = comments.find(c => c.id === commentId);
-      }
-
-      if (post.organizationId && org.blockchainId) {
-        orgBlockchainId = org.blockchainId;
-      } else if (post.organizationId && !org.blockchainId) {
-        const orgData = await withLoader(dispatch(getOrganization(post.organizationId)));
-        orgBlockchainId = orgData.blockchainId;
-      }
-
-      await withLoader(dispatch(createComment(
-        owner.id,
-        owner.accountName,
-        ownerPrivateKey,
-        postId,
-        post.blockchainId,
-        containerId,
-        {
-          entityImages,
-          description: message,
-        },
-        commentId,
-        comment && comment.blockchainId,
-        orgBlockchainId,
-      )));
+      await withLoader(dispatch(createComment(postId, commentId, containerId, {
+        entityImages,
+        description: message,
+      })));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }

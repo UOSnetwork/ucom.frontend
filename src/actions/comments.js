@@ -123,90 +123,88 @@ export const getCommentsOnComment = ({
   loader.done();
 };
 
-// TODO: Refactoring like updateComment
-export const createComment = (
-  ownerId,
-  ownerAccountName,
-  ownerPrivateKey,
-  postId,
-  postBlockchainId,
-  containerId,
-  data,
-  commentId,
-  commentBlockchainId,
-  orgBlockchainId,
-) => async (dispatch) => {
+export const createComment = (postId, parentCommentId, containerId, commentData) => async (dispatch, getState) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return null;
+  }
+
+  const state = getState();
+  const post = selectPostById(postId)(state);
+
+  if (!post) {
+    throw new Error('Post not found.');
+  }
+
+  let parentComment;
+
+  if (parentCommentId) {
+    parentComment = selectCommentById(parentCommentId)(state);
+  }
+
+  if (parentCommentId && !parentComment) {
+    throw new Error('Parent comment not found.');
+  }
+
+  let org;
+
+  if (post.organizationId) {
+    org = selectOrgById(post.organizationId)(state);
+  }
+
+  if (post.organizationId && !org) {
+    throw new Error('Organization not found.');
+  }
+
   const commentContent = {
-    description: data.description,
-    entity_images: data.entityImages,
-    entity_tags: searchTags(data.description),
+    description: commentData.description,
+    entity_images: commentData.entityImages,
+    entity_tags: searchTags(commentData.description),
   };
+
   let signed_transaction;
   let blockchain_id;
 
-  if (orgBlockchainId && !commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-      ownerAccountName,
-      ownerPrivateKey,
-      postBlockchainId,
-      orgBlockchainId,
-      commentContent,
-      false,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  } else if (orgBlockchainId && commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-      ownerAccountName,
-      ownerPrivateKey,
-      commentBlockchainId,
-      orgBlockchainId,
-      commentContent,
-      true,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  } else if (commentBlockchainId) {
+  if (!org) {
     ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-      ownerAccountName,
-      ownerPrivateKey,
-      commentBlockchainId,
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
       commentContent,
-      true,
+      !!parentComment,
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   } else {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-      ownerAccountName,
-      ownerPrivateKey,
-      postBlockchainId,
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      org.blockchainId,
       commentContent,
-      false,
+      !!parentComment,
       TRANSACTION_PERMISSION_SOCIAL,
     ));
   }
 
-  const comment = await api.createComment(
-    {
-      ...omit(commentContent, ['entity_tags']),
-      signed_transaction: JSON.stringify(signed_transaction),
-      blockchain_id,
-    },
-    postId,
-    commentId,
-  );
+  const data = {
+    ...omit(commentContent, ['entity_tags']),
+    signed_transaction: JSON.stringify(signed_transaction),
+    blockchain_id,
+  };
+
+  const result = await api.createComment(data, post.id, parentComment ? parentComment.id : undefined);
 
   dispatch(commentsAddContainerData({
     containerId,
-    entryId: postId,
-    comments: [{ ...comment, isNew: true }],
+    entryId: post.id,
+    comments: [{ ...result, isNew: true }],
   }));
 
-  return comment;
+  return result;
 };
 
-export const updateComment = (
-  commentId,
-  commentData,
-) => async (dispatch, getState) => {
+export const updateComment = (commentId, commentData) => async (dispatch, getState) => {
   const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
 
   if (!ownerCredentials) {
