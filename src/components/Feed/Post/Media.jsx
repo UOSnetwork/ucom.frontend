@@ -25,7 +25,9 @@ const Media = ({
         originEnabled={props.originEnabled}
       />
 
-      <PublicationCardWrapper postId={post.id} />
+      <div className={styles.publication}>
+        <PublicationCardWrapper postId={post.id} />
+      </div>
 
       <PostFeedFooter
         postId={post.id}

@@ -55,7 +55,9 @@ const Repost = ({
             />
 
             {post.post.postTypeId === POST_TYPE_MEDIA_ID ? (
-              <PublicationCardWrapper postId={post.post.id} />
+              <div className={styles.publication}>
+                <PublicationCardWrapper postId={post.post.id} />
+              </div>
             ) : (
               <PostFeedContent
                 post={post.post}

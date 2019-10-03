@@ -8,6 +8,7 @@
 .postEdit {
   z-index: 1;
 }
+
 .repost {
   border: none;
   border-left: 2px solid #E7ECEC;
@@ -28,4 +29,12 @@
   z-index: 999;
   width: 100%;
   position: relative;
+}
+
+.publication {
+  margin: 0 -20px;
+}
+
+.repost .publication {
+  margin: 0 -10px;
 }
