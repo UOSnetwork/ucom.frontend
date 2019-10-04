@@ -8,6 +8,7 @@ import { searchTags } from '../utils/text';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
 import { selectCommentById, selectPostById, selectOrgById } from '../store';
 import Worker from '../worker';
+import * as walletActions from './wallet';
 
 export const addComments = comments => (dispatch) => {
   const users = [];
@@ -200,6 +201,8 @@ export const createComment = (postId, parentCommentId, containerId, commentData)
     entryId: post.id,
     comments: [{ ...result, isNew: true }],
   }));
+
+  dispatch(walletActions.parseStrAndRunAction(commentData.description));
 
   return result;
 };

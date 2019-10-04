@@ -5,6 +5,7 @@ import { TRANSACTION_PERMISSION_SOCIAL } from '../utils';
 import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { addErrorNotificationFromResponse, addSuccessNotification } from './notifications';
+import Command from '../utils/command';
 
 export const setData = payload => ({ type: 'WALLET_SET_DATA', payload });
 
@@ -69,5 +70,12 @@ export const getEmissionAndShowNotification = () => async (dispatch) => {
     dispatch(addSuccessNotification('Successfully get emission'));
   } catch (err) {
     dispatch(addErrorNotificationFromResponse(err));
+  }
+};
+
+export const parseStrAndRunAction = str => (dispatch) => {
+  if (Command.stringHasTipCommand(str)) {
+    console.log(Command.parseTipCommand(str));
+    dispatch(walletToggleSendTokens(true));
   }
 };
