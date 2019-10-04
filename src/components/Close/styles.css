@@ -23,6 +23,7 @@
 .left,
 .bottom {
   position: fixed;
+  z-index: 999999;
 }
 
 .top {
