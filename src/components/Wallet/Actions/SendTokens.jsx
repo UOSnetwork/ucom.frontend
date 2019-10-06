@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleSendTokens, walletSendTokens, walletGetAccount } from '../../../actions/wallet';
+import * as walletActions from '../../../actions/wallet/index';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
@@ -28,8 +28,8 @@ const SendTokens = () => {
     setFormError(null);
     dispatch(addSuccessNotification('Successfully sent tokens'));
     setTimeout(() => {
-      dispatch(walletGetAccount(owner.accountName));
-      dispatch(walletToggleSendTokens(false));
+      dispatch(walletActions.getAccount(owner.accountName));
+      dispatch(walletActions.toggleSendTokens(false));
     }, 0);
   };
 
@@ -38,7 +38,7 @@ const SendTokens = () => {
     setFormError(errors[0].message);
   };
 
-  if (!wallet.sendTokensVisibility) {
+  if (!wallet.sendTokens.visibility) {
     return null;
   }
 
@@ -48,7 +48,7 @@ const SendTokens = () => {
       onSubmit={async (privateKey) => {
         setLoading(true);
         try {
-          await withLoader(dispatch(walletSendTokens(owner.accountName, user.accountName, +amount, memo, privateKey)));
+          await withLoader(dispatch(walletActions.sendTokens(owner.accountName, user.accountName, +amount, memo, privateKey)));
           onSuccess();
         } catch (err) {
           onError(err);
@@ -67,8 +67,8 @@ const SendTokens = () => {
       }}
     >
       {(requestActiveKey, requestLoading) => (
-        <Popup onClickClose={() => dispatch(walletToggleSendTokens(false))}>
-          <Content walletAction onClickClose={() => dispatch(walletToggleSendTokens(false))}>
+        <Popup onClickClose={() => dispatch(walletActions.toggleSendTokens(false))}>
+          <Content walletAction onClickClose={() => dispatch(walletActions.toggleSendTokens(false))}>
             <form
               className={styles.content}
               onSubmit={async (e) => {

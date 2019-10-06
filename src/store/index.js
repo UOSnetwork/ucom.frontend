@@ -14,7 +14,7 @@ import tags from './tags';
 import communityFeed from './communityFeed';
 import tagsFeed from './tagsFeed';
 import user from './user';
-import wallet from './wallet';
+import wallet from './wallet/index';
 import mainPage from './mainPage';
 import mainPageUser from './mainPageUser';
 import userPage from './userPage';

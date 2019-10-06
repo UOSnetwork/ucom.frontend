@@ -1,24 +1,23 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React from 'react';
 import TradeRam from './TradeRam';
-import { walletToggleSellRam } from '../../../actions/wallet';
+import * as walletActions from '../../../actions/wallet/index';
 
-const BuyRam = props => props.wallet.sellRamVisible && (
-  <TradeRam
-    sell
-    onClickClose={() => props.dispatch(walletToggleSellRam(false))}
-    onSubmit={() => props.dispatch(walletToggleSellRam(false))}
-  />
-);
+const BuyRam = () => {
+  const dispatch = useDispatch();
+  const wallet = useSelector(state => state.wallet);
 
-BuyRam.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-  wallet: PropTypes.shape({
-    sellRamVisible: PropTypes.bool.isRequired,
-  }).isRequired,
+  if (!wallet.sellRam.visible) {
+    return null;
+  }
+
+  return (
+    <TradeRam
+      sell
+      onClickClose={() => dispatch(walletActions.toggleSellRam(false))}
+      onSubmit={() => dispatch(walletActions.toggleSellRam(false))}
+    />
+  );
 };
 
-export default connect(state => ({
-  wallet: state.wallet,
-}))(BuyRam);
+export default BuyRam;

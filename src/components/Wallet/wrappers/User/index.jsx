@@ -9,7 +9,7 @@ import urls from '../../../../utils/urls';
 import UserPick from '../../../../components/UserPick';
 import withLoader from '../../../../utils/withLoader';
 import formatNumber from '../../../../utils/formatNumber';
-import * as walletActions from '../../../../actions/wallet';
+import * as walletActions from '../../../../actions/wallet/index';
 import * as Icons from '../../Icons';
 import {
   TRX_TYPE_TRANSFER_FROM,
@@ -24,6 +24,7 @@ import {
 } from '../../../../utils/constants';
 import percent from '../../../../utils/percent';
 import * as searchPopupActions from '../../../../actions/searchPopup';
+import { addErrorNotificationFromResponse, addSuccessNotification } from '../../../../actions/notifications';
 import { logout } from '../../../../utils/auth';
 
 const TRANSACTIONS_PER_PAGE = 50;
@@ -44,29 +45,31 @@ const UserWallet = ({ location }) => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
   const wallet = useSelector(state => state.wallet, isEqual);
+  const { account, transactions } = wallet;
   const [activeTabId, setActiveTabId] = useState(TAB_WALLET_ID);
-  const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [accountInitialLoading, setAccountInitialLoading] = useState(false);
+  const [transactionsInitialLoading, setTransactionsInitialLoading] = useState(false);
+  const [transactionsMoreLoading, setTransactionsMoreLoading] = useState(false);
   const [emissionLoading, setEmissionLoading] = useState(false);
-  const validTransactionsData = wallet.transactions.data.filter(i => transactionTypes.includes(i.trType));
+  const validTransactionsData = transactions.data.filter(i => transactionTypes.includes(i.trType));
   const transactionsGroups = groupBy(validTransactionsData, (trx) => {
     const date = new Date(trx.updatedAt);
     date.setHours(0, 0, 0, 0);
     return date.getTime();
   });
   const transactionsGroupsKeys = Object.keys(transactionsGroups);
-  const unstakingRequestTransactionsSection = wallet.tokens && wallet.tokens.unstakingRequest && wallet.tokens.unstakingRequest.requestDatetime ? ({
+  const unstakingRequestTransactionsSection = account.tokens && account.tokens.unstakingRequest && account.tokens.unstakingRequest.requestDatetime ? ({
     list: [{
       icon: <Icons.St />,
-      title: `Unstaking ${wallet.tokens.unstakingRequest.requestDatetime ? `(${moment(wallet.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
-      amount: `${formatNumber(wallet.tokens.unstakingRequest.amount)} ${wallet.tokens.unstakingRequest.currency}`,
+      title: `Unstaking ${account.tokens.unstakingRequest.requestDatetime ? `(${moment(account.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
+      amount: `${formatNumber(account.tokens.unstakingRequest.amount)} ${account.tokens.unstakingRequest.currency}`,
       disablePopup: true,
       deferred: true,
     }],
   }) : null;
   const tokenCards = [];
   const resources = {
-    showPlaceholder: initialLoading,
+    showPlaceholder: accountInitialLoading,
     sections: [],
   };
   let emissionCards = [{
@@ -75,124 +78,142 @@ const UserWallet = ({ location }) => {
     label: 'Your Emission',
   }];
 
-  if (wallet.tokens) {
+  if (account.tokens) {
     tokenCards.push({
       color: '#B3E1E1',
       icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
       tokens: [{
-        title: `UOS ${formatNumber(wallet.tokens.active || 0)}`,
-        label: `staked UOS ${formatNumber(wallet.tokens.staked || 0)}`,
+        title: `UOS ${formatNumber(account.tokens.active || 0)}`,
+        label: `staked UOS ${formatNumber(account.tokens.staked || 0)}`,
       }, {
-        title: `UOSF ${formatNumber(wallet.tokens.uosFutures || 0)}`,
+        title: `UOSF ${formatNumber(account.tokens.uosFutures || 0)}`,
       }],
       actions: [{
         title: 'Send',
-        onClick: () => dispatch(walletActions.walletToggleSendTokens(true)),
+        onClick: () => dispatch(walletActions.toggleSendTokens(true)),
       }],
     });
   }
 
-  if (wallet.resources && wallet.resources.ram) {
+  if (account.resources && account.resources.ram) {
     resources.sections.push({
       title: 'Resources you own:',
       actions: [{
         title: 'Sell',
-        onClick: () => dispatch(walletActions.walletToggleSellRam(true)),
+        onClick: () => dispatch(walletActions.toggleSellRam(true)),
       }, {
         title: 'Buy',
-        onClick: () => dispatch(walletActions.walletToggleBuyRam(true)),
+        onClick: () => dispatch(walletActions.toggleBuyRam(true)),
       }],
       list: [{
         title: 'RAM',
-        total: `${formatNumber(round(wallet.resources.ram.total, 2))} ${wallet.resources.ram.dimension} Available`,
-        used: `${formatNumber(round(wallet.resources.ram.used, 2))} ${wallet.resources.ram.dimension}`,
-        percentage: percent(wallet.resources.ram.used, wallet.resources.ram.total),
+        total: `${formatNumber(round(account.resources.ram.total, 2))} ${account.resources.ram.dimension} Available`,
+        used: `${formatNumber(round(account.resources.ram.used, 2))} ${account.resources.ram.dimension}`,
+        percentage: percent(account.resources.ram.used, account.resources.ram.total),
       }],
     });
   }
 
-  if (wallet.resources && (wallet.resources.cpu || wallet.resources.net)) {
+  if (account.resources && (account.resources.cpu || account.resources.net)) {
     const list = [];
 
-    if (wallet.resources.net) {
+    if (account.resources.net) {
       list.push({
         title: 'Network bandwidth',
-        total: `${formatNumber(round(wallet.resources.net.total, 2))} ${wallet.resources.net.dimension} Available`,
-        used: `${formatNumber(round(wallet.resources.net.used, 2))} ${wallet.resources.net.dimension}`,
-        percentage: percent(wallet.resources.net.used, wallet.resources.net.total),
+        total: `${formatNumber(round(account.resources.net.total, 2))} ${account.resources.net.dimension} Available`,
+        used: `${formatNumber(round(account.resources.net.used, 2))} ${account.resources.net.dimension}`,
+        percentage: percent(account.resources.net.used, account.resources.net.total),
       });
     }
 
-    if (wallet.resources.cpu) {
+    if (account.resources.cpu) {
       list.push({
         title: 'CPU Time',
-        total: `${formatNumber(round(wallet.resources.cpu.total, 2))} ${wallet.resources.cpu.dimension} Available`,
-        used: `${formatNumber(round(wallet.resources.cpu.used, 2))} ${wallet.resources.cpu.dimension}`,
-        percentage: percent(wallet.resources.cpu.used, wallet.resources.cpu.total),
+        total: `${formatNumber(round(account.resources.cpu.total, 2))} ${account.resources.cpu.dimension} Available`,
+        used: `${formatNumber(round(account.resources.cpu.used, 2))} ${account.resources.cpu.dimension}`,
+        percentage: percent(account.resources.cpu.used, account.resources.cpu.total),
       });
     }
 
     resources.sections.push({
-      title: <span>Resources you staked<strong>{wallet.tokens ? ` UOS ${formatNumber(wallet.tokens.staked)}` : ''}</strong> for:</span>,
+      title: <span>Resources you staked<strong>{account.tokens ? ` UOS ${formatNumber(account.tokens.staked)}` : ''}</strong> for:</span>,
       actions: [{
         title: 'Set',
-        onClick: () => dispatch(walletActions.walletToggleEditStake(true)),
+        onClick: () => dispatch(walletActions.toggleEditStake(true)),
       }],
       list,
     });
   }
 
-  if (wallet.tokens) {
+  if (account.tokens) {
     emissionCards = [{
-      disabled: wallet.tokens.emission === 0,
-      amount: `${formatNumber(wallet.tokens.emission)} UOS`,
+      disabled: account.tokens.emission === 0,
+      amount: `${formatNumber(account.tokens.emission)} UOS`,
       label: 'Your Emission',
       onClick: async () => {
-        if (emissionLoading && !wallet.tokens.emission) {
+        if (emissionLoading && !account.tokens.emission) {
           return;
         }
 
         setEmissionLoading(true);
-        await withLoader(dispatch(walletActions.getEmissionAndShowNotification()));
+        try {
+          await withLoader(dispatch(walletActions.claimEmission()));
+          dispatch(addSuccessNotification('Successfully claim emission'));
+        } catch (err) {
+          dispatch(addErrorNotificationFromResponse(err));
+        }
         setEmissionLoading(false);
       },
     }];
   }
 
-  const getInitialData = async () => {
-    setLoading(true);
-    setInitialLoading(true);
-    await Promise.all([
-      withLoader(dispatch(walletActions.walletGetAccount(owner.accountName))),
-      withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE))),
-    ]);
-    setLoading(false);
-    setInitialLoading(false);
+  const getInitialAccountData = async () => {
+    setAccountInitialLoading(true);
+    try {
+      await withLoader(dispatch(walletActions.getAccount(owner.accountName)));
+      setAccountInitialLoading(false);
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
+  const getInitialTransactions = async () => {
+    setTransactionsInitialLoading(true);
+    try {
+      await withLoader(dispatch(walletActions.getTransactions(1, TRANSACTIONS_PER_PAGE)));
+      setTransactionsInitialLoading(false);
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+    }
+  };
+
+  const getInitialData = () => {
+    getInitialAccountData();
+    getInitialTransactions();
   };
 
   const getNextTransactions = useCallback(async () => {
-    const { metadata } = wallet.transactions;
+    const { metadata } = transactions;
+    const page = metadata.page + 1;
 
-    if (!metadata.hasMore || loading) {
+    if (!metadata.hasMore || transactionsMoreLoading) {
       return;
     }
 
-    const page = metadata.page + 1;
-
-    setLoading(true);
+    setTransactionsMoreLoading(true);
     await withLoader(dispatch(walletActions.getTransactions(page, TRANSACTIONS_PER_PAGE, true)));
-    setLoading(false);
-  }, [wallet, walletActions, loading]);
+    setTransactionsMoreLoading(false);
+  }, [wallet, walletActions, transactionsMoreLoading]);
 
   useEffect(() => {
-    if (wallet.visible) {
+    if (wallet.popup.visible) {
       getInitialData();
     } else {
-      dispatch(walletActions.reset());
+      dispatch(walletActions.resetPopup());
     }
-  }, [wallet.visible]);
+  }, [wallet.popup.visible]);
 
-  if (!wallet.visible) {
+  if (!wallet.popup.visible) {
     return null;
   }
 
@@ -252,13 +273,13 @@ const UserWallet = ({ location }) => {
       }}
       emissionCards={emissionCards}
       resources={resources}
-      showTokenCardsPlaceholder={initialLoading}
+      showTokenCardsPlaceholder={accountInitialLoading}
       tokenCards={tokenCards}
-      sidebarBlocked={initialLoading || (!initialLoading && transactionsGroupsKeys.length === 0)}
+      sidebarBlocked={transactionsInitialLoading || (!transactionsInitialLoading && transactionsGroupsKeys.length === 0)}
       transactions={{
-        showEmptyLabel: !initialLoading && transactionsGroupsKeys.length === 0,
-        showPlaceholder: initialLoading,
-        showLoader: wallet.transactions.metadata.hasMore,
+        showEmptyLabel: !transactionsInitialLoading && transactionsGroupsKeys.length === 0,
+        showPlaceholder: transactionsInitialLoading,
+        showLoader: transactions.metadata.hasMore,
         sections: (unstakingRequestTransactionsSection ? [unstakingRequestTransactionsSection] : [])
           .concat(transactionsGroupsKeys.map(time => ({
             title: moment(+time).format('D MMMM'),

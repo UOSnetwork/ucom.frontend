@@ -86,10 +86,10 @@ const App = () => {
       <Subscribe />
       <UserWallet />
       {auth.visibility && <Auth />}
-      {wallet.buyRamVisible && <BuyRam />}
-      {wallet.sellRamVisible && <SellRam />}
-      {wallet.editStakeVisible && <EditStake />}
-      {wallet.sendTokensVisibility && <SendTokens />}
+      {wallet.buyRam.visible && <BuyRam />}
+      {wallet.sellRam.visible && <SellRam />}
+      {wallet.editStake.visible && <EditStake />}
+      {wallet.sendTokens.visibility && <SendTokens />}
       <Notifications />
     </Fragment>
   );
