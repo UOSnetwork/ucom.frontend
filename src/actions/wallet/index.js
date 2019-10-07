@@ -1,4 +1,4 @@
-// TODO: Refactoring as sendTokens.js
+// TODO: Refactoring like sendTokens.js
 
 import humps from 'lodash-humps';
 import { WalletApi } from 'ucom-libs-wallet';

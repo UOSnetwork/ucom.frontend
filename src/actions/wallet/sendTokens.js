@@ -13,8 +13,21 @@ export default class Actions {
     return baseActions.merge(data);
   }
 
-  static toggle(visible) {
-    return baseActions.merge({ visible });
+  static show() {
+    return baseActions.merge({ visible: true });
+  }
+
+  static cancel() {
+    return (dispatch, getState) => {
+      const state = getState();
+      const { failCallbcak } = state.wallet.sendTokens;
+
+      if (typeof failCallbcak === 'function') {
+        failCallbcak();
+      }
+
+      dispatch(Actions.reset());
+    };
   }
 
   static submit(scatter, activeKey) {

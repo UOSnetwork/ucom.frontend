@@ -37,8 +37,8 @@ const SendTokens = () => {
       onScatterConnect={scatter => withLoader(dispatch(walletActions.sendTokens.submit(scatter)))}
     >
       {(requestActiveKey, requestLoading) => (
-        <Popup onClickClose={() => dispatch(walletActions.sendTokens.toggle(false))}>
-          <Content walletAction onClickClose={() => dispatch(walletActions.sendTokens.toggle(false))}>
+        <Popup onClickClose={() => dispatch(walletActions.sendTokens.cancel())}>
+          <Content walletAction onClickClose={() => dispatch(walletActions.sendTokens.cancel())}>
             <form
               className={styles.content}
               onSubmit={(e) => {

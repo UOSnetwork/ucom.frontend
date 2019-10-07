@@ -16,6 +16,8 @@ import { getUserName } from '../../utils/user';
 import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
+import Command from '../../utils/command';
+import * as walletActions from '../../actions/wallet';
 
 const Wrapper = ({ containerId, postId, ...props }) => {
   const dispatch = useDispatch();
@@ -47,29 +49,32 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     ({ metadata } = commentsByContainerId);
   }
 
-  const onSubmit = async ({
-    postId,
-    message,
-    commentId,
-    containerId,
-    entityImages,
-  }) => {
-    try {
-      await withLoader(dispatch(createComment(postId, commentId, containerId, {
-        entityImages,
-        description: message,
-      })));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
+  const sendTokensIfNeeded = async (description) => {
+    if (Command.stringHasTipCommand(description)) {
+      const { accountName, amount } = Command.parseTipCommand(description);
+      await dispatch(walletActions.sendTokens.send(accountName, amount));
     }
   };
 
-  const onUpdate = async ({ commentId, data }) => {
+  const onSubmit = async (postId, parentCommentId, containerId, data) => {
+    await sendTokensIfNeeded(data.description);
+
+    try {
+      await withLoader(dispatch(createComment(postId, parentCommentId, containerId, data)));
+    } catch (err) {
+      dispatch(addErrorNotificationFromResponse(err));
+      throw err;
+    }
+  };
+
+  const onUpdate = async (commentId, data) => {
+    await sendTokensIfNeeded(data.description);
+
     try {
       await withLoader(dispatch(updateComment(commentId, data)));
     } catch (err) {
-      console.error(err);
       dispatch(addErrorNotificationFromResponse(err));
+      throw err;
     }
   };
 

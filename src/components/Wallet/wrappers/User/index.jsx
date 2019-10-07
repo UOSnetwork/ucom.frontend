@@ -90,7 +90,7 @@ const UserWallet = ({ location }) => {
       }],
       actions: [{
         title: 'Send',
-        onClick: () => dispatch(walletActions.sendTokens.toggle(true)),
+        onClick: () => dispatch(walletActions.sendTokens.show()),
       }],
     });
   }

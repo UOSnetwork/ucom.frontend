@@ -1,10 +1,10 @@
 export default class Command {
-  static getTipRegexp() {
+  static getTipCommandRegexp() {
     return /\-\-tip[ ]+\@([a-z1-5]{12})[ ]+([0-9]+)[ ]+uos/i;
   }
 
   static stringHasTipCommand(str) {
-    return Command.getTipRegexp().test(str);
+    return Command.getTipCommandRegexp().test(str);
   }
 
   static parseTipCommand(str) {
@@ -12,7 +12,7 @@ export default class Command {
       return null;
     }
 
-    const [, accountName, amount] = str.match(Command.getTipRegexp());
+    const [, accountName, amount] = str.match(Command.getTipCommandRegexp());
 
     return { accountName, amount };
   }

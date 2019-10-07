@@ -14,6 +14,7 @@ import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../
 import { COMMENT_EDIT_TIME_LIMIT } from '../../../utils';
 import { sanitizeCommentText, checkMentionTag, checkHashTag } from '../../../utils/text';
 import entityIsEditable from '../../../utils/entityIsEditable';
+import Command from '../../../utils/command';
 
 const Comment = (props) => {
   const [active, setActive] = useState(false);
@@ -26,6 +27,25 @@ const Comment = (props) => {
   const isEditable = entityIsEditable(props.createdAt, COMMENT_EDIT_TIME_LIMIT);
   const calcTimeLeft = () => 15 - moment().diff(props.createdAt, 'm');
   const [leftTime, setLeftTime] = useState(null);
+
+  const menuItems = [];
+
+  if (Command.stringHasTipCommand(props.text)) {
+    menuItems.push({
+      title: <span className={styles.limit}>Can not edit message with tip</span>,
+      disabled: true,
+    });
+  } else {
+    menuItems.push({
+      title: isEditable ? (
+        <span>Edit <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
+      ) : (
+        <span className={styles.limit}>Can only edit in first 15 min</span>
+      ),
+      onClick: () => isEditable && setEditFormVisible(true),
+      disabled: !isEditable,
+    });
+  }
 
   return (
     <Fragment>
@@ -41,12 +61,9 @@ const Comment = (props) => {
             userPageUrl={props.ownerPageUrl}
             userName={props.ownerName}
             onSubmit={async (params) => {
-              await props.onUpdate({
-                commentId: props.id,
-                data: {
-                  description: params.message,
-                  entityImages: params.entityImages,
-                },
+              await props.onUpdate(props.id, {
+                description: params.message,
+                entityImages: params.entityImages,
               });
             }}
             onReset={() => setEditFormVisible(false)}
@@ -74,15 +91,7 @@ const Comment = (props) => {
                 onHide={() => {
                   setActive(false);
                 }}
-                items={[{
-                  title: isEditable ? (
-                    <span>Edit <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
-                  ) : (
-                    <span className={styles.limit}>Can only edit in first 15 min</span>
-                  ),
-                  onClick: () => isEditable && setEditFormVisible(true),
-                  disabled: !isEditable,
-                }]}
+                items={menuItems}
               />
             </div>
           }

@@ -69,15 +69,16 @@ const Form = (props) => {
 
     setLoading(true);
 
-    await props.onSubmit({
-      message,
-      containerId: props.containerId,
-      postId: props.postId,
-      commentId: props.commentId,
-      entityImages: JSON.stringify(entityImages),
-    });
+    try {
+      await props.onSubmit(props.postId, props.commentId, props.containerId, {
+        entityImages: JSON.stringify(entityImages),
+        description: message,
+      });
+    } catch (err) {
+      setLoading(false);
+      return;
+    }
 
-    setLoading(false);
     reset();
   };
 
