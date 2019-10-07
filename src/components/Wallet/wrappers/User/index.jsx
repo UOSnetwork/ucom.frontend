@@ -90,7 +90,7 @@ const UserWallet = ({ location }) => {
       }],
       actions: [{
         title: 'Send',
-        onClick: () => dispatch(walletActions.toggleSendTokens(true)),
+        onClick: () => dispatch(walletActions.sendTokens.toggle(true)),
       }],
     });
   }
@@ -208,6 +208,7 @@ const UserWallet = ({ location }) => {
   useEffect(() => {
     if (wallet.popup.visible) {
       getInitialData();
+      // dispatch(walletActions.sendTokens.send('sudokey', '100', 'Test mesage'));
     } else {
       dispatch(walletActions.resetPopup());
     }

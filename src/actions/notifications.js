@@ -31,6 +31,7 @@ export const addErrorNotificationFromResponse = payload => (dispatch) => {
   dispatch(addErrorNotification(message));
 };
 
+// TODO: Remove when site notifications finish refactoring
 export const addServerErrorNotification = error => (dispatch) => {
   if ((error && error.response && error.response.status) === 401 || (error && error.status) === 401) {
     dispatch(authShowPopup());

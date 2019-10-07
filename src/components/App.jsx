@@ -89,7 +89,7 @@ const App = () => {
       {wallet.buyRam.visible && <BuyRam />}
       {wallet.sellRam.visible && <SellRam />}
       {wallet.editStake.visible && <EditStake />}
-      {wallet.sendTokens.visibility && <SendTokens />}
+      {wallet.sendTokens.visible && <SendTokens />}
       <Notifications />
     </Fragment>
   );

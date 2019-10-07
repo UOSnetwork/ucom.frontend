@@ -1,3 +1,5 @@
+// TODO: Refactoring as sendTokens.js
+
 import humps from 'lodash-humps';
 import { WalletApi } from 'ucom-libs-wallet';
 import Worker from '../../worker';
@@ -8,9 +10,10 @@ import { actions as popupActions } from '../../store/wallet/popup';
 import { actions as buyRamActions } from '../../store/wallet/buyRam';
 import { actions as sellRamActions } from '../../store/wallet/sellRam';
 import { actions as editStakeActions } from '../../store/wallet/editStake';
-import { actions as sendTokensActions } from '../../store/wallet/sendTokens';
 import { actions as accountActions } from '../../store/wallet/account';
 import { actions as transactionsActions } from '../../store/wallet/transactions';
+
+export { default as sendTokens } from './sendTokens';
 
 export const toggle = visible => dispatch => dispatch(popupActions.merge({ visible }));
 
@@ -20,17 +23,12 @@ export const toggleSellRam = visible => dispatch => dispatch(sellRamActions.merg
 
 export const toggleEditStake = visible => dispatch => dispatch(editStakeActions.merge({ visible }));
 
-export const toggleSendTokens = visible => dispatch => dispatch(sendTokensActions.merge({ visible }));
-
 export const buyRam = (accountName, amount, privateKey) => () => Worker.buyRam(accountName, privateKey, amount);
 
 export const sellRam = (accountName, amount, privateKey) => () => Worker.sellRam(accountName, privateKey, amount);
 
 export const editStake = (accountName, privateKey, netAmount, cpuAmount) => () =>
   Worker.stakeOrUnstakeTokens(accountName, privateKey, netAmount, cpuAmount);
-
-export const sendTokens = (accountNameFrom, accountNameTo, amount, memo, privateKey) => () =>
-  Worker.sendTokens(accountNameFrom, privateKey, accountNameTo, amount, memo);
 
 export const getAccount = accountName => async (dispatch) => {
   const data = await WalletApi.getAccountState(accountName);

@@ -17,8 +17,10 @@ const SearchInput = ({
   onChange,
   getOptionLabel,
   getOptionValue,
+  isDisabled,
 }) => (
   <AsyncSelect
+    isDisabled={isDisabled}
     isSearchable
     autoFocus={autoFocus}
     placeholder={placeholder}
@@ -48,6 +50,7 @@ SearchInput.propTypes = {
   organization: PropTypes.bool,
   getOptionLabel: PropTypes.func,
   getOptionValue: PropTypes.func,
+  isDisabled: PropTypes.bool,
 };
 
 SearchInput.defaultProps = {
@@ -57,17 +60,10 @@ SearchInput.defaultProps = {
   value: undefined,
   autoFocus: false,
   organization: false,
-  loadOptions: async (q) => {
-    try {
-      const query = q[0] === '@' ? q.substr(1) : q;
-      const data = await withLoader(api.searchUsers(query));
-      return data.slice(0, 20);
-    } catch (err) {
-      return [];
-    }
-  },
+  loadOptions: q => withLoader(api.searchUsersByAccountNameWithLimit(q, 20)),
   getOptionLabel: getUserName,
   getOptionValue: data => data.id,
+  isDisabled: false,
 };
 
 export default SearchInput;
