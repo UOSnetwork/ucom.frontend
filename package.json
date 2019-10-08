@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run server | npm run dev",
+    "start": "npm run dev",
     "server": "pm2 restart ecosystem-test.config.js",
     "dev": "BABEL_ENV=dev NODE_ENV=staging webpack --config ./webpack.config.js --mode development --watch",
     "staging": "BABEL_ENV=staging NODE_ENV=staging webpack --config ./webpack.config.js --mode development",
@@ -13,6 +13,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "baseUrl": {
+    "production": "https://u.community",
+    "staging": "https://staging.u.community"
+  },
   "uosGroupId": {
     "staging": 41,
     "production": 4

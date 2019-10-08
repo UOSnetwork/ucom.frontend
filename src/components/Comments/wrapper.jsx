@@ -8,6 +8,7 @@ import {
   selectCommentsByIds,
   selectUsersByIds,
   selectOwner,
+  selectPostById,
 } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
@@ -25,6 +26,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const commentsByContainerId = useSelector(selectCommentsByContainerId(containerId, postId), isEqual);
   const comments = useSelector(selectCommentsByIds(commentsByContainerId && commentsByContainerId.commentIds), isEqual);
   const users = useSelector(selectUsersByIds(comments && comments.map(c => c.user)), isEqual);
+  const post = useSelector(selectPostById(postId), isEqual);
 
   let commentsTree = [];
   let metadata = {};
@@ -52,7 +54,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const sendTokensIfNeeded = async (description) => {
     if (Command.stringHasTipCommand(description)) {
       const { accountName, amount } = Command.parseTipCommand(description);
-      await dispatch(walletActions.sendTokens.send(accountName, amount));
+      await dispatch(walletActions.sendTokens.send(accountName, amount, `Tip from @${accountName} in comments of post ${urls.getDirectUrl(urls.getPostUrl(post))}`));
     }
   };
 

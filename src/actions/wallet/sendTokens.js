@@ -2,6 +2,7 @@ import { actions as baseActions } from '../../store/wallet/sendTokens';
 import { getOwnerCredentialsOrShowAuthPopup, fetchUser } from '../users';
 import { addSuccessNotification } from '../notifications';
 import { parseResponseError } from '../../utils/errors';
+import { getAccount } from './index';
 import Worker from '../../worker';
 
 export default class Actions {
@@ -64,6 +65,7 @@ export default class Actions {
         }
 
         dispatch(addSuccessNotification('Successfully sent tokens'));
+        dispatch(getAccount(ownerCredentials.accountName));
         dispatch(Actions.reset());
       } catch (err) {
         const error = parseResponseError(err)[0].message;

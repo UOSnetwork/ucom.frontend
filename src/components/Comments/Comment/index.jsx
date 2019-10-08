@@ -60,11 +60,8 @@ const Comment = (props) => {
             userImageUrl={props.ownerImageUrl}
             userPageUrl={props.ownerPageUrl}
             userName={props.ownerName}
-            onSubmit={async (params) => {
-              await props.onUpdate(props.id, {
-                description: params.message,
-                entityImages: params.entityImages,
-              });
+            onSubmit={async (postId, parentCommentId, containerId, data) => {
+              await props.onUpdate(props.id, data);
             }}
             onReset={() => setEditFormVisible(false)}
             entityImages={props.entityImages}

@@ -79,6 +79,7 @@ const Form = (props) => {
       return;
     }
 
+    setLoading(false);
     reset();
   };
 
