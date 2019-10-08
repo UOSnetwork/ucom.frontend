@@ -54,7 +54,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const sendTokensIfNeeded = async (description) => {
     if (Command.stringHasTipCommand(description)) {
       const { accountName, amount } = Command.parseTipCommand(description);
-      await dispatch(walletActions.sendTokens.send(accountName, amount, `Tip from @${accountName} in comments of post ${urls.getDirectUrl(urls.getPostUrl(post))}`));
+      await dispatch(walletActions.sendTokens.send(accountName, amount, `--tip @${accountName} ${amount} uos ${urls.getDirectUrl(urls.getPostUrl(post))}`));
     }
   };
 
