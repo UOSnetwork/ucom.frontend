@@ -1,18 +1,10 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
-const { exec } = require('child_process');
 
-const copySettings = [
-  { from: './src/favicon/*', flatten: true },
-  { from: './src/u.png', flatten: true },
-];
+const clientConfig = {
+  target: 'web',
 
-if (process.env.NODE_ENV === 'staging') {
-  copySettings.push({ from: './src/robot.txt', flatten: true });
-}
-
-module.exports = {
   entry: [
     'babel-polyfill',
     './src/index.jsx',
@@ -23,16 +15,11 @@ module.exports = {
   },
 
   plugins: [
-    new CopyWebpackPlugin(copySettings),
-    {
-      apply: (compiler) => {
-        if (compiler.options.watch) {
-          compiler.hooks.afterEmit.tap('PM2ReloadPlugin', () => {
-            exec('pm2 reload all');
-          });
-        }
-      },
-    },
+    new CopyWebpackPlugin([
+      { from: './src/favicon/*', flatten: true },
+      { from: './src/u.png', flatten: true },
+      ...process.env.NODE_ENV === 'staging' ? [{ from: './src/robot.txt', flatten: true }] : [],
+    ]),
   ],
 
   module: {
@@ -46,7 +33,6 @@ module.exports = {
         exclude: /node_modules/,
         use: ['babel-loader', 'eslint-loader'],
       },
-
       {
         test: /\.(css)$/,
         loader: [{
@@ -64,7 +50,6 @@ module.exports = {
           },
         }],
       },
-
       {
         test: /\.(less)$/,
         loader: [{
@@ -80,7 +65,6 @@ module.exports = {
           loader: 'less-loader',
         }],
       },
-
       {
         test: /\.(ttf|eot|woff|woff2)$/,
         use: {
@@ -90,7 +74,6 @@ module.exports = {
           },
         },
       },
-
       {
         test: /\.(png|svg|gif|jpg|jpeg)/,
         use: {
@@ -101,7 +84,6 @@ module.exports = {
           },
         },
       },
-
       {
         test: /\.(html)$/,
         use: {
@@ -124,16 +106,64 @@ module.exports = {
     publicPath: '/',
   },
 
-  devServer: {
-    hot: false,
-    inline: false,
-    contentBase: './public',
-    historyApiFallback: true,
-  },
-
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000,
-    ignored: /node_modules/,
+  stats: {
+    warnings: false,
   },
 };
+
+const serverConfig = {
+  target: 'node',
+
+  entry: [
+    'babel-polyfill',
+    './src/server.js',
+  ],
+
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader', 'eslint-loader'],
+      },
+      {
+        test: /\.(css)$/,
+        loader: [{
+          loader: 'isomorphic-style-loader',
+        }, {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            onlyLocals: true,
+            localIdentName: '[local]--[hash:base64:5]',
+          },
+        }],
+      },
+      {
+        test: /\.(html)$/,
+        use: {
+          loader: 'html-loader',
+          options: {
+            attrs: [':data-src'],
+          },
+        },
+      },
+    ],
+  },
+
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+  },
+
+  output: {
+    path: path.resolve(__dirname, 'server'),
+    filename: 'index.js',
+    publicPath: '/',
+  },
+
+  stats: {
+    warnings: false,
+  },
+};
+
+module.exports = [serverConfig, clientConfig];

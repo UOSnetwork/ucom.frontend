@@ -1,15 +1,15 @@
-:local(.followers) {
+.followers {
   position: relative;
   z-index: 0;
   display: flex;
   align-items: center;
 }
 
-:local(.followersActive) {
+.followersActive {
   cursor: pointer;
 }
 
-:local(.count) {
+.count {
   margin: 0 0 4px;
   text-align: right;
   font-size: 16px;
@@ -18,19 +18,19 @@
   transition: color 0.2s ease;
 }
 
-:local(.followers:hover .count) {
+.followers:hover .count {
   color: #000;
 }
 
-:local(.countLighter) {
+.countLighter {
   color: #fff;
 }
 
-:local(.followers:hover .countLighter) {
+.followers:hover .countLighter {
   color: #C1C1C1;
 }
 
-:local(.title) {
+.title {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-size: 10px;
@@ -38,24 +38,26 @@
   transition: color 0.2s ease;
 }
 
-:local(.followers:hover .title) {
+.followers:hover .title {
   color: #000;
 }
 
-:local(.titleLighter) {
+.titleLighter {
   color: #E1E1E1;
 }
 
-:local(.followers:hover .titleLighter) {
+.followers:hover .titleLighter {
   color: #ABABAB;
 }
 
-:local(.avatars) {
+.avatars {
   margin: 0 0 0 10px;
   white-space: nowrap;
 }
 
-:local(.avatar) {
+.avatar,
+.avatarSmall,
+.avatarEmpty {
   display: inline-block;
   width: 36px;
   height: 36px;
@@ -64,17 +66,15 @@
   vertical-align: bottom;
 }
 
-:local(.avatarSmall) {
+.avatarSmall {
   position: relative;
   z-index: 1;
-  composes: avatar;
   width: 24px;
   height: 24px;
   margin: 0 -16px 0 0;
 }
 
-:local(.avatarEmpty) {
-  composes: avatar;
+.avatarEmpty {
   background: #E7ECEC;
   box-shadow: none;
 }

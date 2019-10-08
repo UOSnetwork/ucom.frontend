@@ -1,28 +1,10 @@
 {
-  "presets": [
-    "env",
-    "react",
-    "stage-2",
-    "es2015",
-    "stage-0"
-  ],
+  "presets": ["env", "react", "stage-2", "es2015", "stage-0"],
   "plugins": [
     "transform-decorators-legacy",
     ["transform-runtime", {
       "polyfill": false,
       "regenerator": true
     }]
-  ],
-  "env": {
-    "server": {
-      "plugins": [
-        [
-          "css-modules-transform", {
-            "generateScopedName": "[local]--[hash:base64:5]",
-            "extensions": [".css"]
-          }
-        ]
-      ]
-    }
-  }
+  ]
 }

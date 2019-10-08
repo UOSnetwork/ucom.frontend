@@ -7,7 +7,7 @@ module.exports = {
     {
       name: `${NODE_ENV}_frontend_renderer`,
       instance_var: 'INSTANCE_ID',
-      script: 'server.js',
+      script: './server/index.js',
       instances: 'max',
       exec_mode: 'cluster',
       watch: false,

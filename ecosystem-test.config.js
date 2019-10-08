@@ -6,11 +6,8 @@ module.exports = {
   apps: [
     {
       name: `${NODE_ENV}_frontend_renderer`,
-      instance_var: 'INSTANCE_ID',
-      script: 'server.js',
-      instances: 2,
-      exec_mode: 'cluster',
-      watch: ['server.js'],
+      script: './server/index.js',
+      watch: ['./server/index.js'],
       autorestart: true,
       env: {
         PORT: HTTP_SERVER_PORT,
