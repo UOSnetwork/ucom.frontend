@@ -1,45 +1,45 @@
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
 import utilsActions from '../../actions/utils';
 
-const CopyPanel = props => (
-  <div
-    className={classNames({
-      [styles.copyPanel]: true,
-      [styles.noLabel]: !props.label,
-    })}
-  >
-    {props.label &&
-      <div className={styles.label}>
-        {props.label}
-      </div>
-    }
-    <div className={styles.value}>
-      {props.value}
-    </div>
+const CopyPanel = ({ label, value, onCopy }) => {
+  const dispatch = useDispatch();
+
+  return (
     <div
-      role="presentation"
-      className="link red"
-      onClick={() => {
-        props.dispatch(utilsActions.copyToClipboard(props.value));
-        if (props.onCopy) {
-          props.onCopy();
-        }
-      }}
+      className={classNames({
+        [styles.copyPanel]: true,
+        [styles.noLabel]: !label,
+      })}
     >
-      Copy
+      {label && <div className={styles.label}>{label}</div>}
+
+      <div className={styles.value}>{value}</div>
+
+      <div
+        role="presentation"
+        className="link red"
+        onClick={() => {
+          dispatch(utilsActions.copyToClipboard(value));
+
+          if (onCopy) {
+            onCopy();
+          }
+        }}
+      >
+        Copy
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 CopyPanel.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string.isRequired,
   onCopy: PropTypes.func,
-  dispatch: PropTypes.func.isRequired,
 };
 
 CopyPanel.defaultProps = {
@@ -47,4 +47,4 @@ CopyPanel.defaultProps = {
   onCopy: undefined,
 };
 
-export default connect()(CopyPanel);
+export default CopyPanel;
