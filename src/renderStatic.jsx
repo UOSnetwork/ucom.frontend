@@ -9,9 +9,10 @@ export default (store, location, state, staticVersion, contentMetaTags = {}, bas
   const url = contentMetaTags.url || `${baseUrl}/`;
   const type = contentMetaTags.type || 'website';
   const description = contentMetaTags.description || 'Social platform with a transparent dynamic reputation system';
-  const image = contentMetaTags.image || `${baseUrl}/u.png`;
+  const { image } = contentMetaTags;
   const imageWidth = contentMetaTags.image ? contentMetaTags.imageWidth : 512;
   const imageHeight = contentMetaTags.image ? contentMetaTags.imageHeight : 512;
+  const defaultImage = `${baseUrl}/u.png`;
 
   return renderToString((
     <html lang="en">
@@ -31,13 +32,13 @@ export default (store, location, state, staticVersion, contentMetaTags = {}, bas
 
         <title>{title}</title>
         <meta property="og:title" content={title} />
-        <meta name="twitter:card" content="summary_large_image" />
+        {image && <meta name="twitter:card" content="summary_large_image" />}
         <meta property="og:site_name" content="U°Community" />
         <meta property="og:url" content={url} />
         <meta property="og:type" content={type} />
         <meta name="description" content={description} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={image} />
+        <meta property="og:image" content={image || defaultImage} />
         {imageWidth && <meta property="og:image:width" content={imageWidth} />}
         {imageHeight && <meta property="og:image:width" content={imageHeight} />}
         {contentMetaTags.keywords && <meta name="keywords" content={contentMetaTags.keywords} />}
