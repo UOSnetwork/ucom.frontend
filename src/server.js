@@ -11,12 +11,7 @@ const STATIC_VERSION = (new Date()).getTime();
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
-
-app.disable('x-powered-by');
-
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 routes.forEach((route) => {

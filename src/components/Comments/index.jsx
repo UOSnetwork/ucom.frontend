@@ -88,7 +88,4 @@ Comments.defaultProps = {
   ownerName: null,
 };
 
-export default memo(Comments, (prev, next) => (
-  isEqual(prev.comments, next.comments) &&
-  isEqual(prev.metadata, next.metadata)
-));
+export default memo(Comments, isEqual);

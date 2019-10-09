@@ -1,15 +1,9 @@
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Comments from './index';
-import {
-  selectCommentsByContainerId,
-  selectCommentsByIds,
-  selectUsersByIds,
-  selectOwner,
-  selectPostById,
-} from '../../store/selectors';
+import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
 import urls from '../../utils/urls';
@@ -58,63 +52,60 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     }
   };
 
-  const onSubmit = async (postId, parentCommentId, containerId, data) => {
-    await sendTokensIfNeeded(data.description);
+  const onSubmit = useCallback(
+    async (postId, parentCommentId, containerId, data) => {
+      await sendTokensIfNeeded(data.description);
 
-    try {
-      await withLoader(dispatch(createComment(postId, parentCommentId, containerId, data)));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
-      throw err;
-    }
-  };
+      try {
+        await withLoader(dispatch(createComment(postId, parentCommentId, containerId, data)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+        throw err;
+      }
+    },
+    [dispatch],
+  );
 
-  const onUpdate = async (commentId, data) => {
-    await sendTokensIfNeeded(data.description);
+  const onUpdate = useCallback(
+    async (commentId, data) => {
+      await sendTokensIfNeeded(data.description);
 
-    try {
-      await withLoader(dispatch(updateComment(commentId, data)));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
-      throw err;
-    }
-  };
+      try {
+        await withLoader(dispatch(updateComment(commentId, data)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+        throw err;
+      }
+    },
+    [dispatch],
+  );
 
-  const onClickShowNext = ({
-    containerId,
-    postId,
-    page,
-    perPage,
-  }) => {
-    dispatch(getPostComments({
-      containerId,
-      postId,
-      page,
-      perPage,
-    }));
-  };
+  const onClickShowNext = useCallback(
+    async (containerId, postId, page, perPage) => {
+      try {
+        await withLoader(dispatch(getPostComments(containerId, postId, page, perPage)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
+    },
+    [dispatch],
+  );
 
-  const onClickShowReplies = ({
-    containerId,
-    postId,
-    parentId,
-    parentDepth,
-    page,
-    perPage,
-  }) => {
-    dispatch(getCommentsOnComment({
-      containerId,
-      commentableId: postId,
-      parentId,
-      parentDepth,
-      page,
-      perPage,
-    }));
-  };
+  const onClickShowReplies = useCallback(
+    async (containerId, postId, parentId, parentDepth, page, perPage) => {
+      try {
+        await withLoader(dispatch(getCommentsOnComment(containerId, postId, parentId, parentDepth, page, perPage)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
+    },
+    [dispatch],
+  );
 
-  const onError = (e) => {
-    dispatch(addErrorNotification(e));
-  };
+  const onError = useCallback(
+    message => dispatch(addErrorNotification(message)),
+    [dispatch],
+  );
 
   return (
     <Comments

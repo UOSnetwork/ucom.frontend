@@ -10,12 +10,7 @@ const ShowNext = ({
     <div
       role="presentation"
       className={styles.inner}
-      onClick={() => onClick({
-        containerId,
-        postId,
-        perPage,
-        page: page + 1,
-      })}
+      onClick={() => onClick(containerId, postId, perPage, page + 1)}
     >
       {count ? `Show next ${count} comments` : 'Show more comments'}
     </div>

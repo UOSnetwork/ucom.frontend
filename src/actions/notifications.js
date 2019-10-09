@@ -1,5 +1,4 @@
-import { authShowPopup } from './auth';
-import { parseErrors, parseResponseError } from '../utils/errors';
+import { parseResponseError } from '../utils/errors';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
@@ -29,15 +28,6 @@ export const addErrorNotificationFromResponse = payload => (dispatch) => {
   const { message } = parseResponseError(payload)[0];
 
   dispatch(addErrorNotification(message));
-};
-
-// TODO: Remove when site notifications finish refactoring
-export const addServerErrorNotification = error => (dispatch) => {
-  if ((error && error.response && error.response.status) === 401 || (error && error.status) === 401) {
-    dispatch(authShowPopup());
-  } else {
-    dispatch(addNotification({ type: NOTIFICATION_TYPE_ERROR, message: parseErrors(error).general }));
-  }
 };
 
 export const addValidationErrorNotification = () => (dispatch) => {

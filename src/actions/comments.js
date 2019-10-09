@@ -1,8 +1,6 @@
 import { omit } from 'lodash';
 import api from '../api';
 import graphql from '../api/graphql';
-import loader from '../utils/loader';
-import { addServerErrorNotification } from './notifications';
 import { addUsers, getOwnerCredentialsOrShowAuthPopup } from './users';
 import { searchTags } from '../utils/text';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
@@ -64,63 +62,38 @@ export const commentsAddContainerData = ({
   });
 };
 
-export const getPostComments = ({
-  containerId,
-  postId,
-  page,
-  perPage,
-}) => async (dispatch) => {
-  loader.start();
-  try {
-    const data = await graphql.getPostComments({
-      page,
-      perPage,
-      commentableId: postId,
-    });
-    dispatch(commentsAddContainerData({
-      containerId,
-      entryId: postId,
-      parentId: 0,
-      comments: data.data,
-      metadata: data.metadata,
-    }));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
-  }
-  loader.done();
+export const getPostComments = (containerId, postId, page, perPage) => async (dispatch) => {
+  const data = await graphql.getPostComments({
+    page,
+    perPage,
+    commentableId: postId,
+  });
+
+  dispatch(commentsAddContainerData({
+    containerId,
+    entryId: postId,
+    parentId: 0,
+    comments: data.data,
+    metadata: data.metadata,
+  }));
 };
 
-export const getCommentsOnComment = ({
-  containerId,
-  commentableId,
-  parentId,
-  parentDepth,
-  page,
-  perPage,
-}) => async (dispatch) => {
-  loader.start();
-  try {
-    const data = await graphql.getCommentsOnComment({
-      commentableId,
-      parentId,
-      parentDepth,
-      page,
-      perPage,
-    });
+export const getCommentsOnComment = (containerId, commentableId, parentId, parentDepth, page, perPage) => async (dispatch) => {
+  const data = await graphql.getCommentsOnComment({
+    commentableId,
+    parentId,
+    parentDepth,
+    page,
+    perPage,
+  });
 
-    dispatch(commentsAddContainerData({
-      containerId,
-      entryId: commentableId,
-      parentId,
-      metadata: data.metadata,
-      comments: data.data,
-    }));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
-  }
-  loader.done();
+  dispatch(commentsAddContainerData({
+    containerId,
+    entryId: commentableId,
+    parentId,
+    metadata: data.metadata,
+    comments: data.data,
+  }));
 };
 
 export const createComment = (postId, parentCommentId, containerId, commentData) => async (dispatch, getState) => {
