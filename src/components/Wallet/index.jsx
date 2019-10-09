@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import { throttle } from 'lodash';
+import { throttle, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Fragment, useEffect, useRef, useState, useCallback } from 'react';
+import React, { Fragment, useEffect, useRef, useState, useCallback, memo } from 'react';
 import styles from './styles.css';
 import Popup, { Content } from '../Popup';
 import Close from '../Close';
@@ -150,4 +150,4 @@ Wallet.defaultProps = {
 
 export * from './Actions';
 export * from './wrappers';
-export default Wallet;
+export default memo(Wallet, isEqual);

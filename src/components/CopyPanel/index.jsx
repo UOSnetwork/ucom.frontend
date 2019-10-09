@@ -3,9 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import { copyToClipboard } from '../../utils/text';
-import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
-import { addSuccessNotification } from '../../actions/notifications';
+import utilsActions from '../../actions/utils';
 
 const CopyPanel = props => (
   <div
@@ -26,8 +24,7 @@ const CopyPanel = props => (
       role="presentation"
       className="link red"
       onClick={() => {
-        copyToClipboard(props.value);
-        props.dispatch(addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE));
+        props.dispatch(utilsActions.copyToClipboard(props.value));
         if (props.onCopy) {
           props.onCopy();
         }

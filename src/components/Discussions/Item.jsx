@@ -7,9 +7,8 @@ import React from 'react';
 import CommentIcon from '../Icons/Comment';
 import styles from './styles.css';
 import DropdownMenu from '../DropdownMenu';
-import { addSuccessNotification } from '../../actions/notifications';
-import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
-import { copyToClipboard, sanitizeText } from '../../utils/text';
+import utilsActions from '../../actions/utils';
+import { sanitizeText } from '../../utils/text';
 
 const Item = (props) => {
   const dispatch = useDispatch();
@@ -46,10 +45,7 @@ const Item = (props) => {
                 onClick: () => props.onClickRemove(props.id),
               }, {
                 title: 'Copy Link',
-                onClick: () => {
-                  dispatch(addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE));
-                  copyToClipboard(`${document.location.origin}${props.url}`);
-                },
+                onClick: () => dispatch(utilsActions.copyToClipboard(`${document.location.origin}${props.url}`)),
               }]}
             />
           </div>

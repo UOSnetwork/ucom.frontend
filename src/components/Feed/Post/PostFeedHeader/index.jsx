@@ -7,11 +7,11 @@ import { UserCard } from '../../../SimpleCard';
 import DropdownMenu from '../../../DropdownMenu';
 import urls from '../../../../utils/urls';
 import { addSuccessNotification } from '../../../../actions/notifications';
+import utilsActions from '../../../../actions/utils';
 import styles from './styles.css';
 import UserPick from '../../../UserPick';
 import entityIsEditable from '../../../../utils/entityIsEditable';
-import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE, POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, POST_EDIT_TIME_LIMIT } from '../../../../utils';
-import { copyToClipboard } from '../../../../utils/text';
+import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, POST_EDIT_TIME_LIMIT } from '../../../../utils';
 import fromNow from '../../../../utils/fromNow';
 
 const PostFeedHeader = ({ post, ...props }) => {
@@ -25,8 +25,7 @@ const PostFeedHeader = ({ post, ...props }) => {
   const items = [{
     title: 'Copy Link',
     onClick: () => {
-      copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`);
-      props.addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE);
+      props.dispatch(utilsActions.copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`));
     },
   }];
 
@@ -104,6 +103,7 @@ PostFeedHeader.propTypes = {
   userId: PropTypes.number,
   post: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 PostFeedHeader.defaultProps = {

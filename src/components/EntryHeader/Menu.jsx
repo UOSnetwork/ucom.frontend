@@ -1,17 +1,22 @@
+import { useDispatch } from 'react-redux';
 import React, { memo } from 'react';
-import { copyToClipboard } from '../../utils/text';
+import utilsActions from '../../actions/utils';
 import styles from './styles.css';
 import DropdownMenu from '../DropdownMenu';
 
-const Menu = () => (
-  <div className={styles.menu}>
-    <DropdownMenu
-      items={[{
-        title: 'Copy Link',
-        onClick: () => copyToClipboard(window.location.href), // TODO: Add success notification
-      }]}
-    />
-  </div>
-);
+const Menu = () => {
+  const dispatch = useDispatch();
+
+  return (
+    <div className={styles.menu}>
+      <DropdownMenu
+        items={[{
+          title: 'Copy Link',
+          onClick: () => dispatch(utilsActions.copyToClipboard(window.location.href)),
+        }]}
+      />
+    </div>
+  );
+};
 
 export default memo(Menu);

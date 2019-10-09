@@ -208,7 +208,6 @@ const UserWallet = ({ location }) => {
   useEffect(() => {
     if (wallet.popup.visible) {
       getInitialData();
-      // dispatch(walletActions.sendTokens.send('sudokey', '100', 'Test mesage'));
     } else {
       dispatch(walletActions.resetPopup());
     }
