@@ -3,7 +3,8 @@ import { isEqual } from 'lodash';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Comments from './index';
-import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById } from '../../store/selectors';
+// import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById } from '../../store/selectors';
+import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
 import urls from '../../utils/urls';
@@ -11,8 +12,8 @@ import { getUserName } from '../../utils/user';
 import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
 import withLoader from '../../utils/withLoader';
-import Command from '../../utils/command';
-import * as walletActions from '../../actions/wallet';
+// import Command from '../../utils/command';
+// import * as walletActions from '../../actions/wallet';
 
 const Wrapper = ({ containerId, postId, ...props }) => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const commentsByContainerId = useSelector(selectCommentsByContainerId(containerId, postId), isEqual);
   const comments = useSelector(selectCommentsByIds(commentsByContainerId && commentsByContainerId.commentIds), isEqual);
   const users = useSelector(selectUsersByIds(comments && comments.map(c => c.user)), isEqual);
-  const post = useSelector(selectPostById(postId), isEqual);
+  // const post = useSelector(selectPostById(postId), isEqual);
 
   let commentsTree = [];
   let metadata = {};
@@ -45,16 +46,17 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     ({ metadata } = commentsByContainerId);
   }
 
-  const sendTokensIfNeeded = async (description) => {
-    if (Command.stringHasTipCommand(description)) {
-      const { accountName, amount } = Command.parseTipCommand(description);
-      await dispatch(walletActions.sendTokens.send(accountName, amount, `--tip @${accountName} ${amount} uos ${urls.getDirectUrl(urls.getPostUrl(post))}`));
-    }
-  };
+  // TODO: Enable when design finished
+  // const sendTokensIfNeeded = async (description) => {
+  //   if (Command.stringHasTipCommand(description)) {
+  //     const { accountName, amount } = Command.parseTipCommand(description);
+  //     await dispatch(walletActions.sendTokens.send(accountName, amount, `--tip @${accountName} ${amount} uos ${urls.getDirectUrl(urls.getPostUrl(post))}`));
+  //   }
+  // };
 
   const onSubmit = useCallback(
     async (postId, parentCommentId, containerId, data) => {
-      await sendTokensIfNeeded(data.description);
+      // await sendTokensIfNeeded(data.description);
 
       try {
         await withLoader(dispatch(createComment(postId, parentCommentId, containerId, data)));
@@ -68,7 +70,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
 
   const onUpdate = useCallback(
     async (commentId, data) => {
-      await sendTokensIfNeeded(data.description);
+      // await sendTokensIfNeeded(data.description);
 
       try {
         await withLoader(dispatch(updateComment(commentId, data)));
