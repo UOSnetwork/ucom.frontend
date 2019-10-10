@@ -3,7 +3,7 @@ import api from '../api';
 import graphql from '../api/graphql';
 import { addUsers, getOwnerCredentialsOrShowAuthPopup } from './users';
 import { searchTags } from '../utils/text';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { PERMISSION_SOCIAL } from '../utils/constants';
 import { selectCommentById, selectPostById, selectOrgById } from '../store';
 import Worker from '../worker';
 
@@ -146,7 +146,7 @@ export const createComment = (postId, parentCommentId, containerId, commentData)
       parentComment ? parentComment.blockchainId : post.blockchainId,
       commentContent,
       !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     ));
   } else {
     ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
@@ -156,7 +156,7 @@ export const createComment = (postId, parentCommentId, containerId, commentData)
       org.blockchainId,
       commentContent,
       !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     ));
   }
 
@@ -233,7 +233,7 @@ export const updateComment = (commentId, commentData) => async (dispatch, getSta
       commentContent,
       comment.blockchainId,
       !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     );
   } else {
     signed_transaction = await Worker.signUpdateCommentFromOrganization(
@@ -244,7 +244,7 @@ export const updateComment = (commentId, commentData) => async (dispatch, getSta
       commentContent,
       comment.blockchainId,
       !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     );
   }
 

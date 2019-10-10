@@ -20,6 +20,14 @@ export default class Scatter {
     }];
   }
 
+  async getLoginData() {
+    const accountName = this.account.name;
+    const publicKey = await ScatterJS.getPublicKey('eos');
+    const sign = await ScatterJS.getArbitrarySignature(publicKey, accountName);
+
+    return { accountName, publicKey, sign };
+  }
+
   async sendTransaction(actions) {
     const result = await this.eos.transact({
       actions,
@@ -211,3 +219,67 @@ export default class Scatter {
     return new Scatter(eos, account);
   }
 }
+
+export class ScatterNew {
+  constructor() {
+    this.connected = false;
+  }
+
+  isConnected() {
+    return this.connected;
+  }
+
+  async connect() {
+    try {
+      const network = await Network.getNetwork();
+      this.connected = Boolean(await ScatterJS.connect('U.Community', { network }));
+    } catch (err) {
+      this.connected = false;
+    }
+  }
+
+  async login() {
+    const id = await ScatterJS.login();
+
+    if (!id) {
+      throw new Error('Scatter is no identity');
+    }
+
+    const account = ScatterJS.account('eos');
+
+    return account;
+  }
+
+  async loginByAuthority(authority) {
+    if (!authority) {
+      throw new Error('Authority is required argument');
+    }
+
+    let account;
+
+    const login = async () => {
+      const testAccount = await this.login();
+
+      if (testAccount.authority !== authority) {
+        await ScatterJS.logout();
+        await login();
+      } else {
+        account = testAccount;
+      }
+
+      return undefined;
+    };
+
+    await login();
+
+    return account;
+  }
+
+  async sign(publicKey, str) {
+    const sign = await ScatterJS.getArbitrarySignature(publicKey, str);
+
+    return sign;
+  }
+}
+
+export const scatter = new ScatterNew();

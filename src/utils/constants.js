@@ -99,8 +99,8 @@ export const ENTITY_NAMES_COMMENTS = EntityNames.COMMENTS;
 export const INTERACTION_TYPE_ID_VOTING_UPVOTE = InteractionTypeDictionary.getUpvoteId();
 export const INTERACTION_TYPE_ID_VOTING_DOWNVOTE = InteractionTypeDictionary.getDownvoteId();
 
-export const TRANSACTION_PERMISSION_ACTIVE = 'active';
-export const TRANSACTION_PERMISSION_SOCIAL = 'social';
+export const PERMISSION_ACTIVE = 'active';
+export const PERMISSION_SOCIAL = 'social';
 
 export const TRX_TYPE_TRANSFER_FROM = 10;
 export const TRX_TYPE_TRANSFER_TO = 11;

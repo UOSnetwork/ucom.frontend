@@ -1,4 +1,4 @@
-import { WalletApi, SocialKeyApi } from 'ucom-libs-wallet';
+import { WalletApi } from 'ucom-libs-wallet';
 import humps from 'lodash-humps';
 import param from 'jquery-param';
 import HttpActions from './HttpActions';
@@ -24,48 +24,7 @@ class Api {
     return { Authorization: `Bearer ${getToken()}` };
   }
 
-  async loginBySocialKey(socialKey, accountName) {
-    const sign = await Worker.eccSign(accountName, socialKey);
-    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
-    const response = await this.actions.post('/api/v1/auth/login', {
-      sign,
-      account_name: accountName,
-      social_public_key: socialPublicKey,
-    });
-
-    return humps(response.data);
-  }
-
-  async loginByBrainkey(brainkey, accountName) {
-    const activeKey = await Worker.getActiveKeyByBrainKey(brainkey);
-    const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
-    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
-    const sign = await Worker.eccSign(accountName, socialKey);
-    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
-
-    if (!socialKeyIsBinded) {
-      await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
-    } else {
-      await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
-    }
-
-    const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
-
-    return humps(response.data);
-  }
-
-  async loginByActiveKey(activeKey, accountName) {
-    const socialKey = await Worker.getSocialKeyByActiveKey(activeKey);
-    const socialPublicKey = await Worker.getPublicKeyByPrivateKey(socialKey);
-    const sign = await Worker.eccSign(accountName, socialKey);
-    const socialKeyIsBinded = await SocialKeyApi.getAccountCurrentSocialKey(accountName);
-
-    if (!socialKeyIsBinded) {
-      await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
-    } else {
-      await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
-    }
-
+  async login(accountName, socialPublicKey, sign) {
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
 
     return humps(response.data);

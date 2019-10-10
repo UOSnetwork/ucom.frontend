@@ -4,7 +4,7 @@ import { addUsers } from './users';
 import { selectOrgById } from '../store/selectors';
 import { getOrganizationByIds } from '../store/organizations';
 import snakes from '../utils/snakes';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { PERMISSION_SOCIAL } from '../utils/constants';
 import Worker from '../worker';
 
 export const addOrganizations = payload => (dispatch) => {
@@ -41,7 +41,7 @@ export const saveOrganization = (
       ownerAccountName,
       ownerPrivateKey,
       content,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     ));
   } else {
     signed_transaction = await Worker.signUpdateOrganization(
@@ -49,7 +49,7 @@ export const saveOrganization = (
       ownerPrivateKey,
       content,
       orgBlockchainId,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     );
   }
 

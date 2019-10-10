@@ -5,7 +5,7 @@ import { generateBrainkey } from '../utils/brainkey';
 import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
 import { saveSocialKey } from '../utils/keys';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { PERMISSION_SOCIAL } from '../utils/constants';
 import Worker from '../worker';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
@@ -106,7 +106,7 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
         accountName,
         socialKey,
         referralData.affiliatesActions[0].accountNameSource,
-        TRANSACTION_PERMISSION_SOCIAL,
+        PERMISSION_SOCIAL,
       );
 
       await api.referralTransaction(

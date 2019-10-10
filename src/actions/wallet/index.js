@@ -4,7 +4,7 @@ import humps from 'lodash-humps';
 import { WalletApi } from 'ucom-libs-wallet';
 import Worker from '../../worker';
 import api from '../../api';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../../utils/constants';
+import { PERMISSION_SOCIAL } from '../../utils/constants';
 import { getOwnerCredentialsOrShowAuthPopup } from '../users';
 import { actions as popupActions } from '../../store/wallet/popup';
 import { actions as buyRamActions } from '../../store/wallet/buyRam';
@@ -56,7 +56,7 @@ export const claimEmission = () => async (dispatch) => {
     return;
   }
 
-  await Worker.claimEmission(ownerCredentials.accountName, ownerCredentials.socialKey, TRANSACTION_PERMISSION_SOCIAL);
+  await Worker.claimEmission(ownerCredentials.accountName, ownerCredentials.socialKey, PERMISSION_SOCIAL);
   await dispatch(getAccount(ownerCredentials.accountName));
 };
 

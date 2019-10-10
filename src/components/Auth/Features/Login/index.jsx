@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import Popup, { Content } from '../../../Popup';
 import Account from './Account';
 import SocialKey from './SocialKey';
@@ -14,6 +14,8 @@ import urls from '../../../../utils/urls';
 import { getUserName } from '../../../../utils/user';
 import * as authActions from '../../../../actions/auth';
 import { parseResponseError } from '../../../../utils/errors';
+import { scatter } from '../../../../utils/Scatter';
+import { PERMISSION_SOCIAL } from '../../../../utils/constants';
 
 const STEP_ACCOUNT = 1;
 const STEP_SOCIAL_KEY = 2;
@@ -31,6 +33,22 @@ const Auth = () => {
   const [userId, setUserId] = useState(null);
   const [socialKey, setSocialKey] = useState(null);
   const user = useSelector(selectUserById(userId), isEqual);
+
+  const scatterLogin = async () => {
+    try {
+      const account = await scatter.loginByAuthority(PERMISSION_SOCIAL);
+      const sign = await scatter.sign(account.publicKey, account.name);
+      await dispatch(authActions.loginByScatter(account.name, account.publicKey, sign));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    if (scatter.isConnected()) {
+      scatterLogin();
+    }
+  }, []);
 
   return (
     <Popup onClickClose={() => dispatch(authActions.hidePopup())}>

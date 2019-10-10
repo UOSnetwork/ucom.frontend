@@ -6,7 +6,7 @@ import { addOrganizations } from './organizations';
 import graphql from '../api/graphql';
 import { getUserById, getUsersByIds } from '../store/users';
 import Worker from '../worker';
-import { getSocialKey, getToken, removeToken, USER_EDITABLE_PROPS, TRANSACTION_PERMISSION_SOCIAL } from '../utils';
+import { getSocialKey, getToken, removeToken, USER_EDITABLE_PROPS, PERMISSION_SOCIAL } from '../utils';
 import { selectOwner } from '../store';
 import { authShowPopup } from './auth';
 import { addErrorNotificationFromResponse } from './notifications';
@@ -146,7 +146,7 @@ export const updateUser = userData => async (dispatch) => {
     throw new Error('UserData object is not valid');
   }
 
-  const signedTransaction = await Worker.updateProfile(userData.accountName, socialKey, dataAsJson, TRANSACTION_PERMISSION_SOCIAL);
+  const signedTransaction = await Worker.updateProfile(userData.accountName, socialKey, dataAsJson, PERMISSION_SOCIAL);
 
   const dataForApi = {
     ...userData,
@@ -200,7 +200,7 @@ export const trustUserOrShowErrorNotification = (userId, userAccountName) => asy
       ownerCredentials.accountName,
       ownerCredentials.socialKey,
       userAccountName,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     );
 
     await api.trustUser(userId, blockchain_id, JSON.stringify(signed_transaction));
@@ -222,7 +222,7 @@ export const untrustUserOrShowErrorNotification = (userId, userAccountName) => a
       ownerCredentials.accountName,
       ownerCredentials.socialKey,
       userAccountName,
-      TRANSACTION_PERMISSION_SOCIAL,
+      PERMISSION_SOCIAL,
     );
 
     await api.untrustUser(userId, blockchain_id, JSON.stringify(signed_transaction));

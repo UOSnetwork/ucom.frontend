@@ -1,5 +1,5 @@
 import { removeToken } from './token';
-import { removeEncryptedActiveKey, socialKeyIsExists, removeSocialKey } from './keys';
+import { removeEncryptedActiveKey, removeSocialKey } from './keys';
 
 export const logout = () => {
   removeEncryptedActiveKey();
@@ -10,10 +10,4 @@ export const logout = () => {
 export const logoutAndReload = () => {
   logout();
   window.location.reload();
-};
-
-export const logoutIfNeedBindSocialKey = () => {
-  if (!socialKeyIsExists()) {
-    logout();
-  }
 };

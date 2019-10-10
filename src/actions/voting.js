@@ -1,7 +1,7 @@
 import api, { graphql } from '../api';
 import { addUsers } from './users';
 import { postsFetch } from './posts';
-import { UPVOTE_STATUS, DOWNVOTE_STATUS, TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { UPVOTE_STATUS, DOWNVOTE_STATUS, PERMISSION_SOCIAL } from '../utils/constants';
 import Worker from '../worker';
 
 export const getVotesForEntityPreview = (entityId, entityName) => async (dispatch) => {
@@ -22,7 +22,7 @@ export const getVotesForEntity = (entityId, entityName, interactionType, page, p
 
 export const voteForPost = (isUp, postId, accountName, privateKey, blockchainId) => async (dispatch) => {
   const signTransaction = isUp ? Worker.getUpvoteContentSignedTransaction : Worker.getDownvoteContentSignedTransaction;
-  const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, TRANSACTION_PERMISSION_SOCIAL);
+  const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, PERMISSION_SOCIAL);
   const signedTransaction = JSON.stringify(signedTransactionObject);
 
   await api.vote(isUp, postId, null, signedTransaction);
@@ -31,7 +31,7 @@ export const voteForPost = (isUp, postId, accountName, privateKey, blockchainId)
 
 export const voteForComment = (isUp, postId, commentId, accountName, privateKey, blockchainId) => async (dispatch) => {
   const signTransaction = isUp ? Worker.getUpvoteContentSignedTransaction : Worker.getDownvoteContentSignedTransaction;
-  const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, TRANSACTION_PERMISSION_SOCIAL);
+  const signedTransactionObject = await signTransaction(accountName, privateKey, blockchainId, PERMISSION_SOCIAL);
   const signedTransaction = JSON.stringify(signedTransactionObject);
   const data = await api.vote(isUp, postId, commentId, signedTransaction);
 

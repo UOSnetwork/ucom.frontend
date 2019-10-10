@@ -20,10 +20,10 @@ import Subscribe from '../components/Subscribe';
 import Loader from '../components/Loader';
 import urls from '../utils/urls';
 import loader from '../utils/loader';
-import { logoutIfNeedBindSocialKey } from '../utils/auth';
 import withLoader from '../utils/withLoader';
 import * as mediaQueryActions from '../actions/mediaQuery';
 import { UserWallet, BuyRam, SellRam, EditStake, SendTokensWrapper } from '../components/Wallet';
+import { scatter } from '../utils/Scatter';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const App = () => {
       enableGtm();
     }
 
-    logoutIfNeedBindSocialKey();
     withLoader(dispatch(fetchMyself()));
     dispatch(initNotificationsListeners());
     dispatch(mediaQueryActions.init());
@@ -55,6 +54,8 @@ const App = () => {
     if (config.maintenanceMode) {
       dispatch(addMaintenanceNotification());
     }
+
+    scatter.connect();
 
     return removeInitDragAndDropListeners;
   }, []);
