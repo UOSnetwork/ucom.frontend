@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleEditStake, walletEditStake, walletGetAccount } from '../../../actions/wallet';
+import * as walletActions from '../../../actions/wallet/index';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
@@ -12,8 +11,12 @@ import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
 import { addSuccessNotification } from '../../../actions/notifications';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
+import { selectOwner } from '../../../store';
 
-const EditStake = (props) => {
+const EditStake = () => {
+  const dispatch = useDispatch();
+  const owner = useSelector(selectOwner);
+  const wallet = useSelector(state => state.wallet);
   const [cpu, setCpu] = useState('');
   const [net, setNet] = useState('');
   const [formError, setFormError] = useState(null);
@@ -23,7 +26,7 @@ const EditStake = (props) => {
     setLoading(true);
 
     try {
-      const data = await withLoader(api.getCurrentNetAndCpuStakedTokens(props.owner.accountName));
+      const data = await withLoader(api.getCurrentNetAndCpuStakedTokens(owner.accountName));
       setCpu(data.cpu);
       setNet(data.net);
     } catch (e) {
@@ -36,10 +39,10 @@ const EditStake = (props) => {
 
   const onSuccess = () => {
     setFormError(null);
-    props.dispatch(addSuccessNotification('Successfully set stake'));
+    dispatch(addSuccessNotification('Successfully set stake'));
     setTimeout(() => {
-      withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
-      props.dispatch(walletToggleEditStake(false));
+      withLoader(dispatch(walletActions.getAccount(owner.accountName)));
+      dispatch(walletActions.toggleEditStake(false));
     }, 0);
   };
 
@@ -49,12 +52,12 @@ const EditStake = (props) => {
   };
 
   useEffect(() => {
-    if (props.wallet.editStakeVisible && props.owner.accountName) {
+    if (wallet.editStake.visible && owner.accountName) {
       getCurrentNetAndCpuStakedTokens();
     }
-  }, [props.wallet.editStakeVisible, props.owner.accountName]);
+  }, [wallet.editStake.visible, owner.accountName]);
 
-  if (!props.wallet.editStakeVisible) {
+  if (!wallet.editStake.visible) {
     return null;
   }
 
@@ -64,7 +67,7 @@ const EditStake = (props) => {
       onSubmit={async (privateKey) => {
         setLoading(true);
         try {
-          await withLoader(props.dispatch(walletEditStake(props.owner.accountName, privateKey, net, cpu)));
+          await withLoader(dispatch(walletActions.editStake(owner.accountName, privateKey, net, cpu)));
           onSuccess();
         } catch (err) {
           onError(err);
@@ -74,7 +77,7 @@ const EditStake = (props) => {
       onScatterConnect={async (scatter) => {
         setLoading(true);
         try {
-          await withLoader(scatter.stakeOrUnstakeTokens(props.owner.accountName, net, cpu));
+          await withLoader(scatter.stakeOrUnstakeTokens(owner.accountName, net, cpu));
           onSuccess();
         } catch (err) {
           onError(err);
@@ -83,8 +86,8 @@ const EditStake = (props) => {
       }}
     >
       {(requestActiveKey, requestLoading) => (
-        <Popup onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
-          <Content walletAction onClickClose={() => props.dispatch(walletToggleEditStake(false))}>
+        <Popup onClickClose={() => dispatch(walletActions.toggleEditStake(false))}>
+          <Content walletAction onClickClose={() => dispatch(walletActions.toggleEditStake(false))}>
             <form
               className={styles.content}
               onSubmit={async (e) => {
@@ -147,17 +150,4 @@ const EditStake = (props) => {
   );
 };
 
-EditStake.propTypes = {
-  owner: PropTypes.shape({
-    accountName: PropTypes.string,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
-  wallet: PropTypes.shape({
-    editStakeVisible: PropTypes.bool.isRequired,
-  }).isRequired,
-};
-
-export default connect(state => ({
-  owner: state.user.data,
-  wallet: state.wallet,
-}))(EditStake);
+export default EditStake;

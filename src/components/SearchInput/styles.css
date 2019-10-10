@@ -22,7 +22,7 @@
 }
 
 .wrapper :global(.searchInput__value-container) {
-  padding: 6px 16px;
+  padding: 11px 16px;
   overflow: hidden;
 }
 

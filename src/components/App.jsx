@@ -23,7 +23,7 @@ import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
 import withLoader from '../utils/withLoader';
 import * as mediaQueryActions from '../actions/mediaQuery';
-import { UserWallet, BuyRam, SellRam, EditStake, SendTokens } from '../components/Wallet';
+import { UserWallet, BuyRam, SellRam, EditStake, SendTokensWrapper } from '../components/Wallet';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -86,10 +86,10 @@ const App = () => {
       <Subscribe />
       <UserWallet />
       {auth.visibility && <Auth />}
-      {wallet.buyRamVisible && <BuyRam />}
-      {wallet.sellRamVisible && <SellRam />}
-      {wallet.editStakeVisible && <EditStake />}
-      {wallet.sendTokensVisibility && <SendTokens />}
+      {wallet.buyRam.visible && <BuyRam />}
+      {wallet.sellRam.visible && <SellRam />}
+      {wallet.editStake.visible && <EditStake />}
+      {wallet.sendTokens.visible && <SendTokensWrapper />}
       <Notifications />
     </Fragment>
   );

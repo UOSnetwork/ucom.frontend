@@ -13,13 +13,7 @@ const ShowReplies = props => (
     <div
       role="presentation"
       className={styles.title}
-      onClick={() => props.onClick({
-        containerId: props.containerId,
-        postId: props.postId,
-        parentId: props.parentId,
-        parentDepth: props.parentDepth,
-        page: props.page,
-      })}
+      onClick={() => props.onClick(props.containerId, props.postId, props.parentId, props.parentDepth, props.page)}
     >
       Show {props.count} {props.showNext && 'next'} replies
     </div>

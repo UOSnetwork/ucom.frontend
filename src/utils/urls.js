@@ -1,9 +1,13 @@
 import { memoize } from 'lodash';
 import * as overviewUtils from './overview';
 import { POST_TYPE_MEDIA_ID } from './constants';
-import { getBackendConfig } from './config';
+import { getBackendConfig, getBaseUrl } from './config';
 
 const urls = {
+  getDirectUrl(path) {
+    return `${getBaseUrl()}${path}`;
+  },
+
   getMainPageUrl() {
     return '/';
   },

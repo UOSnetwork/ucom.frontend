@@ -7,10 +7,9 @@ import IconTwitter from '../Icons/Socials/Share/Twitter';
 import IconTelegram from '../Icons/Socials/Share/Telegram';
 import IconCopyLink from '../Icons/CopyLink';
 import IconRepost from '../Icons/Repost';
-import { copyToClipboard } from '../../utils/text';
-import { COPY_TO_CLIPBOARD_SUCCESS_MESSAGE } from '../../utils/constants';
 import withLoader from '../../utils/withLoader';
 import { addSuccessNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
+import utilsActions from '../../actions/utils';
 import * as postsActions from '../../actions/posts';
 import { authShowPopup } from '../../actions/auth';
 import { selectOwner, selectPostById } from '../../store/selectors';
@@ -147,8 +146,7 @@ const Share = ({
                 if (tippyInstance.current) {
                   tippyInstance.current.hide();
                 }
-                copyToClipboard(url);
-                dispatch(addSuccessNotification(COPY_TO_CLIPBOARD_SUCCESS_MESSAGE));
+                dispatch(utilsActions.copyToClipboard(url));
               }}
             >
               <IconCopyLink />

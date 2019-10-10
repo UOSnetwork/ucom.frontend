@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useState } from 'react';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import Button from '../../Button/index';
-import { walletBuyRam, walletSellRam, walletGetAccount } from '../../../actions/wallet';
+import * as walletActions from '../../../actions/wallet/index';
 import { parseResponseError } from '../../../utils/errors';
 import IconInputError from '../../Icons/InputError';
 import api from '../../../api';
@@ -12,8 +12,11 @@ import withLoader from '../../../utils/withLoader';
 import { addSuccessNotification } from '../../../actions/notifications';
 import Popup, { Content } from '../../Popup';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
+import { selectOwner } from '../../../store';
 
 const TradeRam = (props) => {
+  const owner = useSelector(selectOwner);
+  const dispatch = useDispatch();
   const [ram, setRam] = useState('');
   const [formError, setFormError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,8 +24,8 @@ const TradeRam = (props) => {
 
   const onSuccess = () => {
     setFormError(null);
-    props.dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
-    withLoader(props.dispatch(walletGetAccount(props.owner.accountName)));
+    dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
+    withLoader(dispatch(walletActions.getAccount(owner.accountName)));
     setTimeout(() => {
       props.onSubmit();
     }, 0);
@@ -39,8 +42,8 @@ const TradeRam = (props) => {
       onSubmit={async (privateKey) => {
         setLoading(true);
         try {
-          const submitFn = props.sell ? walletSellRam : walletBuyRam;
-          await withLoader(props.dispatch(submitFn(props.owner.accountName, ram, privateKey)));
+          const submitFn = props.sell ? walletActions.sellRam : walletActions.buyRam;
+          await withLoader(dispatch(submitFn(owner.accountName, ram, privateKey)));
           onSuccess();
         } catch (err) {
           onError(err);
@@ -51,9 +54,9 @@ const TradeRam = (props) => {
         setLoading(true);
         try {
           if (props.sell) {
-            await withLoader(scatter.sellRam(props.owner.accountName, ram));
+            await withLoader(scatter.sellRam(owner.accountName, ram));
           } else {
-            await withLoader(scatter.buyRam(props.owner.accountName, ram));
+            await withLoader(scatter.buyRam(owner.accountName, ram));
           }
           onSuccess();
         } catch (err) {
@@ -131,10 +134,6 @@ const TradeRam = (props) => {
 };
 
 TradeRam.propTypes = {
-  owner: PropTypes.shape({
-    accountName: PropTypes.string,
-  }).isRequired,
-  dispatch: PropTypes.func.isRequired,
   sell: PropTypes.bool,
   onSubmit: PropTypes.func.isRequired,
   onClickClose: PropTypes.func.isRequired,
@@ -144,6 +143,4 @@ TradeRam.defaultProps = {
   sell: false,
 };
 
-export default connect(state => ({
-  owner: state.user.data,
-}))(TradeRam);
+export default TradeRam;

@@ -147,7 +147,6 @@ export const getPublicationMetaTags = (post) => {
     type: 'article',
     title: post.title,
     description: post.leadingText,
-    path: urls.getPostUrl(post),
     keywords: searchTags(post.description).join(','),
   };
 };

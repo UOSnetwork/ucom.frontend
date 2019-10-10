@@ -1,7 +1,7 @@
 import socket from '../api/socket';
 import api from '../api';
 import loader from '../utils/loader';
-import { addServerErrorNotification } from './notifications';
+import { addErrorNotificationFromResponse } from './notifications';
 import { getOrganization } from './organizations';
 import { PER_PAGE, INITTIAL_PAGE } from '../utils/notifications';
 
@@ -28,7 +28,7 @@ export const hideNotificationTooltip = () => async (dispatch, getState) => {
       dispatch(siteNotificationsSetTempArray([]));
     } catch (error) {
       console.error(error);
-      dispatch(addServerErrorNotification(error));
+      dispatch(addErrorNotificationFromResponse(error));
     }
   }
 };
@@ -45,7 +45,7 @@ export const fetchNotifications = (payload = {}) => async (dispatch) => {
     dispatch(siteNotificationsAddItems({ data: res.data, metadata: res.metadata }));
     dispatch(siteNotificationsSetLoading(false));
   } catch (error) {
-    dispatch(addServerErrorNotification(error));
+    dispatch(addErrorNotificationFromResponse(error));
   }
   loader.done();
 };
@@ -63,7 +63,7 @@ export const confirmNotification = ({ id, idOfOrg }) => async (dispatch) => {
     dispatch(siteNotificationsSetUnreadAmount(res.myselfData.unreadMessagesCount));
     dispatch(getOrganization(idOfOrg));
   } catch (error) {
-    dispatch(addServerErrorNotification(error));
+    dispatch(addErrorNotificationFromResponse(error));
   }
   loader.done();
 };
@@ -75,7 +75,7 @@ export const declineNotification = id => async (dispatch) => {
     dispatch(siteNotificationsAddItems({ data: [res] }));
     dispatch(siteNotificationsSetUnreadAmount(res.myselfData.unreadMessagesCount));
   } catch (error) {
-    dispatch(addServerErrorNotification(error));
+    dispatch(addErrorNotificationFromResponse(error));
   }
   loader.done();
 };

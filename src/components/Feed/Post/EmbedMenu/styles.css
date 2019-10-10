@@ -5,7 +5,9 @@
   margin-right: auto;
 }
 
-.buttonIcon {
+.buttonIcon,
+.trigger,
+.iconImage {
   box-sizing: border-box;
   display: flex;
   align-content: center;
@@ -34,7 +36,6 @@
 }
 
 .trigger {
-  composes: buttonIcon;
   border: 2px solid #E8ECEC;
   border-radius: 50%;
   background: white;
@@ -52,10 +53,6 @@
 
 .triggerActive {
   transform: rotate(45deg);
-}
-
-.iconImage {
-  composes: buttonIcon;
 }
 
 .iconImage circle {

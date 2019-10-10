@@ -10,7 +10,7 @@ import './index.less';
 const store = createStore();
 const history = createBrowserHistory();
 
-document.querySelector('body').classList.remove('no-js');
+document.querySelector('body').style.display = null;
 
 ReactDOM.hydrate(
   <Provider store={store}>

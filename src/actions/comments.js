@@ -1,8 +1,6 @@
 import { omit } from 'lodash';
 import api from '../api';
 import graphql from '../api/graphql';
-import loader from '../utils/loader';
-import { addServerErrorNotification } from './notifications';
 import { addUsers, getOwnerCredentialsOrShowAuthPopup } from './users';
 import { searchTags } from '../utils/text';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
@@ -64,149 +62,122 @@ export const commentsAddContainerData = ({
   });
 };
 
-export const getPostComments = ({
-  containerId,
-  postId,
-  page,
-  perPage,
-}) => async (dispatch) => {
-  loader.start();
-  try {
-    const data = await graphql.getPostComments({
-      page,
-      perPage,
-      commentableId: postId,
-    });
-    dispatch(commentsAddContainerData({
-      containerId,
-      entryId: postId,
-      parentId: 0,
-      comments: data.data,
-      metadata: data.metadata,
-    }));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
-  }
-  loader.done();
-};
-
-export const getCommentsOnComment = ({
-  containerId,
-  commentableId,
-  parentId,
-  parentDepth,
-  page,
-  perPage,
-}) => async (dispatch) => {
-  loader.start();
-  try {
-    const data = await graphql.getCommentsOnComment({
-      commentableId,
-      parentId,
-      parentDepth,
-      page,
-      perPage,
-    });
-
-    dispatch(commentsAddContainerData({
-      containerId,
-      entryId: commentableId,
-      parentId,
-      metadata: data.metadata,
-      comments: data.data,
-    }));
-  } catch (e) {
-    console.error(e);
-    dispatch(addServerErrorNotification(e));
-  }
-  loader.done();
-};
-
-// TODO: Refactoring like updateComment
-export const createComment = (
-  ownerId,
-  ownerAccountName,
-  ownerPrivateKey,
-  postId,
-  postBlockchainId,
-  containerId,
-  data,
-  commentId,
-  commentBlockchainId,
-  orgBlockchainId,
-) => async (dispatch) => {
-  const commentContent = {
-    description: data.description,
-    entity_images: data.entityImages,
-    entity_tags: searchTags(data.description),
-  };
-  let signed_transaction;
-  let blockchain_id;
-
-  if (orgBlockchainId && !commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-      ownerAccountName,
-      ownerPrivateKey,
-      postBlockchainId,
-      orgBlockchainId,
-      commentContent,
-      false,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  } else if (orgBlockchainId && commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-      ownerAccountName,
-      ownerPrivateKey,
-      commentBlockchainId,
-      orgBlockchainId,
-      commentContent,
-      true,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  } else if (commentBlockchainId) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-      ownerAccountName,
-      ownerPrivateKey,
-      commentBlockchainId,
-      commentContent,
-      true,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  } else {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-      ownerAccountName,
-      ownerPrivateKey,
-      postBlockchainId,
-      commentContent,
-      false,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
-  }
-
-  const comment = await api.createComment(
-    {
-      ...omit(commentContent, ['entity_tags']),
-      signed_transaction: JSON.stringify(signed_transaction),
-      blockchain_id,
-    },
-    postId,
-    commentId,
-  );
+export const getPostComments = (containerId, postId, page, perPage) => async (dispatch) => {
+  const data = await graphql.getPostComments({
+    page,
+    perPage,
+    commentableId: postId,
+  });
 
   dispatch(commentsAddContainerData({
     containerId,
     entryId: postId,
-    comments: [{ ...comment, isNew: true }],
+    parentId: 0,
+    comments: data.data,
+    metadata: data.metadata,
   }));
-
-  return comment;
 };
 
-export const updateComment = (
-  commentId,
-  commentData,
-) => async (dispatch, getState) => {
+export const getCommentsOnComment = (containerId, commentableId, parentId, parentDepth, page, perPage) => async (dispatch) => {
+  const data = await graphql.getCommentsOnComment({
+    commentableId,
+    parentId,
+    parentDepth,
+    page,
+    perPage,
+  });
+
+  dispatch(commentsAddContainerData({
+    containerId,
+    entryId: commentableId,
+    parentId,
+    metadata: data.metadata,
+    comments: data.data,
+  }));
+};
+
+export const createComment = (postId, parentCommentId, containerId, commentData) => async (dispatch, getState) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return null;
+  }
+
+  const state = getState();
+  const post = selectPostById(postId)(state);
+
+  if (!post) {
+    throw new Error('Post not found.');
+  }
+
+  let parentComment;
+
+  if (parentCommentId) {
+    parentComment = selectCommentById(parentCommentId)(state);
+  }
+
+  if (parentCommentId && !parentComment) {
+    throw new Error('Parent comment not found.');
+  }
+
+  let org;
+
+  if (post.organizationId) {
+    org = selectOrgById(post.organizationId)(state);
+  }
+
+  if (post.organizationId && !org) {
+    throw new Error('Organization not found.');
+  }
+
+  const commentContent = {
+    description: commentData.description,
+    entity_images: commentData.entityImages,
+    entity_tags: searchTags(commentData.description),
+  };
+
+  let signed_transaction;
+  let blockchain_id;
+
+  if (!org) {
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      commentContent,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    ));
+  } else {
+    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      org.blockchainId,
+      commentContent,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    ));
+  }
+
+  const data = {
+    ...omit(commentContent, ['entity_tags']),
+    signed_transaction: JSON.stringify(signed_transaction),
+    blockchain_id,
+  };
+
+  const result = await api.createComment(data, post.id, parentComment ? parentComment.id : undefined);
+
+  dispatch(commentsAddContainerData({
+    containerId,
+    entryId: post.id,
+    comments: [{ ...result, isNew: true }],
+  }));
+
+  return result;
+};
+
+export const updateComment = (commentId, commentData) => async (dispatch, getState) => {
   const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
 
   if (!ownerCredentials) {

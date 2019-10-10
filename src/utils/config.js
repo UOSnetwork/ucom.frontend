@@ -31,3 +31,7 @@ export const getBlockchainPort = () => (
 export const getBlockchainProtocol = () => (
   config.blockchanin[process.env.NODE_ENV === 'production' ? 'production' : 'staging'].protocol
 );
+
+export const getBaseUrl = () => (
+  config.baseUrl[process.env.NODE_ENV === 'production' ? 'production' : 'staging']
+);

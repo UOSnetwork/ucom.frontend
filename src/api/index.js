@@ -135,6 +135,16 @@ class Api {
     return humps(response.data);
   }
 
+  async searchUsersByAccountNameWithLimit(accountName, limit = 20) {
+    try {
+      const query = accountName[0] === '@' ? accountName.substr(1) : accountName;
+      const data = await this.searchUsers(query);
+      return data.slice(0, limit);
+    } catch (err) {
+      return [];
+    }
+  }
+
   async createPost(data) {
     const response = await this.actions.post('/api/v1/posts', snakes(data));
 

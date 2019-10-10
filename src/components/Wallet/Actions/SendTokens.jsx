@@ -1,81 +1,50 @@
+// TODO: Remove
 import { useDispatch, useSelector } from 'react-redux';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
-import { walletToggleSendTokens, walletSendTokens, walletGetAccount } from '../../../actions/wallet';
+import * as walletActions from '../../../actions/wallet';
 import styles from './styles.css';
 import TextInput from '../../TextInput';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
 import withLoader from '../../../utils/withLoader';
-import { parseResponseError } from '../../../utils/errors';
 import api from '../../../api';
 import SearchInput from '../../SearchInput';
-import { addSuccessNotification } from '../../../actions/notifications';
 import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
-import { selectOwner } from '../../../store/selectors';
+import { selectOwner, selectUserById } from '../../../store/selectors';
 
 const SendTokens = () => {
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
   const wallet = useSelector(state => state.wallet);
-  const [amount, setAmount] = useState('');
-  const [memo, setMemo] = useState('');
-  const [formError, setFormError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  const {
+    editable, accountName, amount, memo, error, loading,
+  } = wallet.sendTokens;
+  const user = useSelector(selectUserById(accountName));
+  const disabled = !amount || !accountName || loading;
 
-  const onSuccess = () => {
-    setFormError(null);
-    dispatch(addSuccessNotification('Successfully sent tokens'));
-    setTimeout(() => {
-      dispatch(walletGetAccount(owner.accountName));
-      dispatch(walletToggleSendTokens(false));
-    }, 0);
-  };
+  useEffect(() => () => {
+    dispatch(walletActions.sendTokens.reset());
+  }, []);
 
-  const onError = (err) => {
-    const errors = parseResponseError(err);
-    setFormError(errors[0].message);
-  };
-
-  if (!wallet.sendTokensVisibility) {
+  if (!wallet.sendTokens.visible) {
     return null;
   }
 
   return (
     <RequestActiveKey
       replace
-      onSubmit={async (privateKey) => {
-        setLoading(true);
-        try {
-          await withLoader(dispatch(walletSendTokens(owner.accountName, user.accountName, +amount, memo, privateKey)));
-          onSuccess();
-        } catch (err) {
-          onError(err);
-        }
-        setLoading(false);
-      }}
-      onScatterConnect={async (scatter) => {
-        setLoading(true);
-        try {
-          await scatter.sendTokens(owner.accountName, user.accountName, amount, memo);
-          onSuccess();
-        } catch (err) {
-          onError(err);
-        }
-        setLoading(false);
-      }}
+      onSubmit={activeKey => withLoader(dispatch(walletActions.sendTokens.submit(undefined, activeKey)))}
+      onScatterConnect={scatter => withLoader(dispatch(walletActions.sendTokens.submit(scatter)))}
     >
       {(requestActiveKey, requestLoading) => (
-        <Popup onClickClose={() => dispatch(walletToggleSendTokens(false))}>
-          <Content walletAction onClickClose={() => dispatch(walletToggleSendTokens(false))}>
+        <Popup onClickClose={() => dispatch(walletActions.sendTokens.cancel())}>
+          <Content walletAction onClickClose={() => dispatch(walletActions.sendTokens.cancel())}>
             <form
               className={styles.content}
-              onSubmit={async (e) => {
+              onSubmit={(e) => {
                 e.preventDefault();
-                setLoading(true);
-                await requestActiveKey();
-                setLoading(false);
+                requestActiveKey();
               }}
             >
               <h2 className={styles.title}>Send Tokens</h2>
@@ -84,57 +53,48 @@ const SendTokens = () => {
                   autoFocus
                   placeholder="0"
                   label="UOS Amount"
+                  disabled={!editable}
                   value={`${amount}`}
                   onChange={(value) => {
-                    const intValue = parseInt(value, 10);
-                    setAmount(intValue || '');
+                    const amount = parseInt(value, 10) || '';
+                    dispatch(walletActions.sendTokens.merge({ amount }));
                   }}
                 />
               </div>
               <label className={styles.field}>
                 <div className={styles.label}>Destination Account</div>
                 <SearchInput
-                  isMulti={false}
-                  loadOptions={async (q) => {
-                    try {
-                      const query = q[0] === '@' ? q.substr(1) : q;
-                      const data = await withLoader(api.searchUsers(query));
-                      return data.slice(0, 20).filter(i => i.id !== owner.id);
-                    } catch (err) {
-                      return [];
-                    }
-                  }}
                   value={user}
-                  onChange={user => setUser(user)}
+                  isMulti={false}
+                  isDisabled={!editable}
+                  onChange={(user) => {
+                    dispatch(walletActions.sendTokens.merge({ accountName: user.accountName }));
+                  }}
+                  loadOptions={async q =>
+                    (await withLoader(api.searchUsersByAccountNameWithLimit(q, 20)))
+                      .filter(i => i.id !== owner.id)
+                  }
                 />
               </label>
               <div className={styles.field}>
                 <TextInput
+                  disabled={!editable}
                   placeholder="Example"
                   label="Memo"
                   value={`${memo}`}
-                  onChange={(value) => {
-                    setMemo(value);
+                  onChange={(memo) => {
+                    dispatch(walletActions.sendTokens.merge({ memo }));
                   }}
                 />
               </div>
-              {formError &&
+              {error &&
                 <div className={styles.error}>
                   <IconInputError />
-                  <span>{formError}</span>
+                  <span>{error}</span>
                 </div>
               }
               <div className={styles.action}>
-                <Button
-                  cap
-                  big
-                  red
-                  strech
-                  type="submit"
-                  disabled={!amount || !user || !user.accountName || loading || requestLoading}
-                >
-                  Send
-                </Button>
+                <Button cap big red strech type="submit" disabled={disabled || requestLoading}>Send</Button>
               </div>
             </form>
           </Content>

@@ -1,26 +1,19 @@
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Comments from './index';
-import {
-  selectCommentsByContainerId,
-  selectCommentsByIds,
-  selectUsersByIds,
-  selectOwner,
-  selectPostById,
-  selectOrgById,
-} from '../../store/selectors';
+// import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById } from '../../store/selectors';
+import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
 import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
-import { getOrganization } from '../../actions/organizations';
-import { authShowPopup } from '../../actions/auth';
 import withLoader from '../../utils/withLoader';
-import { getSocialKey } from '../../utils/keys';
+// import Command from '../../utils/command';
+// import * as walletActions from '../../actions/wallet';
 
 const Wrapper = ({ containerId, postId, ...props }) => {
   const dispatch = useDispatch();
@@ -28,8 +21,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const commentsByContainerId = useSelector(selectCommentsByContainerId(containerId, postId), isEqual);
   const comments = useSelector(selectCommentsByIds(commentsByContainerId && commentsByContainerId.commentIds), isEqual);
   const users = useSelector(selectUsersByIds(comments && comments.map(c => c.user)), isEqual);
-  const post = useSelector(selectPostById(postId), isEqual);
-  const org = useSelector(selectOrgById(post && post.organizationId), isEqual);
+  // const post = useSelector(selectPostById(postId), isEqual);
 
   let commentsTree = [];
   let metadata = {};
@@ -54,99 +46,68 @@ const Wrapper = ({ containerId, postId, ...props }) => {
     ({ metadata } = commentsByContainerId);
   }
 
-  const onSubmit = async ({
-    message,
-    postId,
-    commentId,
-    containerId,
-    entityImages,
-  }) => {
-    const ownerPrivateKey = getSocialKey();
+  // TODO: Enable when design finished
+  // const sendTokensIfNeeded = async (description) => {
+  //   if (Command.stringHasTipCommand(description)) {
+  //     const { accountName, amount } = Command.parseTipCommand(description);
+  //     await dispatch(walletActions.sendTokens.send(accountName, amount, `--tip @${accountName} ${amount} uos ${urls.getDirectUrl(urls.getPostUrl(post))}`));
+  //   }
+  // };
 
-    if (!owner.id || !owner.accountName || !ownerPrivateKey) {
-      dispatch(authShowPopup());
-      return;
-    }
+  const onSubmit = useCallback(
+    async (postId, parentCommentId, containerId, data) => {
+      // await sendTokensIfNeeded(data.description);
 
-    try {
-      let comment;
-      let orgBlockchainId;
-
-      if (commentId) {
-        comment = comments.find(c => c.id === commentId);
+      try {
+        await withLoader(dispatch(createComment(postId, parentCommentId, containerId, data)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+        throw err;
       }
+    },
+    [dispatch],
+  );
 
-      if (post.organizationId && org.blockchainId) {
-        orgBlockchainId = org.blockchainId;
-      } else if (post.organizationId && !org.blockchainId) {
-        const orgData = await withLoader(dispatch(getOrganization(post.organizationId)));
-        orgBlockchainId = orgData.blockchainId;
+  const onUpdate = useCallback(
+    async (commentId, data) => {
+      // await sendTokensIfNeeded(data.description);
+
+      try {
+        await withLoader(dispatch(updateComment(commentId, data)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+        throw err;
       }
+    },
+    [dispatch],
+  );
 
-      await withLoader(dispatch(createComment(
-        owner.id,
-        owner.accountName,
-        ownerPrivateKey,
-        postId,
-        post.blockchainId,
-        containerId,
-        {
-          entityImages,
-          description: message,
-        },
-        commentId,
-        comment && comment.blockchainId,
-        orgBlockchainId,
-      )));
-    } catch (err) {
-      dispatch(addErrorNotificationFromResponse(err));
-    }
-  };
+  const onClickShowNext = useCallback(
+    async (containerId, postId, page, perPage) => {
+      try {
+        await withLoader(dispatch(getPostComments(containerId, postId, page, perPage)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
+    },
+    [dispatch],
+  );
 
-  const onUpdate = async ({ commentId, data }) => {
-    try {
-      await withLoader(dispatch(updateComment(commentId, data)));
-    } catch (err) {
-      console.error(err);
-      dispatch(addErrorNotificationFromResponse(err));
-    }
-  };
+  const onClickShowReplies = useCallback(
+    async (containerId, postId, parentId, parentDepth, page, perPage) => {
+      try {
+        await withLoader(dispatch(getCommentsOnComment(containerId, postId, parentId, parentDepth, page, perPage)));
+      } catch (err) {
+        dispatch(addErrorNotificationFromResponse(err));
+      }
+    },
+    [dispatch],
+  );
 
-  const onClickShowNext = ({
-    containerId,
-    postId,
-    page,
-    perPage,
-  }) => {
-    dispatch(getPostComments({
-      containerId,
-      postId,
-      page,
-      perPage,
-    }));
-  };
-
-  const onClickShowReplies = ({
-    containerId,
-    postId,
-    parentId,
-    parentDepth,
-    page,
-    perPage,
-  }) => {
-    dispatch(getCommentsOnComment({
-      containerId,
-      commentableId: postId,
-      parentId,
-      parentDepth,
-      page,
-      perPage,
-    }));
-  };
-
-  const onError = (e) => {
-    dispatch(addErrorNotification(e));
-  };
+  const onError = useCallback(
+    message => dispatch(addErrorNotification(message)),
+    [dispatch],
+  );
 
   return (
     <Comments
