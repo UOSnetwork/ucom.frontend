@@ -33,6 +33,7 @@ const Gallery = ({ images, userId, date }) => {
             {...image}
             key={index}
             label={index === 4 ? moreLabel : null}
+            fullView={index === 0}
             onClick={() => {
               setActiveIndex(index);
               setPopupVisible(true);

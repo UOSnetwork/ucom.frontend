@@ -95,7 +95,7 @@ const PostFeedContent = ({
             <div className={styles.cover}>
               <img src={urls.getFileUrl(getCoverImage(post))} alt="cover" />
             </div>
-            ) : post.entityImages.gallery && post.entityImages.gallery.length > 0 &&
+          ) : post.entityImages.gallery && post.entityImages.gallery.length > 0 &&
             <div className={styles.gallery}>
               <Gallery
                 images={post.entityImages.gallery}

@@ -64,6 +64,10 @@
   stroke: #767676;
 }
 
+.iconImage:hover {
+  fill: #767676;
+}
+
 .iconImage input {
   display: none;
 }
