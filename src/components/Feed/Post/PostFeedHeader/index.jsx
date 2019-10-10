@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import React, { Fragment, useState, useCallback } from 'react';
+import React, { Fragment, useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { UserCard } from '../../../SimpleCard';
@@ -119,4 +119,4 @@ PostFeedHeader.defaultProps = {
   onClickEdit: undefined,
 };
 
-export default PostFeedHeader;
+export default memo(PostFeedHeader);
