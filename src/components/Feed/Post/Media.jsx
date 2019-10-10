@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import React, { memo } from 'react';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedFooter from './PostFeedFooter';
@@ -17,11 +16,7 @@ const Media = ({
   return (
     <div className={styles.post} id={`post-${post.id}`}>
       <PostFeedHeader
-        post={post}
-        user={owner}
         postId={post.id}
-        feedTypeId={props.feedTypeId}
-        createdAt={moment(post.createdAt).fromNow()}
         originEnabled={props.originEnabled}
       />
 

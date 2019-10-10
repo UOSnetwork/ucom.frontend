@@ -31,11 +31,9 @@ const Direct = ({
               id={`post-${post.id}`}
             >
               <PostFeedHeader
-                post={post}
-                user={owner}
-                userId={owner.id}
-                formIsVisible={formIsVisible}
-                showForm={() => setFormIsVisible(true)}
+                postId={post.id}
+                menuVisible={!formIsVisible}
+                onClickEdit={() => setFormIsVisible(true)}
                 originEnabled={props.originEnabled}
               />
               <PostFeedContent
@@ -60,13 +58,9 @@ const Direct = ({
       ) : (
         <div className={styles.post} id={`post-${post.id}`}>
           <PostFeedHeader
-            post={post}
-            user={owner}
-            userId={owner.id}
             postId={post.id}
-            formIsVisible={formIsVisible}
-            feedTypeId={props.feedTypeId}
-            showForm={() => setFormIsVisible(true)}
+            menuVisible={!formIsVisible}
+            onClickEdit={() => setFormIsVisible(true)}
             originEnabled={props.originEnabled}
           />
           <PostFeedContent

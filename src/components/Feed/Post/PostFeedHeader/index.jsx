@@ -1,35 +1,46 @@
-import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import React, { Fragment, useState, memo } from 'react';
+import React, { Fragment, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { UserCard } from '../../../SimpleCard';
 import DropdownMenu from '../../../DropdownMenu';
 import urls from '../../../../utils/urls';
-import { addSuccessNotification } from '../../../../actions/notifications';
 import utilsActions from '../../../../actions/utils';
 import styles from './styles.css';
 import UserPick from '../../../UserPick';
 import entityIsEditable from '../../../../utils/entityIsEditable';
 import { POST_TYPE_MEDIA_ID, POST_TYPE_REPOST_ID, POST_EDIT_TIME_LIMIT } from '../../../../utils';
 import fromNow from '../../../../utils/fromNow';
+import { selectPostById, selectOwner } from '../../../../store';
 
-const PostFeedHeader = ({ post, ...props }) => {
+const PostFeedHeader = ({
+  postId, onClickEdit, originEnabled, menuVisible,
+}) => {
+  const dispatch = useDispatch();
+  const post = useSelector(selectPostById(postId), isEqual);
+  const owner = useSelector(selectOwner, isEqual);
+  const calcTimeLeft = () => 15 - moment().diff(post.createdAt, 'm');
+  const [leftTime, setLeftTime] = useState(calcTimeLeft());
+
   if (!post) {
     return null;
   }
 
-  const calcTimeLeft = () => 15 - moment().diff(post.createdAt, 'm');
-  const [leftTime, setLeftTime] = useState(calcTimeLeft());
+  const copyLink = useCallback(
+    () => {
+      dispatch(utilsActions.copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`));
+    },
+    [dispatch, post],
+  );
 
   const items = [{
     title: 'Copy Link',
-    onClick: () => {
-      props.dispatch(utilsActions.copyToClipboard(`${document.location.origin}${urls.getFeedPostUrl(post)}`));
-    },
+    onClick: copyLink,
   }];
 
-  if (props.user && props.user.id === post.userId && post.postTypeId !== POST_TYPE_REPOST_ID) {
+  if (owner && owner.id === post.userId && post.postTypeId !== POST_TYPE_REPOST_ID && post.postTypeId !== POST_TYPE_MEDIA_ID) {
     const isEditable = entityIsEditable(post.createdAt, POST_EDIT_TIME_LIMIT);
 
     // TODO: Refactoring (unification with comment edit menut)
@@ -39,7 +50,7 @@ const PostFeedHeader = ({ post, ...props }) => {
       ) : (
         <span className={styles.limit}>Can only edit in first 15 min </span>
       ),
-      onClick: isEditable ? props.showForm : undefined,
+      onClick: isEditable ? onClickEdit : undefined,
       disabled: !isEditable,
     });
   }
@@ -50,7 +61,7 @@ const PostFeedHeader = ({ post, ...props }) => {
         <div className={styles.info}>
           <Link to={urls.getFeedPostUrl(post)}>{fromNow(post.createdAt)}</Link>
 
-          {props.originEnabled &&
+          {originEnabled &&
             <Fragment>
               {post.entityNameFor.trim() === 'org' &&
                 <div className={styles.org}>
@@ -75,7 +86,7 @@ const PostFeedHeader = ({ post, ...props }) => {
           }
         </div>
 
-        {!props.formIsVisible &&
+        {menuVisible &&
           <div className={styles.dropdown}>
             <DropdownMenu
               items={items}
@@ -97,24 +108,15 @@ const PostFeedHeader = ({ post, ...props }) => {
 
 PostFeedHeader.propTypes = {
   originEnabled: PropTypes.bool,
-  showForm: PropTypes.func,
-  addSuccessNotification: PropTypes.func.isRequired,
-  formIsVisible: PropTypes.bool,
-  userId: PropTypes.number,
-  post: PropTypes.objectOf(PropTypes.any).isRequired,
-  user: PropTypes.objectOf(PropTypes.any).isRequired,
-  dispatch: PropTypes.func.isRequired,
+  postId: PropTypes.number.isRequired,
+  onClickEdit: PropTypes.func,
+  menuVisible: PropTypes.bool,
 };
 
 PostFeedHeader.defaultProps = {
   originEnabled: true,
-  userId: null,
-  showForm: null,
-  formIsVisible: false,
+  menuVisible: true,
+  onClickEdit: undefined,
 };
 
-export default connect(null, {
-  addSuccessNotification,
-})(memo(PostFeedHeader, (prev, next) => (
-  prev.user.id === next.user.id
-)));
+export default PostFeedHeader;

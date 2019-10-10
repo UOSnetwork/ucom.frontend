@@ -1,8 +1,5 @@
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import React, { memo, Fragment } from 'react';
-import { getUserName } from '../../../utils/user';
-import urls from '../../../utils/urls';
 import PostFeedHeader from './PostFeedHeader';
 import PostFeedContent from './PostFeedContent';
 import PostFeedFooter from './PostFeedFooter';
@@ -22,15 +19,7 @@ const Repost = ({
   return (
     <div className={styles.post}>
       <PostFeedHeader
-        post={post}
-        user={owner}
-        userId={user.id}
-        postTypeId={props.postTypeId}
-        createdAt={moment(post.createdAt).fromNow()}
         postId={post.id}
-        userName={getUserName(user)}
-        accountName={user.accountName}
-        profileLink={urls.getUserUrl(user.id)}
         originEnabled={props.originEnabled}
       />
 
@@ -40,18 +29,7 @@ const Repost = ({
         ) : (
           <Fragment>
             <PostFeedHeader
-              repost
-              post={post.post}
-              user={owner}
-              userId={post.post.user.id}
-              postTypeId={post.post.postTypeId}
-              createdAt={moment(post.post.createdAt).fromNow()}
               postId={post.post.id}
-              userName={getUserName(post.post.user)}
-              accountName={post.post.user.accountName}
-              profileLink={urls.getUserUrl(post.post.user.id)}
-              avatarUrl={urls.getFileUrl(post.post.user.avatarFilename)}
-              feedTypeId={props.feedTypeId}
             />
 
             {post.post.postTypeId === POST_TYPE_MEDIA_ID ? (
