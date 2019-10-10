@@ -8,7 +8,7 @@ import Gallery from '../../Gallery';
 import Form from '../Form';
 import ShowReplies from '../ShowReplies';
 import { CommentVotingWrapper } from '../../Voting';
-// import Embed from '../../Embed';
+import Embed from '../../Embed';
 import DropdownMenu from '../../DropdownMenu';
 import { COMMENTS_CONTAINER_ID_POST, COMMENTS_CONTAINER_ID_FEED_POST } from '../../../utils/comments';
 import { COMMENT_EDIT_TIME_LIMIT } from '../../../utils';
@@ -100,11 +100,11 @@ const Comment = (props) => {
           </div>
 
           <div className={styles.content}>
-            {/* {props.entityImages.embeds && props.entityImages.embeds.map((embed, index) => (
+            {props.entityImages.embeds && props.entityImages.embeds.map((embed, index) => (
               <div className={styles.embed} key={index}>
                 <Embed {...embed} />
               </div>
-            ))} */}
+            ))}
             {props.images && props.images.length > 0 &&
               <div className={styles.gallery}>
                 <Gallery

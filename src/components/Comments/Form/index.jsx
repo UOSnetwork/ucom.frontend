@@ -30,7 +30,7 @@ import withLoader from '../../../utils/withLoader';
 const Form = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(props.message);
-  const [entityImages, setEntityImages] = useState(props.entityImages || ({ gallery: [] }));
+  const [entityImages, setEntityImages] = useState(props.entityImages || ({ gallery: [], embeds: [] }));
   const [dropOnForm, setDropOnForm] = useState(false);
   const fieldEl = useRef(null);
   const textareaEl = useRef(null);
@@ -96,14 +96,12 @@ const Form = (props) => {
       return;
     }
 
-    setLoading(true);
     try {
       const embedData = await withLoader(EmbedService.getDataFromUrl(url));
       addEmbed(embedData);
     } catch (err) {
       console.error(err);
     }
-    setLoading(false);
   };
 
   const onMultipleImages = async (files) => {
