@@ -76,7 +76,7 @@ const Auth = () => {
             case STEP_NEW_SOCIAL_KEY_BY_BRAINKEY:
               return (
                 <GenerateSocialKeyByBrainkey
-                  accountName={user.accountName}
+                  accountName={accountName}
                   onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
                   onClickActiveKey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY)}
                   onSubmit={(socialKey) => {
@@ -88,7 +88,7 @@ const Auth = () => {
             case STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY:
                 return (
                   <GenerateSocialKeyByActiveKey
-                    accountName={user.accountName}
+                    accountName={accountName}
                     onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
                     onClickBrainkey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_BRAINKEY)}
                     onSubmit={(socialKey) => {
