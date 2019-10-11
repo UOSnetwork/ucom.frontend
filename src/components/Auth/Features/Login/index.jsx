@@ -14,6 +14,7 @@ import urls from '../../../../utils/urls';
 import { getUserName } from '../../../../utils/user';
 import * as authActions from '../../../../actions/auth';
 import { parseResponseError } from '../../../../utils/errors';
+import api from '../../../../api';
 
 const STEP_ACCOUNT = 1;
 const STEP_SOCIAL_KEY = 2;
@@ -25,6 +26,7 @@ const ERROR_ACCOUNT_NOT_EXIST = 'Such account does not exist in a blockchain';
 const Auth = () => {
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(STEP_ACCOUNT);
+  const [accountName, setAccountName] = useState('');
   const [loading, setLoading] = useState(false);
   const [accountError, setAccountError] = useState('');
   const [socialKeyError, setSocialKeyError] = useState('');
@@ -41,7 +43,7 @@ const Auth = () => {
         {(() => {
           switch (currentStep) {
             case STEP_SOCIAL_KEY: {
-              if (!user) {
+              if (!accountName) {
                 setCurrentStep(STEP_ACCOUNT);
                 return null;
               }
@@ -50,9 +52,9 @@ const Auth = () => {
                 <SocialKey
                   loading={loading}
                   error={socialKeyError}
-                  userName={getUserName(user)}
-                  userAccountName={user.accountName}
-                  userAvatarSrc={urls.getFileUrl(user.avatarFilename)}
+                  userName={user && getUserName(user)}
+                  userAccountName={accountName}
+                  userAvatarSrc={user && urls.getFileUrl(user.avatarFilename)}
                   onClickBack={() => setCurrentStep(STEP_ACCOUNT)}
                   onClickNewKeys={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_BRAINKEY)}
                   onChange={() => {
@@ -61,7 +63,7 @@ const Auth = () => {
                   onSubmit={async (socialKey) => {
                     setLoading(true);
                     try {
-                      await withLoader(dispatch(authActions.loginBySocialKey(socialKey, user.accountName)));
+                      await withLoader(dispatch(authActions.loginBySocialKey(socialKey, accountName)));
                     } catch (err) {
                       const errors = parseResponseError(err);
                       setSocialKeyError(errors[0].message);
@@ -74,7 +76,7 @@ const Auth = () => {
             case STEP_NEW_SOCIAL_KEY_BY_BRAINKEY:
               return (
                 <GenerateSocialKeyByBrainkey
-                  accountName={user.accountName}
+                  accountName={accountName}
                   onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
                   onClickActiveKey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY)}
                   onSubmit={(socialKey) => {
@@ -86,7 +88,7 @@ const Auth = () => {
             case STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY:
                 return (
                   <GenerateSocialKeyByActiveKey
-                    accountName={user.accountName}
+                    accountName={accountName}
                     onClickBack={() => setCurrentStep(STEP_SOCIAL_KEY)}
                     onClickBrainkey={() => setCurrentStep(STEP_NEW_SOCIAL_KEY_BY_BRAINKEY)}
                     onSubmit={(socialKey) => {
@@ -113,9 +115,17 @@ const Auth = () => {
                   onSubmit={async (accountName) => {
                     setLoading(true);
                     try {
-                      const userData = await withLoader(dispatch(fetchUser(accountName)));
+                      await api.validateAccountName(accountName);
+
+                      try {
+                        const userData = await withLoader(dispatch(fetchUser(accountName)));
+                        setUserId(userData.id);
+                      } catch (err) {
+                        console.error(err);
+                      }
+
+                      setAccountName(accountName);
                       setAccountError('');
-                      setUserId(userData.id);
                       setCurrentStep(STEP_SOCIAL_KEY);
                     } catch (e) {
                       setAccountError(ERROR_ACCOUNT_NOT_EXIST);
