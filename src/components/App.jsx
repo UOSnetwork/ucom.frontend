@@ -22,7 +22,7 @@ import urls from '../utils/urls';
 import loader from '../utils/loader';
 import { logoutIfNeedBindSocialKey } from '../utils/auth';
 import withLoader from '../utils/withLoader';
-import * as mediaQueryActions from '../actions/mediaQuery';
+import mediaQueryActions from '../actions/mediaQuery';
 import { UserWallet, BuyRam, SellRam, EditStake, SendTokensWrapper } from '../components/Wallet';
 
 const App = () => {

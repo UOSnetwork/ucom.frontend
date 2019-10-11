@@ -1,20 +1,11 @@
-import merge from '../utils/merge';
+import createReducer from './helpers/createReducer';
 
-const getInitialState = () => ({
+const { reducer, actions } = createReducer('MEDIA_QUERY', () => ({
   hover: false,
-});
+  medium: false,
+  small: false,
+  xsmall: false,
+}));
 
-const mediaQuery = (state = getInitialState(), action) => {
-  switch (action.type) {
-    case 'MEDIA_QUERY_RESET':
-      return getInitialState();
-
-    case 'MEDIA_QUERY_SET_DATA':
-      return merge({}, state, action.payload);
-
-    default:
-      return state;
-  }
-};
-
-export default mediaQuery;
+export { actions };
+export default reducer;

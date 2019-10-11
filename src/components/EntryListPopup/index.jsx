@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import React from 'react';
+import { useSelector } from 'react-redux';
+import React, { Fragment } from 'react';
 import styles from './styles.css';
 import EntryCard from '../EntryCard';
 import Popup, { Content } from '../Popup';
@@ -8,58 +9,54 @@ import { UserFollowButton, OrgFollowButton } from '../FollowButton';
 import Pagination from '../Pagination/index';
 
 // TODO: Replace and remove another popups
-const EntryListPopup = props => (
-  <Popup onClickClose={props.onClickClose}>
-    <Content onClickClose={props.onClickClose}>
-      <div className={styles.container}>
-        {props.title &&
-          <h2 className={styles.title}>{props.title}</h2>
-        }
-        <div className={styles.list}>
-          {props.data.map(item => (
-            <div
-              key={item.id}
-              className={classNames({
-                [styles.item]: true,
-                [styles.follow]: item.follow,
-              })}
-            >
-              <div className={styles.card}>
-                <EntryCard {...{ ...item }} />
-              </div>
+const EntryListPopup = (props) => {
+  const mediaQuery = useSelector(state => state.mediaQuery);
 
-              {item.follow && item.organization &&
-                <div className={styles.action}>
-                  <OrgFollowButton orgId={+item.id} />
-                </div>
-              }
+  return (
+    <Popup onClickClose={props.onClickClose}>
+      <Content onClickClose={props.onClickClose}>
+        <div className={styles.container}>
+          {props.title &&
+            <h2 className={styles.title}>{props.title}</h2>
+          }
+          <div
+            className={classNames({
+              [styles.list]: true,
+              [styles.withFollowButton]: props.followButtonEnabled,
+            })}
+          >
+            {props.data.map(item => (
+              <Fragment key={item.id}>
+                <EntryCard {...{ ...item }} disableRate={mediaQuery.xsmall} />
 
-              {item.follow && !item.organization &&
-                <div className={styles.action}>
-                  <UserFollowButton userId={+item.id} />
-                </div>
-              }
-            </div>
-          ))}
+                {props.followButtonEnabled && item.organization &&
+                  <OrgFollowButton orgId={+item.id} small={mediaQuery.small} iconEnabled={!mediaQuery.small} />
+                }
+
+                {props.followButtonEnabled && !item.organization &&
+                  <UserFollowButton userId={+item.id} small={mediaQuery.small} iconEnabled={!mediaQuery.small} />
+                }
+              </Fragment>
+            ))}
+          </div>
+
+          {props.metadata &&
+            <Pagination
+              {...props.metadata}
+              onChange={props.onChangePage}
+            />
+          }
         </div>
-
-        {props.metadata &&
-          <Pagination
-            {...props.metadata}
-            onChange={props.onChangePage}
-          />
-        }
-      </div>
-    </Content>
-  </Popup>
-);
+      </Content>
+    </Popup>
+  );
+};
 
 EntryListPopup.propTypes = {
   title: PropTypes.string,
   data: PropTypes.arrayOf(PropTypes.shape({
     ...EntryCard.propTypes,
     id: PropTypes.number.isRequired,
-    follow: PropTypes.bool,
   })),
   metadata: PropTypes.shape({
     page: PropTypes.number,
@@ -68,6 +65,7 @@ EntryListPopup.propTypes = {
   }),
   onClickClose: PropTypes.func.isRequired,
   onChangePage: PropTypes.func,
+  followButtonEnabled: PropTypes.bool,
 };
 
 EntryListPopup.defaultProps = {
@@ -75,6 +73,7 @@ EntryListPopup.defaultProps = {
   data: [],
   metadata: undefined,
   onChangePage: undefined,
+  followButtonEnabled: true,
 };
 
 export default EntryListPopup;

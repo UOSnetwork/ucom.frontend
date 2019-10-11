@@ -5,9 +5,9 @@ import IconCheck from '../Icons/Check';
 import styles from './styles.css';
 
 const FollowButton = ({
-  asLink, text, followed, onClick, ...props
+  asLink, text, followed, onClick, iconEnabled, ...props
 }) => {
-  const icon = followed ? (
+  const icon = iconEnabled && followed ? (
     <span className={styles.icon}><IconCheck /></span>
   ) : null;
 
@@ -40,12 +40,14 @@ FollowButton.propTypes = {
   text: PropTypes.string,
   followed: PropTypes.bool,
   onClick: PropTypes.func.isRequired,
+  iconEnabled: PropTypes.bool,
 };
 
 FollowButton.defaultProps = {
   asLink: false,
   text: 'Follow',
   followed: false,
+  iconEnabled: true,
 };
 
 export * from './wrappers';

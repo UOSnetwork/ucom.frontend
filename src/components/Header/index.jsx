@@ -141,10 +141,10 @@ const Header = ({ location }) => {
 
       {organizationsPopupVisible &&
         <EntryListPopup
+          followButtonEnabled={false}
           title="My communities"
           data={orgs.map(item => ({
             id: item.id,
-            follow: false,
             organization: true,
             avatarSrc: urls.getFileUrl(item.avatarFilename),
             url: urls.getOrganizationUrl(item.id),
