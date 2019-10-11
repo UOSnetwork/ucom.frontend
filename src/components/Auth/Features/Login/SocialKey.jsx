@@ -30,7 +30,7 @@ const Account = props => (
               src={props.userAvatarSrc}
             />
           </div>
-          <div className={styles.name}>Hello, {props.userName}!</div>
+          <div className={styles.name}>{`Hello${props.userName ? `, ${props.userName}` : ''}!`}</div>
           <div className={styles.accountName}>@{props.userAccountName}</div>
         </div>
         <KeyFrom

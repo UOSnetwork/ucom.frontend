@@ -508,8 +508,14 @@ class Api {
 
   async registrationProfile(signedTransaction, userCreatedAt) {
     const data = snakes({ signedTransaction, userCreatedAt });
-
     const response = await this.actions.post('/api/v1/myself/transactions/registration-profile', data);
+
+    return humps(response.data);
+  }
+
+  async validateAccountName(accountName) {
+    const data = snakes({ accountName });
+    const response = await this.actions.post('/api/v1/auth/validate-account-name', data);
 
     return humps(response.data);
   }
