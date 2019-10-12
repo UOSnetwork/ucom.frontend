@@ -67,6 +67,7 @@ export const EntryListSectionOrgsWrapper = (props) => {
   return (
     <EntryListSection
       {...props}
+      followButtonEnabled={false}
       data={sortBy(orgs, ['currentRate']).reverse().map(mapProps)}
       popupData={popupOrgs ? popupOrgs.map(mapProps) : undefined}
     />

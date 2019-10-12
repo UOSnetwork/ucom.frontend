@@ -39,6 +39,7 @@ const EntryList = (props) => {
 
       {popupVisible &&
         <EntryListPopup
+          followButtonEnabled={props.followButtonEnabled}
           title={props.title}
           data={props.popupData || props.data}
           onClickClose={() => setPopupVisible(false)}
@@ -59,6 +60,7 @@ EntryList.propTypes = {
   popupMetadata: EntryListPopup.propTypes.metadata,
   onClickViewAll: PropTypes.func,
   showViewMore: PropTypes.bool,
+  followButtonEnabled: PropTypes.bool,
 };
 
 EntryList.defaultProps = {
@@ -70,6 +72,7 @@ EntryList.defaultProps = {
   showViewMore: undefined,
   onChangePage: null,
   onClickViewAll: undefined,
+  followButtonEnabled: true,
 };
 
 export { default as EntryListItem } from './Item';

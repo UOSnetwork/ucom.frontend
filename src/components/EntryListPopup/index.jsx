@@ -27,7 +27,7 @@ const EntryListPopup = (props) => {
           >
             {props.data.map(item => (
               <Fragment key={item.id}>
-                <EntryCard {...{ ...item }} disableRate={mediaQuery.xsmall} />
+                <EntryCard {...{ ...item }} disableRate={mediaQuery.xsmall && props.followButtonEnabled} />
 
                 {props.followButtonEnabled && item.organization &&
                   <OrgFollowButton orgId={+item.id} small={mediaQuery.small} iconEnabled={!mediaQuery.small} />

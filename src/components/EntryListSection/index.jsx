@@ -15,6 +15,7 @@ const EntryListSection = (props) => {
       }
       <div className={styles.content}>
         <EntryList
+          followButtonEnabled={props.followButtonEnabled}
           title={props.title}
           data={props.data}
           limit={props.limit}
@@ -40,6 +41,7 @@ EntryListSection.propTypes = {
   onChangePage: EntryList.propTypes.onChangePage,
   onClickViewAll: EntryList.propTypes.onClickViewAll,
   showViewMore: EntryList.propTypes.showViewMore,
+  followButtonEnabled: PropTypes.bool,
 };
 
 EntryListSection.defaultProps = {
@@ -52,6 +54,7 @@ EntryListSection.defaultProps = {
   showViewMore: undefined,
   onChangePage: null,
   onClickViewAll: undefined,
+  followButtonEnabled: true,
 };
 
 export * from './wrappers';
