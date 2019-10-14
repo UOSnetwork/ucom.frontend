@@ -7,6 +7,7 @@ import Utils from './utils';
 import Validator from './validator';
 import Actions from './actions';
 import { BLOCKS_BEHIND, EXPIRE_SECONDS } from './constants';
+import { PERMISSION_ACTIVE } from '../constants';
 
 ScatterJS.plugins(new ScatterEOS());
 
@@ -279,6 +280,41 @@ export class ScatterNew {
     const sign = await ScatterJS.getArbitrarySignature(publicKey, str);
 
     return sign;
+  }
+
+  async getFollowOrUnfollowAccountSignedTransaction(userAccountName, isFollow) {
+    const account = await this.loginByAuthority(PERMISSION_ACTIVE);
+    const network = await Network.getNetwork();
+    const rpc = Network.getRpc();
+    const eos = ScatterJS.eos(network, Api, { rpc });
+
+    const signedTransaction = await eos.transact({
+      actions: [{
+        account: 'uos.activity',
+        name: 'socialactndt',
+        authorization: [{
+          actor: account.name,
+          permission: account.authority,
+        }],
+        data: {
+          acc: account.name,
+          action_json: JSON.stringify({
+            interaction: isFollow ? 'follow_to_account' : 'unfollow_to_account',
+            data: {
+              account_from: account.name,
+              account_to: userAccountName,
+            },
+          }),
+          action_data: '',
+        },
+      }],
+    }, {
+      blocksBehind: BLOCKS_BEHIND,
+      expireSeconds: EXPIRE_SECONDS,
+      broadcast: false,
+    });
+
+    return signedTransaction;
   }
 }
 

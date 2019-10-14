@@ -6,7 +6,7 @@ import { selectOwner, selectUserById, selectOrgById } from '../../store/selector
 import { getSocialKey } from '../../utils/keys';
 import { authShowPopup } from '../../actions/auth';
 import { addErrorNotificationFromResponse } from '../../actions/notifications';
-import { followUser, unfollowUser, followOrg, unfollowOrg } from '../../actions/follow';
+import { followOrUnfollowUser, followOrg, unfollowOrg } from '../../actions/follow';
 import withLoader from '../../utils/withLoader';
 import equalByProps from '../../utils/equalByProps';
 
@@ -24,23 +24,16 @@ export const UserFollowButton = memo(({ userId, ...props }) => {
       return;
     }
 
-    const socialKey = getSocialKey();
-
-    if (!owner.id || !socialKey) {
-      dispatch(authShowPopup());
-      return;
-    }
-
     setLoading(true);
 
     try {
-      await withLoader(dispatch((followed ? unfollowUser : followUser)(owner.accountName, user.id, user.accountName, socialKey)));
+      await withLoader(dispatch(followOrUnfollowUser(user.id, !followed)));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
 
     setLoading(false);
-  }, [owner, user, followed, loading]);
+  }, [user, followed, loading]);
 
   if (!user) {
     return null;
