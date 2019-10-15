@@ -1,6 +1,6 @@
 export default class Command {
   static getTipCommandRegexp() {
-    return /\-\-tip[ ]+\@([a-z1-5]{12})[ ]+([0-9]+)[ ]+uos/i;
+    return /\@tip[ ]+\@([a-z1-5]{12})[ ]+([0-9]+)[ ]+uos/i;
   }
 
   static stringHasTipCommand(str) {
