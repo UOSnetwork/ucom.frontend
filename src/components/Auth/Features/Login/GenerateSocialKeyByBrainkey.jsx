@@ -23,6 +23,7 @@ const GenerateSocialKeyByBrainkey = (props) => {
             loading={loading}
             error={error}
             title="Generate Social Key with Brainkey"
+            hint="By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before."
             onChange={(value) => {
               setError('');
               if (props.onChange) {

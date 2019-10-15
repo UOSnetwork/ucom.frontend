@@ -256,3 +256,12 @@
 .copyPopup .action {
   margin: 0;
 }
+
+.hint {
+  max-width: 600px;
+  width: 100%;
+  margin: 45px auto 0;
+  font-size: 12px;
+  line-height: 1.75;
+  text-align: center;
+}

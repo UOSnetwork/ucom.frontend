@@ -72,6 +72,7 @@ const BrainkeyForm = (props) => {
           Proceed
         </Button>
       </div>
+      {props.hint && <div className={styles.hint}>{props.hint}</div>}
     </form>
   );
 };
@@ -83,6 +84,7 @@ BrainkeyForm.propTypes = {
   loading: PropTypes.bool,
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
+  hint: PropTypes.string,
 };
 
 BrainkeyForm.defaultProps = {
@@ -91,6 +93,7 @@ BrainkeyForm.defaultProps = {
   loading: false,
   onChange: undefined,
   onSubmit: undefined,
+  hint: '',
 };
 
 export default BrainkeyForm;

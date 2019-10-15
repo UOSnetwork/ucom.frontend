@@ -62,6 +62,7 @@ const KeyForm = (props) => {
           {props.submitText}
         </Button>
       </div>
+      {props.hint && <div className={styles.hint}>{props.hint}</div>}
     </form>
   );
 };
@@ -74,6 +75,7 @@ KeyForm.propTypes = {
   error: PropTypes.string,
   loading: PropTypes.bool,
   submitText: PropTypes.string,
+  hint: PropTypes.string,
 };
 
 KeyForm.defaultProps = {
@@ -81,6 +83,7 @@ KeyForm.defaultProps = {
   loading: false,
   onChange: undefined,
   submitText: 'Enter',
+  hint: '',
 };
 
 export default KeyForm;

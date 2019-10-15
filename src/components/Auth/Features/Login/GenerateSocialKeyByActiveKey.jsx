@@ -25,6 +25,7 @@ const GenerateSocialKeyByActiveKey = (props) => {
             title="Generate Social Key with Active Key"
             placeholder="Active Private Key"
             submitText="Proceed"
+            hint="By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before."
             onChange={(value) => {
               setError('');
 
