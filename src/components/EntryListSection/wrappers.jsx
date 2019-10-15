@@ -145,6 +145,7 @@ export const EntryListSectionOrgSourcesWrapper = ({ orgId, ...props }) => {
   return (
     <EntryListSection
       {...props}
+      followButtonEnabled={false}
       title="Partners"
       count={sources.length}
       data={sources.map(mapProps)}
