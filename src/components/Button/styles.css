@@ -94,6 +94,10 @@
   padding: 0 15px;
 }
 
+.button.rounted {
+  border-radius: 100px;
+}
+
 .inner {
   white-space: nowrap;
   text-overflow: ellipsis;

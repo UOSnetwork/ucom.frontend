@@ -6,6 +6,10 @@
   padding: 0 40px;
 }
 
+.content.small {
+  max-width: 1040px;
+}
+
 @media (max-width: 767px) {
   .content {
     padding: 0 20px;

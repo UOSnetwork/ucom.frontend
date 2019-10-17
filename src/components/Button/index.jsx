@@ -42,6 +42,7 @@ const Button = (props) => {
           [styles.medium]: props.medium,
           [styles.cap]: props.cap,
           [styles.disabled]: props.disabled,
+          [styles.rounted]: props.rounted,
         })}
         style={{
           minWidth: props.width ? `${props.width}px` : undefined,
@@ -73,6 +74,7 @@ Button.propTypes = {
   redBorder: PropTypes.bool,
   width: PropTypes.number,
   medium: PropTypes.bool,
+  rounted: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -92,6 +94,7 @@ Button.defaultProps = {
   large: false,
   width: undefined,
   medium: false,
+  rounted: false,
 };
 
 export default Button;

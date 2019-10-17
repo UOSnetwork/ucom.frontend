@@ -1,0 +1,225 @@
+.wrapper {
+  overflow: hidden;
+  background: #fff;
+}
+
+.wrapper.gray {
+  background: #FAFAFA;
+}
+
+.header {
+  padding: 31px 0 109px 0;
+}
+
+.header .logo {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.header .logo svg {
+  width: 158px;
+  height: 28px;
+}
+
+.header .logo .label {
+  display: block;
+  margin: -3px 0 0;
+  padding: 0 0 0 2px;
+  font-size: 12px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.user {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap: 16px 24px;
+  align-items: center;
+  padding: 0 0 97px;
+}
+
+.user .side {
+  grid-column-start: 2;
+}
+
+.user .title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.25;
+}
+
+.user .label {
+  max-width: 479px;
+  margin: 0 0 31px;
+  font-size: 24px;
+  line-height: 1.33;
+  color: #8C8C8C;
+}
+
+.user .action {
+  margin: 0;
+  max-width: 224px;
+}
+
+.users {
+  display: grid;
+  grid-template-columns: minmax(120px, max-content) 1fr;
+  grid-gap: 24px;
+  align-items: center;
+  padding: 0 0 124px;
+}
+
+.users .counter {
+  text-align: right;
+}
+
+.users .counter .count {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.2;
+  color: #1D1D1F;
+}
+
+.users .counter .label {
+  font-size: 16px;
+  line-height: 1.25;
+  color: #666;
+}
+
+.users .list {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  grid-gap: 16px;
+  align-items: center;
+}
+
+.tizer {
+  padding: 194px 0 70px 0;
+}
+
+.tizer .logo {
+  position: relative;
+  z-index: 0;
+}
+
+.tizer .logo .icon {
+  position: relative;
+  padding-top: 18%;
+}
+
+.tizer .logo .icon svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tizer .pulse {
+  position: absolute;
+  z-index: -1;
+  width: 4.85%;
+  top: 6.6%;
+  left: 10.313%;
+}
+
+.tizer .pulse:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.tizer .pulse svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 392px;
+  height: 392px;
+  margin: -196px 0 0 -196px;
+}
+
+.tizer .pulse.two {
+  left: auto;
+  right: 14.6%;
+  top: -5%;
+}
+
+.tizer .text {
+  position: relative;
+  z-index: 1;
+  max-width: 660px;
+  margin: -30px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.tizer .userPick {
+  position: absolute;
+}
+
+.tizer .userPick.one {
+  top: 60px;
+  left: 75px;
+  z-index: -1;
+}
+
+.tizer .userPick.tow {
+  top: -40px;
+  left: 145px;
+}
+
+.tizer .userPick.three {
+  top: 0;
+  left: 435px;
+}
+
+.tizer .userPick.four {
+  top: -12px;
+  left: 585px;
+}
+
+.tizer .userPick.five {
+  top: 84px;
+  left: 653px;
+}
+
+.tizer .userPick.six {
+  top: 96px;
+  right: 0;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+  margin: 0 -24px 67px;
+}
+
+.feature {
+  padding: 32px;
+  box-shadow: 0px 0px 20px rgba(184, 184, 184, 0.25);
+  background: #fff;
+}
+
+.feature .title {
+  margin: 0 0 23px;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.13;
+}
+
+.feature .text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.submit {
+  margin: 0 auto 48px;
+  width: 224px;
+}
