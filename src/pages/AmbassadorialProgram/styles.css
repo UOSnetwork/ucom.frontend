@@ -107,6 +107,11 @@
 
 .tizer .logo .icon {
   position: relative;
+}
+
+.tizer .logo .icon:after {
+  content: '';
+  display: block;
   padding-top: 18%;
 }
 
@@ -222,4 +227,14 @@
 .submit {
   margin: 0 auto 48px;
   width: 224px;
+}
+
+@media (max-width: 1023px) {
+  .tizer .userPick {
+    display: none;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
 }
