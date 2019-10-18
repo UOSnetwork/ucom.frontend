@@ -13,7 +13,7 @@ import GovernancePage from './pages/Governance';
 import Tag from './pages/Tag';
 import Faq from './pages/Faq/index';
 import Statistics from './pages/Statistics';
-import AmbassadorialProgram from './pages/AmbassadorialProgram';
+import Ambassador, { getAmbassadorPageData } from './pages/Ambassador';
 import { getAirdropOfferId_1, getAirdropOfferId_2 } from './utils/airdrop';
 
 const airdropOfferId_1 = getAirdropOfferId_1();
@@ -124,8 +124,9 @@ export default [{
 },
 {
   exact: true,
-  path: '/ambassador',
-  component: AmbassadorialProgram,
+  path: '/ambassador/:userIdentity',
+  component: Ambassador,
+  getData: getAmbassadorPageData,
 },
 {
   exact: true,

@@ -44,6 +44,7 @@
 }
 
 .user .title {
+  white-space: nowrap;
   margin: 0;
   font-size: 32px;
   font-weight: bold;
@@ -51,7 +52,8 @@
 }
 
 .user .label {
-  max-width: 479px;
+  white-space: nowrap;
+  /* max-width: 479px; */
   margin: 0 0 31px;
   font-size: 24px;
   line-height: 1.33;
@@ -166,35 +168,36 @@
   position: absolute;
 }
 
-.tizer .userPick.one {
+.tizer .userPick.n1 {
   top: 60px;
   left: 75px;
   z-index: -1;
 }
 
-.tizer .userPick.tow {
+.tizer .userPick.n2 {
   top: -40px;
   left: 145px;
 }
 
-.tizer .userPick.three {
+.tizer .userPick.n3 {
   top: 0;
   left: 435px;
 }
 
-.tizer .userPick.four {
+.tizer .userPick.n4 {
   top: -12px;
   left: 585px;
 }
 
-.tizer .userPick.five {
+.tizer .userPick.n5 {
   top: 84px;
   left: 653px;
 }
 
-.tizer .userPick.six {
+.tizer .userPick.n6 {
   top: 96px;
   right: 0;
+  z-index: -1;
 }
 
 .features {

@@ -1,3 +1,4 @@
+import { isString } from 'lodash';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ const Button = (props) => {
 
   if (!props.url) {
     Tag = 'button';
-  } else if (props.url.indexOf('#') === 0 || props.external) {
+  } else if (isString(props.url) && (props.url.indexOf('#') === 0 || props.external)) {
     Tag = 'a';
   } else {
     Tag = Link;
@@ -26,7 +27,7 @@ const Button = (props) => {
       <Tag
         type={!props.url ? props.type : undefined}
         to={props.url}
-        href={filterURL(props.url)}
+        href={isString(props.url) ? filterURL(props.url) : undefined}
         target={props.external ? '_blank' : undefined}
         onClick={props.onClick}
         disabled={props.disabled}
@@ -57,7 +58,15 @@ const Button = (props) => {
 };
 
 Button.propTypes = {
-  url: PropTypes.string,
+  url: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      pathname: PropTypes.string,
+      state: PropTypes.shape({
+        prevPath: PropTypes.string,
+      }),
+    }),
+  ]),
   external: PropTypes.bool,
   onClick: PropTypes.func,
   children: PropTypes.node.isRequired,
@@ -78,7 +87,7 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  url: null,
+  url: undefined,
   external: false,
   onClick: null,
   strech: false,
