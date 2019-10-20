@@ -107,8 +107,29 @@
   z-index: 0;
 }
 
-.tizer .logo .icon {
-  position: relative;
+.tizer .logo .icon .logo1 :global(.u1),
+.tizer .logo .icon .logo1 :global(.c),
+.tizer .logo .icon .logo1 :global(.o),
+.tizer .logo .icon .logo1 :global(.m1),
+.tizer .logo .icon .logo1 :global(.deg) {
+  display: none;
+}
+
+.tizer .logo .icon .logo2 :global(.m2),
+.tizer .logo .icon .logo2 :global(.u2),
+.tizer .logo .icon .logo2 :global(.n),
+.tizer .logo .icon .logo2 :global(.i),
+.tizer .logo .icon .logo2 :global(.t),
+.tizer .logo .icon .logo2 :global(.y) {
+  display: none;
+}
+
+.tizer .logo .icon .logo1 svg {
+  z-index: -3;
+}
+
+.tizer .logo .icon .logo2 svg {
+  z-index: -1;
 }
 
 .tizer .logo .icon:after {
@@ -127,7 +148,7 @@
 
 .tizer .pulse {
   position: absolute;
-  z-index: -1;
+  z-index: -4;
   width: 4.85%;
   top: 6.6%;
   left: 10.313%;
@@ -168,10 +189,38 @@
   position: absolute;
 }
 
+.tizer .userPick .imgWrapper {
+  position: relative;
+  border-radius: 50%;
+  box-shadow: 0px 1px 4px rgba(60, 68, 75, 0.13);
+  overflow: hidden;
+}
+
+.tizer .userPick img {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+}
+
+.tizer .userPick svg {
+  position: absolute;
+  z-index: 1;
+  fill: none;
+}
+
 .tizer .userPick.n1 {
   top: 60px;
   left: 75px;
   z-index: -1;
+}
+
+.tizer .userPick.n1 .imgWrapper {
+  width: 40px;
+  height: 40px;
 }
 
 .tizer .userPick.n2 {
@@ -179,9 +228,31 @@
   left: 145px;
 }
 
+.tizer .userPick.n2 .imgWrapper {
+  width: 64px;
+  height: 64px;
+}
+
+.tizer .userPick.n2 svg {
+  top: -5px;
+  right: -5px;
+}
+
 .tizer .userPick.n3 {
   top: 0;
   left: 435px;
+  z-index: -2;
+}
+
+.tizer .userPick.n3 .imgWrapper {
+  width: 56px;
+  height: 56px;
+}
+
+.tizer .userPick.n3 svg {
+  top: 5px;
+  right: -10px;
+  transform: rotate(25deg);
 }
 
 .tizer .userPick.n4 {
@@ -189,15 +260,35 @@
   left: 585px;
 }
 
+.tizer .userPick.n4 .imgWrapper {
+  width: 40px;
+  height: 40px;
+}
+
 .tizer .userPick.n5 {
   top: 84px;
   left: 653px;
+}
+
+.tizer .userPick.n5 .imgWrapper {
+  width: 48px;
+  height: 48px;
+}
+
+.tizer .userPick.n5 svg {
+  bottom: 0;
+  left: 0;
 }
 
 .tizer .userPick.n6 {
   top: 96px;
   right: 0;
   z-index: -1;
+}
+
+.tizer .userPick.n6 .imgWrapper {
+  width: 32px;
+  height: 32px;
 }
 
 .features {

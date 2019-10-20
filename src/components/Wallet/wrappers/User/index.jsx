@@ -10,7 +10,7 @@ import UserPick from '../../../../components/UserPick';
 import withLoader from '../../../../utils/withLoader';
 import formatNumber from '../../../../utils/formatNumber';
 import * as walletActions from '../../../../actions/wallet/index';
-import * as Icons from '../../Icons';
+import * as Icons from '../../../Icons/WalletIcons';
 import {
   TRX_TYPE_TRANSFER_FROM,
   TRX_TYPE_TRANSFER_TO,

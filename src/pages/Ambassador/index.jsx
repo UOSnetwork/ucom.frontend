@@ -12,7 +12,15 @@ import urls from '../../utils/urls';
 import { getUserName } from '../../utils/user';
 import { selectUserById } from '../../store/';
 import AmbassadorPageActions from '../../actions/pages/ambassador';
+import user1Img from './img/user-1.png';
+import user2Img from './img/user-2.png';
+import user3Img from './img/user-3.png';
+import user4Img from './img/user-4.png';
+import user5Img from './img/user-5.png';
+import user6Img from './img/user-6.png';
 import styles from './styles.css';
+import * as WalletIcons from '../../components/Icons/WalletIcons';
+import * as FeedIcons from '../../components/Icons/FeedIcons';
 
 const Ambassador = ({ match, location }) => {
   const { userIdentity } = match.params;
@@ -75,32 +83,55 @@ const Ambassador = ({ match, location }) => {
           <div className={styles.tizer}>
             <div className={styles.logo}>
               <div className={styles.icon}>
-                <IconLogo showLabel={false} />
+                <div className={styles.logo1}>
+                  <IconLogo showLabel={false} />
+                </div>
+                <div className={styles.logo2}>
+                  <IconLogo showLabel={false} />
+                </div>
               </div>
+
               <div className={styles.pulse}>
                 {[0, 1, 1, 2, 3, 5].map((i, index) => <Pulse key={index} begin={i} />)}
               </div>
+
               <div className={`${styles.pulse} ${styles.two}`}>
                 {[0, 1, 1, 2, 3, 5].map((i, index) => <Pulse key={index} begin={i} />)}
               </div>
 
               <div className={`${styles.userPick} ${styles.n1}`}>
-                <UserPick size={40} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <div className={styles.imgWrapper}>
+                  <img src={user1Img} alt="" />
+                </div>
               </div>
+
               <div className={`${styles.userPick} ${styles.n2}`}>
-                <UserPick size={64} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <WalletIcons.Message />
+                <div className={styles.imgWrapper}>
+                  <img src={user2Img} alt="" />
+                </div>
               </div>
               <div className={`${styles.userPick} ${styles.n3}`}>
-                <UserPick size={56} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <WalletIcons.Message />
+                <div className={styles.imgWrapper}>
+                  <img src={user3Img} alt="" />
+                </div>
               </div>
               <div className={`${styles.userPick} ${styles.n4}`}>
-                <UserPick size={40} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <div className={styles.imgWrapper}>
+                  <img src={user4Img} alt="" />
+                </div>
               </div>
               <div className={`${styles.userPick} ${styles.n5}`}>
-                <UserPick size={48} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <FeedIcons.DownvoteIcon />
+                <div className={styles.imgWrapper}>
+                  <img src={user5Img} alt="" />
+                </div>
               </div>
               <div className={`${styles.userPick} ${styles.n6}`}>
-                <UserPick size={32} src="https://backend.u.community/upload/avatar_filename-1542127407946.png" />
+                <div className={styles.imgWrapper}>
+                  <img src={user6Img} alt="" />
+                </div>
               </div>
             </div>
             <p className={styles.text}>Place to Interact <span role="img" aria-label="love">❤️</span> with others worldwide <span role="img" aria-label="worldwide">🌎</span>️, share your thoughts<span role="img" aria-label="thoughts"> 💭</span> and ideas<span role="img" aria-label="ideas">💡</span>, shape communities of interest <span role="img" aria-label="interest">🎉</span> and contribute to their growing <span role="img" aria-label="growing">🌱</span></p>

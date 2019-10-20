@@ -148,6 +148,16 @@ const serverConfig = {
           },
         },
       },
+      {
+        test: /\.(png|svg|gif|jpg|jpeg)/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            name: 'images/[name].[ext]',
+            limit: 300000,
+          },
+        },
+      },
     ],
   },
 

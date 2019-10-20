@@ -5,7 +5,7 @@ import styles from './styles.css';
 import Popup from '../Popup';
 import UserPick from '../../../UserPick';
 import UserPickWithIcon from '../../../UserPickWithIcon';
-import * as Icons from '../../Icons';
+import * as Icons from '../../../Icons/WalletIcons';
 
 const Transaction = ({
   icon, title, amount, message, date, type, details, avatarSrc, disablePopup, deferred,

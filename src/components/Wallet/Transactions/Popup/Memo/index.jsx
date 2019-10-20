@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
-import * as Icons from '../../../Icons';
+import * as Icons from '../../../../Icons/WalletIcons';
 
 const Memo = ({ text }) => {
   if (!text) {
