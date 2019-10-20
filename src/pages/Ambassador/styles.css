@@ -328,7 +328,35 @@
     display: none;
   }
 
+  .tizer .text {
+    margin-top: -15px;
+  }
+
   .features {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .tizer .text {
+    margin-top: 0;
+  }
+
+  .user {
+    grid-template-columns: 1fr;
+  }
+
+  .user .side {
+    grid-column-start: initial;
+  }
+
+  .user .title,
+  .user .label {
+    white-space: initial;
+  }
+
+  .user .title br,
+  .user .label br {
+    display: none;
   }
 }

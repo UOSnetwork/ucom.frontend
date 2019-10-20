@@ -16,7 +16,7 @@ export default class Actions {
           users = users.concat(result.data.filter(i => i.avatarFilename));
         });
 
-        if (users.length < 50) {
+        if (users.length < 30) {
           users = await fetchUsersWithAvatars(page + results.length, users);
         }
 

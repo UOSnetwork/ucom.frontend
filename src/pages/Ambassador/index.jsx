@@ -52,10 +52,10 @@ const Ambassador = ({ match, location }) => {
             <div className={styles.user}>
               {user && <UserPick size={120} src={urls.getFileUrl(user.avatarFilename)} />}
               <div className={styles.main}>
-                <h1 className={styles.title}>{userName} invites you to U°Community<br />and gives you 100UOS</h1>
+                <h1 className={styles.title}>{userName} invites you to U°Community<br /> and gives you 100UOS</h1>
               </div>
               <div className={styles.side}>
-                <p className={styles.label}>Invite your friends like {userName} do and<br />become ambassador — <a href="" className="link red">learn more</a></p>
+                <p className={styles.label}>Invite your friends like {userName} do and<br /> become ambassador — <a href="" className="link red">learn more</a></p>
                 <p className={styles.action}>
                   <Button red cap medium strech rounted url={registrationUrl}>Join</Button>
                 </p>
@@ -69,8 +69,8 @@ const Ambassador = ({ match, location }) => {
                   <div className={styles.label}>People  Joined</div>
                 </div>
                 <div className={styles.list}>
-                  {state.users.map(user => (
-                    <UserPick key={user.id} src={urls.getFileUrl(user.avatarFilename)} url={urls.getUserUrl(user.id)} />
+                  {state.users.map((user, index) => (
+                    <UserPick key={index} src={urls.getFileUrl(user.avatarFilename)} url={urls.getUserUrl(user.id)} />
                   ))}
                 </div>
               </div>
