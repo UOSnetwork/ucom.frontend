@@ -32,7 +32,7 @@ export default (store, location, state, staticVersion, contentMetaTags = {}, bas
 
         <title>{title}</title>
         <meta property="og:title" content={title} />
-        {image && <meta name="twitter:card" content="summary_large_image" />}
+        {!contentMetaTags.isSmallCardImage && image && <meta name="twitter:card" content="summary_large_image" />}
         <meta property="og:site_name" content="U°Community" />
         <meta property="og:url" content={url} />
         <meta property="og:type" content={type} />

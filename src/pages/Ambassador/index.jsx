@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, memo } from 'react';
@@ -21,6 +22,7 @@ import user6Img from './img/user-6.png';
 import styles from './styles.css';
 import * as WalletIcons from '../../components/Icons/WalletIcons';
 import * as FeedIcons from '../../components/Icons/FeedIcons';
+import { getReferralPostId } from '../../utils/config';
 
 const Ambassador = ({ match, location }) => {
   const { userIdentity } = match.params;
@@ -28,6 +30,7 @@ const Ambassador = ({ match, location }) => {
   const state = useSelector(state => state.pages.ambassador, isEqual);
   const user = useSelector(selectUserById(userIdentity), isEqual);
   const userName = getUserName(user);
+  const referralPostLink = urls.getPostUrl({ id: getReferralPostId() });
   const registrationUrl = {
     pathname: urls.getRegistrationUrl(),
     state: { prevPath: location.pathname },
@@ -55,7 +58,7 @@ const Ambassador = ({ match, location }) => {
                 <h1 className={styles.title}>{userName} invites you to U°Community<br /> and gives you 100UOS</h1>
               </div>
               <div className={styles.side}>
-                <p className={styles.label}>Invite your friends like {userName} do and<br /> become ambassador — <a href="" className="link red">learn more</a></p>
+                <p className={styles.label}>Invite your friends like {userName} do and<br /> become ambassador — <Link to={referralPostLink} className="link red">learn more</Link></p>
                 <p className={styles.action}>
                   <Button red cap medium strech rounted url={registrationUrl}>Join</Button>
                 </p>
@@ -167,6 +170,7 @@ export const getAmbassadorPageData = async (store, params) => {
     contentMetaTags: {
       title: `${getUserName(user)} invites you to U°Community and gives you 100UOS`,
       image: urls.getFileUrl(user.avatarFilename),
+      isSmallCardImage: true,
     },
   };
 };

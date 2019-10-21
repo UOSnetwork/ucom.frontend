@@ -77,10 +77,9 @@ const clientConfig = {
       {
         test: /\.(png|svg|gif|jpg|jpeg)/,
         use: {
-          loader: 'url-loader',
+          loader: 'file-loader',
           options: {
-            name: 'images/[name].[ext]',
-            limit: 300000,
+            name: 'images/[path][name].[ext]',
           },
         },
       },
@@ -151,10 +150,9 @@ const serverConfig = {
       {
         test: /\.(png|svg|gif|jpg|jpeg)/,
         use: {
-          loader: 'url-loader',
+          loader: 'file-loader',
           options: {
-            name: 'images/[name].[ext]',
-            limit: 300000,
+            name: 'images/[path][name].[ext]',
           },
         },
       },
