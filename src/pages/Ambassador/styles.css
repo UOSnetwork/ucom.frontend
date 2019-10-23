@@ -107,6 +107,10 @@
   z-index: 0;
 }
 
+.tizer .logo .icon path {
+  fill: #1D1D1F;
+}
+
 .tizer .logo .icon .logo1 :global(.u1),
 .tizer .logo .icon .logo1 :global(.c),
 .tizer .logo .icon .logo1 :global(.o),

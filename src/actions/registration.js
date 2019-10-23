@@ -6,6 +6,7 @@ import { saveToken } from '../utils/token';
 import urls from '../utils/urls';
 import { saveSocialKey } from '../utils/keys';
 import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { followUserByAccountName, followUosOrg } from '../actions/follow';
 import Worker from '../worker';
 
 const { EventsIds } = require('ucom.libs.common').Events.Dictionary;
@@ -102,19 +103,25 @@ export const registrationRegister = prevPage => async (dispatch, getState) => {
     referralData.affiliatesActions[0].action
   ) {
     try {
-      const signedTransaction = await Worker.getReferralFromUserSignedTransactionAsJson(
-        accountName,
-        socialKey,
-        referralData.affiliatesActions[0].accountNameSource,
-        TRANSACTION_PERMISSION_SOCIAL,
-      );
-
-      await api.referralTransaction(
-        signedTransaction,
-        referralData.affiliatesActions[0].accountNameSource,
-        referralData.affiliatesActions[0].offerId,
-        referralData.affiliatesActions[0].action,
-      );
+      await Promise.all([
+        Worker.getReferralFromUserSignedTransactionAsJson(
+          accountName,
+          socialKey,
+          referralData.affiliatesActions[0].accountNameSource,
+          TRANSACTION_PERMISSION_SOCIAL,
+        ).then(signedTransaction => api.referralTransaction(
+          signedTransaction,
+          referralData.affiliatesActions[0].accountNameSource,
+          referralData.affiliatesActions[0].offerId,
+          referralData.affiliatesActions[0].action,
+        )),
+        dispatch(followUserByAccountName(
+          accountName,
+          referralData.affiliatesActions[0].accountNameSource,
+          socialKey,
+        )),
+        dispatch(followUosOrg(accountName, socialKey)),
+      ]);
     } catch (err) {
       console.error(err);
     }
