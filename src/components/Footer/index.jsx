@@ -1,12 +1,32 @@
+import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import urls from '../../utils/urls';
 import * as subscribeActions from '../../actions/subscribe';
 import styles from './styles.css';
+import DropdownMenu from '../DropdownMenu';
+import i18nCommon from '../../i18n/common.json';
 
 const Footer = () => {
+  const [lang, setLang] = useState();
   const dispatch = useDispatch();
+
+  const setLangAndReload = (lang) => {
+    setLang(lang);
+    Cookies.set('lang', lang, { expires: 365 });
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    let lang = Cookies.get('lang') || 'en';
+
+    if (!i18nCommon[lang]) {
+      lang = 'en';
+    }
+
+    setLang(lang);
+  }, []);
 
   return (
     <nav className={styles.footer}>
@@ -41,6 +61,20 @@ const Footer = () => {
           >
             Subscribe
           </span>
+
+          {lang &&
+            <div>
+              <DropdownMenu
+                position="top-end"
+                items={Object.keys(i18nCommon).map(item => ({
+                  title: <span className={styles.langItem}>{item}</span>,
+                  onClick: () => setLangAndReload(item),
+                }))}
+              >
+                <div className={styles.lang}>{lang}</div>
+              </DropdownMenu>
+            </div>
+          }
         </div>
       </div>
     </nav>

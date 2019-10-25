@@ -1,3 +1,4 @@
+const cookieParser = require('cookie-parser');
 const config = require('config');
 const bodyParser = require('body-parser');
 const axios = require('axios');
@@ -6,16 +7,25 @@ const express = require('express');
 const renderStatic = require('./renderStatic').default;
 const routes = require('./routes').default;
 const { createStore } = require('./store');
+const i18nCommon = require('./i18n/common.json');
 
 const STATIC_VERSION = (new Date()).getTime();
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static('public'));
+
 
 routes.forEach((route) => {
   app.get(route.path, async (req, res) => {
+    let { lang } = req.cookies;
+
+    if (!i18nCommon[lang]) {
+      lang = 'en';
+    }
+
     let state = {};
     const store = createStore();
     const baseUrl = `${req.protocol}://${req.hostname}`;
@@ -46,7 +56,7 @@ routes.forEach((route) => {
     }
 
     try {
-      res.send(renderStatic(store, req.url, state, STATIC_VERSION, contentMetaTags, baseUrl));
+      res.send(renderStatic(store, req.url, state, STATIC_VERSION, contentMetaTags, baseUrl, lang));
     } catch (e) {
       res.status(500).send(e);
     }
