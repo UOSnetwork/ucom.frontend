@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import React from 'react';
 import { getOrganizationById } from '../../store/organizations';
@@ -9,6 +10,8 @@ import Rate from '../Rate';
 import urls from '../../utils/urls';
 
 const OrganizationListPopup = (props) => {
+  const { t } = useTranslation();
+
   if (!props.organizationsIds || !props.organizationsIds.length) {
     return null;
   }
@@ -20,7 +23,7 @@ const OrganizationListPopup = (props) => {
     <Popup onClickClose={props.onClickClose}>
       <ModalContent onClickClose={props.onClickClose}>
         <div className="entry-list entry-list_simple">
-          <div className="entry-list__title">Organizations</div>
+          <div className="entry-list__title">{t('Organizations')}</div>
 
           <div className="entry-list__list">
             {organizations.map((item, index) => (

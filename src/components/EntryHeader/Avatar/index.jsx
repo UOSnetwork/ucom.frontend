@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useState, memo } from 'react';
@@ -7,6 +8,7 @@ import UserPick from '../../UserPick';
 import DropzoneWrapper from '../../DropzoneWrapper';
 
 const Avatar = (props) => {
+  const { t } = useTranslation();
   const [dropActive, setDropActive] = useState(false);
 
   return (
@@ -39,7 +41,7 @@ const Avatar = (props) => {
           <span className={styles.uploadIcon}>
             <IconUpload />
           </span>
-          <span className={styles.uploadLabel}>Upload</span>
+          <span className={styles.uploadLabel}>{t('Upload')}</span>
         </DropzoneWrapper>
       }
     </div>

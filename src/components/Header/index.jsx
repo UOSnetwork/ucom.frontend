@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { throttle, isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,6 +24,7 @@ import * as walletActions from '../../actions/wallet';
 // TODO: Make header sticky, not fixed
 
 const Header = ({ location }) => {
+  const { t } = useTranslation();
   const elRef = useRef();
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
@@ -67,15 +69,15 @@ const Header = ({ location }) => {
                 items={[{
                   to: urls.getUsersUrl(),
                   isActive: () => location.pathname === urls.getUsersUrl(),
-                  title: 'People',
+                  title: t('People'),
                 }, {
                   to: urls.getOverviewCategoryUrl(),
                   isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
-                  title: 'Overview',
+                  title: t('Overview'),
                 }, {
                   to: urls.getGovernanceUrl(),
                   isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
-                  title: 'Governance',
+                  title: t('Governance'),
                 }]}
               />
             </div>
@@ -130,7 +132,7 @@ const Header = ({ location }) => {
             ) : (
               <Menu
                 items={[{
-                  title: 'Sign IN',
+                  title: t('Sign IN'),
                   onClick: () => dispatch(authShowPopup()),
                 }]}
               />
@@ -142,7 +144,7 @@ const Header = ({ location }) => {
       {organizationsPopupVisible &&
         <EntryListPopup
           followButtonEnabled={false}
-          title="My communities"
+          title={t('My communities')}
           data={orgs.map(item => ({
             id: item.id,
             organization: true,

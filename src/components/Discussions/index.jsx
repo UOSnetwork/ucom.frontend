@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import Tippy from '@tippy.js/react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -11,6 +12,7 @@ import List from './List';
 const DISCUSSIONS_LIMIT = 10;
 
 const Discussions = (props) => {
+  const { t } = useTranslation();
   const [itemsLimit, setItemsLimit] = useState(4);
   const [formVisible, setFormVisible] = useState(false);
   const visibleItems = props.items.slice(0, itemsLimit);
@@ -23,24 +25,24 @@ const Discussions = (props) => {
 
     <div className={`${sectionStyles.section} ${styles.discussions}`}>
       <div className={`${sectionStyles.title} ${sectionStyles.withIcon} ${sectionStyles.forText}`}>
-        Discussion Board
+        {t('Discussion Board')}
 
         {props.editable &&
           <div className={styles.menu}>
             {props.items.length >= DISCUSSIONS_LIMIT ? (
               <Tippy
                 arrow
-                content={`Maximum ${DISCUSSIONS_LIMIT} Discussions`}
+                content={t('Maximum Discussions', { limit: DISCUSSIONS_LIMIT })}
               >
                 <DropdownMenuIcon />
               </Tippy>
             ) : (
               <DropdownMenu
                 items={[{
-                  title: 'New Discussion',
+                  title: t('New Discussion'),
                   url: props.newDiscussionUrl,
                 }, {
-                  title: 'Add Discussion',
+                  title: t('Add Discussion'),
                   onClick: () => setFormVisible(true),
                 }]}
               />
@@ -52,15 +54,15 @@ const Discussions = (props) => {
       <div className={styles.content}>
         {!formVisible && !visibleItems.length &&
           <div className={styles.empty}>
-            Nothing here yet.&nbsp;
-            <button onClick={() => setFormVisible(true)} className="link red-hover active">Add existing community article</button> or&nbsp;
-            <Link className="red-hover active" to={props.newDiscussionUrl}>create new article.</Link>
+            <Trans i18nKey="Nothing here yet. Add existing community article or create new article.">
+              Nothing here yet. <button onClick={() => setFormVisible(true)} className="link red-hover active">Add existing community article</button> or <Link className="red-hover active" to={props.newDiscussionUrl}>create new article.</Link>
+            </Trans>
           </div>
         }
 
         {formVisible &&
           <Form
-            placeholder={props.placeholder}
+            placeholder={props.placeholder || t('Link to article')}
             validatePostUrlFn={props.validatePostUrlFn}
             onReset={() => setFormVisible(false)}
             onSubmit={(value) => {
@@ -87,7 +89,7 @@ const Discussions = (props) => {
             className={`link red-hover ${styles.more}`}
             onClick={() => setItemsLimit(props.items.length)}
           >
-            Show {props.items.length - visibleItems.length} more
+            {t('Show more', { count: props.items.length - visibleItems.length })}
           </button>
         }
       </div>
@@ -114,7 +116,7 @@ Discussions.propTypes = {
 };
 
 Discussions.defaultProps = {
-  placeholder: 'Link to article',
+  placeholder: undefined,
   editable: false,
   items: [],
 };

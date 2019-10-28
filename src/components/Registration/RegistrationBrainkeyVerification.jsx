@@ -1,3 +1,4 @@
+import { withTranslation, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { random } from 'lodash';
@@ -58,19 +59,21 @@ class RegistrationBrainkeyVerification extends PureComponent {
         <div className="registration__text">
           <div className="text">
             <p>
-              Type in the words number {this.state.verificationWordsIndexes[0] + 1} and {this.state.verificationWordsIndexes[1] + 1} from your Brainkey.<br />
-              If you didn&apos;t save your Brainkey,&nbsp;
-              <span className="registration__link">
-                <button
-                  className="button-clean button-clean_link"
-                  onClick={() => {
-                    this.props.registrationSetStep(SECOND_STEP_ID);
-                    this.props.registrationSetBrainkeyStep(FIRST_BRAINKEY_STEP_ID);
-                  }}
-                >
-                  generate a new one
-                </button>
-              </span>.
+              {this.props.t('Type in the words number and from your Brainkey.', { num1: this.state.verificationWordsIndexes[0] + 1, num2: this.state.verificationWordsIndexes[1] + 1 })}<br />
+              <Trans i18nKey="If you didnt save your Brainkey">
+                If you didn&apos;t save your Brainkey,&nbsp;
+                <span className="registration__link">
+                  <button
+                    className="button-clean button-clean_link"
+                    onClick={() => {
+                      this.props.registrationSetStep(SECOND_STEP_ID);
+                      this.props.registrationSetBrainkeyStep(FIRST_BRAINKEY_STEP_ID);
+                    }}
+                  >
+                    generate a new one
+                  </button>
+                </span>.
+              </Trans>
             </p>
           </div>
         </div>
@@ -106,4 +109,4 @@ export default connect(
     registrationSetStep,
     registrationSetBrainkeyStep,
   }, dispatch),
-)(RegistrationBrainkeyVerification);
+)(withTranslation()(RegistrationBrainkeyVerification));

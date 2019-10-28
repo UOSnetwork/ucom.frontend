@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import TextInput from '../../../TextInput';
@@ -9,6 +10,7 @@ import { privateKeyIsValid } from '../../../../utils/keys';
 const KEY_ERROR = 'Wrong key format';
 
 const ActiveKey = (props) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -18,14 +20,14 @@ const ActiveKey = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (!privateKeyIsValid(value)) {
-          setFormError(KEY_ERROR);
+          setFormError(t(KEY_ERROR));
           return;
         }
         setFormError('');
         props.onSubmit(value);
       }}
     >
-      <h2 className={styles.title}>Sign Transaction</h2>
+      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
       <div className={styles.field}>
         <TextInput
           autoFocus
@@ -35,7 +37,7 @@ const ActiveKey = (props) => {
           onChange={(value) => {
             setValue(value);
             if (formError && !privateKeyIsValid(value)) {
-              setFormError(KEY_ERROR);
+              setFormError(t(KEY_ERROR));
             } else {
               setFormError('');
             }
@@ -60,7 +62,7 @@ const ActiveKey = (props) => {
           type="submit"
           disabled={props.loading || formError || props.error}
         >
-          Send
+          {t('Send')}
         </Button>
         <div>
           <span
@@ -68,7 +70,7 @@ const ActiveKey = (props) => {
             className="link red-hover"
             onClick={props.onClickSetPassword}
           >
-            Set Password
+            {t('Set Password')}
           </span>
         </div>
       </div>

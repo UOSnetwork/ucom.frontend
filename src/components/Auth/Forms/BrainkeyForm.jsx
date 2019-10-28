@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from '../styles.css';
@@ -11,6 +12,7 @@ import { ERROR_WRONG_BRAINKEY } from '../../../utils/constants';
 import { removeMultipleSpaces } from '../../../utils/text';
 
 const BrainkeyForm = (props) => {
+  const { t } = useTranslation();
   const [brainkey, setBrainkey] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -21,7 +23,7 @@ const BrainkeyForm = (props) => {
         e.preventDefault();
         const trimedBrainkey = brainkey.trim();
         if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
-          setFormError(ERROR_WRONG_BRAINKEY);
+          setFormError(t(ERROR_WRONG_BRAINKEY));
           return;
         }
         setFormError('');
@@ -38,13 +40,13 @@ const BrainkeyForm = (props) => {
         <input
           autoFocus
           className={`${styles.input} ym-disable-keys`}
-          placeholder="Enter your 12-word Brainkey"
+          placeholder={t('Enter your 12-word Brainkey')}
           value={brainkey}
           onChange={(e) => {
             const value = removeMultipleSpaces(e.target.value);
             setBrainkey(value);
             if (!isBrainkeySymbolsValid(value)) {
-              setFormError(ERROR_WRONG_BRAINKEY);
+              setFormError(t(ERROR_WRONG_BRAINKEY));
             } else {
               setFormError('');
             }
@@ -69,7 +71,7 @@ const BrainkeyForm = (props) => {
           type="submit"
           disabled={Boolean(props.loading || props.error || formError)}
         >
-          Proceed
+          {t('Proceed')}
         </Button>
       </div>
       {props.hint && <div className={styles.hint}>{props.hint}</div>}

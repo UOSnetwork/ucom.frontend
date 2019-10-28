@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Pagination from 'rc-pagination';
 import React, { Fragment } from 'react';
@@ -5,6 +6,8 @@ import { LIST_PER_PAGE } from '../../utils/constants';
 import styles from './styles.css';
 
 const PaginationWrapper = (props) => {
+  const { t } = useTranslation();
+
   if (!props.totalAmount) {
     return null;
   }
@@ -18,7 +21,7 @@ const PaginationWrapper = (props) => {
             className="link"
             onClick={props.onClickShowMore}
           >
-            Show More
+            {t('Show More')}
           </span>
         </div>
       }
@@ -34,9 +37,9 @@ const PaginationWrapper = (props) => {
         itemRender={(current, type, element) => {
           switch (type) {
             case 'prev':
-              return <a>Prev</a>;
+              return <a>{t('Prev')}</a>;
             case 'next':
-              return <a>Next</a>;
+              return <a>{t('Next')}</a>;
             default:
               return element;
           }

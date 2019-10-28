@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,6 +19,7 @@ import { entityHasCover, entityGetCoverUrl } from '../../../utils/entityImages';
 import * as selectors from '../../../store/selectors';
 
 const OrganizationHeader = (props) => {
+  const { t } = useTranslation();
   const organization = useSelector(selectors.selectOrgById(props.organizationId), isEqual);
   const owner = useSelector(selectors.selectOwner, isEqual);
 
@@ -73,7 +75,7 @@ const OrganizationHeader = (props) => {
 
           <div className={styles.usersLists}>
             <FollowersWrapper
-              title="Members"
+              title={t('Members')}
               count={props.followedByCount}
               usersIds={props.followedByUserIds}
               popupUsersIds={props.followedByPopupUserIds}

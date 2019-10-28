@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import React, { useEffect, useState } from 'react';
@@ -26,6 +27,7 @@ const paramsForCategories = {
 };
 
 const FeedCategories = (props) => {
+  const { t } = useTranslation();
   const [postIds, setPostIds] = useState([]);
   const [metadata, setMetadata] = useState({ page: 1, perPage: 20 });
   const [loading, setLoading] = useState(true);
@@ -70,7 +72,7 @@ const FeedCategories = (props) => {
     return (
       <div className="feed">
         <div className="feed__empty">
-          <div className="text">No posts to display</div>
+          <div className="text">{t('No posts to display')}</div>
         </div>
       </div>
     );

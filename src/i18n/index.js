@@ -11,6 +11,7 @@ export default (lng) => {
     .use(initReactI18next)
     .init({
       lng,
+      fallbackLng: 'en',
       resources: common,
       keySeparator: false,
       interpolation: {

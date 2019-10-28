@@ -1,3 +1,4 @@
+import { withTranslation } from 'react-i18next';
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { sanitizeCommentText, checkHashTag } from '../../../../utils/text';
@@ -9,14 +10,14 @@ class DescDirectPost extends PureComponent {
     super(props);
     this.state = {
       isHidden: true,
-      textBtn: 'more',
+      textBtn: props.t('more'),
     };
   }
 
   toggleHidden = () => {
     this.setState({
       isHidden: !this.state.isHidden,
-      textBtn: this.state.isHidden ? null : 'more',
+      textBtn: this.state.isHidden ? null : this.props.t('more'),
     });
   }
 
@@ -57,10 +58,11 @@ class DescDirectPost extends PureComponent {
 
 DescDirectPost.propTypes = {
   desc: PropTypes.string,
+  t: PropTypes.func.isRequired,
 };
 
 DescDirectPost.defaultProps = {
   desc: '',
 };
 
-export default DescDirectPost;
+export default withTranslation()(DescDirectPost);

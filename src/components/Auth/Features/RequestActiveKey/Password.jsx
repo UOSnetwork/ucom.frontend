@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import TextInput from '../../../TextInput';
@@ -10,6 +11,7 @@ import { passwordIsValid } from '../../../../utils/password';
 const PASSWORD_ERROR = 'Wrong password format';
 
 const Password = (props) => {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -19,7 +21,7 @@ const Password = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (!passwordIsValid(password)) {
-          setFormError(PASSWORD_ERROR);
+          setFormError(t(PASSWORD_ERROR));
           return;
         }
         try {
@@ -31,8 +33,8 @@ const Password = (props) => {
         }
       }}
     >
-      <h2 className={styles.title}>Sign Transaction</h2>
-      <p className={styles.text}>Enter the password for your Private Active Key, stored in the browser.</p>
+      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
+      <p className={styles.text}>{t('Enter the password for your Private Active Key, stored in the browser.')}</p>
       <div className={styles.field}>
         <TextInput
           autoFocus
@@ -42,7 +44,7 @@ const Password = (props) => {
           onChange={(value) => {
             setPassword(value);
             if (formError && !passwordIsValid(value)) {
-              setFormError(PASSWORD_ERROR);
+              setFormError(t(PASSWORD_ERROR));
             } else {
               setFormError('');
             }
@@ -67,7 +69,7 @@ const Password = (props) => {
           type="submit"
           disabled={props.loading || formError || props.error}
         >
-          Send
+          {t('Send')}
         </Button>
       </div>
       <div className={styles.backLink}>
@@ -76,7 +78,7 @@ const Password = (props) => {
           className="link red-hover"
           onClick={props.onClickActiveKey}
         >
-          Sign the transaction with Private Active key
+          {t('Sign the transaction with Private Active key')}
         </span>
       </div>
     </form>

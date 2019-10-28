@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, memo } from 'react';
@@ -24,6 +25,7 @@ const STEP_SAVE_SOCIAL_KEY = 4;
 const ERROR_ACCOUNT_NOT_EXIST = 'Such account does not exist in a blockchain';
 
 const Auth = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(STEP_ACCOUNT);
   const [accountName, setAccountName] = useState('');
@@ -128,7 +130,7 @@ const Auth = () => {
                       setAccountError('');
                       setCurrentStep(STEP_SOCIAL_KEY);
                     } catch (e) {
-                      setAccountError(ERROR_ACCOUNT_NOT_EXIST);
+                      setAccountError(t(ERROR_ACCOUNT_NOT_EXIST));
                     }
                     setLoading(false);
                   }}

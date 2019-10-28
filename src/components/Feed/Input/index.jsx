@@ -1,3 +1,4 @@
+import { Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, memo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -86,9 +87,11 @@ const FeedInput = ({
         className={styles.invite}
         onClick={showForm}
       >
-        <span>Hey</span>
-        <UserPick src={urls.getFileUrl(owner.avatarFilename)} />
-        <span>what’s new?</span>
+        <Trans i18nKey="Hey what’s new?">
+          <span>Hey</span>
+          <UserPick src={urls.getFileUrl(owner.avatarFilename)} />
+          <span>what’s new?</span>
+        </Trans>
       </div>
 
       {formVisible &&

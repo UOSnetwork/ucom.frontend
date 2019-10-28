@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -18,6 +19,7 @@ import { selectPostById, selectOwner } from '../../../../store';
 const PostFeedHeader = ({
   postId, onClickEdit, originEnabled, menuVisible,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const post = useSelector(selectPostById(postId), isEqual);
   const owner = useSelector(selectOwner, isEqual);
@@ -36,7 +38,7 @@ const PostFeedHeader = ({
   );
 
   const items = [{
-    title: 'Copy Link',
+    title: t('Copy Link'),
     onClick: copyLink,
   }];
 
@@ -46,9 +48,13 @@ const PostFeedHeader = ({
     // TODO: Refactoring (unification with comment edit menut)
     items.unshift({
       title: isEditable ? (
-        <span>Edit <span className={styles.leftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
+        <span>
+          <Trans i18nKey="Edit left" count={leftTime} label={leftTime <= 1 ? 'minute' : 'minutes'}>
+            Edit <span className={styles.leftTime}>({{ count: leftTime }} {{ label: leftTime <= 1 ? 'minute' : 'minutes' }} left)</span>
+          </Trans>
+        </span>
       ) : (
-        <span className={styles.limit}>Can only edit in first 15 min </span>
+        <span className={styles.limit}>{t('Can only edit in first 15 min')}</span>
       ),
       onClick: isEditable ? onClickEdit : undefined,
       disabled: !isEditable,

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import autosize from 'autosize';
 import { last } from 'lodash';
@@ -28,6 +29,7 @@ import { getUrlsFromStr, validUrl } from '../../../utils/url';
 import withLoader from '../../../utils/withLoader';
 
 const Form = (props) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(props.message);
   const [entityImages, setEntityImages] = useState(props.entityImages || ({ gallery: [], embeds: [] }));
@@ -210,7 +212,7 @@ const Form = (props) => {
                   rows="1"
                   disabled={loading}
                   className={styles.input}
-                  placeholder="Leave a comment..."
+                  placeholder={t('Leave a comment...')}
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   onKeyDown={(e) => {

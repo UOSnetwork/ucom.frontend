@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -11,8 +12,8 @@ import urls from '../../utils/urls';
 import { filterURL } from '../../utils/url';
 
 const CommunityCard = (props) => {
+  const { t } = useTranslation();
   const organization = props.community;
-
   const profileLink = getOrganizationUrl(organization.id);
   const avatarUrl = urls.getFileUrl(organization.avatarFilename);
 
@@ -30,7 +31,7 @@ const CommunityCard = (props) => {
               <Link target="_blank" to={profileLink} href={filterURL(profileLink)} className="community-item__title">{organization.title}</Link>
               {organization.poweredBy &&
               <div className="community-item__powered">
-                Powered by {organization.poweredBy}
+                {t('Powered by', { name: organization.poweredBy })}
               </div>
               }
             </div>

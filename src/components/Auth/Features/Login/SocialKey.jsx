@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { memo, Fragment } from 'react';
 import styles from '../../styles.css';
@@ -5,57 +6,63 @@ import IconArrowLeft from '../../../Icons/ArrowLeft';
 import UserPick from '../../../UserPick';
 import KeyFrom from '../../Forms/KeyForm';
 
-const Account = props => (
-  <Fragment>
-    <div
-      role="presentation"
-      className={styles.navigation}
-      onClick={props.onClickBack}
-    >
-      <span className={styles.icon}>
-        <IconArrowLeft />
-      </span>
-      <span className={styles.label}>
-        <span className={styles.navText}>Change Account</span>
-      </span>
-    </div>
+const Account = (props) => {
+  const { t } = useTranslation();
 
-    <div className={styles.content}>
-      <div className={styles.main}>
-        <div className={styles.user}>
-          <div className={styles.userPick}>
-            <UserPick
-              shadow
-              size={44}
-              src={props.userAvatarSrc}
-            />
-          </div>
-          <div className={styles.name}>{`Hello${props.userName ? `, ${props.userName}` : ''}!`}</div>
-          <div className={styles.accountName}>@{props.userAccountName}</div>
-        </div>
-        <KeyFrom
-          title="Enter Your Social Key to Authorize"
-          placeholder="Private Social Key"
-          error={props.error}
-          loading={props.loading}
-          onChange={props.onChange}
-          onSubmit={(socialKey) => {
-            props.onSubmit(socialKey);
-          }}
-        />
-      </div>
-      <div className={styles.bottom}>
-        <span
-          className="link red-hover"
-          role="presentation"
-          onClick={props.onClickNewKeys}
-        >
-          I have a problem with my key
+  return (
+    <Fragment>
+      <div
+        role="presentation"
+        className={styles.navigation}
+        onClick={props.onClickBack}
+      >
+        <span className={styles.icon}>
+          <IconArrowLeft />
+        </span>
+        <span className={styles.label}>
+          <span className={styles.navText}>{t('Change Account')}</span>
         </span>
       </div>
-    </div>
-  </Fragment>
-);
+
+      <div className={styles.content}>
+        <div className={styles.main}>
+          <div className={styles.user}>
+            <div className={styles.userPick}>
+              <UserPick
+                shadow
+                size={44}
+                src={props.userAvatarSrc}
+              />
+            </div>
+            <div className={styles.name}>
+              {`${t('Hello')}${props.userName ? `, ${props.userName}` : ''}!`}
+            </div>
+            <div className={styles.accountName}>@{props.userAccountName}</div>
+          </div>
+          <KeyFrom
+            title={t('Enter Your Social Key to Authorize')}
+            placeholder={t('Private Social Key')}
+            error={props.error}
+            loading={props.loading}
+            onChange={props.onChange}
+            onSubmit={(socialKey) => {
+              props.onSubmit(socialKey);
+            }}
+          />
+        </div>
+        <div className={styles.bottom}>
+          <span
+            className="link red-hover"
+            role="presentation"
+            onClick={props.onClickNewKeys}
+          >
+            {t('I have a problem with my key')}
+          </span>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
 Account.propTypes = {
   userAvatarSrc: PropTypes.string,

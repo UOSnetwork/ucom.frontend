@@ -1,3 +1,4 @@
+import { withTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -56,13 +57,13 @@ class RegistrationBrainkeyStepSecond extends PureComponent {
       <Fragment>
         <div className="registration__text">
           <div className="text">
-            <p>Always keep your Brainkey secure. Never lose it.</p>
+            <p>{this.props.t('Always keep your Brainkey secure. Never lose it.')}</p>
           </div>
         </div>
 
         <div className="registration-brainkey-generate">
           <div className="registration-brainkey-generate__title">
-            Move your pointer to generate the Brainkey
+            {this.props.t('Move your pointer to generate the Brainkey')}
           </div>
 
           <div
@@ -97,4 +98,4 @@ export default connect(
     registrationGenerateBrainkey,
     registrationSetBrainkeyStep,
   }, dispatch),
-)(RegistrationBrainkeyStepSecond);
+)(withTranslation()(RegistrationBrainkeyStepSecond));

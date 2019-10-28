@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import React, { memo, Fragment, useState } from 'react';
@@ -9,6 +10,7 @@ import * as authActions from '../../../../actions/auth';
 import { parseResponseError } from '../../../../utils/errors';
 
 const GenerateSocialKeyByActiveKey = (props) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,10 +24,10 @@ const GenerateSocialKeyByActiveKey = (props) => {
           <KeyForm
             loading={loading}
             error={error}
-            title="Generate Social Key with Active Key"
-            placeholder="Active Private Key"
-            submitText="Proceed"
-            hint="By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before."
+            title={t('Generate Social Key with Active Key')}
+            placeholder={t('Active Private Key')}
+            submitText={t('Proceed')}
+            hint={t('By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before.')}
             onChange={(value) => {
               setError('');
 
@@ -54,7 +56,7 @@ const GenerateSocialKeyByActiveKey = (props) => {
             role="presentation"
             onClick={props.onClickBrainkey}
           >
-            I have Brainkey
+            {t('I have Brainkey')}
           </span>
         </div>
       </div>

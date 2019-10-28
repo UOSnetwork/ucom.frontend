@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { Fragment, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -22,6 +23,7 @@ import withLoader from '../../../../utils/withLoader';
 const PostFeedContent = ({
   post, forUserId, forOrgId, ...props
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, equalByProps('id', 'accountName'));
@@ -93,7 +95,7 @@ const PostFeedContent = ({
         <Fragment>
           {getCoverImage(post) ? (
             <div className={styles.cover}>
-              <img src={urls.getFileUrl(getCoverImage(post))} alt="cover" />
+              <img src={urls.getFileUrl(getCoverImage(post))} alt={t('cover')} />
             </div>
           ) : post.entityImages.gallery && post.entityImages.gallery.length > 0 &&
             <div className={styles.gallery}>

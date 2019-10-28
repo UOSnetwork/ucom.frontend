@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -19,16 +20,17 @@ import { selectOwner, selectOrgsByIds } from '../../store/selectors';
 const ORGANIZATIONS_ITEMS_LIMIT = 3;
 
 const User = ({ onClickOrganizationsViewAll }) => {
+  const { t } = useTranslation();
   const user = useSelector(selectOwner, isEqual);
   const organizations = useSelector(selectOrgsByIds(user.organizations), isEqual);
   const menuItems = [{
-    title: 'Publications',
+    title: t('Publications'),
     type: DROPDOWN_MENU_ITEM_TYPE_TITLE,
   }, {
-    title: 'New Publication',
+    title: t('New Publication'),
     url: urls.getNewPostUrl(),
   }, {
-    title: 'My communities',
+    title: t('My communities'),
     type: DROPDOWN_MENU_ITEM_TYPE_TITLE,
   }]
     .concat(organizations.slice(0, ORGANIZATIONS_ITEMS_LIMIT).map(item => ({
@@ -46,20 +48,20 @@ const User = ({ onClickOrganizationsViewAll }) => {
       ),
     })))
     .concat(organizations.length > ORGANIZATIONS_ITEMS_LIMIT && onClickOrganizationsViewAll ? [{
-      title: 'View All',
+      title: t('View All'),
       onClick: onClickOrganizationsViewAll,
     }] : [])
     .concat([{
-      title: 'Create Community',
+      title: t('Create Community'),
       url: urls.getOrganizationCrerateUrl(),
     }, {
-      title: 'Your Account',
+      title: t('Your Account'),
       type: DROPDOWN_MENU_ITEM_TYPE_TITLE,
     }, {
-      title: 'Settings',
+      title: t('Settings'),
       url: urls.getSettingsUrl(),
     }, {
-      title: 'Log Out',
+      title: t('Log Out'),
       type: DROPDOWN_MENU_ITEM_TYPE_LOGOUT,
       onClick: logoutAndReload,
     }]);

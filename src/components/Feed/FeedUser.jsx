@@ -1,5 +1,6 @@
 // TODO: Refactoring all feed components
 
+import { useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, memo, useMemo } from 'react';
@@ -22,6 +23,7 @@ import {
 const FeedUser = (props) => {
   const dispatch = useDispatch();
   const feed = useSelector(state => state.feed, isEqual);
+  const { t } = useTranslation();
 
   const loadInitial = useMemo(() => async (excludeFilterId) => {
     await withLoader(dispatch(feedGetUserPosts({
@@ -83,19 +85,19 @@ const FeedUser = (props) => {
       forOrgId={props.organizationId}
       filters={isFeedExcludeFilterIsEnabledByFeedTypeId(props.feedTypeId) ? {
         items: [{
-          title: 'All',
+          title: t('All'),
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_ALL,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_ALL),
         }, {
-          title: 'Posts',
+          title: t('Posts'),
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_POSTS,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_POSTS),
         }, {
-          title: 'Publications',
+          title: t('Publications'),
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_PUBLICATIONS,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_PUBLICATIONS),
         }, {
-          title: 'Updates',
+          title: t('Updates'),
           active: feed.excludeFilterId === FEED_EXCLUDE_FILTER_ID_UPDATES,
           onClick: () => changeExcludeFilterId(FEED_EXCLUDE_FILTER_ID_UPDATES),
         }],
