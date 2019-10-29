@@ -47,6 +47,7 @@ class Registration extends PureComponent {
                 <RegistrationStepFirst />
                 <RegistrationStepSecond />
                 <RegistrationStepThird
+                  recaptcha
                   prevPath={this.props.location && this.props.location.state ? this.props.location.state.prevPath : null}
                 />
               </div>
