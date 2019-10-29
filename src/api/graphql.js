@@ -55,13 +55,24 @@ const api = {
   async getMainPageData(params) {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
       feed: GraphQLSchema.getPostsFeedQueryPart(params.feed.params, params.feed.include),
-      posts: GraphQLSchema.getPostsFeedQueryPart(params.posts),
+      // posts: GraphQLSchema.getPostsFeedQueryPart(params.posts),
       users: GraphQLSchema.getManyUsersQueryPart(params.users),
     });
 
+    const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+
     try {
-      const data = await request({ query });
-      return data.data;
+      const [data, posts] = await Promise.all([
+        request({ query }),
+        request({ query: postsQuery }),
+      ]);
+
+      const result = {
+        ...data.data,
+        posts: posts.data.manyPosts,
+      };
+
+      return result;
     } catch (e) {
       throw e;
     }
@@ -71,16 +82,16 @@ const api = {
     userIdentity,
   }) {
     const query = GraphQLSchema.getQueryMadeFromPartsWithAliases({
-      posts: GraphQLSchema.getPostsFeedQueryPart({
-        filters: {
-          post_type_ids: [POST_TYPE_MEDIA_ID],
-          entity_names_from: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-          entity_names_for: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
-        },
-        order_by: LIST_ORDER_BY_RATE,
-        page: 1,
-        per_page: 10,
-      }),
+      // posts: GraphQLSchema.getPostsFeedQueryPart({
+      //   filters: {
+      //     post_type_ids: [POST_TYPE_MEDIA_ID],
+      //     entity_names_from: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+      //     entity_names_for: [ENTITY_NAMES_USERS, ENTITY_NAMES_ORG],
+      //   },
+      //   order_by: LIST_ORDER_BY_RATE,
+      //   page: 1,
+      //   per_page: 10,
+      // }),
       orgs: GraphQLSchema.getOneUserFollowsOrganizationsQueryPart({
         filters: {
           user_identity: `${userIdentity}`,
@@ -100,9 +111,20 @@ const api = {
       }),
     });
 
+    const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+
     try {
-      const data = await request({ query });
-      return data.data;
+      const [data, posts] = await Promise.all([
+        request({ query }),
+        request({ query: postsQuery }),
+      ]);
+
+      const result = {
+        ...data.data,
+        posts: posts.data.manyPosts,
+      };
+
+      return result;
     } catch (e) {
       throw e;
     }
