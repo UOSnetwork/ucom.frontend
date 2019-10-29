@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { isEqual, groupBy, round } from 'lodash';
@@ -42,6 +43,7 @@ const transactionTypes = [
 ];
 
 const UserWallet = ({ location }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner, isEqual);
   const wallet = useSelector(state => state.wallet, isEqual);
@@ -61,7 +63,7 @@ const UserWallet = ({ location }) => {
   const unstakingRequestTransactionsSection = account.tokens && account.tokens.unstakingRequest && account.tokens.unstakingRequest.requestDatetime ? ({
     list: [{
       icon: <Icons.St />,
-      title: `Unstaking ${account.tokens.unstakingRequest.requestDatetime ? `(${moment(account.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
+      title: `${t('Unstaking')} ${account.tokens.unstakingRequest.requestDatetime ? `(${moment(account.tokens.unstakingRequest.requestDatetime).fromNow()})` : ''}`,
       amount: `${formatNumber(account.tokens.unstakingRequest.amount)} ${account.tokens.unstakingRequest.currency}`,
       disablePopup: true,
       deferred: true,
@@ -75,7 +77,7 @@ const UserWallet = ({ location }) => {
   let emissionCards = [{
     disabled: true,
     amount: '0 UOS',
-    label: 'Your Emission',
+    label: t('Your Emission'),
   }];
 
   if (account.tokens) {
@@ -84,12 +86,12 @@ const UserWallet = ({ location }) => {
       icon: <UserPick src={urls.getFileUrl(owner.avatarFilename)} size={32} />,
       tokens: [{
         title: `UOS ${formatNumber(account.tokens.active || 0)}`,
-        label: `staked UOS ${formatNumber(account.tokens.staked || 0)}`,
+        label: t('staked UOS', { count: formatNumber(account.tokens.staked || 0) }),
       }, {
         title: `UOSF ${formatNumber(account.tokens.uosFutures || 0)}`,
       }],
       actions: [{
-        title: 'Send',
+        title: t('Send'),
         onClick: () => dispatch(walletActions.sendTokens.show()),
       }],
     });
@@ -97,17 +99,17 @@ const UserWallet = ({ location }) => {
 
   if (account.resources && account.resources.ram) {
     resources.sections.push({
-      title: 'Resources you own:',
+      title: t('Resources you own:'),
       actions: [{
-        title: 'Sell',
+        title: t('Sell'),
         onClick: () => dispatch(walletActions.toggleSellRam(true)),
       }, {
-        title: 'Buy',
+        title: t('Buy'),
         onClick: () => dispatch(walletActions.toggleBuyRam(true)),
       }],
       list: [{
         title: 'RAM',
-        total: `${formatNumber(round(account.resources.ram.total, 2))} ${account.resources.ram.dimension} Available`,
+        total: t('Available', { count: formatNumber(round(account.resources.ram.total, 2)), label: account.resources.ram.dimension }),
         used: `${formatNumber(round(account.resources.ram.used, 2))} ${account.resources.ram.dimension}`,
         percentage: percent(account.resources.ram.used, account.resources.ram.total),
       }],
@@ -119,8 +121,8 @@ const UserWallet = ({ location }) => {
 
     if (account.resources.net) {
       list.push({
-        title: 'Network bandwidth',
-        total: `${formatNumber(round(account.resources.net.total, 2))} ${account.resources.net.dimension} Available`,
+        title: t('Network bandwidth'),
+        total: t('Available', { count: formatNumber(round(account.resources.net.total, 2)), label: account.resources.net.dimension }),
         used: `${formatNumber(round(account.resources.net.used, 2))} ${account.resources.net.dimension}`,
         percentage: percent(account.resources.net.used, account.resources.net.total),
       });
@@ -128,17 +130,17 @@ const UserWallet = ({ location }) => {
 
     if (account.resources.cpu) {
       list.push({
-        title: 'CPU Time',
-        total: `${formatNumber(round(account.resources.cpu.total, 2))} ${account.resources.cpu.dimension} Available`,
+        title: t('CPU Time'),
+        total: t('Available', { count: formatNumber(round(account.resources.cpu.total, 2)), label: account.resources.cpu.dimension }),
         used: `${formatNumber(round(account.resources.cpu.used, 2))} ${account.resources.cpu.dimension}`,
         percentage: percent(account.resources.cpu.used, account.resources.cpu.total),
       });
     }
 
     resources.sections.push({
-      title: <span>Resources you staked<strong>{account.tokens ? ` UOS ${formatNumber(account.tokens.staked)}` : ''}</strong> for:</span>,
+      title: <span>{t('Resources you staked', { resource: account.tokens ? `UOS ${formatNumber(account.tokens.staked)}` : '' })}</span>,
       actions: [{
-        title: 'Set',
+        title: t('Set'),
         onClick: () => dispatch(walletActions.toggleEditStake(true)),
       }],
       list,
@@ -149,7 +151,7 @@ const UserWallet = ({ location }) => {
     emissionCards = [{
       disabled: account.tokens.emission === 0,
       amount: `${formatNumber(account.tokens.emission)} UOS`,
-      label: 'Your Emission',
+      label: t('Your Emission'),
       onClick: async () => {
         if (emissionLoading && !account.tokens.emission) {
           return;
@@ -158,7 +160,7 @@ const UserWallet = ({ location }) => {
         setEmissionLoading(true);
         try {
           await withLoader(dispatch(walletActions.claimEmission()));
-          dispatch(addSuccessNotification('Successfully claim emission'));
+          dispatch(addSuccessNotification(t('Successfully claim emission')));
         } catch (err) {
           dispatch(addErrorNotificationFromResponse(err));
         }
@@ -223,7 +225,7 @@ const UserWallet = ({ location }) => {
       onLoadMore={() => getNextTransactions()}
       menu={{
         items: [{
-          title: 'Search',
+          title: t('Search'),
           onClick: () => {
             dispatch(walletActions.toggle(false));
             dispatch(searchPopupActions.show());
@@ -231,20 +233,20 @@ const UserWallet = ({ location }) => {
         }, {
           to: urls.getUsersUrl(),
           isActive: () => location.pathname === urls.getUsersUrl(),
-          title: 'People',
+          title: t('People'),
         }, {
           to: urls.getOverviewCategoryUrl(),
           isActive: () => location.pathname.indexOf(urls.getOverviewCategoryUrl()) === 0,
-          title: 'Overview',
+          title: t('Overview'),
         }, {
           to: urls.getGovernanceUrl(),
           isActive: () => location.pathname.indexOf(urls.getGovernanceUrl()) === 0,
-          title: 'Governance',
+          title: t('Governance'),
         }, {
-          title: 'Settings',
+          title: t('Settings'),
           href: urls.getSettingsUrl(),
         }, {
-          title: 'Log Out',
+          title: t('Log Out'),
           onClick: () => logout(),
         }],
       }}
@@ -258,13 +260,13 @@ const UserWallet = ({ location }) => {
         noBorder: true,
         theme: 'thinBlack',
         items: [{
-          title: 'Wallet',
+          title: t('Wallet'),
           onClick: () => {
             setActiveTabId(TAB_WALLET_ID);
           },
           active: activeTabId === TAB_WALLET_ID,
         }, {
-          title: 'Resources',
+          title: t('Resources'),
           active: activeTabId === TAB_RESOURCES_ID,
           onClick: () => {
             setActiveTabId(TAB_RESOURCES_ID);
@@ -294,7 +296,7 @@ const UserWallet = ({ location }) => {
                 case TRX_TYPE_TRANSFER_TO:
                   return ({
                     ...commonProps,
-                    type: 'Transfer',
+                    type: t('Transfer'),
                     avatarSrc: urls.getFileUrl(trx.user.avatarFilename) || '',
                     title: `@${trx.user.accountName}`,
                     amount: `${trx.trType === TRX_TYPE_TRANSFER_FROM ? '– ' : ''}${round(trx.tokens.active, 2)} ${trx.tokens.currency}`,
@@ -324,14 +326,14 @@ const UserWallet = ({ location }) => {
                     icon = <Icons.Net />;
                   }
 
-                  const titleAction = trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Staked' : 'Unstaking';
+                  const titleAction = trx.trType === TRX_TYPE_STAKE_RESOURCES ? t('Staked') : t('Unstaking');
 
                   if (cpu && net) {
-                    title = `${titleAction} for Network BW and CPU Time`;
+                    title = t('for Network BW and CPU Time', { action: titleAction });
                   } else if (cpu) {
-                    title = `${titleAction} for CPU Time`;
+                    title = t('for CPU Time', { action: titleAction });
                   } else {
-                    title = `${titleAction} for Network BW`;
+                    title = t('for Network BW', { action: titleAction });
                   }
 
                   return ({
@@ -339,16 +341,16 @@ const UserWallet = ({ location }) => {
                     icon,
                     title,
                     amount: `${trx.trType === TRX_TYPE_STAKE_RESOURCES ? '– ' : ''}${cpu && net ? cpu + net : cpu || net} ${trx.resources.net.tokens.currency}`,
-                    type: trx.trType === TRX_TYPE_STAKE_RESOURCES ? 'Stake' : 'Unstake',
+                    type: trx.trType === TRX_TYPE_STAKE_RESOURCES ? t('Stake') : t('Unstake'),
                   });
                 }
 
                 case TRX_TYPE_CLAIM_EMISSION:
                   return ({
                     ...commonProps,
-                    type: 'Withdraw',
+                    type: t('Withdraw'),
                     icon: <Icons.Emission />,
-                    title: 'Recieved emission',
+                    title: t('Recieved emission'),
                     amount: `${round(trx.tokens.emission, 2)} ${trx.tokens.currency}`,
                   });
 
@@ -356,9 +358,9 @@ const UserWallet = ({ location }) => {
                 case TRX_TYPE_SELL_RAM:
                   return ({
                     ...commonProps,
-                    type: trx.trType === TRX_TYPE_BUY_RAM ? 'Buy RAM' : 'Sell RAM',
+                    type: trx.trType === TRX_TYPE_BUY_RAM ? t('Buy RAM') : t('Sell RAM'),
                     icon: <Icons.Ram />,
-                    title: `${trx.trType === TRX_TYPE_BUY_RAM ? 'Bought' : 'Sold'} RAM`,
+                    title: t(`${trx.trType === TRX_TYPE_BUY_RAM ? 'Bought' : 'Sold'} RAM`),
                     amount: `${trx.trType === TRX_TYPE_BUY_RAM ? '– ' : ''}${round(trx.resources.ram.tokens.amount, 2)} ${trx.resources.ram.tokens.currency}`,
                   });
 
@@ -368,9 +370,9 @@ const UserWallet = ({ location }) => {
 
                   return ({
                     ...commonProps,
-                    type: 'Vote',
+                    type: t('Vote'),
                     icon: <Icons.Vote />,
-                    title: nodes.length ? `Voted for ${nodes.map(item => item).join(', ')}` : 'Not voted for anyone',
+                    title: nodes.length ? t('Voted for', { nodes: nodes.map(item => item).join(', ') }) : t('Not voted for anyone'),
                   });
                 }
 

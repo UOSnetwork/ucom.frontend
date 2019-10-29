@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,25 +7,29 @@ import * as Icons from '../Icons';
 
 const EmissionCard = ({
   icon, amount, label, onClick, disabled,
-}) => (
-  <div
-    role="presentation"
-    className={classNames({
-      [styles.emissionCard]: true,
-      [styles.disabled]: disabled,
-    })}
-    onClick={onClick}
-  >
-    <div className={styles.icon}>{icon}</div>
-    <div>
-      <div className={styles.amount}>{amount}</div>
-      <div className={styles.label}>{label}</div>
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      role="presentation"
+      className={classNames({
+        [styles.emissionCard]: true,
+        [styles.disabled]: disabled,
+      })}
+      onClick={onClick}
+    >
+      <div className={styles.icon}>{icon}</div>
+      <div>
+        <div className={styles.amount}>{amount}</div>
+        <div className={styles.label}>{label || t('Your Emission')}</div>
+      </div>
+      {!disabled &&
+        <div className={styles.action}>{t('Get')}</div>
+      }
     </div>
-    {!disabled &&
-      <div className={styles.action}>Get</div>
-    }
-  </div>
-);
+  );
+};
 
 EmissionCard.propTypes = {
   icon: PropTypes.node,
@@ -37,7 +42,7 @@ EmissionCard.propTypes = {
 EmissionCard.defaultProps = {
   icon: <Icons.Emission />,
   amount: '…',
-  label: 'Your Emission',
+  label: undefined,
   onClick: undefined,
   disabled: false,
 };

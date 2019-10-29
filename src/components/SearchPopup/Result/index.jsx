@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -8,6 +9,7 @@ import { OVERVIEW_ROUTES, OVERVIEW_ROUTES_COMMUNITIES_ID, OVERVIEW_ROUTES_TAGS_I
 import styles from './styles.css';
 
 const Result = () => {
+  const { t } = useTranslation();
   const state = useSelector(state => state.searchPopup);
 
   return (
@@ -16,9 +18,9 @@ const Result = () => {
     >
       <div className={styles.inner}>
         <div>
-          <div className={styles.title}>Members</div>
+          <div className={styles.title}>{t('Members')}</div>
           {!state.loading && !state.result.users.ids.length &&
-            <div className={styles.notFound}>Not found</div>
+            <div className={styles.notFound}>{t('Not found')}</div>
           }
           <div className={styles.list}>
             <UsersEntryList ids={state.result.users.ids} />
@@ -30,14 +32,14 @@ const Result = () => {
                 userName: state.query,
               })}
             >
-              View All <IconArrowRight />
+              {t('View All')} <IconArrowRight />
             </Link>
           }
         </div>
         <div>
-          <div className={styles.title}>Communities</div>
+          <div className={styles.title}>{t('Communities')}</div>
           {!state.loading && !state.result.orgs.ids.length &&
-            <div className={styles.notFound}>Not found</div>
+            <div className={styles.notFound}>{t('Not found')}</div>
           }
           <div className={styles.list}>
             <OrgsEntryList ids={state.result.orgs.ids} />
@@ -49,15 +51,15 @@ const Result = () => {
                 route: OVERVIEW_ROUTES.find(i => i.id === OVERVIEW_ROUTES_COMMUNITIES_ID).name,
               })}
             >
-              View All <IconArrowRight />
+              {t('View All')} <IconArrowRight />
             </Link>
           }
         </div>
 
         <div>
-          <div className={styles.title}>Tags</div>
+          <div className={styles.title}>{t('Tags')}</div>
           {!state.loading && !state.result.tags.titles.length &&
-            <div className={styles.notFound}>Not found</div>
+            <div className={styles.notFound}>{t('Not found')}</div>
           }
           <div className={styles.list}>
             <TagsEntryList titles={state.result.tags.titles} />
@@ -69,7 +71,7 @@ const Result = () => {
                 route: OVERVIEW_ROUTES.find(i => i.id === OVERVIEW_ROUTES_TAGS_ID).name,
               })}
             >
-              View All <IconArrowRight />
+              {t('View All')} <IconArrowRight />
             </Link>
           }
         </div>

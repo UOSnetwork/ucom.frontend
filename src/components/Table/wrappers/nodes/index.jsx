@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { endsWith } from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,6 +18,7 @@ import styles from './styles.css';
 const TableNodes = ({
   nodesIds, selectedNodesIds, orderBy, disableSorting, onSelect, ...props
 }) => {
+  const { t } = useTranslation();
   const nodes = useSelector(selectNodesByIds(nodesIds));
   const owner = useSelector(selectOwner);
   const hasSelected = nodesIds.some(i => selectedNodesIds.includes(i));
@@ -34,7 +36,7 @@ const TableNodes = ({
         }] : []),
 
         ...[{
-          title: 'Organization',
+          title: t('Organization'),
           width: 'auto',
           minWidth: '150px',
           name: 'title',
@@ -42,7 +44,7 @@ const TableNodes = ({
           sorted: endsWith(orderBy, 'title'),
           reverse: orderBy[0] !== '-',
         }, {
-          title: 'Votes',
+          title: t('Votes'),
           right: true,
           width: '60px',
           minWidth: '60px',
@@ -51,7 +53,7 @@ const TableNodes = ({
           sorted: endsWith(orderBy, 'votes_count'),
           reverse: orderBy[0] !== '-',
         }, {
-          title: 'Vote amount',
+          title: t('Vote amount'),
           hideOnSmall: true,
           right: true,
           width: '120px',
@@ -61,7 +63,7 @@ const TableNodes = ({
           sorted: endsWith(orderBy, 'votes_amount'),
           reverse: orderBy[0] !== '-',
         }, {
-          title: 'State',
+          title: t('State'),
           right: true,
           width: '70px',
           minWidth: '70px',

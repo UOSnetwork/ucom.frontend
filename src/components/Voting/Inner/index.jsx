@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -10,64 +11,68 @@ import styles from './styles.css';
 
 const Inner = ({
   loading, onClick, onClickUp, selfVote, count, rate, onClickDown,
-}) => (
-  <div
-    role="presentation"
-    className={classNames({
-      [styles.voting]: true,
-      [styles.loading]: loading,
-    })}
-    onClick={onClick}
-  >
-    {onClickUp &&
-      <span
-        title="Upvote"
-        role="presentation"
-        className={classNames({
-          [styles.voteBtn]: true,
-          [styles.up]: selfVote === UPVOTE_STATUS,
-        })}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClickUp();
-        }}
-      >
-        <IconVoteUp />
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      role="presentation"
+      className={classNames({
+        [styles.voting]: true,
+        [styles.loading]: loading,
+      })}
+      onClick={onClick}
+    >
+      {onClickUp &&
+        <span
+          title={t('Upvote')}
+          role="presentation"
+          className={classNames({
+            [styles.voteBtn]: true,
+            [styles.up]: selfVote === UPVOTE_STATUS,
+          })}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickUp();
+          }}
+        >
+          <IconVoteUp />
+        </span>
+      }
+      <span className={styles.value}>
+        <span
+          className={classNames({
+            [styles.count]: true,
+            [styles.up]: count > 0,
+            [styles.down]: count < 0,
+          })}
+        >
+          {count}
+        </span>
+        <span className={styles.rate}>{rate}</span>
+        <span className={styles.spinner}>
+          <Spinner color="rgba(0,0,0,0.3)" width={6} size={16} />
+        </span>
       </span>
-    }
-    <span className={styles.value}>
-      <span
-        className={classNames({
-          [styles.count]: true,
-          [styles.up]: count > 0,
-          [styles.down]: count < 0,
-        })}
-      >
-        {count}
-      </span>
-      <span className={styles.rate}>{rate}</span>
-      <span className={styles.spinner}>
-        <Spinner color="rgba(0,0,0,0.3)" width={6} size={16} />
-      </span>
-    </span>
-    {onClickDown &&
-      <span
-        title="Downvote"
-        role="presentation"
-        className={classNames({
-          [styles.voteBtn]: true,
-          [styles.down]: selfVote === DOWNVOTE_STATUS,
-        })}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClickDown();
-        }}
-      >
-        <IconVoteDown />
-      </span>
-    }
-  </div>
-);
+      {onClickDown &&
+        <span
+          title={t('Downvote')}
+          role="presentation"
+          className={classNames({
+            [styles.voteBtn]: true,
+            [styles.down]: selfVote === DOWNVOTE_STATUS,
+          })}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClickDown();
+          }}
+        >
+          <IconVoteDown />
+        </span>
+      }
+    </div>
+  );
+};
 
 Inner.propTypes = {
   rate: PropTypes.string,

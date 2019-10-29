@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,6 +11,7 @@ import * as subscribeActions from '../../../actions/subscribe';
 import styles from './styles.css';
 
 const Form = ({ onSuccess }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [submited, setSubmited] = useState(false);
@@ -69,7 +71,7 @@ const Form = ({ onSuccess }) => {
       <div className={styles.field}>
         <TextInput
           autoFocus
-          label="Email"
+          label={t('Email')}
           submited={submited}
           error={errors && errors.email}
           value={data.email}
@@ -85,7 +87,7 @@ const Form = ({ onSuccess }) => {
           type="submit"
           disabled={!isValid}
         >
-          Subscribe
+          {t('Subscribe')}
         </Button>
       </div>
     </form>

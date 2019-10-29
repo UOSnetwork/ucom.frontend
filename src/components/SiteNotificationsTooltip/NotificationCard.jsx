@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -78,24 +79,24 @@ const getTitle = (props) => {
       if (!(props.data && props.data.user)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User trusts you" userName={getUserName(props.data.user)}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           &nbsp;trusts you
-        </Fragment>
+        </Trans>
       );
 
     case USER_FOLLOWS_YOU:
       if (!(props.data && props.data.user)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User started following you" userName={getUserName(props.data.user)}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           &nbsp;started following you
-        </Fragment>
+        </Trans>
       );
 
     case USER_UPVOTES_YOUR_POST:
@@ -103,30 +104,30 @@ const getTitle = (props) => {
       if (!(props.data && props.data.user && props.targetEntity && props.targetEntity.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey={props.eventId === USER_UPVOTES_YOUR_POST ? 'User upvotes your post' : 'User downvotes your post'} userName={getUserName(props.data.user)}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           {`${props.eventId === USER_UPVOTES_YOUR_POST ? ' upvotes' : ' downvotes'} your `}
           <Link to={urls.getPostUrl(props.targetEntity.post)}>
             <strong>post</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
     case USER_SHARE_YOUR_POST:
     case USER_SHARE_YOUR_MEDIA_POST:
       if (!(props.data && props.data.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User shared your" userName={getUserName(props.data.post.user)}>
           <Link to={urls.getUserUrl(props.data.post.user.id)}>
-            <strong>{getUserName(props.data.post.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.post.user) }}</strong>
           </Link>
           &nbsp;shared your&nbsp;
           <Link to={urls.getPostUrl(props.data.post)}>
             <strong>post</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
     case USER_DOWNVOTES_YOUR_COMMENT:
     case USER_UPVOTES_YOUR_COMMENT:
@@ -134,30 +135,30 @@ const getTitle = (props) => {
       if (!(props.targetEntity && props.targetEntity.comment && props.targetEntity.comment.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey={props.eventId === USER_UPVOTES_YOUR_COMMENT ? 'User upvotes your comment' : 'User downvotes your comment'} userName={getUserName(props.data.user)}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           {`${props.eventId === USER_UPVOTES_YOUR_COMMENT ? ' upvotes' : ' downvotes'} your`}
           <Link to={urls.getPostUrl(props.targetEntity.comment.post)}>
             <strong> comment</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_FOLLOWS_ORG:
       if (!(props.data && props.data.user && props.targetEntity && props.targetEntity.organization)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User joined" userName={getUserName(props.data.user)} orgName={props.targetEntity.organization.title}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           &nbsp;joined&nbsp;
           <Link to={getOrganizationUrl(props.targetEntity.organization.id)}>
-            <strong>{props.targetEntity.organization.title}</strong>
+            <strong>{{ orgName: props.targetEntity.organization.title }}</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_DOWNVOTES_ORG_POST:
@@ -165,16 +166,16 @@ const getTitle = (props) => {
       if (!(props.data && props.data.user && props.targetEntity && props.targetEntity.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey={props.eventId === USER_UPVOTES_ORG_POST ? 'User upvotes org post' : 'User downvotes org post'} userName={getUserName(props.data.user)} title={props.targetEntity.post.title}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           {props.eventId === USER_UPVOTES_ORG_POST ? ' upvotes ' : ' downvotes '}
           <Link to={urls.getPostUrl(props.targetEntity.post)}>
-            <strong>{props.targetEntity.post.title}</strong>
+            <strong>{{ title: props.targetEntity.post.title }}</strong>
           </Link>
           &#160;post
-        </Fragment>
+        </Trans>
       );
 
     case USER_DOWNVOTES_ORG_COMMENT:
@@ -182,46 +183,46 @@ const getTitle = (props) => {
       if (!(props.data && props.data.user && props.targetEntity && props.targetEntity.organization)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey={props.eventId === USER_UPVOTES_ORG_POST ? 'User upvotes org comment' : 'User downvotes org comment'} userName={getUserName(props.data.user)} title={props.targetEntity.post.title}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           {props.eventId === USER_UPVOTES_ORG_COMMENT ? ' upvotes ' : ' downvotes '}
           <Link to={getOrganizationUrl(props.targetEntity.comment.organizationId)}>
-            <strong>{props.targetEntity.comment.post.title}</strong>
+            <strong>{{ title: props.targetEntity.comment.post.title }}</strong>
           </Link>
           &#160;comment
-        </Fragment>
+        </Trans>
       );
 
     case USER_CREATES_DIRECT_POST_FOR_YOU:
       if (!(props.data && props.data.post && props.data.post.user)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User posted on your profile" userName={getUserName(props.data.post.user)}>
           <Link to={urls.getUserUrl(props.data.post.user.id)}>
-            <strong>{getUserName(props.data.post.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.post.user) }}</strong>
           </Link>
           &nbsp;posted on your&nbsp;
           <Link to={urls.getPostUrl(props.data.post)}>
             <strong>profile</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_COMMENTS_YOUR_POST:
       if (!(props.data && props.data.comment && props.data.comment.user && props.data.comment.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User comment your post" userName={getUserName(props.data.comment.user)}>
           <Link to={urls.getUserUrl(props.data.comment.user.id)}>
-            <strong>{getUserName(props.data.comment.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.comment.user) }}</strong>
           </Link>
           &nbsp;commented on your&nbsp;
           <Link to={urls.getPostUrl(props.data.comment.post)}>
             <strong>post</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_LEAVES_COMMENT_ON_YOUR_COMMENT:
@@ -229,106 +230,105 @@ const getTitle = (props) => {
       if (!(props.targetEntity && props.targetEntity.comment && props.targetEntity.comment.post)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User replied to your comment" userName={getUserName(props.data.comment.user)}>
           <Link to={urls.getUserUrl(props.data.comment.userId)}>
-            <strong>{getUserName(props.data.comment.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.comment.user) }}</strong>
           </Link>
           &nbsp;replied to your&nbsp;
           <Link to={urls.getPostUrl(props.targetEntity.comment.post)}>
             <strong>comment</strong>
           </Link>
-
-        </Fragment>
+        </Trans>
       );
 
     case USER_CREATES_DIRECT_POST_FOR_ORG:
       if (!(props.data && props.data.post && props.data.post.user && props.targetEntity && props.targetEntity.organization && props.targetEntity.organization.nickname)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User posted in org feed" userName={getUserName(props.data.post.user)} orgName={props.targetEntity.organization.nickname}>
           <Link to={urls.getUserUrl(props.data.post.user.id)}>
-            <strong>{getUserName(props.data.post.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.post.user) }}</strong>
           </Link>
           &nbsp;posted in&nbsp;
           <Link to={urls.getPostUrl(props.data.post)}>
-            <strong>{props.targetEntity.organization.nickname}</strong>
+            <strong>{{ orgName: props.targetEntity.organization.nickname }}</strong>
           </Link>
           ’feed
-        </Fragment>
+        </Trans>
       );
 
     case USER_COMMENTS_ORG_POST:
       if (!(props.data && props.data.user && props.targetEntity.organization)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User comments org post" userName={getUserName(props.data.user)} orgName={props.targetEntity.organization.title}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           &nbsp;commented&nbsp;
-          {props.targetEntity.organization.title}
+          {{ orgName: props.targetEntity.organization.title }}
           &#160;post
-        </Fragment>
+        </Trans>
       );
 
     case USER_LEAVES_COMMENT_ON_ORG_COMMENT:
       if (!(props.data && props.data.user && props.targetEntity.organization)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User leaves comment on org comment" userName={getUserName(props.data.user)} orgName={props.targetEntity.organization.title}>
           <Link to={urls.getUserUrl(props.data.user.id)}>
-            <strong>{getUserName(props.data.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.user) }}</strong>
           </Link>
           &nbsp;replied to&nbsp;
-          {props.targetEntity.organization.title}
+          {{ orgName: props.targetEntity.organization.title }}
           &#160;comment
-        </Fragment>
+        </Trans>
       );
 
     case CONGRATULATIONS_EVENT_ID:
       if (!(props.data && props.data.user && props.data.organization)) return null;
 
       return (
-        <Fragment>
+        <Trans i18nKey="User invites you to become a member of org" userName={getUserName(props.data.user)} orgName={props.data.organization.title}>
           {props.data.user && (
             <Fragment>
               <Link to={urls.getUserUrl(props.data.user.id)}>
-                <strong>{getUserName(props.data.user)}</strong>
+                <strong>{{ userName: getUserName(props.data.user) }}</strong>
               </Link>
               &nbsp;
             </Fragment>
           )}
           invites you to become a member of&nbsp;
           <Link to={getOrganizationUrl(props.data.organization.id)}>
-            <strong>{props.data.organization.title}</strong>
+            <strong>{{ orgName: props.data.organization.title }}</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_HAS_MENTIONED_YOU_IN_POST:
       return (
-        <Fragment>
+        <Trans i18nKey="User has mentioned you in post" userName={getUserName(props.data.post.user)}>
           <Link to={urls.getUserUrl(props.data.post.user.id)}>
-            <strong>{getUserName(props.data.post.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.post.user) }}</strong>
           </Link>
           &nbsp;mentioned you in the &nbsp;
           <Link to={urls.getPostUrl(props.data.post)}>
             <strong>post</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     case USER_HAS_MENTIONED_YOU_IN_COMMENT:
       return (
-        <Fragment>
+        <Trans i18nKey="User has mentioned you in comment" userName={getUserName(props.data.comment.user)}>
           <Link to={urls.getUserUrl(props.data.comment.user.id)}>
-            <strong>{getUserName(props.data.comment.user)}</strong>
+            <strong>{{ userName: getUserName(props.data.comment.user) }}</strong>
           </Link>
           &nbsp;mentioned you in the &nbsp;
           <Link to={urls.getPostUrl(props.data.comment.post)}>
             <strong>comment</strong>
           </Link>
-        </Fragment>
+        </Trans>
       );
 
     default:
@@ -478,6 +478,8 @@ const getAvatar = (props) => {
 };
 
 const getActions = (props) => {
+  const { t } = useTranslation();
+
   switch (props.eventId) {
     case CONGRATULATIONS_EVENT_ID:
       return (
@@ -512,7 +514,7 @@ const getActions = (props) => {
               <div className="inline__item">
                 <div className="site-notification__confirmed-action">
                   <span className="inline inline_small">
-                    <span className="inline__item">{props.confirmed === 1 ? 'Accepted' : 'Declined'}</span>
+                    <span className="inline__item">{props.confirmed === 1 ? t('Accepted') : t('Declined')}</span>
                     <span className="inline__item">
                       {props.confirmed === 1 ? <InputCompleteIcon /> : <InputErrorIcon />}
                     </span>

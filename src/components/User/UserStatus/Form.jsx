@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import Button from '../../Button';
@@ -7,6 +8,7 @@ import { PLACEHOLDER, STATUS_MAX_LENGTH } from './index';
 import { isSubmitKey, isEscKey } from '../../../utils/keyboard';
 
 const UserStatusForm = (props) => {
+  const { t } = useTranslation();
   let element;
   const [moodMessage, setMoodMessage] = useState(props.moodMessage || '');
 
@@ -56,7 +58,7 @@ const UserStatusForm = (props) => {
 
       <div className={styles.actions}>
         <Button
-          text="Save"
+          text={t('Save')}
           size="small"
           theme="transparent"
           onClick={() => save()}

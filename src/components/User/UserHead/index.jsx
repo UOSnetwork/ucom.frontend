@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { pick, isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -20,6 +21,7 @@ import { USER_EDITABLE_PROPS } from '../../../utils/constants';
 import { addErrorNotificationFromResponse } from '../../../actions/notifications';
 
 const UserHead = (props) => {
+  const { t } = useTranslation();
   const user = useSelector(selectUserById(props.userId), isEqual);
   const owner = useSelector(selectOwner, isEqual);
   const dispatch = useDispatch();
@@ -89,7 +91,7 @@ const UserHead = (props) => {
         <div className={styles.usersLists}>
           <div>
             <FollowersWrapper
-              title="Followers"
+              title={t('Followers')}
               count={props.followedByCount}
               usersIds={props.followedByUserIds}
               popupUsersIds={props.followedByPopupUserIds}
@@ -100,7 +102,7 @@ const UserHead = (props) => {
 
           <div>
             <FollowersWrapper
-              title="Following"
+              title={t('Following')}
               count={props.iFollowCount}
               usersIds={props.iFollowUserIds}
               popupUsersIds={props.iFollowPopupUserIds}
@@ -111,7 +113,7 @@ const UserHead = (props) => {
 
           <div>
             <FollowersWrapper
-              title="Trusted by"
+              title={t('Trusted by')}
               count={props.trustedByCount}
               usersIds={props.trustedByUsersIds}
               metadata={props.trustedByPopupMetadata}

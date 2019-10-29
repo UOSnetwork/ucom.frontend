@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { scroller, Element } from 'react-scroll';
 import PropTypes from 'prop-types';
 import React, { memo, useState, useEffect, Fragment } from 'react';
@@ -10,6 +11,7 @@ import Popup from '../Popup';
 const Trust = ({
   userName, userAvtarUrl, trusted, onClickTrust, onClickUntrust, loading,
 }) => {
+  const { t } = useTranslation();
   const [untrustPopupVisible, setUntrustPopupVisible] = useState(false);
   const [acceptCardVisible, setAcceptCardVisible] = useState(false);
 
@@ -40,14 +42,14 @@ const Trust = ({
       {untrustPopupVisible &&
         <Popup showCloseIcon onClickClose={() => setUntrustPopupVisible(false)}>
           <div className={styles.untrust}>
-            <h2 className={styles.title}>You are revoking your trust</h2>
+            <h2 className={styles.title}>{t('You are revoking your trust')}</h2>
             <ol className={styles.rules}>
-              <li>You are publicly revoking your trust to this person.</li>
-              <li>Your public trust revoke is a transaction on the U°OS blockchain.</li>
-              <li>This trust revoke transaction will be put in your profile feed and the feed of your followers.</li>
+              <li>{t('You are publicly revoking your trust to this person.')}</li>
+              <li>{t('Your public trust revoke is a transaction on the U°OS blockchain.')}</li>
+              <li>{t('This trust revoke transaction will be put in your profile feed and the feed of your followers.')}</li>
             </ol>
 
-            <Button big cap red strech disabled={loading} onClick={onClickUntrust}>Revoke trust</Button>
+            <Button big cap red strech disabled={loading} onClick={onClickUntrust}>{t('Revoke trust')}</Button>
           </div>
         </Popup>
       }
@@ -59,14 +61,14 @@ const Trust = ({
               distance={15}
               trigger="mouseenter"
               items={[{
-                title: 'Change my mind',
+                title: t('Change my mind'),
                 onClick: () => setUntrustPopupVisible(true),
               }]}
             >
               <span className={styles.trigger}>
-                You Trust&nbsp;
-                <UserPick shadow size={24} alt={userName} src={userAvtarUrl} />
-                &nbsp;<span title={userName}>{userName}</span>
+                <Trans i18nKey="You Trust user" userName={userName}>
+                  You Trust <UserPick shadow size={24} alt={userName} src={userAvtarUrl} /> <span title={userName}>{{ userName }}</span>
+                </Trans>
               </span>
             </DropdownMenu>
           </div>
@@ -74,34 +76,34 @@ const Trust = ({
 
         {!trusted && !acceptCardVisible &&
           <Button strech grayBorder onClick={showAcceptCard}>
-            Trust&nbsp;
-            <UserPick shadow size={24} alt={userName} src={userAvtarUrl} />
-            &nbsp;<span title={userName}>{userName}</span>
+            <Trans i18nKey="Trust user" userName={userName}>
+              Trust <UserPick shadow size={24} alt={userName} src={userAvtarUrl} /> <span title={userName}>{{ userName }}</span>
+            </Trans>
           </Button>
         }
 
         {!trusted && acceptCardVisible &&
           <div className={styles.acceptCard}>
             <h3 className={styles.title}>
-              I Trust&nbsp;
-              <UserPick shadow size={32} alt={userName} src={userAvtarUrl} />
-              &nbsp;<span title={userName}>{userName}</span>
+              <Trans i18nKey="I Trust user" userName={userName}>
+                I Trust <UserPick shadow size={32} alt={userName} src={userAvtarUrl} /> <span title={userName}>{{ userName }}</span>
+              </Trans>
             </h3>
 
             <ol className={styles.rules}>
-              <li>You are publicly manifesting your trust to this person.</li>
-              <li>Your public trust manifestation is a transaction on the U°OS blockchain.</li>
-              <li>This trust transaction will be put in your profile feed and the feed of your followers.</li>
-              <li>The profiles that you trust will be publicly listed in your profile.</li>
-              <li>This trust transaction expands the web of trust within the network.</li>
+              <li>{t('You are publicly manifesting your trust to this person.')}</li>
+              <li>{t('Your public trust manifestation is a transaction on the U°OS blockchain.')}</li>
+              <li>{t('This trust transaction will be put in your profile feed and the feed of your followers.')}</li>
+              <li>{t('The profiles that you trust will be publicly listed in your profile.')}</li>
+              <li>{t('This trust transaction expands the web of trust within the network.')}</li>
             </ol>
 
             <div className={styles.action}>
-              <Button strech red onClick={onClickTrust} disabled={loading}>Trust</Button>
+              <Button strech red onClick={onClickTrust} disabled={loading}>{t('Trust')}</Button>
             </div>
 
             <div className={styles.action}>
-              <Button strech transparent disabled={loading} onClick={hideAcceptCard}>Cancel</Button>
+              <Button strech transparent disabled={loading} onClick={hideAcceptCard}>{t('Cancel')}</Button>
             </div>
           </div>
         }

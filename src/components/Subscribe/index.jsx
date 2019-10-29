@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Popup, { Content } from '../Popup';
@@ -7,6 +8,7 @@ import Form from './Form';
 import styles from './styles.css';
 
 const Subscribe = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const state = useSelector(state => state.subscribe);
   const hide = () => dispatch(subscribeActions.hide());
@@ -22,12 +24,12 @@ const Subscribe = () => {
         onClickClose={hide}
       >
         <div className={styles.subscribe}>
-          <h2 className={styles.title}>Subscribe</h2>
-          <p className={styles.description}>Subscribe to U.community mailing list</p>
+          <h2 className={styles.title}>{t('Subscribe')}</h2>
+          <p className={styles.description}>{t('Subscribe to U.community mailing list')}</p>
 
           <Form
             onSuccess={() => {
-              dispatch(addSuccessNotification('Subscribe is successful'));
+              dispatch(addSuccessNotification(t('Subscribe is successful')));
               hide();
             }}
           />
