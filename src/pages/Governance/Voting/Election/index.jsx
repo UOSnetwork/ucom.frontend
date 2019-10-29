@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +18,7 @@ import { BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS, PRODUCERS_LIMIT } from '../../..
 import styles from '../styles.css';
 
 const Voting = ({ history, match }) => {
+  const { t } = useTranslation();
   const owner = useSelector(selectOwner);
   const state = useSelector(state => state.pages.governance.voting);
   const nodeTypeId = Number(match.params.nodeTypeId);
@@ -41,51 +43,51 @@ const Voting = ({ history, match }) => {
         <div className={styles.content}>
           {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? (
             <Fragment>
-              <h1 className={styles.title}>Block Producer Election</h1>
+              <h1 className={styles.title}>{t('Block Producer Election')}</h1>
               <VotingFeatures
                 items={[{
                   title: formatScaledImportance(owner.scaledImportance),
-                  text: 'You’re voting with your Importance.',
+                  text: t('You’re voting with your Importance.'),
                 }, {
                   title: PRODUCERS_LIMIT,
-                  text: `Vote for a maximum of ${PRODUCERS_LIMIT} Block Producers.`,
+                  text: t('Vote for a maximum of Block Producers.', { limit: PRODUCERS_LIMIT }),
                 }, {
-                  title: 'Trust',
-                  text: 'You extend your trust to a Block Producer through voting.',
+                  title: t('Trust'),
+                  text: t('You extend your trust to a Block Producer through voting.'),
                 }, {
-                  title: 'BP Rank',
-                  text: 'The rank of each Block Producer is affected by the amount of your Importance.',
+                  title: t('BP Rank'),
+                  text: t('The rank of each Block Producer is affected by the amount of your Importance.'),
                 }, {
-                  title: '126 Seconds',
-                  text: 'Your vote is exercised each round of 126 seconds.',
+                  title: t('126 Seconds'),
+                  text: t('Your vote is exercised each round of 126 seconds.'),
                 }, {
-                  title: '1 Round',
-                  text: 'You can change your vote on each round.',
+                  title: t('1 Round'),
+                  text: t('You can change your vote on each round.'),
                 }]}
               />
             </Fragment>
           ) : (
             <Fragment>
-              <h1 className={styles.title}>Calculator Node Election</h1>
+              <h1 className={styles.title}>{t('Calculator Node Election')}</h1>
               <VotingFeatures
                 items={[{
                   title: formatScaledImportance(owner.scaledImportance),
-                  text: 'You’re voting with your Importance.',
+                  text: t('You’re voting with your Importance.'),
                 }, {
                   title: PRODUCERS_LIMIT,
-                  text: `Vote for a maximum of ${PRODUCERS_LIMIT} Calculator Nodes.`,
+                  text: t('Vote for a maximum of Calculator Nodes.', { limit: PRODUCERS_LIMIT }),
                 }, {
-                  title: 'Trust',
-                  text: 'You extend your trust to a Calculator Node through voting.',
+                  title: t('Trust'),
+                  text: t('You extend your trust to a Calculator Node through voting.'),
                 }, {
-                  title: 'Calculator Rank',
-                  text: 'The rank of each Calculator Node is affected by the amount of your Importance.',
+                  title: t('Calculator Rank'),
+                  text: t('The rank of each Calculator Node is affected by the amount of your Importance.'),
                 }, {
-                  title: 'Immediate',
-                  text: 'Your vote takes effect immediately.',
+                  title: t('Immediate'),
+                  text: t('Your vote takes effect immediately.'),
                 }, {
-                  title: 'Perpetual',
-                  text: 'Once cast, your vote is perpetually exercised. You can change your vote at any time.',
+                  title: t('Perpetual'),
+                  text: t('Once cast, your vote is perpetually exercised. You can change your vote at any time.'),
                 }]}
               />
             </Fragment>
@@ -101,7 +103,7 @@ const Voting = ({ history, match }) => {
                 })}
                 onClick={() => setShowSelected(false)}
               >
-                {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? 'Select Block Producers' : 'Select Calculator Nodes'}
+                {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? t('Select Block Producers') : t('Select Calculator Nodes')}
               </div>
               <div
                 role="presentation"
@@ -111,7 +113,7 @@ const Voting = ({ history, match }) => {
                 })}
                 onClick={() => setShowSelected(true)}
               >
-                {state.nodesToVoteIds.length} Selected
+                {state.nodesToVoteIds.length} {t('Selected')}
               </div>
             </div>
             <div className={styles.submit}>
@@ -119,7 +121,7 @@ const Voting = ({ history, match }) => {
                 redBorder
                 url={urls.getGovernanceCastUrl(nodeTypeId)}
               >
-                Cast your vote
+                {t('Cast your vote')}
               </Button>
             </div>
           </div>

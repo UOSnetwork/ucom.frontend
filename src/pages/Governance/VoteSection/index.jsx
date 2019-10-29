@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
@@ -9,60 +10,67 @@ import styles from './styles.css';
 
 const VoteSection = ({
   active, onToggle, title, blurb, description, votes, table, pagination, votingUrl,
-}) => (
-  <div className={styles.voteSection}>
-    <div className={styles.inner}>
-      <div
-        role="presentation"
-        className={styles.title}
-        onClick={onToggle}
-      >
-        <span
-          className={classNames({
-            [styles.toggler]: true,
-            [styles.active]: active,
-          })}
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles.voteSection}>
+      <div className={styles.inner}>
+        <div
+          role="presentation"
+          className={styles.title}
+          onClick={onToggle}
         >
-          <IconTick />
-        </span>
-        {title}
-      </div>
-      <div className={styles.blurb}>{blurb}</div>
-      <div className={styles.description}>{description}</div>
-      <div className={styles.vote}>
-        {votes > 0 ? (
-          <Fragment>You casted <strong>{votes} votes</strong></Fragment>
-        ) : (
-          <Fragment>You didn’t vote</Fragment>
-        )}
-      </div>
+          <span
+            className={classNames({
+              [styles.toggler]: true,
+              [styles.active]: active,
+            })}
+          >
+            <IconTick />
+          </span>
+          {title}
+        </div>
+        <div className={styles.blurb}>{blurb}</div>
+        <div className={styles.description}>{description}</div>
+        <div className={styles.vote}>
+          {votes > 0 ? (
+            <Fragment>
+              {t('You casted votes', { votes })}
+            </Fragment>
+          ) : (
+            <Fragment>{t('You didn’t vote')}</Fragment>
+          )}
+        </div>
 
-      {active &&
-        <Fragment>
-          <div className={styles.action}>
-            <Button
-              red
-              small
-              url={votingUrl}
-            >
-              Go to Voting
-            </Button>
-          </div>
-
-          {table &&
-            <div className={styles.table}>
-              <TableNodes {...table} />
+        {active &&
+          <Fragment>
+            <div className={styles.action}>
+              <Button
+                red
+                small
+                url={votingUrl}
+              >
+                {t('Go to Voting')}
+              </Button>
             </div>
-          }
 
-          {pagination &&
-            <Pagination {...pagination} />
-          }
-        </Fragment>
-      }
+            {table &&
+              <div className={styles.table}>
+                <TableNodes {...table} />
+              </div>
+            }
+
+            {pagination &&
+              <Pagination {...pagination} />
+            }
+          </Fragment>
+        }
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 VoteSection.propTypes = {
   active: PropTypes.bool,

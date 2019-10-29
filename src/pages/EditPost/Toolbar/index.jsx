@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -13,6 +14,7 @@ import styles from './styles.css';
 const Toolbar = ({
   showTitle, showClose, history,
 }) => {
+  const { t } = useTranslation();
   const state = useSelector(state => state.pages.editPost, (prev, next) => (
     prev.data.id === next.data.id &&
     prev.loaded === next.loaded
@@ -43,7 +45,7 @@ const Toolbar = ({
           <div className={styles.title}>
             {state.loaded && showTitle &&
               <Fragment>
-                {state.data.id ? 'Edit Media Post' : 'Create Media Post'}
+                {state.data.id ? t('Edit Media Post') : t('Create Media Post')}
               </Fragment>
             }
           </div>
@@ -59,7 +61,7 @@ const Toolbar = ({
               onClick={showSubmitPopup}
               disabled={!state.loaded}
             >
-              Publish
+              {t('Publish')}
             </Button>
           </div>
         </div>
@@ -71,7 +73,7 @@ const Toolbar = ({
               history.goBack();
             }}
           >
-            <span className={styles.label}>Close</span> <Close />
+            <span className={styles.label}>{t('Close')}</span> <Close />
           </div>
         }
       </div>
