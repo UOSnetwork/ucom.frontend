@@ -1,4 +1,4 @@
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import React, { Fragment, PureComponent } from 'react';
@@ -67,7 +67,11 @@ class RegistrationBrainkeyStepThird extends PureComponent {
 
               <div className="registration__text">
                 <div className="text">
-                  <p>{this.props.t('Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>')}</p>
+                  <p>
+                    <Trans i18nKey="Write down or memorize your Brainkey">
+                      Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>
+                    </Trans>
+                  </p>
                 </div>
               </div>
 

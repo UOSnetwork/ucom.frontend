@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
@@ -25,9 +25,17 @@ const CommunityBanner = ({ authorized, authShowPopup, forCommunity }) => {
       </div>
 
       {forCommunity ? (
-        <div className={styles.title}>{t('Run Your Community')}</div>
+        <div className={styles.title}>
+          <Trans i18nKey="Run Your Community">
+            Run<br />Your<br />Community
+          </Trans>
+        </div>
       ) : (
-        <div className={styles.title}>{t('Join Community')}</div>
+        <div className={styles.title}>
+          <Trans i18nKey="Join Community">
+            Join<br />Community
+          </Trans>
+        </div>
       )}
 
       <div className={styles.button}>

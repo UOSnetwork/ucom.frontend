@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -36,7 +36,9 @@ const Footer = () => {
         <div className={styles.list}>
           <span className={styles.telegram}>
             <span className={styles.telegramTitle}>
-              {t('Chat with U°Community')}
+              <Trans i18nKey="Chat with U°Community">
+                Chat with <strong>U°Community</strong>:
+              </Trans>
             </span>
 
             <a href="https://t.me/uos_network_en" target="_blank" rel="noopener noreferrer">

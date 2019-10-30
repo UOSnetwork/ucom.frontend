@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 import { isEqual, groupBy, round } from 'lodash';
@@ -138,7 +138,13 @@ const UserWallet = ({ location }) => {
     }
 
     resources.sections.push({
-      title: <span>{t('Resources you staked', { resource: account.tokens ? `UOS ${formatNumber(account.tokens.staked)}` : '' })}</span>,
+      title: (
+        <span>
+          <Trans i18nKey="Resources you staked" resource={account.tokens ? `UOS ${formatNumber(account.tokens.staked)}` : ''}>
+            Resources you staked <strong>{{ resource: account.tokens ? `UOS ${formatNumber(account.tokens.staked)}` : '' }}</strong> for:
+          </Trans>
+        </span>
+      ),
       actions: [{
         title: t('Set'),
         onClick: () => dispatch(walletActions.toggleEditStake(true)),

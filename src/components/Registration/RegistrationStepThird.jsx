@@ -144,7 +144,9 @@ class RegistrationStepThird extends PureComponent {
             </div>
             {this.state.brainkeyVerificationIsComplete && !this.state.brainkeyVerificationIsValid &&
               <div className="registration-footer__error">
-                {this.props.t('Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.')}
+                <Trans i18nKey="Selected keywords don’t match">
+                  Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.
+                </Trans>
               </div>
             }
           </div>
