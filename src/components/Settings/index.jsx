@@ -210,7 +210,7 @@ const Settings = () => {
               }
 
               <div className={styles.subscribe}>
-                {t('Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!')}
+                {t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
                 <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
                   Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => dispatch(subscribeActions.show())}>subscribe</span> to&nbsp;our weekly updates.
                 </Trans>

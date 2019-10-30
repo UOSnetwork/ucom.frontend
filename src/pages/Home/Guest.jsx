@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, Fragment } from 'react';
 import Tabs, { TAB_ID_COMMUNITIES } from '../../components/Feed/Tabs';
@@ -14,6 +15,7 @@ import LayoutBase from '../../components/Layout/LayoutBase';
 const SIDEBAR_ENTRY_LIST_LIMIT = 8;
 
 const Guest = () => {
+  const { t } = useTranslation();
   const state = useSelector(s => s.mainPage);
   const dispatch = useDispatch();
 
@@ -64,7 +66,7 @@ const Guest = () => {
 
   const usersSection = (
     <EntryListSectionUsersWrapper
-      title={state.activeTabId === TAB_ID_COMMUNITIES ? 'Recent Top Authors' : 'Top Users of the Day'}
+      title={state.activeTabId === TAB_ID_COMMUNITIES ? t('Recent Top Authors') : t('Top Users of the Day')}
       limit={SIDEBAR_ENTRY_LIST_LIMIT}
       ids={state.feed.userIds}
       popupIds={state.usersPopup.ids}
@@ -75,7 +77,7 @@ const Guest = () => {
 
   const communitiesSections = (
     <EntryListSectionOrgsWrapper
-      title={state.activeTabId === TAB_ID_COMMUNITIES ? 'Top Communities This Week' : 'Most Buzzin’ Communities'}
+      title={state.activeTabId === TAB_ID_COMMUNITIES ? t('Top Communities This Week') : t('Most Buzzin’ Communities')}
       limit={SIDEBAR_ENTRY_LIST_LIMIT}
       ids={state.feed.organizationsIds}
       popupIds={state.organizationsPopup.ids}
@@ -140,7 +142,7 @@ const Guest = () => {
               )}
 
               <EntryListSectionTagsWrapper
-                title="Popular Today"
+                title={t('Popular Today')}
                 limit={SIDEBAR_ENTRY_LIST_LIMIT}
                 titles={state.feed.tagsIds}
                 popupTitles={state.tagsPopup.ids}

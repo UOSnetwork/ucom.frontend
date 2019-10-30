@@ -180,7 +180,7 @@
       "Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>": "Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>",
       "Got it": "Got it",
       "Type in the words number and from your Brainkey.": "Type in the words number {{num1}} and {{num2}} from your Brainkey.",
-      "If you didnt save your Brainkey": "If you didn&apos;t save your Brainkey,&nbsp;<1><0>generate a new one<0/><1/>",
+      "If you didnt save your Brainkey": "If you didn’t save your Brainkey, <1><0>generate a new one<0/><1/>",
       "Choose Account Name": "Choose Account Name",
       "Account Name: @": "Account Name: @{{accountName}}",
       "Must be 12 characters": "Must be <strong>12 characters</strong>",
@@ -190,8 +190,8 @@
       "Brainkey": "Brainkey",
       "I accept the General Terms and Conditions.": "I accept the  General <0>Terms and Conditions.</0>",
       "Allow to send anonymous usage data for developer.": "Allow to send anonymous usage data for developer.",
-      "Selected keywords don&apos;t match with entered on previous step.<br />Try check the order of your phrase.": "Selected keywords don&apos;t match with entered on previous step.<br />Try check the order of your phrase.",
-      "Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!": "Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!",
+      "Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.": "Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.",
+      "Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!": "Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!",
       "Fill the form to subscribe to our weekly updates.": "Fill the form to <0>subscribe</0> to our weekly updates.",
       "Locate in posts and publications": "Locate “{{query}}” in posts and publications",
       "Search for people in U°OS blockchain…": "Search for people in U°OS blockchain…",
@@ -389,7 +389,16 @@
       "Ongoing voting": "Ongoing voting",
       "The Block Producers are decentralized entities that keep the chain running by producing blocks. The Block Producers are elected through voting.": "The Block Producers are decentralized entities that keep the chain running by producing blocks. The Block Producers are elected through voting.",
       "Calculator Nodes": "Calculator Nodes",
-      "A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake.": "A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake."
+      "A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake.": "A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake.",
+      "Recent Top Authors": "Recent Top Authors",
+      "Top Users of the Day": "Top Users of the Day",
+      "Top Communities This Week": "Top Communities This Week",
+      "Most Buzzin’ Communities": "Most Buzzin’ Communities",
+      "Popular Today": "Popular Today",
+      "Link to Article": "Link to {{title}} Article",
+      "Page not found": "Page not found",
+      "We cant find the page": "We can’t find the page that you’re looking for :(<br />Please try repeat this request later.",
+      "Go back home": "Go back home"
     }
   }
 }

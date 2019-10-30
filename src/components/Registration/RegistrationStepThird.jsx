@@ -144,13 +144,13 @@ class RegistrationStepThird extends PureComponent {
             </div>
             {this.state.brainkeyVerificationIsComplete && !this.state.brainkeyVerificationIsValid &&
               <div className="registration-footer__error">
-                {this.props.t('Selected keywords don&apos;t match with entered on previous step.<br />Try check the order of your phrase.')}
+                {this.props.t('Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.')}
               </div>
             }
           </div>
 
           <div className="registration__subscribe">
-            {this.props.t('Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!')}
+            {this.props.t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
             <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
               Fill the form to <span role="presentation" className="link red" onClick={() => this.props.showSubscribe()}>subscribe</span> to our weekly updates.
             </Trans>

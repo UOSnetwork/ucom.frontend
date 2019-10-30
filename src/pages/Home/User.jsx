@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { isEqual } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect } from 'react';
@@ -13,6 +14,7 @@ import { selectOwner } from '../../store/selectors';
 import { addErrorNotification } from '../../actions/notifications';
 
 const HomeUserPage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const state = useSelector(s => s.mainPageUser);
   const owner = useSelector(selectOwner, ((prev, next) =>
@@ -68,7 +70,7 @@ const HomeUserPage = () => {
             <div className="grid__item grid__item_side">
               <div className="sidebar sidebar_main">
                 <EntryListSectionUsersWrapper
-                  title="People"
+                  title={t('People')}
                   limit={8}
                   count={state.users.metadata.totalAmount}
                   ids={state.users.ids}
@@ -78,7 +80,7 @@ const HomeUserPage = () => {
                 />
 
                 <EntryListSectionOrgsWrapper
-                  title="Communities"
+                  title={t('Communities')}
                   limit={8}
                   count={state.orgs.metadata.totalAmount}
                   ids={state.orgs.ids}

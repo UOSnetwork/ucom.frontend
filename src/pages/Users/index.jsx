@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { endsWith, clamp, debounce } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useMemo } from 'react';
@@ -16,6 +17,7 @@ import urls from '../../utils/urls';
 import styles from './styles.css';
 
 const Users = ({ location, history }) => {
+  const { t } = useTranslation();
   const getUrlParams = () => {
     const urlParams = new URLSearchParams(location.search);
 
@@ -67,10 +69,10 @@ const Users = ({ location, history }) => {
     <LayoutBase>
       <Content>
         <div className={styles.header}>
-          <h1 className={styles.title}>People</h1>
+          <h1 className={styles.title}>{t('People')}</h1>
           <div className={styles.search}>
             <TextInput
-              placeholder="Search"
+              placeholder={t('Search')}
               icon={userName ? <IconClose /> : <IconSearch />}
               value={userName}
               onChange={(value) => {
