@@ -36,7 +36,7 @@ const Footer = () => {
         <div className={styles.list}>
           <span className={styles.telegram}>
             <span className={styles.telegramTitle}>
-              <Trans i18nKey="Chat with U°Community">
+              <Trans i18nKey="chatWith">
                 Chat with <strong>U°Community</strong>:
               </Trans>
             </span>

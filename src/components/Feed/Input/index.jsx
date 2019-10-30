@@ -87,7 +87,7 @@ const FeedInput = ({
         className={styles.invite}
         onClick={showForm}
       >
-        <Trans i18nKey="Hey what’s new?">
+        <Trans i18nKey="heyWhatsWew">
           <span>Hey</span>
           <UserPick src={urls.getFileUrl(owner.avatarFilename)} />
           <span>what’s new?</span>

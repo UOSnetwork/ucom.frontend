@@ -59,7 +59,7 @@ const RegistrationAccountField = (props) => {
               <InputCompleteIcon />
             </span>
             <span className="inline__item">
-              {t('Nice name! Memorize it')}
+              {t('niceName')}
             </span>
           </span>
         </div>

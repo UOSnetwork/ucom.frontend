@@ -65,7 +65,7 @@ const EmbedMenu = (props) => {
             onClick={async () => {
               loader.start();
               try {
-                const url = prompt(t('Paste a link and press Enter')); // eslint-disable-line
+                const url = prompt(t('pasteLink')); // eslint-disable-line
                 const data = await EmbedService.getDataFromUrl(url);
                 props.onEmbed(data);
               } catch (err) {

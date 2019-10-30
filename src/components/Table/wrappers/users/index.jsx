@@ -43,7 +43,7 @@ const TableUsers = ({
         name: 'current_rate',
         reverse: orderBy[0] !== '-',
       }, {
-        title: t('Importance°'),
+        title: t('Importance'),
         width: '120px',
         minWidth: '120px',
         sortable: true,

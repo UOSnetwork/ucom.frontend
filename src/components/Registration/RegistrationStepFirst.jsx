@@ -53,7 +53,7 @@ const RegistrationStepFirst = (props) => {
           <div className="registration-account-info__section">
             <div className="registration-account-info__title">1-5</div>
             <div className="registration-account-info__description">
-              <Trans i18nKey="Can only have numbers 1–5'">
+              <Trans i18nKey="сanOnlyNumbers'">
                 Can only have <strong>numbers 1–5</strong>
               </Trans>
             </div>

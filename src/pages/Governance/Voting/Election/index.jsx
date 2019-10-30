@@ -47,22 +47,22 @@ const Voting = ({ history, match }) => {
               <VotingFeatures
                 items={[{
                   title: formatScaledImportance(owner.scaledImportance),
-                  text: t('You’re voting with your Importance.'),
+                  text: t('YoueVotingWithImportance'),
                 }, {
                   title: PRODUCERS_LIMIT,
-                  text: t('Vote for a maximum of Block Producers.', { limit: PRODUCERS_LIMIT }),
+                  text: t('VoteForMaximum', { limit: PRODUCERS_LIMIT }),
                 }, {
                   title: t('Trust'),
-                  text: t('You extend your trust to a Block Producer through voting.'),
+                  text: t('YouExtendYourTrust'),
                 }, {
                   title: t('BP Rank'),
-                  text: t('The rank of each Block Producer is affected by the amount of your Importance.'),
+                  text: t('TheRankBlockProducer'),
                 }, {
                   title: t('126 Seconds'),
-                  text: t('Your vote is exercised each round of 126 seconds.'),
+                  text: t('YourVoteExercised'),
                 }, {
                   title: t('1 Round'),
-                  text: t('You can change your vote on each round.'),
+                  text: t('YouCanChangeRound'),
                 }]}
               />
             </Fragment>
@@ -72,22 +72,22 @@ const Voting = ({ history, match }) => {
               <VotingFeatures
                 items={[{
                   title: formatScaledImportance(owner.scaledImportance),
-                  text: t('You’re voting with your Importance.'),
+                  text: t('YoueVotingWithImportance'),
                 }, {
                   title: PRODUCERS_LIMIT,
-                  text: t('Vote for a maximum of Calculator Nodes.', { limit: PRODUCERS_LIMIT }),
+                  text: t('VoteForMaximumCalculator', { limit: PRODUCERS_LIMIT }),
                 }, {
                   title: t('Trust'),
-                  text: t('You extend your trust to a Calculator Node through voting.'),
+                  text: t('YouExtendYourTrustVoting'),
                 }, {
                   title: t('Calculator Rank'),
-                  text: t('The rank of each Calculator Node is affected by the amount of your Importance.'),
+                  text: t('TheRankCalculatorNodeIs'),
                 }, {
                   title: t('Immediate'),
-                  text: t('Your vote takes effect immediately.'),
+                  text: t('YourVoteTakes'),
                 }, {
                   title: t('Perpetual'),
-                  text: t('Once cast, your vote is perpetually exercised. You can change your vote at any time.'),
+                  text: t('OnceCastYourVote'),
                 }]}
               />
             </Fragment>

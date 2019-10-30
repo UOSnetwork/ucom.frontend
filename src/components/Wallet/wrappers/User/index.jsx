@@ -99,7 +99,7 @@ const UserWallet = ({ location }) => {
 
   if (account.resources && account.resources.ram) {
     resources.sections.push({
-      title: t('Resources you own:'),
+      title: t('ResourcesYouOwn'),
       actions: [{
         title: t('Sell'),
         onClick: () => dispatch(walletActions.toggleSellRam(true)),

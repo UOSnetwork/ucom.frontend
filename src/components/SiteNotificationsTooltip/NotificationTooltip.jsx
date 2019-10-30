@@ -90,7 +90,7 @@ class NotificationTooltip extends Component {
 
             {!Object.values(list).length && this.props.loading &&
               <div className="notification-tooltip__header notification-tooltip__header_center">
-                <h3 className="notification-tooltip__title">{this.props.t('Loading...')}</h3>
+                <h3 className="notification-tooltip__title">{this.props.t('Loading')}</h3>
               </div>
             }
 
@@ -139,7 +139,7 @@ class NotificationTooltip extends Component {
             </div>
 
             {notificationsMetadata.hasMore &&
-              <div className="notification-tooltip__loading">{this.props.t('Loading...')}</div>
+              <div className="notification-tooltip__loading">{this.props.t('Loading')}</div>
             }
           </div>
 

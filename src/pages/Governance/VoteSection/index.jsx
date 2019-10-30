@@ -39,7 +39,7 @@ const VoteSection = ({
               You casted <strong>{{ votes }} votes</strong>
             </Trans>
           ) : (
-            <Fragment>{t('You didn’t vote')}</Fragment>
+            <Fragment>{t('YouDidntVote')}</Fragment>
           )}
         </div>
 

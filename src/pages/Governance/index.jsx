@@ -100,7 +100,7 @@ const GovernancePage = () => {
             </div>
 
             <div className={styles.description}>
-              {t('Govern the U°OS protocol through voting. You can vote for Block Producers and Calculator Nodes. Vote with your Importance.')}
+              {t('GovernProtocol')}
             </div>
           </div>
 
@@ -127,7 +127,7 @@ const GovernancePage = () => {
             onToggle={() => toggleSection(BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS)}
             title={t('Block Producers')}
             blurb={t('Ongoing voting')}
-            description={t('The Block Producers are decentralized entities that keep the chain running by producing blocks. The Block Producers are elected through voting.')}
+            description={t('TheBlockProducersDecentralized')}
             votes={state.selectedIds[BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS].length}
             votingUrl={urls.getGovernanceVotingUrl(BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS)}
             table={{
@@ -157,7 +157,7 @@ const GovernancePage = () => {
             onToggle={() => toggleSection(BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES)}
             title={t('Calculator Nodes')}
             blurb={t('Ongoing voting')}
-            description={t('A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake.')}
+            description={t('CalculatorNodeIs')}
             votes={state.selectedIds[BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES].length}
             votingUrl={urls.getGovernanceVotingUrl(BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES)}
             table={{

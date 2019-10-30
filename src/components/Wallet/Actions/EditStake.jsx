@@ -124,7 +124,7 @@ const EditStake = () => {
                 </div>
               </div>
               <div className={styles.hint}>
-                {t('Unstaking UOS from Bandwidth or CPU takes 3 days. After 3 days, you can claim your unstaked UOS.')}
+                {t('UnstakingUOSBandwidth')}
               </div>
               {formError &&
                 <div className={styles.error}>

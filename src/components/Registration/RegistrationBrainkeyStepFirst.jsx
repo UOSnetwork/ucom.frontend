@@ -13,8 +13,8 @@ const RegistrationBrainkeyStepFirst = (props) => {
     <Fragment>
       <div className="registration__text">
         <div className="text">
-          <p>{t('The Brainkey is the seed phrase from which your public-private key pairs are generated. You can restore the public-private key pairs from your Brainkey if you lose the keys.')}</p>
-          <p><strong>{t('The Brainkey itself cannot be restored once lost!')}</strong></p>
+          <p>{t('brainkeySeed')}</p>
+          <p><strong>{t('brainkeyItself')}</strong></p>
         </div>
       </div>
 
