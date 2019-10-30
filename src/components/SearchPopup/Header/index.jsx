@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { debounce } from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,6 +9,7 @@ import withLoader from '../../../utils/withLoader';
 import styles from './styles.css';
 
 const Header = () => {
+  const { t } = useTranslation();
   const state = useSelector(state => state.searchPopup);
   const dispatch = useDispatch();
 
@@ -27,7 +29,7 @@ const Header = () => {
           <input
             autoFocus
             type="text"
-            placeholder="Search for people in U°OS blockchain…"
+            placeholder={t('Search for people in U°OS blockchain…')}
             spellCheck="false"
             className={styles.input}
             value={state.query}

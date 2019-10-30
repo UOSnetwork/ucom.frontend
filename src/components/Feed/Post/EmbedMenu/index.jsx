@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,12 +14,13 @@ import loader from '../../../../utils/loader';
 
 const EmbedMenu = (props) => {
   const [active, setActive] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className={styles.embedMenu}>
       <div className={styles.mainItem}>
         <button
-          title="Toggle menu"
+          title={t('Toggle menu')}
           type="button"
           className={classNames({
             [styles.trigger]: true,
@@ -63,7 +65,7 @@ const EmbedMenu = (props) => {
             onClick={async () => {
               loader.start();
               try {
-                const url = prompt('Paste a link and press Enter'); // eslint-disable-line
+                const url = prompt(t('Paste a link and press Enter')); // eslint-disable-line
                 const data = await EmbedService.getDataFromUrl(url);
                 props.onEmbed(data);
               } catch (err) {

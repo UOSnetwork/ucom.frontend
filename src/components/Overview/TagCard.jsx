@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -6,6 +7,7 @@ import urls from '../../utils/urls';
 import { addTags } from '../../actions/tags';
 
 const TagCard = (props) => {
+  const { t } = useTranslation();
   const { tag } = props;
   const tagLink = urls.getTagUrl(tag.title);
 
@@ -27,7 +29,7 @@ const TagCard = (props) => {
       <div className="community-item__footer">
         <div className="community-item__posts">{tag.currentPostsAmount}
           <div className="community-item__caption">
-            Posts
+            {t('Posts')}
           </div>
         </div>
       </div>

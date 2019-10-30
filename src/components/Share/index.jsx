@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, useRef, Fragment, memo, useEffect } from 'react';
 import Tippy from '@tippy.js/react';
@@ -22,6 +23,7 @@ import ShareButton from './Button';
 const Share = ({
   children, directUrl, postId,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const tippyInstance = useRef();
   const [origin, setOrigin] = useState(null);
@@ -61,7 +63,7 @@ const Share = ({
         tippyInstance.current.hide();
       }
 
-      dispatch(addSuccessNotification('Repost is successful'));
+      dispatch(addSuccessNotification(t('Repost is successful')));
     } catch (err) {
       dispatch(addErrorNotificationFromResponse(err));
     }
@@ -93,7 +95,7 @@ const Share = ({
                 onClick={createRepost}
               >
                 <IconRepost />
-                Repost to my profile
+                {t('Repost to my profile')}
               </div>
 
               <hr className={styles.line} />
@@ -101,7 +103,7 @@ const Share = ({
           }
 
           <Fragment>
-            <div className={styles.title}>Share to</div>
+            <div className={styles.title}>{t('Share to')}</div>
 
             <div className={styles.icons}>
               <a
@@ -133,7 +135,7 @@ const Share = ({
             <hr className={styles.line} />
           </Fragment>
 
-          <div className={styles.title}>Copy link</div>
+          <div className={styles.title}>{t('Copy link')}</div>
 
           <div className={styles.copy}>
             <span className={styles.text}>

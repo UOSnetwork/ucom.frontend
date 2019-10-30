@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -6,6 +7,7 @@ import styles from './styles.css';
 import utilsActions from '../../actions/utils';
 
 const CopyPanel = ({ label, value, onCopy }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   return (
@@ -30,7 +32,7 @@ const CopyPanel = ({ label, value, onCopy }) => {
           }
         }}
       >
-        Copy
+        {t('Copy')}
       </div>
     </div>
   );

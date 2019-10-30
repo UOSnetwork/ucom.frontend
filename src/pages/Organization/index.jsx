@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
 import { arrayMove } from 'react-sortable-hoc';
 import React, { useEffect } from 'react';
@@ -31,6 +32,7 @@ import { getPublicationMetaTags } from '../../utils/posts';
 import * as EntityImages from '../../utils/entityImages';
 
 const OrganizationPage = (props) => {
+  const { t } = useTranslation();
   const organizationId = +props.match.params.id;
   const organization = useSelector(selectOrgById(organizationId));
   const owner = useSelector(selectOwner);
@@ -130,7 +132,7 @@ const OrganizationPage = (props) => {
           {organization && organization.discussions &&
             <Discussions
               editable={userIsTeam(owner, organization)}
-              placeholder={`Link to ${organization.title} Article`}
+              placeholder={t('Link to Article', { title: organization.title })}
               validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
               newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}
               onSubmit={async (postId) => {

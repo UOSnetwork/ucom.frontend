@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -7,11 +8,12 @@ import InputCompleteIcon from '../Icons/InputComplete';
 import { registrationSetAndValidateAccountName } from '../../actions/registration';
 
 const RegistrationAccountField = (props) => {
+  const { t } = useTranslation();
   const accountNameLength = props.registration.accountName.length;
 
   return (
     <div className="registration-account-field">
-      <div className="registration-account-field__label">Account name</div>
+      <div className="registration-account-field__label">{t('Account name')}</div>
       <div className="registration-account-field__input">
         <span className="registration-account-field__sign">@</span>
 
@@ -57,7 +59,7 @@ const RegistrationAccountField = (props) => {
               <InputCompleteIcon />
             </span>
             <span className="inline__item">
-              Nice name! Memorize it
+              {t('Nice name! Memorize it')}
             </span>
           </span>
         </div>

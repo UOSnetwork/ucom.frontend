@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import React, { useState, Fragment } from 'react';
 import styles from './styles.css';
@@ -18,6 +19,7 @@ import withLoader from '../../utils/withLoader';
 import Worker from '../../worker';
 
 const OwnerActiveKeys = () => {
+  const { t } = useTranslation();
   const [brainkey, setBrainkey] = useState('');
   const [keys, setKeys] = useState({});
   const [formActive, setFormActive] = useState(false);
@@ -27,36 +29,36 @@ const OwnerActiveKeys = () => {
 
   return (
     <Fragment>
-      <h4 className={styles.title}>Get Owner and Active key pairs with Brainkey</h4>
-      <p>Here you can generate your keys from Brainkey.</p>
+      <h4 className={styles.title}>{t('Get Owner and Active key pairs with Brainkey')}</h4>
+      <p>{t('Here you can generate your keys from Brainkey.')}</p>
 
       {keys.ownerKey && keys.ownerPublicKey && keys.activeKey && keys.activePublicKey ? (
         <div className="ym-hide-conten">
-          <h4 className={styles.title}>Active</h4>
-          <p>You need your Active Key to sign financial transactions</p>
+          <h4 className={styles.title}>{t('Active')}</h4>
+          <p>{t('You need your Active Key to sign financial transactions')}</p>
           <div className={styles.copy}>
             <CopyPanel
-              label="Private"
+              label={t('Private')}
               value={keys.activeKey}
             />
           </div>
           <div className={styles.copy}>
             <CopyPanel
-              label="Public"
+              label={t('Public')}
               value={keys.activePublicKey}
             />
           </div>
-          <h4 className={styles.title}>Owner</h4>
-          <p>You can reset your Active and Social Keys using your Owner Key.</p>
+          <h4 className={styles.title}>{t('Owner')}</h4>
+          <p>{t('You can reset your Active and Social Keys using your Owner Key.')}</p>
           <div className={styles.copy}>
             <CopyPanel
-              label="Private"
+              label={t('Private')}
               value={keys.ownerKey}
             />
           </div>
           <div className={styles.copy}>
             <CopyPanel
-              label="Public"
+              label={t('Public')}
               value={keys.ownerPublicKey}
             />
           </div>
@@ -112,7 +114,7 @@ const OwnerActiveKeys = () => {
               <TextInput
                 autoFocus
                 ymDisableKeys
-                placeholder="Brainkey"
+                placeholder={t('Brainkey')}
                 value={brainkey}
                 onChange={(value) => {
                   value = removeMultipleSpaces(value);
@@ -144,7 +146,7 @@ const OwnerActiveKeys = () => {
                 small
                 onClick={() => setFormActive(true)}
               >
-                Show
+                {t('Show')}
               </Button>
             </div>
           )}

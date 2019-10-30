@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState } from 'react';
@@ -15,6 +16,7 @@ import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
 import { selectOwner } from '../../../store';
 
 const TradeRam = (props) => {
+  const { t } = useTranslation();
   const owner = useSelector(selectOwner);
   const dispatch = useDispatch();
   const [ram, setRam] = useState('');
@@ -24,7 +26,7 @@ const TradeRam = (props) => {
 
   const onSuccess = () => {
     setFormError(null);
-    dispatch(addSuccessNotification(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`));
+    dispatch(addSuccessNotification(t(`Successfully ${props.sell ? 'sold' : 'bought'} RAM`)));
     withLoader(dispatch(walletActions.getAccount(owner.accountName)));
     setTimeout(() => {
       props.onSubmit();
@@ -75,12 +77,12 @@ const TradeRam = (props) => {
                 requestActiveKey();
               }}
             >
-              <h2 className={styles.title}>{props.sell ? 'Sell' : 'Buy'} RAM</h2>
+              <h2 className={styles.title}>{t(`${props.sell ? 'Sell' : 'Buy'} RAM`)}</h2>
               <div className={styles.field}>
                 <TextInput
                   autoFocus
                   placeholder="6664"
-                  label="RAM Amount, Bytes"
+                  label={t('RAM Amount, Bytes')}
                   value={`${ram}`}
                   onChange={async (value) => {
                     const intValue = parseInt(value, 10);
@@ -104,7 +106,7 @@ const TradeRam = (props) => {
               {cost &&
                 <div className={styles.cost}>
                   <div className={styles.value}>≈ {cost} UOS</div>
-                  <div className={styles.label}>RAM Cost</div>
+                  <div className={styles.label}>{t('RAM Cost')}</div>
                 </div>
               }
               {formError &&
@@ -122,7 +124,7 @@ const TradeRam = (props) => {
                   type="submit"
                   disabled={!ram || loading || requestLoading}
                 >
-                  {props.sell ? 'Sell' : 'Buy'}
+                  {props.sell ? t('Sell') : t('Buy')}
                 </Button>
               </div>
             </form>

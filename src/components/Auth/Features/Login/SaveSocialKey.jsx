@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { memo, useState, Fragment } from 'react';
 import styles from '../../styles.css';
@@ -7,6 +8,7 @@ import Button from '../../../Button/index';
 import SaveKey from '../../Screens/SaveKey';
 
 const SaveSocialKey = (props) => {
+  const { t } = useTranslation();
   const [popupVisible, setPopupVisible] = useState(false);
   const [hasCopiedKey, setHasCopiedKey] = useState(false);
 
@@ -24,26 +26,20 @@ const SaveSocialKey = (props) => {
                 <IconClose />
               </span>
             </span>
-            <h3 className={styles.title}>Copy Your Social Key and Save It</h3>
-            <p className={styles.text}>This key is your way to authorize on a platform, it much safer and simplier than Brainkey. Keep it somewhere safe!</p>
+            <h3 className={styles.title}>{t('Copy Your Social Key and Save It')}</h3>
+            <p className={styles.text}>{t('This key is your way to authorize on a platform, it much safer and simplier than Brainkey. Keep it somewhere safe!')}</p>
             <div className={styles.action}>
-              <Button
-                big
-                cap
-                red
-                strech
-                onClick={props.onClickBack}
-              >
-                GOT IT
+              <Button big cap red strech onClick={props.onClickBack}>
+                {t('GOT IT')}
               </Button>
             </div>
           </div>
         </Popup>
       }
       <SaveKey
-        title="Save Your Social Key"
+        title={t('Save Your Social Key')}
         copyText={props.socialKey}
-        proceedText="Proceed to Authorization"
+        proceedText={t('Proceed to Authorization')}
         onCopy={() => {
           setHasCopiedKey(true);
         }}

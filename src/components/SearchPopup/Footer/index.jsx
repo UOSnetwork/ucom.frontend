@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -6,6 +7,7 @@ import IconDuck from '../../Icons/Socials/Duck';
 import styles from './styles.css';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const state = useSelector(state => state.searchPopup);
   const duckLink = `https://duckduckgo.com/?q=${state.query}&sites=u.community&ia=web`;
 
@@ -24,7 +26,7 @@ const Footer = () => {
       })}
     >
       <span className={styles.text}>
-        Locate “{state.query}” in posts and publications
+        {t('Locate in posts and publications', { query: state.query })}
       </span>
       <span className={styles.iconDuck}>
         <IconDuck />

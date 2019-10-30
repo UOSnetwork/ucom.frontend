@@ -1,3 +1,4 @@
+import { withTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -56,7 +57,7 @@ class LoadMore extends PureComponent {
             }
           }}
         >
-          Load more
+          {this.props.t('Load more')}
         </ButtonTag>
       </div>
     );
@@ -67,6 +68,7 @@ LoadMore.propTypes = {
   onClick: PropTypes.func,
   disabled: PropTypes.bool,
   url: PropTypes.string,
+  t: PropTypes.func.isRequired,
 };
 
 LoadMore.defaultProps = {
@@ -75,4 +77,4 @@ LoadMore.defaultProps = {
   onClick: null,
 };
 
-export default LoadMore;
+export default withTranslation()(LoadMore);

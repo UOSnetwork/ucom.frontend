@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import styles from '../List/styles.css';
 
 // TODO: Remove
 const OrganizationList = (props) => {
+  const { t } = useTranslation();
   const [popupVisibility, setPopupVisibility] = useState(false);
 
   if (!props.organizationsIds.length) {
@@ -54,7 +56,7 @@ const OrganizationList = (props) => {
               }
             }}
           >
-            View All
+            {t('View All')}
           </span>
         </div>
       }

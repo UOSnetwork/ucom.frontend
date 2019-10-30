@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -24,6 +25,7 @@ import loader from '../utils/loader';
 const ENTRY_SECTION_LIMIT = 3;
 
 const Tag = (props) => {
+  const { t } = useTranslation();
   const tagTitle = props.match.params.title;
   const [loading, setLoading] = useState(true);
   const [usersPopupIds, setUsersPopupIds] = useState([]);
@@ -85,7 +87,7 @@ const Tag = (props) => {
             <div className={headerStyles.side}>
               <div className={headerStyles.usersLists}>
                 <div>
-                  <Stats title="Posts" amount={tag ? tag.posts.metadata.totalAmount : 0} />
+                  <Stats title={t('Posts')} amount={tag ? tag.posts.metadata.totalAmount : 0} />
                 </div>
               </div>
             </div>

@@ -1,3 +1,4 @@
+import { withTranslation } from 'react-i18next';
 import { throttle } from 'lodash';
 import { bindActionCreators } from 'redux';
 import React, { Component, createRef } from 'react';
@@ -83,20 +84,20 @@ class NotificationTooltip extends Component {
           <div ref={this.notificationsContent}>
             {!Object.values(list).length && !this.props.loading &&
               <div className="notification-tooltip__header notification-tooltip__header_center">
-                <h3 className="notification-tooltip__title">No notifications</h3>
+                <h3 className="notification-tooltip__title">{this.props.t('No notifications')}</h3>
               </div>
             }
 
             {!Object.values(list).length && this.props.loading &&
               <div className="notification-tooltip__header notification-tooltip__header_center">
-                <h3 className="notification-tooltip__title">Loading...</h3>
+                <h3 className="notification-tooltip__title">{this.props.t('Loading...')}</h3>
               </div>
             }
 
             <div>
               {isRequiredTime(list, false) &&
                 <div className="notification-tooltip__header">
-                  <h3 className="notification-tooltip__title">New notifications</h3>
+                  <h3 className="notification-tooltip__title">{this.props.t('New notifications')}</h3>
                 </div>
               }
 
@@ -118,7 +119,7 @@ class NotificationTooltip extends Component {
             <div>
               {isRequiredTime(list, true) &&
                 <div className="notification-tooltip__header">
-                  <h3 className="notification-tooltip__title">Early</h3>
+                  <h3 className="notification-tooltip__title">{this.props.t('Early')}</h3>
                 </div>
               }
 
@@ -138,7 +139,7 @@ class NotificationTooltip extends Component {
             </div>
 
             {notificationsMetadata.hasMore &&
-              <div className="notification-tooltip__loading">Loading...</div>
+              <div className="notification-tooltip__loading">{this.props.t('Loading...')}</div>
             }
           </div>
 
@@ -181,4 +182,4 @@ export default connect(
     siteNotificationsDeleteItems,
     fetchNotifications,
   }, dispatch),
-)(NotificationTooltip);
+)(withTranslation()(NotificationTooltip));

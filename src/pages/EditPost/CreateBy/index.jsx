@@ -1,3 +1,4 @@
+import { Trans } from 'react-i18next';
 import classNames from 'classnames';
 import Tippy from '@tippy.js/react';
 import { isEqual } from 'lodash';
@@ -84,15 +85,17 @@ const CreateBy = () => {
             [styles.enabled]: enabled,
           })}
         >
-          By
-          <UserPick
-            organization={!!state.data.organizationId}
-            size={24}
-            src={urls.getFileUrl((org || owner).avatarFilename)}
-          />
-          <span className={styles.name}>
-            {org ? org.title : getUserName(owner)}
-          </span>
+          <Trans i18nKey="By" title={org ? org.title : getUserName(owner)}>
+            By
+            <UserPick
+              organization={!!state.data.organizationId}
+              size={24}
+              src={urls.getFileUrl((org || owner).avatarFilename)}
+            />
+            <span className={styles.name}>
+              {{ title: org ? org.title : getUserName(owner) }}
+            </span>
+          </Trans>
           {enabled &&
             <span className={styles.trigger}>
               <IconMenuTrigger />

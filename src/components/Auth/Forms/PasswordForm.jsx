@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from '../styles.css';
@@ -7,6 +8,7 @@ import Button from '../../Button/index';
 const PASSWORD_ERROR = 'Passwords do not match';
 
 const Password = (props) => {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const [formError, setFormError] = useState('');
@@ -17,7 +19,7 @@ const Password = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (password !== passwordRepeat) {
-          setFormError(PASSWORD_ERROR);
+          setFormError(t(PASSWORD_ERROR));
           return;
         }
         setFormError('');
@@ -26,10 +28,10 @@ const Password = (props) => {
         }
       }}
     >
-      <h2 className={styles.title}>{props.title}</h2>
+      <h2 className={styles.title}>{props.title || t('Set a Password to Use your Active Keys Automatically')}</h2>
       <div className={styles.formContent}>
         <div className={styles.text}>
-          Set the Password to save encrypted Active Keys in your browser. This allows you to send the transactions that require Active Keys, using this password.
+          {t('Set the Password to save encrypted Active Keys in your browser. This allows you to send the transactions that require Active Keys, using this password.')}
         </div>
         <div className={styles.field}>
           <input
@@ -41,19 +43,19 @@ const Password = (props) => {
             onChange={(e) => {
               setPassword(e.target.value);
               if (formError) {
-                setFormError(e.target.value !== passwordRepeat ? PASSWORD_ERROR : '');
+                setFormError(e.target.value !== passwordRepeat ? t(PASSWORD_ERROR) : '');
               }
             }}
           />
           <input
             type="password"
             className={styles.input}
-            placeholder="Repeat Password"
+            placeholder={t('Repeat Password')}
             value={passwordRepeat}
             onChange={(e) => {
               setPasswordRepeat(e.target.value);
               if (formError) {
-                setFormError(e.target.value !== password ? PASSWORD_ERROR : '');
+                setFormError(e.target.value !== password ? t(PASSWORD_ERROR) : '');
               }
             }}
           />
@@ -74,7 +76,7 @@ const Password = (props) => {
           type="submit"
           disabled={Boolean(!password || !passwordRepeat || formError)}
         >
-          Set Password
+          {t('Set Password')}
         </Button>
       </div>
     </form>
@@ -87,7 +89,7 @@ Password.propTypes = {
 };
 
 Password.defaultProps = {
-  title: 'Set a Password to Use your Active Keys Automatically',
+  title: undefined,
 };
 
 export default Password;

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import React from 'react';
@@ -17,6 +18,7 @@ import { FEED_PER_PAGE, POST_TYPE_MEDIA_ID, POST_TYPE_DIRECT_ID } from '../utils
 import Tabs from '../components/Tabs';
 
 const Overview = (props) => {
+  const { t } = useTranslation();
   const overviewCategoryName = props.match.params.filter;
   const overviewRouteName = props.match.params.route;
   const overviewCategory = overviewUtils.OVERVIEW_CATEGORIES.find(i => i.name === overviewCategoryName);
@@ -43,7 +45,7 @@ const Overview = (props) => {
           <div className="content__inner content__inner_overview">
             <div className="nav-bar">
               <div className="nav-bar__title nav-bar__title_overview">
-                <h1 className="title title_bold">Overview</h1>
+                <h1 className="title title_bold">{t('Overview')}</h1>
 
                 <Tabs
                   responsive

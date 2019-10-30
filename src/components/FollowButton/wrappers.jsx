@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useCallback, memo, useState } from 'react';
@@ -11,13 +12,14 @@ import withLoader from '../../utils/withLoader';
 import equalByProps from '../../utils/equalByProps';
 
 export const UserFollowButton = memo(({ userId, ...props }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
   const user = useSelector(selectUserById(userId), equalByProps(['id', 'accountName', 'myselfData.follow']));
   const followed = user && user.myselfData && user.myselfData.follow;
   const userIsOwner = owner && user && Number(owner.id) === Number(user.id);
-  const text = followed || userIsOwner ? 'Following' : 'Follow';
+  const text = followed || userIsOwner ? t('Following') : t('Follow');
 
   const followOrUnfollow = useCallback(async () => {
     if (loading) {
@@ -62,12 +64,13 @@ UserFollowButton.propTypes = {
 };
 
 export const OrgFollowButton = memo(({ orgId, ...props }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const owner = useSelector(selectOwner, equalByProps(['id', 'accountName']));
   const org = useSelector(selectOrgById(orgId), equalByProps(['id', 'blockchainId', 'myselfData.follow']));
   const followed = org && org.myselfData && org.myselfData.follow;
-  const text = followed ? 'Joined' : 'Join';
+  const text = followed ? t('Joined') : t('Join');
 
   const followOrUnfollow = useCallback(async () => {
     if (loading) {

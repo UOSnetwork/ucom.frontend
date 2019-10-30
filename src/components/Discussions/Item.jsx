@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { SortableElement } from 'react-sortable-hoc';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -11,6 +12,7 @@ import utilsActions from '../../actions/utils';
 import { sanitizeText } from '../../utils/text';
 
 const Item = (props) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   return (
@@ -31,7 +33,9 @@ const Item = (props) => {
             />
           </div>
           <div className={styles.author}>
-            by <Link to={props.authorUrl} className="link red-hover">{props.author}</Link>
+            <Trans i18nKey="By author" author={props.author}>
+              by <Link to={props.authorUrl} className="link red-hover">{{ author: props.author }}</Link>
+            </Trans>
           </div>
         </div>
         <div className={styles.count}>
@@ -41,10 +45,10 @@ const Item = (props) => {
           <div className={styles.itemMenu}>
             <DropdownMenu
               items={[{
-                title: 'Remove',
+                title: t('Remove'),
                 onClick: () => props.onClickRemove(props.id),
               }, {
-                title: 'Copy Link',
+                title: t('Copy Link'),
                 onClick: () => dispatch(utilsActions.copyToClipboard(`${document.location.origin}${props.url}`)),
               }]}
             />

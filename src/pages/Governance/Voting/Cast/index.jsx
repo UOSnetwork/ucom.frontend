@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react';
@@ -20,6 +21,7 @@ import * as governancePageActions from '../../../../actions/pages/governance';
 import styles from '../styles.css';
 
 const Cast = ({ history, match }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const nodeTypeId = Number(match.params.nodeTypeId);
   const state = useSelector(state => state.pages.governance.voting);
@@ -33,7 +35,7 @@ const Cast = ({ history, match }) => {
 
   const onSuccess = () => {
     dispatch(governancePageActions.setSelectedNodes(nodesToVote.map(i => i.id), nodeTypeId));
-    dispatch(addSuccessNotification('Vote for nodes is successful'));
+    dispatch(addSuccessNotification(t('Vote for nodes is successful')));
     history.push(urls.getGovernanceUrl());
   };
 
@@ -74,7 +76,7 @@ const Cast = ({ history, match }) => {
       <Content onClickClose={close}>
         <div className={styles.content}>
           <h1 className={styles.title}>
-            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? 'Vote for these producers' : 'Vote for these nodes'}
+            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? t('Vote for these producers') : t('Vote for these nodes')}
           </h1>
 
           <div className={styles.voteTitle}>
@@ -86,7 +88,7 @@ const Cast = ({ history, match }) => {
                 size: 32,
               }}
             />
-            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? 'Block Producers to Vote' : 'Nodes to Vote'}
+            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? t('Block Producers to Vote') : t('Nodes to Vote')}
           </div>
 
           <div className={styles.table}>
@@ -109,7 +111,7 @@ const Cast = ({ history, match }) => {
                 size: 32,
               }}
             />
-            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? 'Block Producers to Unvote' : 'Nodes to Unvote'}
+            {nodeTypeId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS ? t('Block Producers to Unvote') : t('Nodes to Unvote')}
           </div>
 
           <div className={styles.table}>
@@ -123,17 +125,13 @@ const Cast = ({ history, match }) => {
           </div>
 
           <div className={styles.panel}>
-            <PanelWrapper title="By completing this transaction, I agree to the following…">
+            <PanelWrapper title={t('By completing this transaction, I agree to the following…')}>
               <div className={styles.text}>
-                <p>The intent of the ‘voteproducer’ action is to cast a valid vote for up to 30 BP candidates.</p>
-                <p>
-                  As an authorized party I {getUserName(owner)} wish to vote on behalf of {getUserName(owner)} in favor of the block produser candidates
-                  {nodesToVote.length ? nodesToVote.map((node, index) => <strong key={index}> {node.title}, </strong>) : <strong> none </strong>}
-                  with a voting weight equal to all tokens currently owned by {getUserName(owner)} and staked for CPU or bandwidth.
-                </p>
-                <p>If I am not the benefitial owner of these shares I stipulate I have proof that I’ve been authorized to vote these shares by their benefitial owner(s).</p>
-                <p>I stipulate I have not and will not accept anything of value in exchange for these votes, on penalty of confiscation of these tokens, and other penalties.</p>
-                <p>I acknowledge that using any system of authomatic voting, re-voting, or vote refreshing, or allowing such system to be used on my behalf or on behalf of another, is forbidden and doing so violates this contract.</p>
+                <p>{t('The intent of the ‘voteproducer’ action is to cast a valid vote for up to 30 BP candidates.')}</p>
+                <p>{t('As an authorized party', { userName: getUserName(owner), nodes: nodesToVote.length ? nodesToVote.map(node => node.title).join(', ') : t('none') })}</p>
+                <p>{t('If I am not the benefitial owner of these shares I stipulate I have proof that I’ve been authorized to vote these shares by their benefitial owner(s).')}</p>
+                <p>{t('I stipulate I have not and will not accept anything of value in exchange for these votes, on penalty of confiscation of these tokens, and other penalties.')}</p>
+                <p>{t('I acknowledge that using any system of authomatic voting, re-voting, or vote refreshing, or allowing such system to be used on my behalf or on behalf of another, is forbidden and doing so violates this contract.')}</p>
               </div>
             </PanelWrapper>
           </div>
@@ -158,7 +156,7 @@ const Cast = ({ history, match }) => {
                     }
                   }}
                 >
-                  Vote
+                  {t('Vote')}
                 </Button>
               )}
             </RequestActiveKey>

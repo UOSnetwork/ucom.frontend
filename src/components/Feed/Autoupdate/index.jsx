@@ -1,3 +1,4 @@
+import { Trans } from 'react-i18next';
 import classNames from 'classnames';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,9 @@ const Autoupdate = ({
     >
       <UserPick src={userAvatarSrc} url={userUrl} size={24} />
       <span className={styles.text}>
-        <Link to={userUrl} className="link red-hover">{userName}</Link>&nbsp;made an update {moment(createdAt).fromNow()}
+        <Trans i18nKey="Made an update">
+          <Link to={userUrl} className="link red-hover">{{ userName }}</Link> made an update {{ fromNow: moment(createdAt).fromNow() }}
+        </Trans>
       </span>
     </div>
     <div className={styles.container}>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Element } from 'react-scroll';
 import { pick, cloneDeep, uniqBy } from 'lodash';
@@ -59,6 +60,7 @@ const OrganizationProfile = ({
   organization,
   onSuccess,
 }) => {
+  const { t } = useTranslation();
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
   const [loading, setLoading] = useState(false);
@@ -114,7 +116,7 @@ const OrganizationProfile = ({
         data,
       )));
 
-      dispatch(addSuccessNotification(data.id ? 'Community has been saved' : 'Community has been created'));
+      dispatch(addSuccessNotification(data.id ? t('Community has been saved') : t('Community has been created')));
 
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
@@ -178,28 +180,28 @@ const OrganizationProfile = ({
           <Menu
             create={!data.id}
             sections={[
-              { title: 'General', name: 'general' },
-              { title: 'Board', name: 'board' },
-              { title: 'About', name: 'about' },
-              { title: 'Contacts', name: 'contacts' },
-              { title: 'Links', name: 'links' },
-              { title: 'Location', name: 'cocation' },
+              { title: t('General'), name: 'general' },
+              { title: t('Board'), name: 'board' },
+              { title: t('About'), name: 'about' },
+              { title: t('Contacts'), name: 'contacts' },
+              { title: t('Links'), name: 'links' },
+              { title: t('Location'), name: 'cocation' },
             ]}
             submitDisabled={loading}
             submitVisible={edited}
           />
         </div>
         <div className={styles.content}>
-          <h2 className={styles.title}>{data.id ? 'Edit Community Profile' : 'New Community'}</h2>
+          <h2 className={styles.title}>{data.id ? t('Edit Community Profile') : t('New Community')}</h2>
 
           <Element
             name="general"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>General</h3>
+            <h3 className={styles.subTitle}>{t('General')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>Cover</div>
+              <div className={styles.label}>{t('Cover')}</div>
               <div className={styles.data}>
                 <DropzoneWrapper
                   className={styles.cover}
@@ -216,7 +218,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={`${styles.field} ${styles.block}`}>
-              <div className={styles.label}>Emblem</div>
+              <div className={styles.label}>{t('Emblem')}</div>
               <div className={styles.data}>
                 <DropzoneWrapper
                   className={styles.upload}
@@ -234,18 +236,18 @@ const OrganizationProfile = ({
                     )}
                   </div>
                   <div className={styles.uploadText}>
-                    Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.
+                    {t('Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.')}
                   </div>
                 </DropzoneWrapper>
               </div>
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Community Name</div>
+              <div className={styles.label}>{t('Community Name')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
-                  placeholder="Choose Nice Name"
+                  placeholder={t('Choose Nice Name')}
                   value={data.title}
                   error={errors && errors.title}
                   onChange={(title) => {
@@ -256,7 +258,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Community Link</div>
+              <div className={styles.label}>{t('Community Link')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
@@ -276,10 +278,10 @@ const OrganizationProfile = ({
             name="board"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Board</h3>
+            <h3 className={styles.subTitle}>{t('Board')}</h3>
 
             <div className={`${styles.field} ${styles.block}`}>
-              <div className={styles.label}>Owner</div>
+              <div className={styles.label}>{t('Owner')}</div>
               <div className={styles.data}>
                 {owner &&
                   <EntryCard
@@ -294,7 +296,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Administrators</div>
+              <div className={styles.label}>{t('Administrators')}</div>
               <div className={`${styles.data} ${styles.entrys}`}>
                 {data.usersTeam && data.usersTeam.map((item, index) => (
                   <div
@@ -341,7 +343,7 @@ const OrganizationProfile = ({
                     disabled={adminSearchVisible}
                     onClick={() => setAdminSearchVisible(true)}
                   >
-                    Add Admin
+                    {t('Add Admin')}
                   </Button>
                 </div>
               </div>
@@ -352,12 +354,12 @@ const OrganizationProfile = ({
             name="about"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>About</h3>
+            <h3 className={styles.subTitle}>{t('About')}</h3>
 
             <Textarea
               rows={5}
               submited={submited}
-              placeholder="Main idea — something you want others to know about this community…"
+              placeholder={t('Main idea — something you want others to know about this community…')}
               className={styles.textarea}
               value={data.about}
               error={errors && errors.about}
@@ -371,10 +373,10 @@ const OrganizationProfile = ({
             name="contacts"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Contacts</h3>
+            <h3 className={styles.subTitle}>{t('Contacts')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>Email</div>
+              <div className={styles.label}>{t('Email')}</div>
               <div className={styles.data}>
                 <TextInput
                   type="email"
@@ -390,7 +392,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Phone Number</div>
+              <div className={styles.label}>{t('Phone Number')}</div>
               <div className={styles.data}>
                 <TextInput
                   type="tel"
@@ -410,10 +412,10 @@ const OrganizationProfile = ({
             name="links"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Links</h3>
+            <h3 className={styles.subTitle}>{t('Links')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>Community Website</div>
+              <div className={styles.label}>{t('Community Website')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
@@ -428,7 +430,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Social Networks</div>
+              <div className={styles.label}>{t('Social Networks')}</div>
               <div className={`${styles.data} ${styles.entrys}`}>
                 {data.socialNetworks && data.socialNetworks.map((item, index) => (
                   <div className={`${styles.entry} ${styles.input}`} key={index}>
@@ -470,14 +472,14 @@ const OrganizationProfile = ({
                       setDataAndValidate({ ...data, socialNetworks });
                     }}
                   >
-                    {data.socialNetworks && data.socialNetworks.length > 0 ? 'Add Another' : 'Add Network'}
+                    {data.socialNetworks && data.socialNetworks.length > 0 ? t('Add Another') : t('Add Network')}
                   </Button>
                 </div>
               </div>
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Partners</div>
+              <div className={styles.label}>{t('Partners')}</div>
               <div className={`${styles.data} ${styles.entrys}`}>
                 {data.communitySources && data.communitySources.map((item, index) => (
                   <div
@@ -542,7 +544,7 @@ const OrganizationProfile = ({
                     autoFocus
                     organization
                     value={[]}
-                    placeholder="Find community"
+                    placeholder={t('Find community')}
                     loadOptions={async (q) => {
                       if (validUrl(q)) {
                         try {
@@ -588,7 +590,7 @@ const OrganizationProfile = ({
                     disabled={partnersSearchVisible}
                     onClick={() => setPartnersSearchVisible(true)}
                   >
-                    {[...(data.partnershipSources || []), ...(data.communitySources || [])].length > 0 ? 'Add Another' : 'Add Partner'}
+                    {[...(data.partnershipSources || []), ...(data.communitySources || [])].length > 0 ? t('Add Another') : t('Add Partner')}
                   </Button>
                 </div>
               </div>
@@ -599,10 +601,10 @@ const OrganizationProfile = ({
             name="cocation"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Location</h3>
+            <h3 className={styles.subTitle}>{t('Location')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>Country</div>
+              <div className={styles.label}>{t('Country')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
@@ -616,7 +618,7 @@ const OrganizationProfile = ({
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>City</div>
+              <div className={styles.label}>{t('City')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}

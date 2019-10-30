@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Element } from 'react-scroll';
@@ -26,6 +27,7 @@ import withLoader from '../../utils/withLoader';
 import { selectOwner } from '../../store/selectors';
 
 const Settings = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
   const state = useSelector(state => state.settings);
@@ -111,26 +113,26 @@ const Settings = () => {
             </div>
             <div className={styles.content}>
               <div className={styles.section}>
-                <h2 className={styles.title}>Account Settings</h2>
-                <p>This section contains settings of your blockchain account.</p>
+                <h2 className={styles.title}>{t('Account Settings')}</h2>
+                <p>{t('This section contains settings of your blockchain account.')}</p>
               </div>
 
               <Element
                 name="Keys"
                 className={styles.section}
               >
-                <h3 className={styles.title}>Keys</h3>
+                <h3 className={styles.title}>{t('Keys')}</h3>
                 <div className={styles.subSection}>
-                  <h4 className={styles.title}>Social Keys</h4>
-                  <p>The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.</p>
+                  <h4 className={styles.title}>{t('Social Keys')}</h4>
+                  <p>{t('The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.')}</p>
                   {keys.socialKey ? (
                     <Fragment>
                       <div className={styles.copy}>
-                        <CopyPanel label="Private" value={keys.socialKey} />
+                        <CopyPanel label={t('Private')} value={keys.socialKey} />
                       </div>
                       <div className={styles.copy}>
                         <CopyPanel
-                          label="Public"
+                          label={t('Public')}
                           value={keys.socialPublicKey}
                         />
                       </div>
@@ -138,30 +140,30 @@ const Settings = () => {
                   ) : (
                     <div className={styles.action}>
                       <Button strech small onClick={() => setGenerateSocialKeyVisible(true)}>
-                        Generate Social Key
+                        {t('Generate Social Key')}
                       </Button>
                     </div>
                   )}
                 </div>
 
                 <div className={styles.subSection}>
-                  <h4 className={styles.title}>Password for Active Key</h4>
-                  <p>You can set a Password to save a pair of encrypted Active Keys in your browser. This allows you to send the transactions, that require Active Keys, using your Password instead. You will need to enter the Brainkey to unlock your Active Keys.</p>
+                  <h4 className={styles.title}>{t('Password for Active Key')}</h4>
+                  <p>{t('You can set a Password to save a pair of encrypted Active Keys in your browser. This allows you to send the transactions, that require Active Keys, using your Password instead. You will need to enter the Brainkey to unlock your Active Keys.')}</p>
                   {!passwordIsSet ? (
                     <div className={styles.action}>
                       <Button strech small onClick={() => setChangePasswordVisible(true)}>
-                        Set Password
+                        {t('Set Password')}
                       </Button>
                     </div>
                   ) : (
                     <div className={`${styles.action} ${styles.withLabel}`}>
                       <div className={styles.label}>
                         <IconInputComplete />
-                        <span className={styles.text}>Password set</span>
+                        <span className={styles.text}>{t('Password set')}</span>
                       </div>
 
                       <Button strech small onClick={() => setChangePasswordVisible(true)}>
-                        Reset password
+                        {t('Reset password')}
                       </Button>
                     </div>
                   )}
@@ -174,10 +176,10 @@ const Settings = () => {
 
               {owner.affiliates && owner.affiliates.referralRedirectUrl &&
                 <Element name="Referral" className={styles.section}>
-                  <h3 className={styles.title}>Referral Link</h3>
+                  <h3 className={styles.title}>{t('Referral Link')}</h3>
 
                   <div className={styles.subSection}>
-                    <p>Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get 10% of the importance they acquire.</p>
+                    <p>{t('Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get 10% of the importance they acquire.')}</p>
                     <div className={styles.copy}>
                       <CopyPanel
                         label="Your referral link"
@@ -188,11 +190,11 @@ const Settings = () => {
 
                   {state.refferals.ids.length > 0 &&
                     <div className={styles.subSection}>
-                      <h4 className={styles.title}>Your Referrals</h4>
+                      <h4 className={styles.title}>{t('Your Referrals')}</h4>
                       <div className={styles.refferals}>
                         <EntryListSectionUsersWrapper
                           titleEnabled={false}
-                          title="Your Referrals"
+                          title={t('Your Referrals')}
                           limit={3}
                           showViewMore={state.refferals.metadata.totalAmount > state.refferals.ids.length}
                           count={state.refferals.metadata.totalAmount}
@@ -208,16 +210,20 @@ const Settings = () => {
               }
 
               <div className={styles.subscribe}>
-                Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!
-                Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => dispatch(subscribeActions.show())}>subscribe</span> to&nbsp;our weekly updates.
+                {t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
+                <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
+                  Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => dispatch(subscribeActions.show())}>subscribe</span> to&nbsp;our weekly updates.
+                </Trans>
               </div>
             </div>
 
             <div className={styles.footer}>
-              Go to&nbsp;
-              <Link className="link red" to={urls.getUserEditProfileUrl(owner.id)}>
-                Profile Edit
-              </Link>
+              <Trans i18nKey="Go to Profile Edit">
+                Go to&nbsp;
+                <Link className="link red" to={urls.getUserEditProfileUrl(owner.id)}>
+                  Profile Edit
+                </Link>
+              </Trans>
             </div>
           </div>
         </Content>

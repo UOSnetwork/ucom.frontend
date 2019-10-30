@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { padStart } from 'lodash';
 import styles from './styles.css';
 
 const Countdown = (props) => {
+  const { t } = useTranslation();
   const [date, setDate] = useState();
 
   const calculateCountdown = (endDate) => {
@@ -67,7 +69,7 @@ const Countdown = (props) => {
       <div className={styles.column}>
         <div>
           <div className={styles.number}>{padStart(date.days, 2, '0')}</div>
-          <div className={styles.text}>{date.days === 1 ? 'Day' : 'Days'}</div>
+          <div className={styles.text}>{date.days === 1 ? t('Day') : t('Days')}</div>
         </div>
       </div>
       <div className={styles.column}>
@@ -75,7 +77,7 @@ const Countdown = (props) => {
           <span className={styles.number}>{padStart(date.hours, 2, '0')}:</span>
           <span className={styles.number}>{padStart(date.min, 2, '0')}:</span>
           <span className={styles.number}>{padStart(date.sec, 2, '0')}</span>
-          <div className={styles.text}>Hours</div>
+          <div className={styles.text}>{t('Hours')}</div>
         </div>
       </div>
     </div>

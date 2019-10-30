@@ -1,4 +1,5 @@
 // TODO: Move to pages/home
+import { useTranslation } from 'react-i18next';
 import { range } from 'lodash';
 import Tippy from '@tippy.js/react';
 import PropTypes from 'prop-types';
@@ -11,74 +12,79 @@ export const TAB_ID_PEOPLE = 2;
 export const TAB_ID_ALL = 3;
 export const TAB_ID_OFFERS = 4;
 
-const tabs = [{
-  id: TAB_ID_COMMUNITIES,
-  title: 'Communities',
-  disabled: false,
-}, {
-  id: TAB_ID_PEOPLE,
-  title: 'People',
-  disabled: false,
-}, {
-  id: TAB_ID_ALL,
-  title: 'All',
-  disabled: true,
-}, {
-  id: TAB_ID_OFFERS,
-  title: 'Offers',
-  disabled: true,
-}];
 
-const Tabs = ({ activeTabId, onClickItem }) => (
-  <div className={styles.container}>
-    <div className={styles.title}>
-      {tabs.map(item => (
-        <div
-          key={item.id}
-          className={classNames({
-            [styles.item]: true,
-            [styles.active]: activeTabId === item.id,
-          })}
-        >
-          <span className={styles.inner}>
-            <span className={styles.left}>{range(5).map(() => ` ${item.title}`)}&nbsp;</span>
-            {item.title}
-            <span className={styles.right}>&nbsp;{range(5).map(() => `${item.title} `)}</span>
-          </span>
-        </div>
-      ))}
-    </div>
+const Tabs = ({ activeTabId, onClickItem }) => {
+  const { t } = useTranslation();
 
-    <div className={styles.tabs}>
-      {tabs.map(item => (
-        <div
-          key={item.id}
-          className={classNames({
-            [styles.item]: true,
-            [styles.offers]: item.id === TAB_ID_OFFERS,
-            [styles.active]: activeTabId === item.id,
-            [styles.disabled]: item.disabled,
-          })}
-        >
-          <span
-            role="presentation"
-            className={styles.link}
-            onClick={() => !item.disabled && onClickItem(item.id)}
+  const tabs = [{
+    id: TAB_ID_COMMUNITIES,
+    title: t('Communities'),
+    disabled: false,
+  }, {
+    id: TAB_ID_PEOPLE,
+    title: t('People'),
+    disabled: false,
+  }, {
+    id: TAB_ID_ALL,
+    title: t('All'),
+    disabled: true,
+  }, {
+    id: TAB_ID_OFFERS,
+    title: t('Offers'),
+    disabled: true,
+  }];
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.title}>
+        {tabs.map(item => (
+          <div
+            key={item.id}
+            className={classNames({
+              [styles.item]: true,
+              [styles.active]: activeTabId === item.id,
+            })}
           >
-            <Tippy
-              arrow
-              isEnabled={item.disabled}
-              placement="top"
-              content="Coming Soon"
+            <span className={styles.inner}>
+              <span className={styles.left}>{range(5).map(() => ` ${item.title}`)}&nbsp;</span>
+              {item.title}
+              <span className={styles.right}>&nbsp;{range(5).map(() => `${item.title} `)}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.tabs}>
+        {tabs.map(item => (
+          <div
+            key={item.id}
+            className={classNames({
+              [styles.item]: true,
+              [styles.offers]: item.id === TAB_ID_OFFERS,
+              [styles.active]: activeTabId === item.id,
+              [styles.disabled]: item.disabled,
+            })}
+          >
+            <span
+              role="presentation"
+              className={styles.link}
+              onClick={() => !item.disabled && onClickItem(item.id)}
             >
-              <span className={styles.text}>{item.title}</span>
-            </Tippy>
-          </span>
-        </div>
-      ))}
+              <Tippy
+                arrow
+                isEnabled={item.disabled}
+                placement="top"
+                content={t('Coming Soon')}
+              >
+                <span className={styles.text}>{item.title}</span>
+              </Tippy>
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 Tabs.propTypes = {
   activeTabId: PropTypes.oneOf([

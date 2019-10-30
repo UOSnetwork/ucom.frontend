@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { endsWith } from 'lodash';
 import React from 'react';
@@ -13,6 +14,7 @@ import styles from './styles.css';
 const TableUsers = ({
   userIds, orderBy, startIndex, ...props
 }) => {
+  const { t } = useTranslation();
   const users = useSelector(selectUsersByIds(userIds));
 
   return (
@@ -25,7 +27,7 @@ const TableUsers = ({
         hideOnSmall: true,
         sortable: false,
       }, {
-        title: 'Name',
+        title: t('Name'),
         width: 'auto',
         minWidth: '150px',
         sortable: true,
@@ -33,7 +35,7 @@ const TableUsers = ({
         name: 'account_name',
         reverse: orderBy[0] !== '-',
       }, {
-        title: 'Social activity',
+        title: t('Social activity'),
         width: '120px',
         minWidth: '120px',
         sortable: true,
@@ -41,7 +43,7 @@ const TableUsers = ({
         name: 'current_rate',
         reverse: orderBy[0] !== '-',
       }, {
-        title: 'Importance°',
+        title: t('Importance°'),
         width: '120px',
         minWidth: '120px',
         sortable: true,

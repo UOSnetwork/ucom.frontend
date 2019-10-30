@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ const SendTokens = ({
   error,
   loading,
 }) => {
+  const { t } = useTranslation();
   const user = useSelector(selectUserById(accountName), isEqual);
   const owner = useSelector(selectOwner, isEqual);
   const disabled = !amount || !accountName || loading;
@@ -47,19 +49,19 @@ const SendTokens = ({
                 requestActiveKey();
               }}
             >
-              <h2 className={styles.title}>Send Tokens</h2>
+              <h2 className={styles.title}>{t('Send Tokens')}</h2>
               <div className={styles.field}>
                 <TextInput
                   autoFocus
                   placeholder="0"
-                  label="UOS Amount"
+                  label={t('UOS Amount')}
                   disabled={!editable}
                   value={`${amount}`}
                   onChange={value => onChangeAmount(parseInt(value, 10) || '')}
                 />
               </div>
               <label className={styles.field}>
-                <div className={styles.label}>Destination Account</div>
+                <div className={styles.label}>{t('Destination Account')}</div>
                 <SearchInput
                   value={user}
                   isMulti={false}
@@ -74,8 +76,8 @@ const SendTokens = ({
               <div className={styles.field}>
                 <TextInput
                   disabled={!editable}
-                  placeholder="Example"
-                  label="Memo"
+                  placeholder={t('Example')}
+                  label={t('Memo')}
                   value={`${memo}`}
                   onChange={onChangeMemo}
                 />
@@ -87,7 +89,7 @@ const SendTokens = ({
                 </div>
               }
               <div className={styles.action}>
-                <Button cap big red strech type="submit" disabled={disabled || requestLoading}>Send</Button>
+                <Button cap big red strech type="submit" disabled={disabled || requestLoading}>{t('Send')}</Button>
               </div>
             </form>
           </Content>

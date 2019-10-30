@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 32px 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   line-height: 1.5;
 }
@@ -30,7 +30,8 @@
 .list {
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 26px;
+  grid-gap: 16px;
+  align-items: center;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -43,7 +44,7 @@
 }
 
 .telegramTitle {
-  margin: 0 20px 0 0;
+  margin: 0 16px 0 0;
   font-weight: normal;
 }
 
@@ -55,4 +56,16 @@
 .telegram svg {
   display: inline;
   margin: 0 6px 0 0;
+}
+
+.lang {
+  outline: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.langItem {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
 }

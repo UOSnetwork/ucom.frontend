@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -17,6 +18,7 @@ const STEP_ACTIVE_KEY = 2;
 const STEP_PASSWORD = 3;
 
 const ChangePassword = (props) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(STEP_BRAINKEY);
   const [brainkey, setBrainkey] = useState(null);
   const [brainkeyError, setBrainkeyError] = useState('');
@@ -65,7 +67,7 @@ const ChangePassword = (props) => {
 
                       saveAndEncryptActiveKey(activeKey, password);
                       props.onSubmit();
-                      dispatch(addSuccessNotification('Password for Active Key has changed'));
+                      dispatch(addSuccessNotification(t('Password for Active Key has changed')));
                     } catch (e) {
                       dispatch(addErrorNotification(e.message));
                     }
@@ -76,11 +78,11 @@ const ChangePassword = (props) => {
             default:
               return (
                 <Brainkey
-                  title="Generate Private Active Key with Brainkey"
+                  title={t('Generate Private Active Key with Brainkey')}
                   description={props.description}
                   error={brainkeyError}
                   loading={loading}
-                  backText="I have Active Private key"
+                  backText={t('I have Active Private key')}
                   onChange={() => {
                     setBrainkeyError('');
                   }}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -13,6 +14,7 @@ const STEP_ACTIVE_KEY = 2;
 const STEP_SAVE_KEY = 3;
 
 const GenerateSocialKey = (props) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(STEP_BRAINKEY);
   const [socialKey, setSocailKey] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -53,10 +55,10 @@ const GenerateSocialKey = (props) => {
             case STEP_SAVE_KEY:
               return (
                 <SaveKey
-                  title="Save your Private Social Key"
+                  title={t('Save your Private Social Key')}
                   copyText={socialKey}
                   proceedAsLink={false}
-                  proceedText="Finish"
+                  proceedText={t('Finish')}
                   onClickProceed={() => {
                     props.onSubmit(socialKey);
                   }}
@@ -67,8 +69,8 @@ const GenerateSocialKey = (props) => {
               return (
                 <Brainkey
                   loading={loading}
-                  title="Generate Social Key with Brainkey"
-                  backText="I have Private Active key"
+                  title={t('Generate Social Key with Brainkey')}
+                  backText={t('I have Private Active key')}
                   onSubmit={async (brainkey) => {
                     setLoading(true);
 

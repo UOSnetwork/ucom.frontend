@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
@@ -10,34 +11,38 @@ export const TAB_ID_DOWN = 3;
 
 const Tabs = ({
   count, upCount, downCount, activeTabId, onClickTab,
-}) => (
-  <div className={styles.tabs}>
-    <div className={styles.inner}>
-      {[{
-        id: TAB_ID_ALL,
-        title: `All (${formatNumber(count)})`,
-      }, {
-        id: TAB_ID_UP,
-        title: `${formatNumber(upCount)} Up`,
-      }, {
-        id: TAB_ID_DOWN,
-        title: `${formatNumber(downCount)} Down`,
-      }].map(({ id, title }) => (
-        <span
-          key={id}
-          role="presentation"
-          onClick={() => onClickTab && onClickTab(id)}
-          className={classNames({
-            [styles.tab]: true,
-            [styles.active]: activeTabId === id,
-          })}
-        >
-          {title}
-        </span>
-      ))}
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles.tabs}>
+      <div className={styles.inner}>
+        {[{
+          id: TAB_ID_ALL,
+          title: t('All num', { count: formatNumber(count) }),
+        }, {
+          id: TAB_ID_UP,
+          title: t('Up num', { count: formatNumber(upCount) }),
+        }, {
+          id: TAB_ID_DOWN,
+          title: t('Down num', { count: formatNumber(downCount) }),
+        }].map(({ id, title }) => (
+          <span
+            key={id}
+            role="presentation"
+            onClick={() => onClickTab && onClickTab(id)}
+            className={classNames({
+              [styles.tab]: true,
+              [styles.active]: activeTabId === id,
+            })}
+          >
+            {title}
+          </span>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 Tabs.propTypes = {
   count: PropTypes.number,

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import React from 'react';
 import { withRouter } from 'react-router';
@@ -13,6 +14,8 @@ import loader from '../../utils/loader';
 const LIST_LIMIT = 5;
 
 const Publications = (props) => {
+  const { t } = useTranslation();
+
   const page = +props.match.params.page || 1;
   const overviewCategoryName = props.match.params.filter;
   const overviewCategory = overviewUtils.OVERVIEW_CATEGORIES.find(i => i.name === overviewCategoryName);
@@ -62,12 +65,12 @@ const Publications = (props) => {
               <div className="user-section">
                 <div className="user-section__title">
                   <h2 className="title title_xxsmall title_medium">
-                  Published by
+                    {t('Published by')}
                   </h2>
                 </div>
                 <UserList
                   loadMore={() => props.dispatch(feedActions.feedGetSide({
-                    postTypeId, categoryId: overviewCategory.id, tab: 'Posts', side: 'Users',
+                    postTypeId, categoryId: overviewCategory.id, tab: t('Posts'), side: t('Users'),
                   }))}
                   usersIds={props.feed.manyUsers.map(e => e.id)}
                   limit={LIST_LIMIT}
@@ -100,7 +103,7 @@ const Publications = (props) => {
                 </div>
                 <OrganizationList
                   loadMore={() => props.dispatch(feedActions.feedGetSide({
-                    postTypeId, categoryId: overviewCategory.id, tab: 'Posts', side: 'Organizations',
+                    postTypeId, categoryId: overviewCategory.id, tab: t('Posts'), side: t('Organizations'),
                   }))}
                   limit={LIST_LIMIT}
                   organizationsIds={props.feed.manyOrganizations.map(e => e.id)}

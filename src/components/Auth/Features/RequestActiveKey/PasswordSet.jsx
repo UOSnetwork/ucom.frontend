@@ -1,40 +1,39 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Button from '../../../Button/index';
 import styles from '../../../Wallet/Actions/styles.css'; // TODO: Incapsulate styles
 
-const PasswordSet = props => (
-  <form
-    className={styles.content}
-    onSubmit={async (e) => {
-      e.preventDefault();
-      props.onSubmit();
-    }}
-  >
-    <h2 className={styles.title}>Sign Transaction</h2>
-    <p className={`${styles.text} ${styles.intro}`}>To register this transaction, you need your Private Active Key. You can save it in your browser, encrypted with a password, in order to send your transactions faster.</p>
-    <div className={styles.action}>
-      <Button
-        cap
-        big
-        red
-        strech
-        type="submit"
-      >
-        Set Password
-      </Button>
-    </div>
-    <div className={styles.backLink}>
-      <span
-        role="presentation"
-        className="link red-hover"
-        onClick={props.onClickActiveKey}
-      >
-        Sign the transaction with Private Active key
-      </span>
-    </div>
-  </form>
-);
+const PasswordSet = (props) => {
+  const { t } = useTranslation();
+
+  return (
+    <form
+      className={styles.content}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        props.onSubmit();
+      }}
+    >
+      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
+      <p className={`${styles.text} ${styles.intro}`}>{t('To register this transaction, you need your Private Active Key. You can save it in your browser, encrypted with a password, in order to send your transactions faster.')}</p>
+      <div className={styles.action}>
+        <Button cap big red strech type="submit">
+          {t('Set Password')}
+        </Button>
+      </div>
+      <div className={styles.backLink}>
+        <span
+          role="presentation"
+          className="link red-hover"
+          onClick={props.onClickActiveKey}
+        >
+          {t('Sign the transaction with Private Active key')}
+        </span>
+      </div>
+    </form>
+  );
+};
 
 PasswordSet.propTypes = {
   onSubmit: PropTypes.func.isRequired,

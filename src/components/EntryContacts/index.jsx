@@ -1,16 +1,19 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
 import styles from '../Section/styles.css';
 import { extractHostname, validUrl } from '../../utils/url';
 
 const EntryContacts = (props) => {
+  const { t } = useTranslation();
+
   if (!props.phone && !props.email && !validUrl(props.site)) {
     return null;
   }
 
   return (
     <div className={styles.section}>
-      <div className={styles.title}>Contacts</div>
+      <div className={styles.title}>{t('Contacts')}</div>
       <div className={styles.content}>
         {props.phone &&
           <p><a className="red-hover" href={`tel:${props.phone}`}>{props.phone}</a></p>

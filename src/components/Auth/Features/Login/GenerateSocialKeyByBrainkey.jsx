@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import React, { memo, Fragment, useState } from 'react';
@@ -9,6 +10,7 @@ import { parseResponseError } from '../../../../utils/errors';
 import BackToAuth from './BackToAuth';
 
 const GenerateSocialKeyByBrainkey = (props) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,8 +24,8 @@ const GenerateSocialKeyByBrainkey = (props) => {
           <BrainkeyForm
             loading={loading}
             error={error}
-            title="Generate Social Key with Brainkey"
-            hint="By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before."
+            title={t('Generate Social Key with Brainkey')}
+            hint={t('By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before.')}
             onChange={(value) => {
               setError('');
               if (props.onChange) {
@@ -49,7 +51,7 @@ const GenerateSocialKeyByBrainkey = (props) => {
             role="presentation"
             onClick={props.onClickActiveKey}
           >
-            I have Active Private Key
+            {t('I have Active Private Key')}
           </span>
         </div>
       </div>

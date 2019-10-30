@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React, { memo, Fragment, useState } from 'react';
@@ -13,6 +14,7 @@ import urls from '../../../../utils/urls';
 const ERROR_WRONG_ACCOUNT_NAME = 'Wrong Account Name format';
 
 const Account = (props) => {
+  const { t } = useTranslation();
   const [accountName, setAccountName] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -25,13 +27,13 @@ const Account = (props) => {
             onSubmit={async (e) => {
               e.preventDefault();
               if (!USER_ACCOUNT_NAME_REG_EXP.test(accountName.substr(1))) {
-                setFormError(ERROR_WRONG_ACCOUNT_NAME);
+                setFormError(t(ERROR_WRONG_ACCOUNT_NAME));
                 return;
               }
               props.onSubmit(accountName.substr(1));
             }}
           >
-            <h2 className={styles.title}>What’s Your U°OS Account Name?</h2>
+            <h2 className={styles.title}>{t('What’s Your U°OS Account Name?')}</h2>
             <div className={styles.field}>
               <input
                 type="text"
@@ -78,14 +80,15 @@ const Account = (props) => {
                 type="submit"
                 disabled={Boolean(props.loading || formError || props.error)}
               >
-                Proceed
+                {t('Proceed')}
               </Button>
             </div>
           </form>
         </div>
         <div className={styles.bottom}>
-          Don’t have an account?&nbsp;
-          <Link to={urls.getRegistrationUrl()} className={`red ${styles.navText}`}>Create one</Link>
+          <Trans>
+            Don’t have an account? <Link to={urls.getRegistrationUrl()} className={`red ${styles.navText}`}>Create one</Link>
+          </Trans>
         </div>
       </div>
     </Fragment>

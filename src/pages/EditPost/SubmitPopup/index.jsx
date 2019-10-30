@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
@@ -17,6 +18,7 @@ import styles from './styles.css';
 import { isSubmitKey } from '../../../utils/keyboard';
 
 const SubmitPopup = ({ onClickClose, location, history }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const state = useSelector(state => state.pages.editPost, isEqual);
   const urlSearchParams = new URLSearchParams(location.search);
@@ -46,7 +48,7 @@ const SubmitPopup = ({ onClickClose, location, history }) => {
     <Popup onClickClose={onClickClose}>
       <Content fixWidth={false} onClickClose={onClickClose}>
         <form className={styles.submitPopup}>
-          <div className={styles.title}>Publication preview</div>
+          <div className={styles.title}>{t('Publication preview')}</div>
 
           <div className={styles.field}>
             <Cover />
@@ -57,7 +59,7 @@ const SubmitPopup = ({ onClickClose, location, history }) => {
               autoFocus
               rows="1"
               maxLength={VALIDATION_INPUT_MAX_LENGTH}
-              placeholder="Preview title"
+              placeholder={t('Preview title')}
               value={state.data.title}
               onChange={title => dispatch(editPostActions.changeData({ title }))}
               className={styles.input}
@@ -69,7 +71,7 @@ const SubmitPopup = ({ onClickClose, location, history }) => {
             <TextareaAutosize
               rows="1"
               maxLength={VALIDATION_INPUT_MAX_LENGTH}
-              placeholder="Preview description"
+              placeholder={t('Preview description')}
               value={state.data.leadingText}
               onChange={leadingText => dispatch(editPostActions.changeData({ leadingText }))}
               className={`${styles.input} ${styles.small}`}
@@ -81,7 +83,7 @@ const SubmitPopup = ({ onClickClose, location, history }) => {
             <div>
               <CreateBy enabled={!state.data.id} />
             </div>
-            <Button red small disabled={state.loading} onClick={save}>Publish</Button>
+            <Button red small disabled={state.loading} onClick={save}>{t('Publish')}</Button>
           </div>
         </form>
       </Content>

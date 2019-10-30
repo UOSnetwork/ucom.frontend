@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, Fragment } from 'react';
 import Popup, { Content } from '../../../Popup';
@@ -15,6 +16,7 @@ const STEP_ACTIVE_KEY = 3;
 const STEP_PASSWORD_CREATE = 4;
 
 const RequestActiveKey = (props) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(null);
   const [visible, setVisible] = useState(false);
   const [submitArgs, setSubmitArgs] = useState([]);
@@ -69,7 +71,7 @@ const RequestActiveKey = (props) => {
           case STEP_PASSWORD_CREATE:
             return (
               <ChangePassword
-                description="To send this transaction, you need a Private Active Key. We generate it from your Brainkey."
+                description={t('To send this transaction, you need a Private Active Key. We generate it from your Brainkey.')}
                 onClickClose={resetStep}
                 onSubmit={resetStep}
               />

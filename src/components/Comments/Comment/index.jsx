@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -17,6 +18,7 @@ import entityIsEditable from '../../../utils/entityIsEditable';
 import Command from '../../../utils/command';
 
 const Comment = (props) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(false);
   const [editFormVisible, setEditFormVisible] = useState(false);
   const [formVisible, setFormVisible] = useState({ visible: false, name: '' });
@@ -32,15 +34,15 @@ const Comment = (props) => {
 
   if (Command.stringHasTipCommand(props.text)) {
     menuItems.push({
-      title: <span className={styles.limit}>Can not edit message with tip</span>,
+      title: <span className={styles.limit}>{t('Can not edit message with tip')}</span>,
       disabled: true,
     });
   } else {
     menuItems.push({
       title: isEditable ? (
-        <span>Edit <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? 'minute' : 'minutes'} left)</span></span>
+        <span>{t('Edit')} <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? t('minute') : t('minutes')} left)</span></span>
       ) : (
-        <span className={styles.limit}>Can only edit in first 15 min</span>
+        <span className={styles.limit}>{t('Can only edit in first 15 min')}</span>
       ),
       onClick: () => isEditable && setEditFormVisible(true),
       disabled: !isEditable,
@@ -134,7 +136,7 @@ const Comment = (props) => {
                   }
                 }}
               >
-                Reply
+                {t('Reply')}
               </div>
               <div className={styles.date}>{props.date}</div>
               <div className={styles.rating}>

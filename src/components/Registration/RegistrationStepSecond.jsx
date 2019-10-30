@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -12,35 +13,39 @@ import {
   THIRD_BRAINKEY_STEP_ID,
 } from '../../store/registration';
 
-const RegistrationStepSecond = props => (
-  <div
-    className={classNames(
-      'registration__section',
-      'registration__section_second',
-      { 'registration__section_active': props.registration.activeStepId === SECOND_STEP_ID },
-    )}
-  >
-    <div className="registration__title">
-      <div className="registration__step">2/3</div>
-      <h3 className="title title_small">Brainkey</h3>
-    </div>
+const RegistrationStepSecond = (props) => {
+  const { t } = useTranslation();
 
-    <div className="registration__content">
-      {(() => {
-        switch (props.registration.activeBrainkeyStepId) {
-          case (FIRST_BRAINKEY_STEP_ID):
-            return <RegistrationBrainkeyStepFirst />;
-          case (SECOND_BRAINKEY_STEP_ID):
-            return <RegistrationBrainkeyStepSecond />;
-          case (THIRD_BRAINKEY_STEP_ID):
-            return <RegistrationBrainkeyStepThird />;
-          default:
-            return null;
-        }
-      })()}
+  return (
+    <div
+      className={classNames(
+        'registration__section',
+        'registration__section_second',
+        { 'registration__section_active': props.registration.activeStepId === SECOND_STEP_ID },
+      )}
+    >
+      <div className="registration__title">
+        <div className="registration__step">2/3</div>
+        <h3 className="title title_small">{t('Brainkey')}</h3>
+      </div>
+
+      <div className="registration__content">
+        {(() => {
+          switch (props.registration.activeBrainkeyStepId) {
+            case (FIRST_BRAINKEY_STEP_ID):
+              return <RegistrationBrainkeyStepFirst />;
+            case (SECOND_BRAINKEY_STEP_ID):
+              return <RegistrationBrainkeyStepSecond />;
+            case (THIRD_BRAINKEY_STEP_ID):
+              return <RegistrationBrainkeyStepThird />;
+            default:
+              return null;
+          }
+        })()}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default connect(
   state => ({

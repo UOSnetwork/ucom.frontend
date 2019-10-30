@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styles from '../styles.css';
@@ -8,6 +9,7 @@ import { privateKeyIsValid } from '../../../utils/keys';
 const KEY_ERROR = 'Wrong key format';
 
 const KeyForm = (props) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -17,7 +19,7 @@ const KeyForm = (props) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (!privateKeyIsValid(value)) {
-          setFormError(KEY_ERROR);
+          setFormError(t(KEY_ERROR));
           return;
         }
         setFormError('');
@@ -34,7 +36,7 @@ const KeyForm = (props) => {
           onChange={(e) => {
             setValue(e.target.value);
             if (formError && !privateKeyIsValid(e.target.value)) {
-              setFormError(KEY_ERROR);
+              setFormError(t(KEY_ERROR));
             } else {
               setFormError('');
             }
@@ -59,7 +61,7 @@ const KeyForm = (props) => {
           type="submit"
           disabled={Boolean(props.loading || props.error || formError)}
         >
-          {props.submitText}
+          {props.submitText || t('Enter')}
         </Button>
       </div>
       {props.hint && <div className={styles.hint}>{props.hint}</div>}
@@ -82,7 +84,7 @@ KeyForm.defaultProps = {
   error: '',
   loading: false,
   onChange: undefined,
-  submitText: 'Enter',
+  submitText: undefined,
   hint: '',
 };
 

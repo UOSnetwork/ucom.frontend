@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 import Popup, { Content } from '../../Popup';
@@ -14,6 +15,7 @@ import RequestActiveKey from '../../Auth/Features/RequestActiveKey';
 import { selectOwner } from '../../../store';
 
 const EditStake = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const owner = useSelector(selectOwner);
   const wallet = useSelector(state => state.wallet);
@@ -39,7 +41,7 @@ const EditStake = () => {
 
   const onSuccess = () => {
     setFormError(null);
-    dispatch(addSuccessNotification('Successfully set stake'));
+    dispatch(addSuccessNotification(t('Successfully set stake')));
     setTimeout(() => {
       withLoader(dispatch(walletActions.getAccount(owner.accountName)));
       dispatch(walletActions.toggleEditStake(false));
@@ -101,7 +103,7 @@ const EditStake = () => {
                   <TextInput
                     autoFocus
                     placeholder="6664"
-                    label="UOS for CPU Time"
+                    label={t('UOS for CPU Time')}
                     value={`${cpu}`}
                     onChange={async (value) => {
                       const intValue = parseInt(value, 10);
@@ -112,7 +114,7 @@ const EditStake = () => {
                 <div className={styles.field}>
                   <TextInput
                     placeholder="6664"
-                    label="UOS for Network BW"
+                    label={t('UOS for Network BW')}
                     value={`${net}`}
                     onChange={async (value) => {
                       const intValue = parseInt(value, 10);
@@ -122,7 +124,7 @@ const EditStake = () => {
                 </div>
               </div>
               <div className={styles.hint}>
-                Unstaking UOS from Bandwidth or CPU takes 3 days. After 3 days, you can claim your unstaked UOS.
+                {t('Unstaking UOS from Bandwidth or CPU takes 3 days. After 3 days, you can claim your unstaked UOS.')}
               </div>
               {formError &&
                 <div className={styles.error}>
@@ -139,7 +141,7 @@ const EditStake = () => {
                   type="submit"
                   disabled={!`${cpu}`.length || !`${net}`.length || loading || requestLoading}
                 >
-                  Update
+                  {t('Update')}
                 </Button>
               </div>
             </form>

@@ -3,8 +3,11 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import App from './components/App';
+import i18n from './i18n';
 
-export default (store, location, state, staticVersion, contentMetaTags = {}, baseUrl) => {
+export default (store, location, state, staticVersion, contentMetaTags = {}, baseUrl, lang) => {
+  i18n(lang);
+
   const title = contentMetaTags.title || 'U°Community';
   const url = contentMetaTags.url || `${baseUrl}/`;
   const type = contentMetaTags.type || 'website';
@@ -17,7 +20,7 @@ export default (store, location, state, staticVersion, contentMetaTags = {}, bas
   return renderToString((
     <html lang="en">
       <head>
-        <meta charset="UTF-8" />
+        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
         <meta name="google-site-verification" content="mhqdpp_Xwfs-HeZvF6fQ1OR-pq3wNylaet4dVvUeLPk" />
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,600,700,700i,900" rel="stylesheet" />

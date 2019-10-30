@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { throttle, isEqual } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { memo, useRef, useCallback } from 'react';
@@ -11,6 +12,7 @@ import styles from './styles.css';
 const UsersPopup = ({
   users, tabs, visible, onLoadMore, onClickClose,
 }) => {
+  const { t } = useTranslation();
   const listRef = useRef();
 
   const onScroll = useCallback(throttle(() => {
@@ -34,7 +36,7 @@ const UsersPopup = ({
         onClickClose={onClickClose}
       >
         <div className={styles.users}>
-          <h2 className={styles.title}>Votes</h2>
+          <h2 className={styles.title}>{t('Votes')}</h2>
 
           <Tabs {...tabs} />
 

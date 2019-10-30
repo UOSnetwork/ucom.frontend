@@ -1,3 +1,4 @@
+import { useTranslation, Trans } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { pick, cloneDeep } from 'lodash';
@@ -30,6 +31,7 @@ import { USER_EDITABLE_PROPS } from '../../utils/constants';
 import styles from './styles.css';
 
 const Profile = ({ onSuccess }) => {
+  const { t } = useTranslation();
   const user = useSelector(selectors.selectOwner);
   const [data, setData] = useState({});
   const [errors, setErrors] = useState(undefined);
@@ -70,7 +72,7 @@ const Profile = ({ onSuccess }) => {
 
     try {
       await withLoader(dispatch(updateUser(data)));
-      dispatch(addSuccessNotification('Profile has been updated'));
+      dispatch(addSuccessNotification(t('Profile has been updated')));
       setTimeout(onSuccess, 0);
     } catch (err) {
       if (Validate.isResponseErrors(err.response)) {
@@ -132,29 +134,30 @@ const Profile = ({ onSuccess }) => {
         <div className={styles.sidebar}>
           <Menu
             sections={[
-              { title: 'Personal Info', name: 'personalInfo' },
-              { title: 'About Me', name: 'aboutMe' },
-              { title: 'Links', name: 'links' },
+              { title: t('Personal Info'), name: 'personalInfo' },
+              { title: t('About Me'), name: 'aboutMe' },
+              { title: t('Links'), name: 'links' },
             ]}
             submitDisabled={loading}
             submitVisible={edited}
           />
         </div>
         <div className={styles.footer}>
-          Go to&nbsp;
-          <Link className="link red" to={urls.getSettingsUrl(urls.getUserUrl(user.id))}>Settings</Link>
+          <Trans i18nKey="Go to Settings">
+            Go to <Link className="link red" to={urls.getSettingsUrl(urls.getUserUrl(user.id))}>Settings</Link>
+          </Trans>
         </div>
         <div className={styles.content}>
-          <h2 className={styles.title}>Your Profile</h2>
+          <h2 className={styles.title}>{t('Your Profile')}</h2>
 
           <Element
             name="personalInfo"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Personal Info</h3>
+            <h3 className={styles.subTitle}>{t('Personal Info')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>Cover</div>
+              <div className={styles.label}>{t('Cover')}</div>
               <div className={styles.data}>
                 <DropzoneWrapper
                   className={styles.cover}
@@ -171,7 +174,7 @@ const Profile = ({ onSuccess }) => {
             </div>
 
             <div className={`${styles.field} ${styles.fieldUpload}`}>
-              <div className={styles.label}>Photo</div>
+              <div className={styles.label}>{t('Photo')}</div>
               <div className={styles.data}>
                 <DropzoneWrapper
                   className={styles.upload}
@@ -189,18 +192,18 @@ const Profile = ({ onSuccess }) => {
                     )}
                   </div>
                   <div className={styles.uploadText}>
-                    Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.
+                    {t('Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.')}
                   </div>
                 </DropzoneWrapper>
               </div>
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Displayed Name</div>
+              <div className={styles.label}>{t('Displayed Name')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
-                  placeholder="Nickname or name, maybe emoji…"
+                  placeholder={t('Nickname or name, maybe emoji…')}
                   value={data.firstName}
                   error={errors && errors.firstName}
                   onChange={(firstName) => {
@@ -215,11 +218,11 @@ const Profile = ({ onSuccess }) => {
             name="aboutMe"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>About Me</h3>
+            <h3 className={styles.subTitle}>{t('About Me')}</h3>
             <Textarea
               rows={5}
               submited={submited}
-              placeholder="Your story, what passions you — something you want others to know about you"
+              placeholder={t('Your story, what passions you — something you want others to know about you')}
               className={styles.textarea}
               value={data.about}
               error={errors && errors.about}
@@ -233,10 +236,10 @@ const Profile = ({ onSuccess }) => {
             name="links"
             className={styles.section}
           >
-            <h3 className={styles.subTitle}>Links</h3>
+            <h3 className={styles.subTitle}>{t('Links')}</h3>
 
             <div className={styles.field}>
-              <div className={styles.label}>My Website</div>
+              <div className={styles.label}>{t('My Website')}</div>
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
@@ -251,7 +254,7 @@ const Profile = ({ onSuccess }) => {
             </div>
 
             <div className={styles.field}>
-              <div className={styles.label}>Social Networks</div>
+              <div className={styles.label}>{t('Social Networks')}</div>
               <div className={`${styles.data} ${styles.entrys}`}>
                 {data.usersSources && data.usersSources.map((item, index) => (
                   <div className={`${styles.entry} ${styles.input}`} key={index}>
@@ -290,7 +293,7 @@ const Profile = ({ onSuccess }) => {
                       setDataAndValidate({ ...data, usersSources });
                     }}
                   >
-                    {data.socialNetworks && data.socialNetworks.length > 0 ? 'Add Another' : 'Add Network'}
+                    {data.socialNetworks && data.socialNetworks.length > 0 ? t('Add Another') : t('Add Network')}
                   </Button>
                 </div>
               </div>

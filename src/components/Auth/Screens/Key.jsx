@@ -1,30 +1,35 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from '../styles.css';
 import KeyForm from '../Forms/KeyForm';
 
-const ActiveKey = props => (
-  <div className={`${styles.content} ${styles.generateKey}`}>
-    <div className={styles.main}>
-      <KeyForm
-        loading={props.loading}
-        title={props.title}
-        placeholder={props.placeholder}
-        submitText="Proceed"
-        onSubmit={props.onSubmit}
-      />
+const ActiveKey = (props) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={`${styles.content} ${styles.generateKey}`}>
+      <div className={styles.main}>
+        <KeyForm
+          loading={props.loading}
+          title={props.title || t('Enter Private Active Key')}
+          placeholder={props.placeholder || t('Active Private Key')}
+          submitText="Proceed"
+          onSubmit={props.onSubmit}
+        />
+      </div>
+      <div className={styles.bottom}>
+        <span
+          className="link red-hover"
+          role="presentation"
+          onClick={props.onClickBack}
+        >
+          {props.backText || t('I don’t have Active key')}
+        </span>
+      </div>
     </div>
-    <div className={styles.bottom}>
-      <span
-        className="link red-hover"
-        role="presentation"
-        onClick={props.onClickBack}
-      >
-        {props.backText}
-      </span>
-    </div>
-  </div>
-);
+  );
+};
 
 ActiveKey.propTypes = {
   title: PropTypes.string,
@@ -36,9 +41,9 @@ ActiveKey.propTypes = {
 };
 
 ActiveKey.defaultProps = {
-  title: 'Enter Private Active Key',
-  placeholder: 'Active Private Key',
-  backText: 'I don’t have Active key',
+  title: undefined,
+  placeholder: undefined,
+  backText: undefined,
   loading: false,
 };
 

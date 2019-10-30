@@ -1,3 +1,4 @@
+import { Trans, withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import classNames from 'classnames';
@@ -107,7 +108,11 @@ class RegistrationStepThird extends PureComponent {
                     onChange={checked => this.setState({ termsAccepted: checked })}
                   />
                 </span>
-                <span className="toolbar__main">I accept the  General <a target="_blank" rel="noopener noreferrer" className="registration__link" href="/posts/7881">Terms and Conditions.</a></span>
+                <span className="toolbar__main">
+                  <Trans i18nKey="I accept the General Terms and Conditions.">
+                    I accept the  General <a target="_blank" rel="noopener noreferrer" className="registration__link" href="/posts/7881">Terms and Conditions.</a>
+                  </Trans>
+                </span>
               </span>
             </div>
             <div className="registration-terms__item">
@@ -118,7 +123,7 @@ class RegistrationStepThird extends PureComponent {
                     onChange={checked => this.props.registrationSetIsTrackingAllowed(checked)}
                   />
                 </span>
-                <span className="toolbar__main">Allow to send anonymous usage data for developer.</span>
+                <span className="toolbar__main">{this.props.t('Allow to send anonymous usage data for developer.')}</span>
               </span>
             </div>
           </div>
@@ -139,14 +144,16 @@ class RegistrationStepThird extends PureComponent {
             </div>
             {this.state.brainkeyVerificationIsComplete && !this.state.brainkeyVerificationIsValid &&
               <div className="registration-footer__error">
-                Selected keywords don&apos;t match with entered on previous step.<br />Try check the order of your phrase.
+                {this.props.t('Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.')}
               </div>
             }
           </div>
 
           <div className="registration__subscribe">
-            Don&rsquo;t miss a&nbsp;new platform release, token giveaway, or&nbsp;anything else we&rsquo;ve got in&nbsp;stash!
-            Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => this.props.showSubscribe()}>subscribe</span> to&nbsp;our weekly updates.
+            {this.props.t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
+            <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
+              Fill the form to <span role="presentation" className="link red" onClick={() => this.props.showSubscribe()}>subscribe</span> to our weekly updates.
+            </Trans>
           </div>
         </div>
       </div>
@@ -164,4 +171,4 @@ export default withRouter(connect(
     showSubscribe: subscribeActions.show,
     addErrorNotificationFromResponse,
   },
-)(RegistrationStepThird));
+)(withTranslation()(RegistrationStepThird)));

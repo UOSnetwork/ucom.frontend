@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.css';
@@ -8,37 +9,41 @@ import Memo from './Memo';
 
 const TransactionPopup = ({
   onClickClose, date, type, icon, title, amount, details, avatarSrc, message,
-}) => (
-  <Popup onClickClose={onClickClose}>
-    <Content onClickClose={onClickClose} fixWidth={false}>
-      <div className={styles.content}>
-        {(date || type) &&
-          <div className={styles.header}>
-            {date && <span className={styles.date}>{date}</span>}
-            {type && <span className={styles.type}>{type}</span>}
-          </div>
-        }
-        {typeof avatarSrc === 'string' ? (
-          <div className={styles.userPic}>
-            <UserPick src={avatarSrc} size={80} />
-          </div>
-        ) : (
-          <div className={styles.icon}>{icon}</div>
-        )}
-        {title && <div className={styles.title}>{title}</div>}
-        {amount && <div className={styles.amount}>{amount}</div>}
-        {message && <Memo text={message} />}
-        {details &&
-          <div className={styles.details}>
-            <PanelWrapper title="Detailed info">
-              <pre className={styles.json}>{details}</pre>
-            </PanelWrapper>
-          </div>
-        }
-      </div>
-    </Content>
-  </Popup>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Popup onClickClose={onClickClose}>
+      <Content onClickClose={onClickClose} fixWidth={false}>
+        <div className={styles.content}>
+          {(date || type) &&
+            <div className={styles.header}>
+              {date && <span className={styles.date}>{date}</span>}
+              {type && <span className={styles.type}>{type}</span>}
+            </div>
+          }
+          {typeof avatarSrc === 'string' ? (
+            <div className={styles.userPic}>
+              <UserPick src={avatarSrc} size={80} />
+            </div>
+          ) : (
+            <div className={styles.icon}>{icon}</div>
+          )}
+          {title && <div className={styles.title}>{title}</div>}
+          {amount && <div className={styles.amount}>{amount}</div>}
+          {message && <Memo text={message} />}
+          {details &&
+            <div className={styles.details}>
+              <PanelWrapper title={t('Detailed info')}>
+                <pre className={styles.json}>{details}</pre>
+              </PanelWrapper>
+            </div>
+          }
+        </div>
+      </Content>
+    </Popup>
+  );
+};
 
 TransactionPopup.propTypes = {
   onClickClose: PropTypes.func,

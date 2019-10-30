@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Tippy from '@tippy.js/react';
 import { Link } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
@@ -23,6 +24,7 @@ import withLoader from '../../utils/withLoader';
 import styles from './styles.css';
 
 const GovernancePage = () => {
+  const { t } = useTranslation();
   const state = useSelector(state => state.pages.governance.main);
   const owner = useSelector(selectOwner);
   const org = useSelector(selectOrgById(getUosGroupId()));
@@ -91,14 +93,14 @@ const GovernancePage = () => {
 
             <div className={styles.tabs}>
               <div className={styles.active}>Network</div>
-              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>My Projects</span></Tippy></div>
-              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Ideas</span></Tippy></div>
-              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Projects</span></Tippy></div>
-              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>Results</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>{t('My Projects')}</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>{t('Ideas')}</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>{t('Projects')}</span></Tippy></div>
+              <div><Tippy arrow placement="bottom" content="Coming Soon"><span>{t('Results')}</span></Tippy></div>
             </div>
 
             <div className={styles.description}>
-              Govern the U°OS protocol through voting. You can vote for Block Producers and Calculator Nodes. Vote with your Importance.
+              {t('Govern the U°OS protocol through voting. You can vote for Block Producers and Calculator Nodes. Vote with your Importance.')}
             </div>
           </div>
 
@@ -123,9 +125,9 @@ const GovernancePage = () => {
           <VoteSection
             active={state.activeSectionId === BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS}
             onToggle={() => toggleSection(BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS)}
-            title="Block Producers"
-            blurb="Ongoing voting"
-            description="The Block Producers are decentralized entities that keep the chain running by producing blocks. The Block Producers are elected through voting."
+            title={t('Block Producers')}
+            blurb={t('Ongoing voting')}
+            description={t('The Block Producers are decentralized entities that keep the chain running by producing blocks. The Block Producers are elected through voting.')}
             votes={state.selectedIds[BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS].length}
             votingUrl={urls.getGovernanceVotingUrl(BLOCKCHAIN_NODES_TYPE_BLOCK_PRODUCERS)}
             table={{
@@ -153,9 +155,9 @@ const GovernancePage = () => {
           <VoteSection
             active={state.activeSectionId === BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES}
             onToggle={() => toggleSection(BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES)}
-            title="Calculator Nodes"
-            blurb="Ongoing voting"
-            description="A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake."
+            title={t('Calculator Nodes')}
+            blurb={t('Ongoing voting')}
+            description={t('A Calculator Node is a node on the U°OS blockchain dedicated to calculating the activity of user accounts: social, transactional, stake.')}
             votes={state.selectedIds[BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES].length}
             votingUrl={urls.getGovernanceVotingUrl(BLOCKCHAIN_NODES_TYPE_CALCULATOR_NODES)}
             table={{
