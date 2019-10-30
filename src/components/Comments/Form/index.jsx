@@ -212,7 +212,7 @@ const Form = (props) => {
                   rows="1"
                   disabled={loading}
                   className={styles.input}
-                  placeholder={t('Leave a comment...')}
+                  placeholder={t('leaveComment')}
                   value={message}
                   onChange={e => setMessage(e.target.value)}
                   onKeyDown={(e) => {

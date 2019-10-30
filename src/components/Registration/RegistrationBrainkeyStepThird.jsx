@@ -82,7 +82,7 @@ class RegistrationBrainkeyStepThird extends PureComponent {
                   size="big"
                   theme="red"
                   type="submit"
-                  text={this.props.t('Got it')}
+                  text={this.props.t('GOTIT')}
                   onClick={() => {
                     this.setState({
                       brainkeyPopupVisible: false,

@@ -24,10 +24,10 @@ const GenerateSocialKeyByActiveKey = (props) => {
           <KeyForm
             loading={loading}
             error={error}
-            title={t('Generate Social Key with Active Key')}
-            placeholder={t('Active Private Key')}
+            title={t('auth.generateSocialKeyWithActiveKey')}
+            placeholder={t('auth.activePrivateKey')}
             submitText={t('Proceed')}
-            hint={t('By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before.')}
+            hint={t('auth.terms')}
             onChange={(value) => {
               setError('');
 
@@ -56,7 +56,7 @@ const GenerateSocialKeyByActiveKey = (props) => {
             role="presentation"
             onClick={props.onClickBrainkey}
           >
-            {t('I have Brainkey')}
+            {t('auth.haveBrainkey')}
           </span>
         </div>
       </div>

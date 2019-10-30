@@ -11,7 +11,7 @@ import {
 } from '../../../../utils/constants';
 import urls from '../../../../utils/urls';
 
-const ERROR_WRONG_ACCOUNT_NAME = 'Wrong Account Name format';
+const ERROR_WRONG_ACCOUNT_NAME = 'auth.wrongAccount';
 
 const Account = (props) => {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ const Account = (props) => {
               props.onSubmit(accountName.substr(1));
             }}
           >
-            <h2 className={styles.title}>{t('What’s Your U°OS Account Name?')}</h2>
+            <h2 className={styles.title}>{t('auth.whatYourAccount')}</h2>
             <div className={styles.field}>
               <input
                 type="text"
@@ -86,7 +86,7 @@ const Account = (props) => {
           </form>
         </div>
         <div className={styles.bottom}>
-          <Trans>
+          <Trans i18nKey="auth.dontHaveAccount">
             Don’t have an account? <Link to={urls.getRegistrationUrl()} className={`red ${styles.navText}`}>Create one</Link>
           </Trans>
         </div>

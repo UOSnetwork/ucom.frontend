@@ -6,7 +6,7 @@ const { EntityNames } = require('ucom.libs.common').Common.Dictionary;
 const { InteractionTypeDictionary } = require('ucom-libs-social-transactions');
 
 export const ERROR_SERVER = 'Could not complete request, please try again later';
-export const ERROR_WRONG_BRAINKEY = 'Wrong brainkey format';
+export const ERROR_WRONG_BRAINKEY = 'auth.wrongBrainkey';
 
 export const NOTIFICATION_TITLE_ERROR = 'Error';
 export const NOTIFICATION_TITLE_SUCCESS = 'Success';

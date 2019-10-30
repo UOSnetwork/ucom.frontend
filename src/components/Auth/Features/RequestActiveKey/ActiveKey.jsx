@@ -7,7 +7,7 @@ import Button from '../../../Button/index';
 import styles from '../../../Wallet/Actions/styles.css'; // TODO: Incapsulate styles
 import { privateKeyIsValid } from '../../../../utils/keys';
 
-const KEY_ERROR = 'Wrong key format';
+const KEY_ERROR = 'auth.wrongKeyFormat';
 
 const ActiveKey = (props) => {
   const { t } = useTranslation();
@@ -27,12 +27,12 @@ const ActiveKey = (props) => {
         props.onSubmit(value);
       }}
     >
-      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
+      <h2 className={styles.title}>{t('auth.signTransaction')}</h2>
       <div className={styles.field}>
         <TextInput
           autoFocus
           ymDisableKeys
-          label="Active Private Key"
+          label={t('auth.activePrivateKey')}
           value={value}
           onChange={(value) => {
             setValue(value);
@@ -70,7 +70,7 @@ const ActiveKey = (props) => {
             className="link red-hover"
             onClick={props.onClickSetPassword}
           >
-            {t('Set Password')}
+            {t('auth.setPassword')}
           </span>
         </div>
       </div>

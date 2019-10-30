@@ -152,7 +152,7 @@ const Settings = () => {
                   {!passwordIsSet ? (
                     <div className={styles.action}>
                       <Button strech small onClick={() => setChangePasswordVisible(true)}>
-                        {t('Set Password')}
+                        {t('auth.setPassword')}
                       </Button>
                     </div>
                   ) : (

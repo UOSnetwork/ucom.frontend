@@ -77,7 +77,7 @@ const OwnerActiveKeys = () => {
 
                 const trimedBrainkey = brainkey.trim();
                 if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
-                  setFormError(ERROR_WRONG_BRAINKEY);
+                  setFormError(t(ERROR_WRONG_BRAINKEY));
                   return;
                 }
 
@@ -120,7 +120,7 @@ const OwnerActiveKeys = () => {
                   value = removeMultipleSpaces(value);
                   setBrainkey(value);
                   if (!isBrainkeySymbolsValid(value)) {
-                    setFormError(ERROR_WRONG_BRAINKEY);
+                    setFormError(t(ERROR_WRONG_BRAINKEY));
                   } else {
                     setFormError('');
                   }

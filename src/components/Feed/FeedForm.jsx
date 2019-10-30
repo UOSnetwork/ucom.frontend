@@ -1,5 +1,5 @@
 // TODO: Refactoring and refactoring tribute wrapper
-
+import { useTranslation } from 'react-i18next';
 import autosize from 'autosize';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
@@ -30,6 +30,7 @@ import EmbedService from '../../utils/embedService';
 import withLoader from '../../utils/withLoader';
 
 const FeedForm = (props) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const fieldEl = useRef(null);
@@ -215,7 +216,7 @@ const FeedForm = (props) => {
                 ref={textareaEl}
                 rows="4"
                 className="feed-form__textarea"
-                placeholder="Leave a comment"
+                placeholder={t('leaveComment')}
                 value={message}
                 onChange={e => onEdit(e.target.value)}
                 disabled={loading || props.loading}

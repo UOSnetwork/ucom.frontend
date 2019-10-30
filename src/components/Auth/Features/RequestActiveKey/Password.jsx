@@ -8,7 +8,7 @@ import styles from '../../../Wallet/Actions/styles.css'; // TODO: Incapsulate st
 import { restoreEncryptedActiveKey } from '../../../../utils/keys';
 import { passwordIsValid } from '../../../../utils/password';
 
-const PASSWORD_ERROR = 'Wrong password format';
+const PASSWORD_ERROR = 'auth.wrongPasswordFormat';
 
 const Password = (props) => {
   const { t } = useTranslation();
@@ -33,8 +33,8 @@ const Password = (props) => {
         }
       }}
     >
-      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
-      <p className={styles.text}>{t('Enter the password for your Private Active Key, stored in the browser.')}</p>
+      <h2 className={styles.title}>{t('auth.signTransaction')}</h2>
+      <p className={styles.text}>{t('auth.enterPasswordPrivateActiveKey.')}</p>
       <div className={styles.field}>
         <TextInput
           autoFocus
@@ -78,7 +78,7 @@ const Password = (props) => {
           className="link red-hover"
           onClick={props.onClickActiveKey}
         >
-          {t('Sign the transaction with Private Active key')}
+          {t('auth.signTransactionPrivateActiveKey')}
         </span>
       </div>
     </form>

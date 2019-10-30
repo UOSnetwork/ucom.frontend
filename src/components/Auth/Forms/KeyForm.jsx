@@ -6,7 +6,7 @@ import Button from '../../Button/index';
 import IconInputError from '../../Icons/InputError';
 import { privateKeyIsValid } from '../../../utils/keys';
 
-const KEY_ERROR = 'Wrong key format';
+const KEY_ERROR = 'auth.wrongKeyFormat';
 
 const KeyForm = (props) => {
   const { t } = useTranslation();

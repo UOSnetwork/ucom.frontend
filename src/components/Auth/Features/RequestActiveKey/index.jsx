@@ -71,7 +71,7 @@ const RequestActiveKey = (props) => {
           case STEP_PASSWORD_CREATE:
             return (
               <ChangePassword
-                description={t('To send this transaction, you need a Private Active Key. We generate it from your Brainkey.')}
+                description={t('auth.needPrivateActiveKey')}
                 onClickClose={resetStep}
                 onSubmit={resetStep}
               />

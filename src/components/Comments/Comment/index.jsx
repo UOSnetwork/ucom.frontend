@@ -34,7 +34,7 @@ const Comment = (props) => {
 
   if (Command.stringHasTipCommand(props.text)) {
     menuItems.push({
-      title: <span className={styles.limit}>{t('Can not edit message with tip')}</span>,
+      title: <span className={styles.limit}>{t('tip.canNotEdit')}</span>,
       disabled: true,
     });
   } else {
@@ -42,7 +42,7 @@ const Comment = (props) => {
       title: isEditable ? (
         <span>{t('Edit')} <span className={styles.editLeftTime}>({leftTime} {leftTime <= 1 ? t('minute') : t('minutes')} left)</span></span>
       ) : (
-        <span className={styles.limit}>{t('Can only edit in first 15 min')}</span>
+        <span className={styles.limit}>{t('post.canEdit')}</span>
       ),
       onClick: () => isEditable && setEditFormVisible(true),
       disabled: !isEditable,

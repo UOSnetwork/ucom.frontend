@@ -25,7 +25,7 @@ const RegistrationStepFirst = (props) => {
           {props.registration.activeStepId === FIRST_STEP_ID ? (
             <Fragment>{t('Choose Account Name')}</Fragment>
           ) : (
-            <Fragment>{t('Account Name: @', { accountName: props.registration.accountName })}</Fragment>
+            <Fragment>{t('registration.accountName', { accountName: props.registration.accountName })}</Fragment>
           )}
         </h3>
       </div>

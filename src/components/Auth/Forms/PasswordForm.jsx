@@ -5,7 +5,7 @@ import styles from '../styles.css';
 import IconInputError from '../../Icons/InputError';
 import Button from '../../Button/index';
 
-const PASSWORD_ERROR = 'Passwords do not match';
+const PASSWORD_ERROR = 'auth.passwordsNotMatch';
 
 const Password = (props) => {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ const Password = (props) => {
       <h2 className={styles.title}>{props.title || t('Set a Password to Use your Active Keys Automatically')}</h2>
       <div className={styles.formContent}>
         <div className={styles.text}>
-          {t('Set the Password to save encrypted Active Keys in your browser. This allows you to send the transactions that require Active Keys, using this password.')}
+          {t('auth.setPasswordToSave')}
         </div>
         <div className={styles.field}>
           <input
@@ -76,7 +76,7 @@ const Password = (props) => {
           type="submit"
           disabled={Boolean(!password || !passwordRepeat || formError)}
         >
-          {t('Set Password')}
+          {t('auth.setPassword')}
         </Button>
       </div>
     </form>

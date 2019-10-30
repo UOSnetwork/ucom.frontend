@@ -20,7 +20,7 @@ const SaveKey = props => (
         <div className={styles.saveKeyText}>
           <span>
             {props.text || (
-              <Trans i18nKey="This is your Social Private Key">
+              <Trans i18nKey="auth.thisYourSocialPrivateKey">
                 This is your Social Private Key.<br /><strong>You will need it to authorize on a platform</strong> from any device. Keep it safe.
               </Trans>
             )}
