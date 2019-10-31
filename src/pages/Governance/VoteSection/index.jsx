@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
@@ -35,11 +35,11 @@ const VoteSection = ({
         <div className={styles.description}>{description}</div>
         <div className={styles.vote}>
           {votes > 0 ? (
-            <Fragment>
-              {t('You casted votes', { votes })}
-            </Fragment>
+            <Trans i18nKey="You casted votes" votes={votes}>
+              You casted <strong>{{ votes }} votes</strong>
+            </Trans>
           ) : (
-            <Fragment>{t('You didn’t vote')}</Fragment>
+            <Fragment>{t('YouDidntVote')}</Fragment>
           )}
         </div>
 

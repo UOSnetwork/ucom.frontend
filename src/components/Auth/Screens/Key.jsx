@@ -12,8 +12,8 @@ const ActiveKey = (props) => {
       <div className={styles.main}>
         <KeyForm
           loading={props.loading}
-          title={props.title || t('Enter Private Active Key')}
-          placeholder={props.placeholder || t('Active Private Key')}
+          title={props.title || t('auth.enterPrivateActiveKey')}
+          placeholder={props.placeholder || t('auth.activePrivateKey')}
           submitText="Proceed"
           onSubmit={props.onSubmit}
         />
@@ -24,7 +24,7 @@ const ActiveKey = (props) => {
           role="presentation"
           onClick={props.onClickBack}
         >
-          {props.backText || t('I don’t have Active key')}
+          {props.backText || t('auth.dontHaveActive')}
         </span>
       </div>
     </div>

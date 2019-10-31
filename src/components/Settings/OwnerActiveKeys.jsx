@@ -30,12 +30,12 @@ const OwnerActiveKeys = () => {
   return (
     <Fragment>
       <h4 className={styles.title}>{t('Get Owner and Active key pairs with Brainkey')}</h4>
-      <p>{t('Here you can generate your keys from Brainkey.')}</p>
+      <p>{t('hereYouGenerateBrainkey')}</p>
 
       {keys.ownerKey && keys.ownerPublicKey && keys.activeKey && keys.activePublicKey ? (
         <div className="ym-hide-conten">
           <h4 className={styles.title}>{t('Active')}</h4>
-          <p>{t('You need your Active Key to sign financial transactions')}</p>
+          <p>{t('needActiveKeySign')}</p>
           <div className={styles.copy}>
             <CopyPanel
               label={t('Private')}
@@ -49,7 +49,7 @@ const OwnerActiveKeys = () => {
             />
           </div>
           <h4 className={styles.title}>{t('Owner')}</h4>
-          <p>{t('You can reset your Active and Social Keys using your Owner Key.')}</p>
+          <p>{t('canResetKeys')}</p>
           <div className={styles.copy}>
             <CopyPanel
               label={t('Private')}
@@ -77,7 +77,7 @@ const OwnerActiveKeys = () => {
 
                 const trimedBrainkey = brainkey.trim();
                 if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
-                  setFormError(ERROR_WRONG_BRAINKEY);
+                  setFormError(t(ERROR_WRONG_BRAINKEY));
                   return;
                 }
 
@@ -120,7 +120,7 @@ const OwnerActiveKeys = () => {
                   value = removeMultipleSpaces(value);
                   setBrainkey(value);
                   if (!isBrainkeySymbolsValid(value)) {
-                    setFormError(ERROR_WRONG_BRAINKEY);
+                    setFormError(t(ERROR_WRONG_BRAINKEY));
                   } else {
                     setFormError('');
                   }

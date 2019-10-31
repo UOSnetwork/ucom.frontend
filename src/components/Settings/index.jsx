@@ -114,7 +114,7 @@ const Settings = () => {
             <div className={styles.content}>
               <div className={styles.section}>
                 <h2 className={styles.title}>{t('Account Settings')}</h2>
-                <p>{t('This section contains settings of your blockchain account.')}</p>
+                <p>{t('sectionContainsSettings')}</p>
               </div>
 
               <Element
@@ -124,7 +124,7 @@ const Settings = () => {
                 <h3 className={styles.title}>{t('Keys')}</h3>
                 <div className={styles.subSection}>
                   <h4 className={styles.title}>{t('Social Keys')}</h4>
-                  <p>{t('The pair of Social Keys is needed to sign your social transactions. After authorization on the platform, it is stored in your browser.')}</p>
+                  <p>{t('pairSocialKeysNeeded')}</p>
                   {keys.socialKey ? (
                     <Fragment>
                       <div className={styles.copy}>
@@ -148,11 +148,11 @@ const Settings = () => {
 
                 <div className={styles.subSection}>
                   <h4 className={styles.title}>{t('Password for Active Key')}</h4>
-                  <p>{t('You can set a Password to save a pair of encrypted Active Keys in your browser. This allows you to send the transactions, that require Active Keys, using your Password instead. You will need to enter the Brainkey to unlock your Active Keys.')}</p>
+                  <p>{t('canSetPassword')}</p>
                   {!passwordIsSet ? (
                     <div className={styles.action}>
                       <Button strech small onClick={() => setChangePasswordVisible(true)}>
-                        {t('Set Password')}
+                        {t('auth.setPassword')}
                       </Button>
                     </div>
                   ) : (
@@ -179,7 +179,7 @@ const Settings = () => {
                   <h3 className={styles.title}>{t('Referral Link')}</h3>
 
                   <div className={styles.subSection}>
-                    <p>{t('Provide a referral link to your friend and gain importance from your referrals, registered on the platform. You get 10% of the importance they acquire.')}</p>
+                    <p>{t('provideReferralLink')}</p>
                     <div className={styles.copy}>
                       <CopyPanel
                         label="Your referral link"
@@ -211,7 +211,7 @@ const Settings = () => {
 
               <div className={styles.subscribe}>
                 {t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
-                <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
+                <Trans i18nKey="fillForm">
                   Fill the form to&nbsp;<span role="presentation" className="link red" onClick={() => dispatch(subscribeActions.show())}>subscribe</span> to&nbsp;our weekly updates.
                 </Trans>
               </div>

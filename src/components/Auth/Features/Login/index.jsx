@@ -22,7 +22,7 @@ const STEP_SOCIAL_KEY = 2;
 const STEP_NEW_SOCIAL_KEY_BY_BRAINKEY = 3;
 const STEP_NEW_SOCIAL_KEY_BY_ACTIVE_KEY = 5;
 const STEP_SAVE_SOCIAL_KEY = 4;
-const ERROR_ACCOUNT_NOT_EXIST = 'Such account does not exist in a blockchain';
+const ERROR_ACCOUNT_NOT_EXIST = 'auth.accountDoesNotExist';
 
 const Auth = () => {
   const { t } = useTranslation();

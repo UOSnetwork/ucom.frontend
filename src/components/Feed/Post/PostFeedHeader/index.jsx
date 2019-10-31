@@ -54,7 +54,7 @@ const PostFeedHeader = ({
           </Trans>
         </span>
       ) : (
-        <span className={styles.limit}>{t('Can only edit in first 15 min')}</span>
+        <span className={styles.limit}>{t('post.canEdit')}</span>
       ),
       onClick: isEditable ? onClickEdit : undefined,
       disabled: !isEditable,

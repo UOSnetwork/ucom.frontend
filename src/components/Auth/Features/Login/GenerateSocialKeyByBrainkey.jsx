@@ -24,8 +24,8 @@ const GenerateSocialKeyByBrainkey = (props) => {
           <BrainkeyForm
             loading={loading}
             error={error}
-            title={t('Generate Social Key with Brainkey')}
-            hint={t('By clicking Proceed you agree that we will generate a Social Permission key and add it to your account if it has not been assigned before.')}
+            title={t('auth.generateSocialKey')}
+            hint={t('auth.terms')}
             onChange={(value) => {
               setError('');
               if (props.onChange) {
@@ -51,7 +51,7 @@ const GenerateSocialKeyByBrainkey = (props) => {
             role="presentation"
             onClick={props.onClickActiveKey}
           >
-            {t('I have Active Private Key')}
+            {t('auth.haveActive')}
           </span>
         </div>
       </div>

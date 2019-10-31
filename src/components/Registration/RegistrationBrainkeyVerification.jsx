@@ -59,7 +59,7 @@ class RegistrationBrainkeyVerification extends PureComponent {
         <div className="registration__text">
           <div className="text">
             <p>
-              {this.props.t('Type in the words number and from your Brainkey.', { num1: this.state.verificationWordsIndexes[0] + 1, num2: this.state.verificationWordsIndexes[1] + 1 })}<br />
+              {this.props.t('typeWordsBrainkey', { num1: this.state.verificationWordsIndexes[0] + 1, num2: this.state.verificationWordsIndexes[1] + 1 })}<br />
               <Trans i18nKey="If you didnt save your Brainkey">
                 If you didn&apos;t save your Brainkey,&nbsp;
                 <span className="registration__link">

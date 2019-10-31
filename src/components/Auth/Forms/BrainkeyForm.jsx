@@ -40,7 +40,7 @@ const BrainkeyForm = (props) => {
         <input
           autoFocus
           className={`${styles.input} ym-disable-keys`}
-          placeholder={t('Enter your 12-word Brainkey')}
+          placeholder={t('auth.enterBrainkey')}
           value={brainkey}
           onChange={(e) => {
             const value = removeMultipleSpaces(e.target.value);

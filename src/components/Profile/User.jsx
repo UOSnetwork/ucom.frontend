@@ -192,7 +192,7 @@ const Profile = ({ onSuccess }) => {
                     )}
                   </div>
                   <div className={styles.uploadText}>
-                    {t('Drag and drop. We support JPG, PNG or GIF files. Max file size 0,5 Mb.')}
+                    {t('dragAndDrop')}
                   </div>
                 </DropzoneWrapper>
               </div>
@@ -203,7 +203,7 @@ const Profile = ({ onSuccess }) => {
               <div className={styles.data}>
                 <TextInput
                   submited={submited}
-                  placeholder={t('Nickname or name, maybe emoji…')}
+                  placeholder={t('nicknameOrName')}
                   value={data.firstName}
                   error={errors && errors.firstName}
                   onChange={(firstName) => {
@@ -222,7 +222,7 @@ const Profile = ({ onSuccess }) => {
             <Textarea
               rows={5}
               submited={submited}
-              placeholder={t('Your story, what passions you — something you want others to know about you')}
+              placeholder={t('yourStory')}
               className={styles.textarea}
               value={data.about}
               error={errors && errors.about}

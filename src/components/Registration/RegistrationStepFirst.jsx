@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -25,7 +25,7 @@ const RegistrationStepFirst = (props) => {
           {props.registration.activeStepId === FIRST_STEP_ID ? (
             <Fragment>{t('Choose Account Name')}</Fragment>
           ) : (
-            <Fragment>{t('Account Name: @', { accountName: props.registration.accountName })}</Fragment>
+            <Fragment>{t('registration.accountName', { accountName: props.registration.accountName })}</Fragment>
           )}
         </h3>
       </div>
@@ -34,17 +34,29 @@ const RegistrationStepFirst = (props) => {
         <div className="registration-account-info">
           <div className="registration-account-info__section">
             <div className="registration-account-info__title">12</div>
-            <div className="registration-account-info__description">{t('Must be 12 characters')}</div>
+            <div className="registration-account-info__description">
+              <Trans i18nKey="Must be 12 characters">
+                Must be <strong>12 characters</strong>
+              </Trans>
+            </div>
           </div>
 
           <div className="registration-account-info__section">
             <div className="registration-account-info__title">a <strike><span>A</span></strike></div>
-            <div className="registration-account-info__description">{t('Must be lowercase only')}</div>
+            <div className="registration-account-info__description">
+              <Trans i18nKey="Must be lowercase only">
+                Must be <strong>lowercase</strong> only
+              </Trans>
+            </div>
           </div>
 
           <div className="registration-account-info__section">
             <div className="registration-account-info__title">1-5</div>
-            <div className="registration-account-info__description">{t('Can only have numbers 1–5')}</div>
+            <div className="registration-account-info__description">
+              <Trans i18nKey="сanOnlyNumbers'">
+                Can only have <strong>numbers 1–5</strong>
+              </Trans>
+            </div>
           </div>
         </div>
 

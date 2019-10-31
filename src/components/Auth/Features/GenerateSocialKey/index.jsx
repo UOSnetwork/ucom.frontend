@@ -55,7 +55,7 @@ const GenerateSocialKey = (props) => {
             case STEP_SAVE_KEY:
               return (
                 <SaveKey
-                  title={t('Save your Private Social Key')}
+                  title={t('auth.saveSocial')}
                   copyText={socialKey}
                   proceedAsLink={false}
                   proceedText={t('Finish')}
@@ -69,8 +69,8 @@ const GenerateSocialKey = (props) => {
               return (
                 <Brainkey
                   loading={loading}
-                  title={t('Generate Social Key with Brainkey')}
-                  backText={t('I have Private Active key')}
+                  title={t('auth.generateSocialKey')}
+                  backText={t('auth.havePrivateActive')}
                   onSubmit={async (brainkey) => {
                     setLoading(true);
 

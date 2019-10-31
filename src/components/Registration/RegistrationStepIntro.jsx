@@ -7,7 +7,7 @@ const RegistrationStepIntro = () => {
   return (
     <div className="registration__intro">
       <div className="registration__title registration__title_intro">
-        <h2 className="title">{t('U°OS Account Creation')}</h2>
+        <h2 className="title">{t('accountCreation')}</h2>
       </div>
     </div>
   );

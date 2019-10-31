@@ -44,9 +44,9 @@ const Trust = ({
           <div className={styles.untrust}>
             <h2 className={styles.title}>{t('You are revoking your trust')}</h2>
             <ol className={styles.rules}>
-              <li>{t('You are publicly revoking your trust to this person.')}</li>
-              <li>{t('Your public trust revoke is a transaction on the U°OS blockchain.')}</li>
-              <li>{t('This trust revoke transaction will be put in your profile feed and the feed of your followers.')}</li>
+              <li>{t('YouPubliclyPerson')}</li>
+              <li>{t('YourPublicTrust')}</li>
+              <li>{t('ThisTrustRevoke')}</li>
             </ol>
 
             <Button big cap red strech disabled={loading} onClick={onClickUntrust}>{t('Revoke trust')}</Button>
@@ -91,11 +91,11 @@ const Trust = ({
             </h3>
 
             <ol className={styles.rules}>
-              <li>{t('You are publicly manifesting your trust to this person.')}</li>
-              <li>{t('Your public trust manifestation is a transaction on the U°OS blockchain.')}</li>
-              <li>{t('This trust transaction will be put in your profile feed and the feed of your followers.')}</li>
-              <li>{t('The profiles that you trust will be publicly listed in your profile.')}</li>
-              <li>{t('This trust transaction expands the web of trust within the network.')}</li>
+              <li>{t('YouArePubliclyManifesting')}</li>
+              <li>{t('YourPublicTrustManifestation')}</li>
+              <li>{t('ThisTrustTransaction')}</li>
+              <li>{t('TheProfilesYouTrust')}</li>
+              <li>{t('ThisTrustTransactionExpands')}</li>
             </ol>
 
             <div className={styles.action}>

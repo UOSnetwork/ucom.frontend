@@ -82,7 +82,7 @@ const TradeRam = (props) => {
                 <TextInput
                   autoFocus
                   placeholder="6664"
-                  label={t('RAM Amount, Bytes')}
+                  label={t('RAMAmountBytes')}
                   value={`${ram}`}
                   onChange={async (value) => {
                     const intValue = parseInt(value, 10);

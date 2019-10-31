@@ -54,7 +54,7 @@ const Discussions = (props) => {
       <div className={styles.content}>
         {!formVisible && !visibleItems.length &&
           <div className={styles.empty}>
-            <Trans i18nKey="Nothing here yet. Add existing community article or create new article.">
+            <Trans i18nKey="nothingHereYet">
               Nothing here yet. <button onClick={() => setFormVisible(true)} className="link red-hover active">Add existing community article</button> or <Link className="red-hover active" to={props.newDiscussionUrl}>create new article.</Link>
             </Trans>
           </div>

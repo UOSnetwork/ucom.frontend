@@ -15,11 +15,11 @@ const PasswordSet = (props) => {
         props.onSubmit();
       }}
     >
-      <h2 className={styles.title}>{t('Sign Transaction')}</h2>
-      <p className={`${styles.text} ${styles.intro}`}>{t('To register this transaction, you need your Private Active Key. You can save it in your browser, encrypted with a password, in order to send your transactions faster.')}</p>
+      <h2 className={styles.title}>{t('auth.signTransaction')}</h2>
+      <p className={`${styles.text} ${styles.intro}`}>{t('auth.toRegister')}</p>
       <div className={styles.action}>
         <Button cap big red strech type="submit">
-          {t('Set Password')}
+          {t('auth.setPassword')}
         </Button>
       </div>
       <div className={styles.backLink}>
@@ -28,7 +28,7 @@ const PasswordSet = (props) => {
           className="link red-hover"
           onClick={props.onClickActiveKey}
         >
-          {t('Sign the transaction with Private Active key')}
+          {t('auth.signTransactionPrivateActiveKey')}
         </span>
       </div>
     </form>

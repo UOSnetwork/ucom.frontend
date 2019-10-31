@@ -1,4 +1,4 @@
-import { withTranslation } from 'react-i18next';
+import { withTranslation, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import React, { Fragment, PureComponent } from 'react';
@@ -23,7 +23,7 @@ class RegistrationBrainkeyStepThird extends PureComponent {
       <Fragment>
         <div className="registration__text">
           <div className="text">
-            <p>{this.props.t('Write it down on a paper, make a photo')}</p>
+            <p>{this.props.t('writeDownPaper')}</p>
           </div>
         </div>
 
@@ -52,7 +52,7 @@ class RegistrationBrainkeyStepThird extends PureComponent {
               size="big"
               theme="red"
               type="submit"
-              text={this.props.t('I’ve saved it, Proceed')}
+              text={this.props.t('iSavedProceed')}
               onClick={() => this.props.registrationSetStep(THIRD_STEP_ID)}
             />
           </div>
@@ -62,12 +62,16 @@ class RegistrationBrainkeyStepThird extends PureComponent {
           <Popup onClickClose={() => this.setState({ brainkeyPopupVisible: false })}>
             <ModalContent mod="brainkey-info">
               <div className="registration__title">
-                <h3 className="title title_small">{this.props.t('The Brainkey cannot be restored if lost')}</h3>
+                <h3 className="title title_small">{this.props.t('brainkeyCannotRestored')}</h3>
               </div>
 
               <div className="registration__text">
                 <div className="text">
-                  <p>{this.props.t('Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>')}</p>
+                  <p>
+                    <Trans i18nKey="writeDownBrainkey">
+                      Write down or memorize your Brainkey. The Brainkey is your access to your account. <strong>It can’t be restored</strong>
+                    </Trans>
+                  </p>
                 </div>
               </div>
 
@@ -78,7 +82,7 @@ class RegistrationBrainkeyStepThird extends PureComponent {
                   size="big"
                   theme="red"
                   type="submit"
-                  text={this.props.t('Got it')}
+                  text={this.props.t('GOTIT')}
                   onClick={() => {
                     this.setState({
                       brainkeyPopupVisible: false,

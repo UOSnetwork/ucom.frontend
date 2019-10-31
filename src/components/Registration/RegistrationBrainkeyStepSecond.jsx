@@ -57,13 +57,13 @@ class RegistrationBrainkeyStepSecond extends PureComponent {
       <Fragment>
         <div className="registration__text">
           <div className="text">
-            <p>{this.props.t('Always keep your Brainkey secure. Never lose it.')}</p>
+            <p>{this.props.t('alwaysKeepBrainkey')}</p>
           </div>
         </div>
 
         <div className="registration-brainkey-generate">
           <div className="registration-brainkey-generate__title">
-            {this.props.t('Move your pointer to generate the Brainkey')}
+            {this.props.t('movePointer')}
           </div>
 
           <div

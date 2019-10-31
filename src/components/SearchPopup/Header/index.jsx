@@ -29,7 +29,7 @@ const Header = () => {
           <input
             autoFocus
             type="text"
-            placeholder={t('Search for people in U°OS blockchain…')}
+            placeholder={t('searchPeople')}
             spellCheck="false"
             className={styles.input}
             value={state.query}

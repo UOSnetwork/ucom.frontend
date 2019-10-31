@@ -20,7 +20,7 @@ const Account = (props) => {
           <IconArrowLeft />
         </span>
         <span className={styles.label}>
-          <span className={styles.navText}>{t('Change Account')}</span>
+          <span className={styles.navText}>{t('auth.changeAccount')}</span>
         </span>
       </div>
 
@@ -40,8 +40,8 @@ const Account = (props) => {
             <div className={styles.accountName}>@{props.userAccountName}</div>
           </div>
           <KeyFrom
-            title={t('Enter Your Social Key to Authorize')}
-            placeholder={t('Private Social Key')}
+            title={t('auth.enterSocialKey')}
+            placeholder={t('auth.privateSocialKey')}
             error={props.error}
             loading={props.loading}
             onChange={props.onChange}
@@ -56,7 +56,7 @@ const Account = (props) => {
             role="presentation"
             onClick={props.onClickNewKeys}
           >
-            {t('I have a problem with my key')}
+            {t('auth.haveProblemKey')}
           </span>
         </div>
       </div>

@@ -67,7 +67,7 @@ const ChangePassword = (props) => {
 
                       saveAndEncryptActiveKey(activeKey, password);
                       props.onSubmit();
-                      dispatch(addSuccessNotification(t('Password for Active Key has changed')));
+                      dispatch(addSuccessNotification(t('auth.success')));
                     } catch (e) {
                       dispatch(addErrorNotification(e.message));
                     }
@@ -78,11 +78,11 @@ const ChangePassword = (props) => {
             default:
               return (
                 <Brainkey
-                  title={t('Generate Private Active Key with Brainkey')}
+                  title={t('auth.generateKey')}
                   description={props.description}
                   error={brainkeyError}
                   loading={loading}
-                  backText={t('I have Active Private key')}
+                  backText={t('auth.haveActive')}
                   onChange={() => {
                     setBrainkeyError('');
                   }}

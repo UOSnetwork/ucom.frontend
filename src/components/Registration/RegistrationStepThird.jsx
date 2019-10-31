@@ -109,7 +109,7 @@ class RegistrationStepThird extends PureComponent {
                   />
                 </span>
                 <span className="toolbar__main">
-                  <Trans i18nKey="I accept the General Terms and Conditions.">
+                  <Trans i18nKey="iAcceptTerms">
                     I accept the  General <a target="_blank" rel="noopener noreferrer" className="registration__link" href="/posts/7881">Terms and Conditions.</a>
                   </Trans>
                 </span>
@@ -123,7 +123,7 @@ class RegistrationStepThird extends PureComponent {
                     onChange={checked => this.props.registrationSetIsTrackingAllowed(checked)}
                   />
                 </span>
-                <span className="toolbar__main">{this.props.t('Allow to send anonymous usage data for developer.')}</span>
+                <span className="toolbar__main">{this.props.t('allowToSendData')}</span>
               </span>
             </div>
           </div>
@@ -144,14 +144,16 @@ class RegistrationStepThird extends PureComponent {
             </div>
             {this.state.brainkeyVerificationIsComplete && !this.state.brainkeyVerificationIsValid &&
               <div className="registration-footer__error">
-                {this.props.t('Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.')}
+                <Trans i18nKey="selectedKeywordsDontMatch">
+                  Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.
+                </Trans>
               </div>
             }
           </div>
 
           <div className="registration__subscribe">
-            {this.props.t('Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!')}
-            <Trans i18nKey="Fill the form to subscribe to our weekly updates.">
+            {this.props.t('dontMissANewPlatform')}
+            <Trans i18nKey="fillForm">
               Fill the form to <span role="presentation" className="link red" onClick={() => this.props.showSubscribe()}>subscribe</span> to our weekly updates.
             </Trans>
           </div>

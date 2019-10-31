@@ -77,7 +77,7 @@ const Guest = () => {
 
   const communitiesSections = (
     <EntryListSectionOrgsWrapper
-      title={state.activeTabId === TAB_ID_COMMUNITIES ? t('Top Communities This Week') : t('Most Buzzin’ Communities')}
+      title={state.activeTabId === TAB_ID_COMMUNITIES ? t('Top Communities This Week') : t('MostBuzzinCommunities')}
       limit={SIDEBAR_ENTRY_LIST_LIMIT}
       ids={state.feed.organizationsIds}
       popupIds={state.organizationsPopup.ids}

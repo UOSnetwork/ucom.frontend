@@ -125,13 +125,13 @@ const Cast = ({ history, match }) => {
           </div>
 
           <div className={styles.panel}>
-            <PanelWrapper title={t('By completing this transaction, I agree to the following…')}>
+            <PanelWrapper title={t('ByCompletingTransaction')}>
               <div className={styles.text}>
-                <p>{t('The intent of the ‘voteproducer’ action is to cast a valid vote for up to 30 BP candidates.')}</p>
+                <p>{t('TheIntentVoteproducer')}</p>
                 <p>{t('As an authorized party', { userName: getUserName(owner), nodes: nodesToVote.length ? nodesToVote.map(node => node.title).join(', ') : t('none') })}</p>
-                <p>{t('If I am not the benefitial owner of these shares I stipulate I have proof that I’ve been authorized to vote these shares by their benefitial owner(s).')}</p>
-                <p>{t('I stipulate I have not and will not accept anything of value in exchange for these votes, on penalty of confiscation of these tokens, and other penalties.')}</p>
-                <p>{t('I acknowledge that using any system of authomatic voting, re-voting, or vote refreshing, or allowing such system to be used on my behalf or on behalf of another, is forbidden and doing so violates this contract.')}</p>
+                <p>{t('IfIAmNotTheBenefitial')}</p>
+                <p>{t('IStipulateIHaveNot')}</p>
+                <p>{t('IAcknowledgeThatUsing')}</p>
               </div>
             </PanelWrapper>
           </div>

@@ -26,20 +26,20 @@ const SaveSocialKey = (props) => {
                 <IconClose />
               </span>
             </span>
-            <h3 className={styles.title}>{t('Copy Your Social Key and Save It')}</h3>
-            <p className={styles.text}>{t('This key is your way to authorize on a platform, it much safer and simplier than Brainkey. Keep it somewhere safe!')}</p>
+            <h3 className={styles.title}>{t('auth.copyYourKey')}</h3>
+            <p className={styles.text}>{t('auth.warning')}</p>
             <div className={styles.action}>
               <Button big cap red strech onClick={props.onClickBack}>
-                {t('GOT IT')}
+                {t('GOTIT')}
               </Button>
             </div>
           </div>
         </Popup>
       }
       <SaveKey
-        title={t('Save Your Social Key')}
+        title={t('auth.saveSocialKey')}
         copyText={props.socialKey}
-        proceedText={t('Proceed to Authorization')}
+        proceedText={t('auth.proceedAuthorization')}
         onCopy={() => {
           setHasCopiedKey(true);
         }}

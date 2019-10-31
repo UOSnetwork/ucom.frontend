@@ -25,7 +25,7 @@ const Subscribe = () => {
       >
         <div className={styles.subscribe}>
           <h2 className={styles.title}>{t('Subscribe')}</h2>
-          <p className={styles.description}>{t('Subscribe to U.community mailing list')}</p>
+          <p className={styles.description}>{t('subscribeUCommunity')}</p>
 
           <Form
             onSuccess={() => {
