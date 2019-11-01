@@ -15,14 +15,6 @@ const AccountName = ({
     error: error || '',
   });
 
-  const testAccountNameSymbolsOrExeption = (str) => {
-    if (str && !USER_ACCOUNT_NAME_SYMBOLS_REG_EXP.test(str)) {
-      throw new Error(t('auth.wrongAccount'));
-    }
-
-    return true;
-  };
-
   const testAccountNameLengthAndSymbolsOrExeption = (str) => {
     if (!USER_ACCOUNT_NAME_REG_EXP.test(str)) {
       throw new Error(t('auth.wrongAccount'));
@@ -42,15 +34,9 @@ const AccountName = ({
 
   const testAccountName = async (str) => {
     try {
-      if (str.length < 12) {
-        testAccountNameSymbolsOrExeption(str);
-        onChange('');
-      } else if (str.length === 12) {
-        testAccountNameLengthAndSymbolsOrExeption(str);
-        await testAccountNameUniqOrExeption(str);
-        onChange(str);
-      }
-
+      testAccountNameLengthAndSymbolsOrExeption(str);
+      await testAccountNameUniqOrExeption(str);
+      onChange(str);
       setState(state => ({ ...state, error: '' }));
     } catch (err) {
       onChange('');
