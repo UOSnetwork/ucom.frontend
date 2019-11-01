@@ -12,6 +12,7 @@ const PasswordSet = (props) => {
       className={styles.content}
       onSubmit={async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         props.onSubmit();
       }}
     >

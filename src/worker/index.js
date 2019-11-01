@@ -177,4 +177,8 @@ export default class Api {
   static signUpdateCommentFromOrganization(...args) {
     return Api.postMessage({ args, type: actions.SIGN_UPDATE_COMMENT_FROM_ORGANIZATION });
   }
+
+  static addSocialPermissionsToProposeApproveAndExecute(...args) {
+    return Api.postMessage({ args, type: actions.ADD_SOCIAL_PERMISSIONS_TO_PROPOSE_APPROVE_AND_EXECUTE });
+  }
 }

@@ -20,6 +20,7 @@ const Password = (props) => {
       className={styles.content}
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!passwordIsValid(password)) {
           setFormError(t(PASSWORD_ERROR));
           return;

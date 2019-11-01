@@ -18,6 +18,7 @@ const Password = (props) => {
       className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (password !== passwordRepeat) {
           setFormError(t(PASSWORD_ERROR));
           return;

@@ -101,4 +101,5 @@ Popup.defaultProps = {
 };
 
 export { default as Content } from './Content';
+export { default as Portal } from './Portal';
 export default memo(Popup);

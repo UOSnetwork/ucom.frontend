@@ -21,6 +21,7 @@ const BrainkeyForm = (props) => {
       className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         const trimedBrainkey = brainkey.trim();
         if (!isBrainkeySymbolsValid(trimedBrainkey) || !isBrainkeyLengthValid(trimedBrainkey)) {
           setFormError(t(ERROR_WRONG_BRAINKEY));

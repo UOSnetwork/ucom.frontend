@@ -7,7 +7,7 @@
       "auth.saveSocial": "Save your Private Social Key",
       "auth.generateSocialKey": "Generate Social Key with Brainkey",
       "auth.havePrivateActive": "I have Private Active key",
-      "auth.wrongAccount": "Wrong Account Name format",
+      "auth.wrongAccount": "Wrong account name format",
       "auth.whatYourAccount": "What’s Your U°OS Account Name?",
       "auth.dontHaveAccount": "Don’t have an account? <1>Create one</1>",
       "auth.generateSocialKeyWithActiveKey": "Generate Social Key with Active Key",
@@ -398,7 +398,11 @@
       "Link to Article": "Link to {{title}} Article",
       "Page not found": "Page not found",
       "We cant find the page": "We can’t find the page that you’re looking for :(<br />Please try repeat this request later.",
-      "Go back home": "Go back home"
+      "Go back home": "Go back home",
+      "Create": "Create",
+      "keys.privateNotValid": "Private key is not valid",
+      "community.accountName": "Community Account name",
+      "accountAlreadyTaken": "Account name {{accountName}} is already taken."
     }
   }
 }

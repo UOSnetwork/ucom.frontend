@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import React, { useState, Fragment } from 'react';
-import Popup, { Content } from '../../../Popup';
+import Popup, { Content, Portal } from '../../../Popup';
 import PasswordSet from './PasswordSet';
 import ActiveKey from './ActiveKey';
 import Password from './Password';
@@ -47,6 +47,7 @@ const RequestActiveKey = (props) => {
   const request = async (...args) => {
     if (!props.onScatterConnect) {
       show(args);
+      return;
     }
 
     setLoading(true);
@@ -66,71 +67,73 @@ const RequestActiveKey = (props) => {
     <Fragment>
       {(!props.replace || !visible) && props.children(request, loading)}
 
-      {visible && (() => {
-        switch (currentStep) {
-          case STEP_PASSWORD_CREATE:
-            return (
-              <ChangePassword
-                description={t('auth.needPrivateActiveKey')}
-                onClickClose={resetStep}
-                onSubmit={resetStep}
-              />
-            );
+      <Portal>
+        {visible && (() => {
+          switch (currentStep) {
+            case STEP_PASSWORD_CREATE:
+              return (
+                <ChangePassword
+                  description={t('auth.needPrivateActiveKey')}
+                  onClickClose={resetStep}
+                  onSubmit={resetStep}
+                />
+              );
 
-          case STEP_PASSWORD_SET:
-          case STEP_PASSWORD:
-          case STEP_ACTIVE_KEY:
-            return (
-              <Popup onClickClose={hide}>
-                <Content
-                  walletAction
-                  roundBorders={false}
-                  onClickClose={hide}
-                >
-                  {(() => {
-                    switch (currentStep) {
-                      case STEP_PASSWORD:
-                        return (
-                          <Password
-                            onClickActiveKey={() => setCurrentStep(STEP_ACTIVE_KEY)}
-                            onSubmit={(activeKey) => {
-                              submit(activeKey);
-                              hide();
-                            }}
-                          />
-                        );
+            case STEP_PASSWORD_SET:
+            case STEP_PASSWORD:
+            case STEP_ACTIVE_KEY:
+              return (
+                <Popup onClickClose={hide}>
+                  <Content
+                    walletAction
+                    roundBorders={false}
+                    onClickClose={hide}
+                  >
+                    {(() => {
+                      switch (currentStep) {
+                        case STEP_PASSWORD:
+                          return (
+                            <Password
+                              onClickActiveKey={() => setCurrentStep(STEP_ACTIVE_KEY)}
+                              onSubmit={(activeKey) => {
+                                submit(activeKey);
+                                hide();
+                              }}
+                            />
+                          );
 
-                      case STEP_ACTIVE_KEY:
-                        return (
-                          <ActiveKey
-                            onClickSetPassword={() => setCurrentStep(STEP_PASSWORD_CREATE)}
-                            onSubmit={(activeKey) => {
-                              submit(activeKey);
-                              hide();
-                            }}
-                          />
-                        );
+                        case STEP_ACTIVE_KEY:
+                          return (
+                            <ActiveKey
+                              onClickSetPassword={() => setCurrentStep(STEP_PASSWORD_CREATE)}
+                              onSubmit={(activeKey) => {
+                                submit(activeKey);
+                                hide();
+                              }}
+                            />
+                          );
 
-                      case STEP_PASSWORD_SET:
-                        return (
-                          <PasswordSet
-                            onSubmit={() => setCurrentStep(STEP_PASSWORD_CREATE)}
-                            onClickActiveKey={() => setCurrentStep(STEP_ACTIVE_KEY)}
-                          />
-                        );
+                        case STEP_PASSWORD_SET:
+                          return (
+                            <PasswordSet
+                              onSubmit={() => setCurrentStep(STEP_PASSWORD_CREATE)}
+                              onClickActiveKey={() => setCurrentStep(STEP_ACTIVE_KEY)}
+                            />
+                          );
 
-                      default:
-                        return null;
-                    }
-                  })()}
-                </Content>
-              </Popup>
-            );
+                        default:
+                          return null;
+                      }
+                    })()}
+                  </Content>
+                </Popup>
+              );
 
-          default:
-            return null;
-        }
-      })()}
+            default:
+              return null;
+          }
+        })()}
+      </Portal>
     </Fragment>
   );
 };

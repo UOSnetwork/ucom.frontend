@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Element } from 'react-scroll';
 import { pick, cloneDeep, uniqBy } from 'lodash';
 import { useDispatch } from 'react-redux';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import Menu from './Menu';
 import DropzoneWrapper from '../DropzoneWrapper';
 import IconOrganization from '../Icons/Organization';
@@ -28,12 +28,12 @@ import {
   addErrorNotification,
   addErrorNotificationFromResponse,
 } from '../../actions/notifications';
-import { saveOrganization } from '../../actions/organizations';
-import { authShowPopup } from '../../actions/auth';
+import multiSignActions from '../../actions/multiSign';
 import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
 import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import EmbedService from '../../utils/embedService';
-import { getSocialKey } from '../../utils/keys';
+import AccountName from './AccountName';
+import RequestActiveKey from '../Auth/Features/RequestActiveKey';
 import styles from './styles.css';
 
 const defaultOrg = {
@@ -85,39 +85,18 @@ const OrganizationProfile = ({
     validate(data);
   };
 
-  const submit = async (data) => {
+  const submit = async (activeKey, data) => {
     const isValid = validate(data);
 
-    setSubmited(true);
-
-    if (!isValid) {
-      dispatch(addValidationErrorNotification());
-    }
-
     if (!isValid || loading) {
-      return;
-    }
-
-    const ownerPrivateKey = getSocialKey();
-
-    if (!owner || !owner.accountName || !ownerPrivateKey) {
-      dispatch(authShowPopup());
       return;
     }
 
     setLoading(true);
 
     try {
-      const result = await withLoader(dispatch(saveOrganization(
-        owner.accountName,
-        ownerPrivateKey,
-        data.id,
-        data.blockchainId,
-        data,
-      )));
-
+      const result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data)));
       dispatch(addSuccessNotification(data.id ? t('Community has been saved') : t('Community has been created')));
-
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
       setErrors(Validate.parseResponseError(err.response));
@@ -168,483 +147,517 @@ const OrganizationProfile = ({
   }, [organization]);
 
   return (
-    <form
-      noValidate
-      onSubmit={(e) => {
-        e.preventDefault();
-        submit(data);
+    <RequestActiveKey
+      onSubmit={(activeKey) => {
+        submit(activeKey, data);
       }}
     >
-      <div className={styles.grid}>
-        <div className={`${styles.sidebar} ${styles.organization}`}>
-          <Menu
-            create={!data.id}
-            sections={[
-              { title: t('General'), name: 'general' },
-              { title: t('Board'), name: 'board' },
-              { title: t('About'), name: 'about' },
-              { title: t('Contacts'), name: 'contacts' },
-              { title: t('Links'), name: 'links' },
-              { title: t('Location'), name: 'cocation' },
-            ]}
-            submitDisabled={loading}
-            submitVisible={edited}
-          />
-        </div>
-        <div className={styles.content}>
-          <h2 className={styles.title}>{data.id ? t('Edit Community Profile') : t('New Community')}</h2>
+      {requestActiveKey => (
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault();
 
-          <Element
-            name="general"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('General')}</h3>
+            const isValid = validate(data);
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Cover')}</div>
-              <div className={styles.data}>
-                <DropzoneWrapper
-                  className={styles.cover}
-                  accept="image/jpeg, image/png"
-                  onChange={uploadAndSetCover}
-                >
-                  {entityHasCover(data.entityImages) ? (
-                    <img src={entityGetCoverUrl(data.entityImages)} alt="" />
-                  ) : (
-                    <IconCover />
-                  )}
-                </DropzoneWrapper>
-              </div>
+            setSubmited(true);
+
+            if (!isValid) {
+              dispatch(addValidationErrorNotification());
+            }
+
+            if (!isValid || loading) {
+              return;
+            }
+
+            requestActiveKey();
+          }}
+        >
+          <div className={styles.grid}>
+            <div className={`${styles.sidebar} ${styles.organization}`}>
+              <Menu
+                create={!data.id}
+                sections={[
+                  { title: t('General'), name: 'general' },
+                  { title: t('Board'), name: 'board' },
+                  { title: t('About'), name: 'about' },
+                  { title: t('Contacts'), name: 'contacts' },
+                  { title: t('Links'), name: 'links' },
+                  { title: t('Location'), name: 'cocation' },
+                ]}
+                submitDisabled={loading}
+                submitVisible={edited}
+              />
             </div>
+            <div className={styles.content}>
+              <h2 className={styles.title}>{data.id ? t('Edit Community Profile') : t('New Community')}</h2>
 
-            <div className={`${styles.field} ${styles.block}`}>
-              <div className={styles.label}>{t('Emblem')}</div>
-              <div className={styles.data}>
-                <DropzoneWrapper
-                  className={styles.upload}
-                  accept="image/jpeg, image/png, image/gif"
-                  onChange={(avatarFilename) => {
-                    setAvatarPreview(URL.createObjectURL(avatarFilename));
-                    setDataAndValidate({ ...data, avatarFilename });
-                  }}
-                >
-                  <div className={`${styles.uploadIcon} ${styles.org}`}>
-                    {avatarPreview || data.avatarFilename ? (
-                      <UserPick src={avatarPreview || urls.getFileUrl(data.avatarFilename)} size={100} shadow organization />
-                    ) : (
-                      <IconOrganization />
-                    )}
+              <Element
+                name="general"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('General')}</h3>
+
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Cover')}</div>
+                  <div className={styles.data}>
+                    <DropzoneWrapper
+                      className={styles.cover}
+                      accept="image/jpeg, image/png"
+                      onChange={uploadAndSetCover}
+                    >
+                      {entityHasCover(data.entityImages) ? (
+                        <img src={entityGetCoverUrl(data.entityImages)} alt="" />
+                      ) : (
+                        <IconCover />
+                      )}
+                    </DropzoneWrapper>
                   </div>
-                  <div className={styles.uploadText}>
-                    {t('dragAndDrop')}
-                  </div>
-                </DropzoneWrapper>
-              </div>
-            </div>
+                </div>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Community Name')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  submited={submited}
-                  placeholder={t('Choose Nice Name')}
-                  value={data.title}
-                  error={errors && errors.title}
-                  onChange={(title) => {
-                    setDataAndValidate({ ...data, title });
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Community Link')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  submited={submited}
-                  placeholder="datalightsus"
-                  prefix="u.community/"
-                  value={data.nickname}
-                  error={errors && errors.nickname}
-                  onChange={(nickname) => {
-                    setDataAndValidate({ ...data, nickname });
-                  }}
-                />
-              </div>
-            </div>
-          </Element>
-
-          <Element
-            name="board"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('Board')}</h3>
-
-            <div className={`${styles.field} ${styles.block}`}>
-              <div className={styles.label}>{t('Owner')}</div>
-              <div className={styles.data}>
-                {owner &&
-                  <EntryCard
-                    disableRate
-                    avatarSrc={urls.getFileUrl(owner.avatarFilename)}
-                    url={urls.getUserUrl(owner.id)}
-                    title={getUserName(owner)}
-                    nickname={owner.accountName}
-                  />
-                }
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Administrators')}</div>
-              <div className={`${styles.data} ${styles.entrys}`}>
-                {data.usersTeam && data.usersTeam.map((item, index) => (
-                  <div
-                    key={index}
-                    className={styles.entry}
-                  >
-                    <EntryCard
-                      disableRate
-                      avatarSrc={urls.getFileUrl(item.avatarFilename)}
-                      url={urls.getUserUrl(item.id)}
-                      title={getUserName(item)}
-                      nickname={item.accountName}
-                    />
-                    <span className={styles.adminStatus}>{getUsersTeamStatusById(item.usersTeamStatus)}</span>
-                    <span
-                      role="presentation"
-                      className={`${styles.remove} ${styles.medium}`}
-                      onClick={() => {
-                        const { usersTeam } = data;
-                        usersTeam.splice(index, 1);
-                        setDataAndValidate({ ...data, usersTeam });
+                <div className={`${styles.field} ${styles.block}`}>
+                  <div className={styles.label}>{t('Emblem')}</div>
+                  <div className={styles.data}>
+                    <DropzoneWrapper
+                      className={styles.upload}
+                      accept="image/jpeg, image/png, image/gif"
+                      onChange={(avatarFilename) => {
+                        setAvatarPreview(URL.createObjectURL(avatarFilename));
+                        setDataAndValidate({ ...data, avatarFilename });
                       }}
                     >
-                      <IconRemove />
-                    </span>
+                      <div className={`${styles.uploadIcon} ${styles.org}`}>
+                        {avatarPreview || data.avatarFilename ? (
+                          <UserPick src={avatarPreview || urls.getFileUrl(data.avatarFilename)} size={100} shadow organization />
+                        ) : (
+                          <IconOrganization />
+                        )}
+                      </div>
+                      <div className={styles.uploadText}>
+                        {t('dragAndDrop')}
+                      </div>
+                    </DropzoneWrapper>
                   </div>
-                ))}
-                {adminSearchVisible &&
-                  <SearchInput
-                    autoFocus
-                    value={[]}
-                    onChange={(users) => {
-                      const user = users[0];
-                      const usersTeam = uniqBy(data.usersTeam.concat(user).filter(i => i.id !== owner.id), 'id');
-                      setDataAndValidate({ ...data, usersTeam });
-                      setAdminSearchVisible(false);
-                    }}
-                  />
-                }
-                <div>
-                  <Button
-                    small
-                    type="button"
-                    disabled={adminSearchVisible}
-                    onClick={() => setAdminSearchVisible(true)}
-                  >
-                    {t('Add Admin')}
-                  </Button>
                 </div>
-              </div>
-            </div>
-          </Element>
 
-          <Element
-            name="about"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('About')}</h3>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Community Name')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      submited={submited}
+                      placeholder={t('Choose Nice Name')}
+                      value={data.title}
+                      error={errors && errors.title}
+                      onChange={(title) => {
+                        setDataAndValidate({ ...data, title });
+                      }}
+                    />
+                  </div>
+                </div>
 
-            <Textarea
-              rows={5}
-              submited={submited}
-              placeholder={t('mainIdea')}
-              className={styles.textarea}
-              value={data.about}
-              error={errors && errors.about}
-              onChange={(about) => {
-                setDataAndValidate({ ...data, about });
-              }}
-            />
-          </Element>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('community.accountName')}</div>
+                  <div className={styles.data}>
+                    {/* TODO: If account name exist */}
+                    <AccountName
+                      submited={submited}
+                      onChange={nickname => setDataAndValidate({ ...data, nickname })}
+                      error={errors && errors.nickname}
+                    />
+                  </div>
+                </div>
 
-          <Element
-            name="contacts"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('Contacts')}</h3>
+                {/* <div className={styles.field}>
+                  <div className={styles.label}>{t('Community Link')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      submited={submited}
+                      placeholder="datalightsus"
+                      prefix="u.community/"
+                      value={data.nickname}
+                      error={errors && errors.nickname}
+                      onChange={(nickname) => {
+                        setDataAndValidate({ ...data, nickname });
+                      }}
+                    />
+                  </div>
+                </div> */}
+              </Element>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Email')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  type="email"
+              <Element
+                name="board"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('Board')}</h3>
+
+                <div className={`${styles.field} ${styles.block}`}>
+                  <div className={styles.label}>{t('Owner')}</div>
+                  <div className={styles.data}>
+                    {owner &&
+                      <EntryCard
+                        disableRate
+                        avatarSrc={urls.getFileUrl(owner.avatarFilename)}
+                        url={urls.getUserUrl(owner.id)}
+                        title={getUserName(owner)}
+                        nickname={owner.accountName}
+                      />
+                    }
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Administrators')}</div>
+                  <div className={`${styles.data} ${styles.entrys}`}>
+                    {data.usersTeam && data.usersTeam.map((item, index) => (
+                      <div
+                        key={index}
+                        className={styles.entry}
+                      >
+                        <EntryCard
+                          disableRate
+                          avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                          url={urls.getUserUrl(item.id)}
+                          title={getUserName(item)}
+                          nickname={item.accountName}
+                        />
+                        <span className={styles.adminStatus}>{getUsersTeamStatusById(item.usersTeamStatus)}</span>
+                        <span
+                          role="presentation"
+                          className={`${styles.remove} ${styles.medium}`}
+                          onClick={() => {
+                            const { usersTeam } = data;
+                            usersTeam.splice(index, 1);
+                            setDataAndValidate({ ...data, usersTeam });
+                          }}
+                        >
+                          <IconRemove />
+                        </span>
+                      </div>
+                    ))}
+                    {adminSearchVisible &&
+                      <SearchInput
+                        autoFocus
+                        value={[]}
+                        onChange={(users) => {
+                          const user = users[0];
+                          const usersTeam = uniqBy(data.usersTeam.concat(user).filter(i => i.id !== owner.id), 'id');
+                          setDataAndValidate({ ...data, usersTeam });
+                          setAdminSearchVisible(false);
+                        }}
+                      />
+                    }
+                    <div>
+                      <Button
+                        small
+                        type="button"
+                        disabled={adminSearchVisible}
+                        onClick={() => setAdminSearchVisible(true)}
+                      >
+                        {t('Add Admin')}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Element>
+
+              <Element
+                name="about"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('About')}</h3>
+
+                <Textarea
+                  rows={5}
                   submited={submited}
-                  placeholder="example@mail.com"
-                  value={data.email}
-                  error={errors && errors.email}
-                  onChange={(email) => {
-                    setDataAndValidate({ ...data, email });
+                  placeholder={t('mainIdea')}
+                  className={styles.textarea}
+                  value={data.about}
+                  error={errors && errors.about}
+                  onChange={(about) => {
+                    setDataAndValidate({ ...data, about });
                   }}
                 />
-              </div>
-            </div>
+              </Element>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Phone Number')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  type="tel"
-                  submited={submited}
-                  placeholder="8 800 200 06 00 88 88"
-                  value={data.phoneNumber}
-                  error={errors && errors.phoneNumber}
-                  onChange={(phoneNumber) => {
-                    setDataAndValidate({ ...data, phoneNumber });
-                  }}
-                />
-              </div>
-            </div>
-          </Element>
+              <Element
+                name="contacts"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('Contacts')}</h3>
 
-          <Element
-            name="links"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('Links')}</h3>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Email')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      type="email"
+                      submited={submited}
+                      placeholder="example@mail.com"
+                      value={data.email}
+                      error={errors && errors.email}
+                      onChange={(email) => {
+                        setDataAndValidate({ ...data, email });
+                      }}
+                    />
+                  </div>
+                </div>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Community Website')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  submited={submited}
-                  placeholder="http://example.com"
-                  value={data.personalWebsiteUrl}
-                  error={errors && errors.personalWebsiteUrl}
-                  onChange={(personalWebsiteUrl) => {
-                    setDataAndValidate({ ...data, personalWebsiteUrl });
-                  }}
-                />
-              </div>
-            </div>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Phone Number')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      type="tel"
+                      submited={submited}
+                      placeholder="8 800 200 06 00 88 88"
+                      value={data.phoneNumber}
+                      error={errors && errors.phoneNumber}
+                      onChange={(phoneNumber) => {
+                        setDataAndValidate({ ...data, phoneNumber });
+                      }}
+                    />
+                  </div>
+                </div>
+              </Element>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Social Networks')}</div>
-              <div className={`${styles.data} ${styles.entrys}`}>
-                {data.socialNetworks && data.socialNetworks.map((item, index) => (
-                  <div className={`${styles.entry} ${styles.input}`} key={index}>
+              <Element
+                name="links"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('Links')}</h3>
+
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Community Website')}</div>
+                  <div className={styles.data}>
                     <TextInput
                       submited={submited}
                       placeholder="http://example.com"
-                      value={item.sourceUrl}
-                      error={errors && errors.socialNetworks && errors.socialNetworks[index] && errors.socialNetworks[index].sourceUrl}
-                      onChange={(sourceUrl) => {
-                        const { socialNetworks } = data;
-                        socialNetworks[index].sourceUrl = sourceUrl;
-                        setDataAndValidate({ ...data, socialNetworks });
+                      value={data.personalWebsiteUrl}
+                      error={errors && errors.personalWebsiteUrl}
+                      onChange={(personalWebsiteUrl) => {
+                        setDataAndValidate({ ...data, personalWebsiteUrl });
                       }}
                     />
-                    <span
-                      role="presentation"
-                      className={styles.remove}
-                      onClick={() => {
-                        const { socialNetworks } = data;
-                        socialNetworks.splice(index, 1);
-                        setDataAndValidate({ ...data, socialNetworks });
-                      }}
-                    >
-                      <IconRemove />
-                    </span>
                   </div>
-                ))}
-
-                <div>
-                  <Button
-                    small
-                    type="button"
-                    onClick={() => {
-                      const { socialNetworks } = data;
-                      socialNetworks.push({
-                        sourceUrl: '',
-                        sourceTypeId: 0,
-                      });
-                      setDataAndValidate({ ...data, socialNetworks });
-                    }}
-                  >
-                    {data.socialNetworks && data.socialNetworks.length > 0 ? t('Add Another') : t('Add Network')}
-                  </Button>
                 </div>
-              </div>
-            </div>
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Partners')}</div>
-              <div className={`${styles.data} ${styles.entrys}`}>
-                {data.communitySources && data.communitySources.map((item, index) => (
-                  <div
-                    key={index}
-                    className={styles.entry}
-                  >
-                    <EntryCard
-                      disableRate
-                      organization
-                      disableSign={item.sourceType === SOURCE_TYPE_EXTERNAL}
-                      isExternal={item.sourceType === SOURCE_TYPE_EXTERNAL}
-                      avatarSrc={urls.getFileUrl(item.avatarFilename)}
-                      url={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : urls.getOrganizationUrl(item.entityId)}
-                      title={item.title}
-                      nickname={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : item.nickname}
-                    />
-                    <span
-                      role="presentation"
-                      className={`${styles.remove} ${styles.medium}`}
-                      onClick={() => {
-                        const { communitySources } = data;
-                        communitySources.splice(index, 1);
-                        setDataAndValidate({ ...data, communitySources });
-                      }}
-                    >
-                      <IconRemove />
-                    </span>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Social Networks')}</div>
+                  <div className={`${styles.data} ${styles.entrys}`}>
+                    {data.socialNetworks && data.socialNetworks.map((item, index) => (
+                      <div className={`${styles.entry} ${styles.input}`} key={index}>
+                        <TextInput
+                          submited={submited}
+                          placeholder="http://example.com"
+                          value={item.sourceUrl}
+                          error={errors && errors.socialNetworks && errors.socialNetworks[index] && errors.socialNetworks[index].sourceUrl}
+                          onChange={(sourceUrl) => {
+                            const { socialNetworks } = data;
+                            socialNetworks[index].sourceUrl = sourceUrl;
+                            setDataAndValidate({ ...data, socialNetworks });
+                          }}
+                        />
+                        <span
+                          role="presentation"
+                          className={styles.remove}
+                          onClick={() => {
+                            const { socialNetworks } = data;
+                            socialNetworks.splice(index, 1);
+                            setDataAndValidate({ ...data, socialNetworks });
+                          }}
+                        >
+                          <IconRemove />
+                        </span>
+                      </div>
+                    ))}
+
+                    <div>
+                      <Button
+                        small
+                        type="button"
+                        onClick={() => {
+                          const { socialNetworks } = data;
+                          socialNetworks.push({
+                            sourceUrl: '',
+                            sourceTypeId: 0,
+                          });
+                          setDataAndValidate({ ...data, socialNetworks });
+                        }}
+                      >
+                        {data.socialNetworks && data.socialNetworks.length > 0 ? t('Add Another') : t('Add Network')}
+                      </Button>
+                    </div>
                   </div>
-                ))}
-
-                {data.partnershipSources && data.partnershipSources.map((item, index) => (
-                  <div
-                    key={index}
-                    className={styles.entry}
-                  >
-                    <EntryCard
-                      disableRate
-                      organization
-                      disableSign={item.sourceType === SOURCE_TYPE_EXTERNAL}
-                      isExternal={item.sourceType === SOURCE_TYPE_EXTERNAL}
-                      avatarSrc={urls.getFileUrl(item.avatarFilename)}
-                      url={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : urls.getOrganizationUrl(item.entityId)}
-                      title={item.title}
-                      nickname={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : item.nickname}
-                    />
-                    <span
-                      role="presentation"
-                      className={`${styles.remove} ${styles.medium}`}
-                      onClick={() => {
-                        const { partnershipSources } = data;
-                        partnershipSources.splice(index, 1);
-                        setDataAndValidate({ ...data, partnershipSources });
-                      }}
-                    >
-                      <IconRemove />
-                    </span>
-                  </div>
-                ))}
-
-                {partnersSearchVisible &&
-                  <SearchInput
-                    autoFocus
-                    organization
-                    value={[]}
-                    placeholder={t('Find community')}
-                    loadOptions={async (q) => {
-                      if (validUrl(q)) {
-                        try {
-                          const data = await EmbedService.getDataFromUrl(q);
-                          return [{
-                            title: data.title,
-                            description: data.description,
-                            sourceUrl: q,
-                            sourceType: SOURCE_TYPE_EXTERNAL,
-                          }];
-                        } catch (err) {
-                          return [{
-                            title: extractSitename(q),
-                            description: extractSitename(q),
-                            sourceUrl: q,
-                            sourceType: SOURCE_TYPE_EXTERNAL,
-                          }];
-                        }
-                      }
-
-                      try {
-                        const data = await api.searchCommunity(q);
-                        return data.slice(0, 20);
-                      } catch (err) {
-                        return [];
-                      }
-                    }}
-                    onChange={(organizations) => {
-                      const organization = {
-                        ...organizations[0],
-                        sourceType: organizations[0].sourceType || SOURCE_TYPE_INTERNAL,
-                      };
-                      const partnershipSources = data.partnershipSources.concat(organization);
-                      setDataAndValidate({ ...data, partnershipSources });
-                      setPartnersSearchVisible(false);
-                    }}
-                  />
-                }
-                <div>
-                  <Button
-                    small
-                    type="button"
-                    disabled={partnersSearchVisible}
-                    onClick={() => setPartnersSearchVisible(true)}
-                  >
-                    {[...(data.partnershipSources || []), ...(data.communitySources || [])].length > 0 ? t('Add Another') : t('Add Partner')}
-                  </Button>
                 </div>
-              </div>
-            </div>
-          </Element>
 
-          <Element
-            name="cocation"
-            className={styles.section}
-          >
-            <h3 className={styles.subTitle}>{t('Location')}</h3>
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Partners')}</div>
+                  <div className={`${styles.data} ${styles.entrys}`}>
+                    {data.communitySources && data.communitySources.map((item, index) => (
+                      <div
+                        key={index}
+                        className={styles.entry}
+                      >
+                        <EntryCard
+                          disableRate
+                          organization
+                          disableSign={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                          isExternal={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                          avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                          url={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : urls.getOrganizationUrl(item.entityId)}
+                          title={item.title}
+                          nickname={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : item.nickname}
+                        />
+                        <span
+                          role="presentation"
+                          className={`${styles.remove} ${styles.medium}`}
+                          onClick={() => {
+                            const { communitySources } = data;
+                            communitySources.splice(index, 1);
+                            setDataAndValidate({ ...data, communitySources });
+                          }}
+                        >
+                          <IconRemove />
+                        </span>
+                      </div>
+                    ))}
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('Country')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  submited={submited}
-                  value={data.country}
-                  error={errors && errors.country}
-                  onChange={(country) => {
-                    setDataAndValidate({ ...data, country });
-                  }}
-                />
-              </div>
-            </div>
+                    {data.partnershipSources && data.partnershipSources.map((item, index) => (
+                      <div
+                        key={index}
+                        className={styles.entry}
+                      >
+                        <EntryCard
+                          disableRate
+                          organization
+                          disableSign={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                          isExternal={item.sourceType === SOURCE_TYPE_EXTERNAL}
+                          avatarSrc={urls.getFileUrl(item.avatarFilename)}
+                          url={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : urls.getOrganizationUrl(item.entityId)}
+                          title={item.title}
+                          nickname={item.sourceType === SOURCE_TYPE_EXTERNAL ? item.sourceUrl : item.nickname}
+                        />
+                        <span
+                          role="presentation"
+                          className={`${styles.remove} ${styles.medium}`}
+                          onClick={() => {
+                            const { partnershipSources } = data;
+                            partnershipSources.splice(index, 1);
+                            setDataAndValidate({ ...data, partnershipSources });
+                          }}
+                        >
+                          <IconRemove />
+                        </span>
+                      </div>
+                    ))}
 
-            <div className={styles.field}>
-              <div className={styles.label}>{t('City')}</div>
-              <div className={styles.data}>
-                <TextInput
-                  submited={submited}
-                  value={data.city}
-                  error={errors && errors.city}
-                  onChange={(city) => {
-                    setDataAndValidate({ ...data, city });
-                  }}
-                />
-              </div>
+                    {partnersSearchVisible &&
+                      <SearchInput
+                        autoFocus
+                        organization
+                        value={[]}
+                        placeholder={t('Find community')}
+                        loadOptions={async (q) => {
+                          if (validUrl(q)) {
+                            try {
+                              const data = await EmbedService.getDataFromUrl(q);
+                              return [{
+                                title: data.title,
+                                description: data.description,
+                                sourceUrl: q,
+                                sourceType: SOURCE_TYPE_EXTERNAL,
+                              }];
+                            } catch (err) {
+                              return [{
+                                title: extractSitename(q),
+                                description: extractSitename(q),
+                                sourceUrl: q,
+                                sourceType: SOURCE_TYPE_EXTERNAL,
+                              }];
+                            }
+                          }
+
+                          try {
+                            const data = await api.searchCommunity(q);
+                            return data.slice(0, 20);
+                          } catch (err) {
+                            return [];
+                          }
+                        }}
+                        onChange={(organizations) => {
+                          const organization = {
+                            ...organizations[0],
+                            sourceType: organizations[0].sourceType || SOURCE_TYPE_INTERNAL,
+                          };
+                          const partnershipSources = data.partnershipSources.concat(organization);
+                          setDataAndValidate({ ...data, partnershipSources });
+                          setPartnersSearchVisible(false);
+                        }}
+                      />
+                    }
+                    <div>
+                      <Button
+                        small
+                        type="button"
+                        disabled={partnersSearchVisible}
+                        onClick={() => setPartnersSearchVisible(true)}
+                      >
+                        {[...(data.partnershipSources || []), ...(data.communitySources || [])].length > 0 ? t('Add Another') : t('Add Partner')}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Element>
+
+              <Element
+                name="cocation"
+                className={styles.section}
+              >
+                <h3 className={styles.subTitle}>{t('Location')}</h3>
+
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('Country')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      submited={submited}
+                      value={data.country}
+                      error={errors && errors.country}
+                      onChange={(country) => {
+                        setDataAndValidate({ ...data, country });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <div className={styles.label}>{t('City')}</div>
+                  <div className={styles.data}>
+                    <TextInput
+                      submited={submited}
+                      value={data.city}
+                      error={errors && errors.city}
+                      onChange={(city) => {
+                        setDataAndValidate({ ...data, city });
+                      }}
+                    />
+                  </div>
+                </div>
+              </Element>
             </div>
-          </Element>
-        </div>
-      </div>
-    </form>
+          </div>
+        </form>
+      )}
+    </RequestActiveKey>
   );
 };
 
 OrganizationProfile.propTypes = {
   owner: PropTypes.objectOf(PropTypes.any),
-  organization: PropTypes.objectOf(PropTypes.any).isRequired,
+  organization: PropTypes.objectOf(PropTypes.any),
   onSuccess: PropTypes.func.isRequired,
 };
 
 OrganizationProfile.defaultProps = {
   owner: undefined,
+  organization: undefined,
 };
 
-export default OrganizationProfile;
+export default memo(OrganizationProfile);

@@ -149,6 +149,9 @@ registerPromiseWorker((action) => {
     case actions.SIGN_UPDATE_COMMENT_FROM_ORGANIZATION:
       return PublicationsApi.signUpdateCommentFromOrganization(...action.args);
 
+    case action.ADD_SOCIAL_PERMISSIONS_TO_PROPOSE_APPROVE_AND_EXECUTE:
+      return SocialKeyApi.addSocialPermissionsToProposeApproveAndExecute(...action.args);
+
     default:
       return null;
   }

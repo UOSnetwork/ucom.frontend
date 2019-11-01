@@ -144,7 +144,7 @@ export default class Validate {
 
     return Validate.validate(data, {
       title: [reuqired, inputMaxLength],
-      nickname: [reuqired, inputMaxLength],
+      nickname: [reuqired],
       about: [textareaMaxLength],
       country: [inputMaxLength],
       city: [inputMaxLength],

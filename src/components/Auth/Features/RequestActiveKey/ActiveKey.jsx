@@ -19,6 +19,7 @@ const ActiveKey = (props) => {
       className={styles.content}
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!privateKeyIsValid(value)) {
           setFormError(t(KEY_ERROR));
           return;

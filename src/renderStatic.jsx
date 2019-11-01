@@ -54,6 +54,7 @@ export default (store, location, state, staticVersion, contentMetaTags = {}, bas
             </StaticRouter>
           </Provider>
         </div>
+        <div id="portal-root" />
 
         <noscript>
           <iframe title="googletagmanager" src="https://www.googletagmanager.com/ns.html?id=GTM-WGSSH3Q" height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} />

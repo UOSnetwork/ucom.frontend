@@ -18,6 +18,7 @@ const KeyForm = (props) => {
       className={styles.form}
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!privateKeyIsValid(value)) {
           setFormError(t(KEY_ERROR));
           return;
