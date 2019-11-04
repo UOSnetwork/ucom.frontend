@@ -197,4 +197,16 @@ export default class Api {
   static multiSignUpdateProfile(...args) {
     return Api.postMessage({ args, type: actions.MULTI_SIGN_UPDATE_PROFILE });
   }
+
+  static getCreatePublicationFromOrganizationAction(...args) {
+    return Api.postMessage({ args, type: actions.GET_CREATE_PUBLICATION_FROM_ORGANIZATION_ACTION });
+  }
+
+  static proposeApproveAndExecuteByProposer(...args) {
+    return Api.postMessage({ args, type: actions.PROPOSE_APPROVE_AND_EXECUTE_BY_PROPOSER });
+  }
+
+  static getUpdatePublicationFromOrganizationAction(...args) {
+    return Api.postMessage({ args, type: actions.GET_UPDATE_PUBLICATION_FROM_ORGANIZATION_ACTION });
+  }
 }

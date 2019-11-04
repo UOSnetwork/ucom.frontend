@@ -1,7 +1,7 @@
 import { omit } from 'lodash';
 import api, { graphql } from '../api';
 import { addUsers } from './users';
-import { addOrganizations, getOrganization } from './organizations';
+import { addOrganizations } from './organizations';
 import multiSignActions from './multiSign';
 import { POST_TYPE_MEDIA_ID, TRANSACTION_PERMISSION_SOCIAL } from '../utils';
 import { commentsAddContainerData } from './comments';
@@ -145,38 +145,6 @@ export const createMediaPost = (
   }
 
   return result;
-
-  // let transaction;
-
-  // if (organizationId) {
-  //   const organization = await dispatch(getOrganization(organizationId));
-  //   transaction = await Worker.signCreatePublicationFromOrganization(
-  //     accountName,
-  //     privateKey,
-  //     organization.blockchainId,
-  //     content,
-  //     TRANSACTION_PERMISSION_SOCIAL,
-  //   );
-  // } else {
-  //   transaction = await Worker.signCreatePublicationFromUser(
-  //     accountName,
-  //     privateKey,
-  //     content,
-  //     TRANSACTION_PERMISSION_SOCIAL,
-  //   );
-  // }
-
-  // const data = {
-  //   ...omit(content, ['entity_tags']),
-  //   ...(organizationId ? { organization_id: organizationId } : null),
-  //   post_type_id: POST_TYPE_MEDIA_ID,
-  //   signed_transaction: JSON.stringify(transaction.signed_transaction),
-  //   blockchain_id: transaction.blockchain_id,
-  // };
-
-  // const result = await api.createPost(data);
-
-  // return result;
 };
 
 export const updateMediaPost = (
@@ -193,6 +161,7 @@ export const updateMediaPost = (
   accountName,
   privateKey,
 ) => async (dispatch) => {
+  let result;
   const content = {
     title,
     description,
@@ -203,36 +172,25 @@ export const updateMediaPost = (
     blockchain_id: blockchainId,
   };
 
-  let signed_transaction;
-
   if (organizationId) {
-    const organization = await dispatch(getOrganization(organizationId));
-    signed_transaction = await Worker.signUpdatePublicationFromOrganization(
-      accountName,
-      privateKey,
-      organization.blockchainId,
-      content,
-      blockchainId,
-      TRANSACTION_PERMISSION_SOCIAL,
-    );
+    result = await dispatch(multiSignActions.updatePost(organizationId, id, content));
   } else {
-    signed_transaction = await Worker.signUpdatePublicationFromUser(
+    const signed_transaction = await Worker.signUpdatePublicationFromUser(
       accountName,
       privateKey,
       content,
       blockchainId,
       TRANSACTION_PERMISSION_SOCIAL,
     );
+
+    const data = {
+      ...omit(content, ['entity_tags']),
+      post_type_id: POST_TYPE_MEDIA_ID,
+      signed_transaction: JSON.stringify(signed_transaction),
+    };
+
+    result = await api.updatePost(data, id);
   }
-
-  const data = {
-    ...omit(content, ['entity_tags']),
-    ...(organizationId ? { organization_id: organizationId } : null),
-    post_type_id: POST_TYPE_MEDIA_ID,
-    signed_transaction: JSON.stringify(signed_transaction),
-  };
-
-  const result = await api.updatePost(data, id);
 
   return result;
 };

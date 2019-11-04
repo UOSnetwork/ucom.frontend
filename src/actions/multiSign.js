@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { ContentIdGenerator, ContentPublicationsActionsApi, MultiSignatureApi } from 'ucom-libs-wallet';
+import { ContentIdGenerator } from 'ucom-libs-wallet';
 import snakes from '../utils/snakes';
 import * as keyUtils from '../utils/keys';
 import Worker from '../worker';
@@ -7,7 +7,7 @@ import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { addOrganizations } from './organizations';
 import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID } from '../utils/constants';
-import { selectOrgById } from '../store';
+import { selectOrgById, selectPostById } from '../store';
 
 export default class {
   static createOrg(activeKey, data) {
@@ -116,13 +116,13 @@ export default class {
         return null;
       }
 
-      const { action, blockchain_id } = ContentPublicationsActionsApi.getCreatePublicationFromOrganizationAction(
+      const { action, blockchain_id } = await Worker.getCreatePublicationFromOrganizationAction(
         org.nickname,
         org.blockchainId,
         content,
       );
 
-      await MultiSignatureApi.proposeApproveAndExecuteByProposer(
+      await Worker.proposeApproveAndExecuteByProposer(
         ownerCredentials.accountName,
         ownerCredentials.socialKey,
         TRANSACTION_PERMISSION_SOCIAL,
@@ -137,6 +137,61 @@ export default class {
       };
 
       const result = await api.createPost(data);
+
+      return result;
+    };
+  }
+
+  static updatePost(orgId, postId, content) {
+    return async (dispatch, getState) => {
+      if (!orgId) {
+        throw new Error('Organization id is required argument');
+      }
+
+      if (!postId) {
+        throw new Error('Post id is required argument');
+      }
+
+      const state = getState();
+      const org = selectOrgById(orgId)(state);
+
+      if (!org) {
+        throw new Error(`Organization with id ${content.organizationId} not found`);
+      }
+
+      const post = selectPostById(postId)(state);
+
+      if (!post) {
+        throw new Error(`Post with id ${content.organizationId} not found`);
+      }
+
+      const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+      if (!ownerCredentials) {
+        return null;
+      }
+
+      const updatePostAction = await Worker.getUpdatePublicationFromOrganizationAction(
+        org.nickname,
+        org.blockchainId,
+        content,
+        post.blockchainId,
+      );
+
+      await Worker.proposeApproveAndExecuteByProposer(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        TRANSACTION_PERMISSION_SOCIAL,
+        [updatePostAction],
+      );
+
+      const data = {
+        ...omit(content, ['entity_tags']),
+        organization_id: orgId,
+        post_type_id: POST_TYPE_MEDIA_ID,
+      };
+
+      const result = await api.updatePost(data, postId);
 
       return result;
     };

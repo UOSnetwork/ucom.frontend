@@ -67,7 +67,7 @@
       "New Discussion": "New Discussion",
       "Add Discussion": "Add Discussion",
       "Maximum Discussions": "Maximum {{limit}} Discussions",
-      "nothingHereYet": "Nothing here yet. <1>Add existing community article</1> or <2>create new article.</2>",
+      "nothingHereYet": "Nothing here yet. <1>Add existing community article</1> or <3>create new article.</3>",
       "Show more": "Show {{count}} more",
       "Link to article": "Link to article",
       "By author": "by <1>{{author}}</1>",
