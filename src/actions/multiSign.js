@@ -1,11 +1,13 @@
-import { ContentIdGenerator } from 'ucom-libs-wallet';
+import { omit } from 'lodash';
+import { ContentIdGenerator, ContentPublicationsActionsApi, MultiSignatureApi } from 'ucom-libs-wallet';
 import snakes from '../utils/snakes';
 import * as keyUtils from '../utils/keys';
 import Worker from '../worker';
 import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { addOrganizations } from './organizations';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID } from '../utils/constants';
+import { selectOrgById } from '../store';
 
 export default class {
   static createOrg(activeKey, data) {
@@ -92,6 +94,51 @@ export default class {
       dispatch(addOrganizations([{ ...org, ...data }]));
 
       return org;
+    };
+  }
+
+  static createPost(orgId, content) {
+    return async (dispatch, getState) => {
+      const state = getState();
+      const org = selectOrgById(orgId)(state);
+
+      if (!orgId) {
+        throw new Error('Organization id is required argument');
+      }
+
+      if (!org) {
+        throw new Error(`Organization with id ${content.organizationId} not found`);
+      }
+
+      const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+      if (!ownerCredentials) {
+        return null;
+      }
+
+      const { action, blockchain_id } = ContentPublicationsActionsApi.getCreatePublicationFromOrganizationAction(
+        org.nickname,
+        org.blockchainId,
+        content,
+      );
+
+      await MultiSignatureApi.proposeApproveAndExecuteByProposer(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        TRANSACTION_PERMISSION_SOCIAL,
+        [action],
+      );
+
+      const data = {
+        ...omit(content, ['entity_tags']),
+        blockchain_id,
+        organization_id: orgId,
+        post_type_id: POST_TYPE_MEDIA_ID,
+      };
+
+      const result = await api.createPost(data);
+
+      return result;
     };
   }
 }

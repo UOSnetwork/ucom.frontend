@@ -333,7 +333,7 @@
       "Voted for": "Voted for {{nodes}}",
       "Not voted for anyone": "Not voted for anyone",
       "Hide More": "Hide More",
-      "By": "By <0></0> <1>{{title}}</1>",
+      "By": "By <1></1> <2>{{title}}</2>",
       "Publication preview": "Publication preview",
       "Preview title": "Preview title",
       "Preview description": "Preview description",

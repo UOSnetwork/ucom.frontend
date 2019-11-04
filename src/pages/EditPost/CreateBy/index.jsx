@@ -96,6 +96,7 @@ const CreateBy = () => {
               {{ title: org ? org.title : getUserName(owner) }}
             </span>
           </Trans>
+
           {enabled &&
             <span className={styles.trigger}>
               <IconMenuTrigger />
