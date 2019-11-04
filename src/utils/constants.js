@@ -129,3 +129,5 @@ export const FEED_PER_PAGE = 10;
 
 export const POST_EDIT_TIME_LIMIT = 60 * 1000 * 15;
 export const COMMENT_EDIT_TIME_LIMIT = 60 * 1000 * 15;
+
+export const ORGANIZATION_TYPE_ID_MULTI = 2;

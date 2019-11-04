@@ -10,7 +10,7 @@ import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID } from '../utils/cons
 import { selectOrgById, selectPostById } from '../store';
 
 export default class {
-  static createOrg(activeKey, data) {
+  static createOrg(activeKey, data, isMigrate) {
     return async (dispatch) => {
       const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
 
@@ -43,7 +43,14 @@ export default class {
 
       content.is_multi_signature = true;
 
-      const org = await api.createOrganization(content);
+      let org;
+
+      if (isMigrate) {
+        content.accountName = data.nickname;
+        org = await api.migrateOrganization(data.id, content);
+      } else {
+        org = await api.createOrganization(content);
+      }
 
       dispatch(addOrganizations([{ ...org, ...data }]));
 

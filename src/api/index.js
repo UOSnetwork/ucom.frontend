@@ -319,6 +319,13 @@ class Api {
     return humps(response.data);
   }
 
+  async migrateOrganization(orgId, data) {
+    const url = `/api/v1/organizations/${orgId}/migrate-to-multi-signature`;
+    const response = await this.actions.post(url, snakes(data));
+
+    return response.data;
+  }
+
   async createOrganization(data) {
     const url = '/api/v1/organizations';
     const response = await this.actions.post(url, snakes(data));

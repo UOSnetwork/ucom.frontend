@@ -29,7 +29,7 @@ import {
   addErrorNotificationFromResponse,
 } from '../../actions/notifications';
 import multiSignActions from '../../actions/multiSign';
-import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL } from '../../utils/constants';
+import { SOURCE_TYPE_EXTERNAL, SOURCE_TYPE_INTERNAL, ORGANIZATION_TYPE_ID_MULTI } from '../../utils/constants';
 import { entityHasCover, entityAddCover, entityGetCoverUrl } from '../../utils/entityImages';
 import EmbedService from '../../utils/embedService';
 import AccountName from './AccountName';
@@ -95,8 +95,16 @@ const OrganizationProfile = ({
     setLoading(true);
 
     try {
-      const submitFn = multiSignActions[data.id ? 'updateOrg' : 'createOrg'].bind(multiSignActions);
-      const result = await withLoader(dispatch(submitFn(activeKey, data)));
+      let result;
+
+      if (organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
+        result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data, true)));
+      } else if (!data.id) {
+        result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data, false)));
+      } else {
+        result = await withLoader(dispatch(multiSignActions.updateOrg(activeKey, data)));
+      }
+
       dispatch(addSuccessNotification(data.id ? t('Community has been saved') : t('Community has been created')));
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
@@ -138,6 +146,10 @@ const OrganizationProfile = ({
 
     if (data.socialNetworks) {
       data.socialNetworks = data.socialNetworks.filter(item => item.sourceUrl);
+    }
+
+    if (organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
+      data.nickname = '';
     }
 
     setData(data);
@@ -264,7 +276,7 @@ const OrganizationProfile = ({
                       submited={submited}
                       onChange={nickname => setDataAndValidate({ ...data, nickname })}
                       error={errors && errors.nickname}
-                      disabled={Boolean(data.id)}
+                      disabled={Boolean(data.id) && organization.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI}
                     />
                   </div>
                 </div>
