@@ -11,7 +11,7 @@ import {
 import * as actions from './actions';
 
 const {
-  SocialKeyApi, SocialApi, ContentApi, WalletApi,
+  SocialKeyApi, SocialApi, ContentApi, WalletApi, MultiSignatureApi,
 } = Wallet;
 
 const {
@@ -149,8 +149,20 @@ registerPromiseWorker((action) => {
     case actions.SIGN_UPDATE_COMMENT_FROM_ORGANIZATION:
       return PublicationsApi.signUpdateCommentFromOrganization(...action.args);
 
-    case action.ADD_SOCIAL_PERMISSIONS_TO_PROPOSE_APPROVE_AND_EXECUTE:
+    case actions.ADD_SOCIAL_PERMISSIONS_TO_PROPOSE_APPROVE_AND_EXECUTE:
       return SocialKeyApi.addSocialPermissionsToProposeApproveAndExecute(...action.args);
+
+    case actions.CREATE_MULTI_SIGNATURE_ACCOUNT:
+      return MultiSignatureApi.createMultiSignatureAccount(...action.args);
+
+    case actions.ARE_SOCIAL_MEMBERS_CHANGED:
+      return MultiSignatureApi.areSocialMembersChanged(...action.args);
+
+    case actions.CREATE_AND_EXECUTE_PROFILE_UPDATE_AND_SOCIAL_MEMBERS:
+      return MultiSignatureApi.createAndExecuteProfileUpdateAndSocialMembers(...action.args);
+
+    case actions.MULTI_SIGN_UPDATE_PROFILE:
+      return MultiSignatureApi.updateProfile(...action.args);
 
     default:
       return null;

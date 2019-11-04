@@ -181,4 +181,20 @@ export default class Api {
   static addSocialPermissionsToProposeApproveAndExecute(...args) {
     return Api.postMessage({ args, type: actions.ADD_SOCIAL_PERMISSIONS_TO_PROPOSE_APPROVE_AND_EXECUTE });
   }
+
+  static createMultiSignatureAccount(...args) {
+    return Api.postMessage({ args, type: actions.CREATE_MULTI_SIGNATURE_ACCOUNT });
+  }
+
+  static areSocialMembersChanged(...args) {
+    return Api.postMessage({ args, type: actions.ARE_SOCIAL_MEMBERS_CHANGED });
+  }
+
+  static createAndExecuteProfileUpdateAndSocialMembers(...args) {
+    return Api.postMessage({ args, type: actions.CREATE_AND_EXECUTE_PROFILE_UPDATE_AND_SOCIAL_MEMBERS });
+  }
+
+  static multiSignUpdateProfile(...args) {
+    return Api.postMessage({ args, type: actions.MULTI_SIGN_UPDATE_PROFILE });
+  }
 }

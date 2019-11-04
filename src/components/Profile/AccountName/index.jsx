@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import { useTranslation, Trans } from 'react-i18next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextInput from '../../TextInput';
-import { USER_ACCOUNT_NAME_SYMBOLS_REG_EXP, USER_ACCOUNT_NAME_REG_EXP } from '../../../utils/constants';
+import { USER_ACCOUNT_NAME_REG_EXP } from '../../../utils/constants';
 import api from '../../../api';
 import styles from './styles.css';
 
 const AccountName = ({
-  onChange, disabled, error, submited,
+  onChange, disabled, error, submited, value,
 }) => {
   const { t } = useTranslation();
   const [state, setState] = useState({
-    accountName: '@',
+    accountName: `@${value}`,
     error: error || '',
   });
 
@@ -52,6 +52,10 @@ const AccountName = ({
     testAccountName(accountName.substr(1));
   };
 
+  useEffect(() => {
+    setState(s => ({ ...s, accountName: `@${value}` }));
+  }, [value]);
+
   return (
     <div className={styles.accountName}>
       <div className={styles.field}>
@@ -85,12 +89,14 @@ AccountName.propTypes = {
   disabled: PropTypes.bool,
   error: PropTypes.string,
   submited: PropTypes.bool,
+  value: PropTypes.string,
 };
 
 AccountName.defaultProps = {
   disabled: false,
   error: undefined,
   submited: false,
+  value: '',
 };
 
 export default AccountName;

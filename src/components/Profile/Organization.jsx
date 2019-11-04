@@ -95,7 +95,8 @@ const OrganizationProfile = ({
     setLoading(true);
 
     try {
-      const result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data)));
+      const submitFn = multiSignActions[data.id ? 'updateOrg' : 'createOrg'].bind(multiSignActions);
+      const result = await withLoader(dispatch(submitFn(activeKey, data)));
       dispatch(addSuccessNotification(data.id ? t('Community has been saved') : t('Community has been created')));
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
@@ -258,11 +259,12 @@ const OrganizationProfile = ({
                 <div className={styles.field}>
                   <div className={styles.label}>{t('community.accountName')}</div>
                   <div className={styles.data}>
-                    {/* TODO: If account name exist */}
                     <AccountName
+                      value={data.nickname}
                       submited={submited}
                       onChange={nickname => setDataAndValidate({ ...data, nickname })}
                       error={errors && errors.nickname}
+                      disabled={Boolean(data.id)}
                     />
                   </div>
                 </div>
