@@ -192,7 +192,7 @@
       "allowToSendData": "Allow to send anonymous usage data for developer.",
       "selectedKeywordsDontMatch": "Selected keywords don’t match with entered on previous step.<br />Try check the order of your phrase.",
       "dontMissANewPlatform": "Don’t miss a new platform release, token giveaway, or anything else we’ve got in stash!",
-      "fillForm": "Fill the form to <0>subscribe</0> to our weekly updates.",
+      "fillForm": "Fill the form to <1>subscribe</1> to our weekly updates.",
       "Locate in posts and publications": "Locate “{{query}}” in posts and publications",
       "searchPeople": "Search for people in U°OS blockchain…",
       "Not found": "Not found",

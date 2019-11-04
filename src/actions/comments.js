@@ -2,8 +2,9 @@ import { omit } from 'lodash';
 import api from '../api';
 import graphql from '../api/graphql';
 import { addUsers, getOwnerCredentialsOrShowAuthPopup } from './users';
+import multiSignActions from './multiSign';
 import { searchTags } from '../utils/text';
-import { TRANSACTION_PERMISSION_SOCIAL } from '../utils/constants';
+import { TRANSACTION_PERMISSION_SOCIAL, ORGANIZATION_TYPE_ID_MULTI } from '../utils/constants';
 import { selectCommentById, selectPostById, selectOrgById } from '../store';
 import Worker from '../worker';
 
@@ -130,49 +131,59 @@ export const createComment = (postId, parentCommentId, containerId, commentData)
     throw new Error('Organization not found.');
   }
 
+  let result;
+
   const commentContent = {
     description: commentData.description,
     entity_images: commentData.entityImages,
     entity_tags: searchTags(commentData.description),
   };
 
-  let signed_transaction;
-  let blockchain_id;
-
-  if (!org) {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-      ownerCredentials.accountName,
-      ownerCredentials.socialKey,
-      parentComment ? parentComment.blockchainId : post.blockchainId,
-      commentContent,
-      !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
+  if (org && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
+    if (parentCommentId) {
+      result = await dispatch(multiSignActions.createReply(containerId, org.id, post.id, parentComment.id, commentContent));
+    } else {
+      result = await dispatch(multiSignActions.createComment(containerId, org.id, post.id, commentContent));
+    }
   } else {
-    ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-      ownerCredentials.accountName,
-      ownerCredentials.socialKey,
-      parentComment ? parentComment.blockchainId : post.blockchainId,
-      org.blockchainId,
-      commentContent,
-      !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
-    ));
+    let signed_transaction;
+    let blockchain_id;
+
+    if (!org) {
+      ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        parentComment ? parentComment.blockchainId : post.blockchainId,
+        commentContent,
+        !!parentComment,
+        TRANSACTION_PERMISSION_SOCIAL,
+      ));
+    } else {
+      ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        parentComment ? parentComment.blockchainId : post.blockchainId,
+        org.blockchainId,
+        commentContent,
+        !!parentComment,
+        TRANSACTION_PERMISSION_SOCIAL,
+      ));
+    }
+
+    const data = {
+      ...omit(commentContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+      blockchain_id,
+    };
+
+    result = await api.createComment(data, post.id, parentComment ? parentComment.id : undefined);
+
+    dispatch(commentsAddContainerData({
+      containerId,
+      entryId: post.id,
+      comments: [{ ...result, isNew: true }],
+    }));
   }
-
-  const data = {
-    ...omit(commentContent, ['entity_tags']),
-    signed_transaction: JSON.stringify(signed_transaction),
-    blockchain_id,
-  };
-
-  const result = await api.createComment(data, post.id, parentComment ? parentComment.id : undefined);
-
-  dispatch(commentsAddContainerData({
-    containerId,
-    entryId: post.id,
-    comments: [{ ...result, isNew: true }],
-  }));
 
   return result;
 };
@@ -181,7 +192,7 @@ export const updateComment = (commentId, commentData) => async (dispatch, getSta
   const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
 
   if (!ownerCredentials) {
-    return;
+    return null;
   }
 
   const state = getState();
@@ -217,43 +228,55 @@ export const updateComment = (commentId, commentData) => async (dispatch, getSta
     throw new Error('Organization not found.');
   }
 
+  let result;
+
   const commentContent = {
     description: commentData.description,
     entity_images: commentData.entityImages,
     entity_tags: searchTags(commentData.description),
   };
 
-  let signed_transaction;
-
-  if (!org) {
-    signed_transaction = await Worker.signUpdateCommentFromAccount(
-      ownerCredentials.accountName,
-      ownerCredentials.socialKey,
-      parentComment ? parentComment.blockchainId : post.blockchainId,
-      commentContent,
-      comment.blockchainId,
-      !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
-    );
+  if (org && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
+    if (parentComment) {
+      result = await dispatch(multiSignActions.updateReply(org.id, comment.id, parentComment.id, commentContent));
+    } else {
+      result = await dispatch(multiSignActions.updateComment(org.id, post.id, comment.id, commentContent));
+    }
   } else {
-    signed_transaction = await Worker.signUpdateCommentFromOrganization(
-      ownerCredentials.accountName,
-      ownerCredentials.socialKey,
-      parentComment ? parentComment.blockchainId : post.blockchainId,
-      org.blockchainId,
-      commentContent,
-      comment.blockchainId,
-      !!parentComment,
-      TRANSACTION_PERMISSION_SOCIAL,
-    );
+    let signed_transaction;
+
+    if (!org) {
+      signed_transaction = await Worker.signUpdateCommentFromAccount(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        parentComment ? parentComment.blockchainId : post.blockchainId,
+        commentContent,
+        comment.blockchainId,
+        !!parentComment,
+        TRANSACTION_PERMISSION_SOCIAL,
+      );
+    } else {
+      signed_transaction = await Worker.signUpdateCommentFromOrganization(
+        ownerCredentials.accountName,
+        ownerCredentials.socialKey,
+        parentComment ? parentComment.blockchainId : post.blockchainId,
+        org.blockchainId,
+        commentContent,
+        comment.blockchainId,
+        !!parentComment,
+        TRANSACTION_PERMISSION_SOCIAL,
+      );
+    }
+
+    const data = {
+      ...omit(commentContent, ['entity_tags']),
+      signed_transaction: JSON.stringify(signed_transaction),
+    };
+
+    result = await api.updateComment(data, commentId);
+
+    dispatch(addComments([result]));
   }
 
-  const data = {
-    ...omit(commentContent, ['entity_tags']),
-    signed_transaction: JSON.stringify(signed_transaction),
-  };
-
-  const result = await api.updateComment(data, commentId);
-
-  dispatch(addComments([result]));
+  return result;
 };
