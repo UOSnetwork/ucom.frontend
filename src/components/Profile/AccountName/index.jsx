@@ -53,7 +53,9 @@ const AccountName = ({
   };
 
   useEffect(() => {
-    setState(s => ({ ...s, accountName: `@${value}` }));
+    if (value) {
+      setState(s => ({ ...s, accountName: `@${value}` }));
+    }
   }, [value]);
 
   return (
