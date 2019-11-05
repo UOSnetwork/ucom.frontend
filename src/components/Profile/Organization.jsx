@@ -97,7 +97,7 @@ const OrganizationProfile = ({
     try {
       let result;
 
-      if (organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
+      if (organization && organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
         result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data, true)));
       } else if (!data.id) {
         result = await withLoader(dispatch(multiSignActions.createOrg(activeKey, data, false)));
@@ -148,7 +148,7 @@ const OrganizationProfile = ({
       data.socialNetworks = data.socialNetworks.filter(item => item.sourceUrl);
     }
 
-    if (organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
+    if (organization && organization.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI) {
       data.nickname = '';
     }
 

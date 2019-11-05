@@ -17,3 +17,14 @@
   position: relative;
   margin: 32px 0;
 }
+
+.updateMessage {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(184, 184, 184, 0.25);
+  background: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}

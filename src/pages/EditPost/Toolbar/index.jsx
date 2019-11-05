@@ -12,7 +12,7 @@ import SubmitPopup from '../SubmitPopup';
 import styles from './styles.css';
 
 const Toolbar = ({
-  showTitle, showClose, history,
+  showTitle, showClose, history, disabled,
 }) => {
   const { t } = useTranslation();
   const state = useSelector(state => state.pages.editPost, (prev, next) => (
@@ -39,6 +39,7 @@ const Toolbar = ({
         className={classNames({
           [styles.toolbar]: true,
           [styles.withClose]: showClose,
+          [styles.disabled]: disabled,
         })}
       >
         <div className={styles.inner}>
@@ -59,7 +60,7 @@ const Toolbar = ({
               red
               small
               onClick={showSubmitPopup}
-              disabled={!state.loaded}
+              disabled={!state.loaded || disabled}
             >
               {t('Publish')}
             </Button>
@@ -84,11 +85,13 @@ const Toolbar = ({
 Toolbar.propTypes = {
   showClose: PropTypes.bool,
   showTitle: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 Toolbar.defaultProps = {
   showClose: true,
   showTitle: true,
+  disabled: false,
 };
 
 export default withRouter(memo(Toolbar));

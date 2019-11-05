@@ -6,7 +6,7 @@ import Worker from '../worker';
 import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { commentsAddContainerData, addComments } from './comments';
-import { addOrganizations } from './organizations';
+import { addOrganizations, getOrganization } from './organizations';
 import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID } from '../utils/constants';
 import { selectOrgById, selectPostById, selectCommentById } from '../store';
 
@@ -53,7 +53,9 @@ export default class {
         org = await api.createOrganization(content);
       }
 
-      dispatch(addOrganizations([{ ...org, ...data }]));
+      if (data.id || org.id) {
+        await dispatch(getOrganization(data.id || org.id));
+      }
 
       return org;
     };
