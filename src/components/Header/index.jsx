@@ -32,6 +32,10 @@ const Header = ({ location }) => {
   const ieobanner = useSelector(state => state.ieobanner, isEqual);
   const [organizationsPopupVisible, setOrganizationsPopupVisible] = useState(false);
 
+  useEffect(() => {
+    setOrganizationsPopupVisible(false);
+  }, [location]);
+
   const checkScroll = throttle(() => {
     if (window.top.scrollY > 0 && elRef.current) {
       elRef.current.classList.add(styles.isScroll);
