@@ -10,7 +10,7 @@ import RequestActiveKey from '../Auth/Features/RequestActiveKey';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
-  NOTIFICATION_TYPE_BLOCKCHAIN_ERROR,
+  NOTIFICATION_TYPE_BLOCKCHAIN_PERMISSIONS_ERROR,
 } from '../../store/notifications';
 import { closeNotification, addSuccessNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
 import multiSignActions from '../../actions/multiSign';
@@ -50,7 +50,7 @@ const Notification = (props) => {
         <div
           className={classNames(
             'notification',
-            { 'notification_error': props.type === NOTIFICATION_TYPE_ERROR || NOTIFICATION_TYPE_BLOCKCHAIN_ERROR },
+            { 'notification_error': props.type === NOTIFICATION_TYPE_ERROR || NOTIFICATION_TYPE_BLOCKCHAIN_PERMISSIONS_ERROR },
             { 'notification_success': props.type === NOTIFICATION_TYPE_SUCCESS },
           )}
         >
@@ -73,7 +73,7 @@ const Notification = (props) => {
               </div>
             </div>
           </div>
-          {props.type === NOTIFICATION_TYPE_BLOCKCHAIN_ERROR ? (
+          {props.type === NOTIFICATION_TYPE_BLOCKCHAIN_PERMISSIONS_ERROR ? (
             <div className="notification__content">
               <div>
                 {t('accountPermissionsNeedUpdate')}

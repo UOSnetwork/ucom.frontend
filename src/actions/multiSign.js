@@ -7,8 +7,16 @@ import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { commentsAddContainerData, addComments } from './comments';
 import { addOrganizations, getOrganization } from './organizations';
-import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID, BLOCKCHAIN_ERROR } from '../utils/constants';
+import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID, BLOCKCHAIN_PERMISSIONS_ERROR } from '../utils/constants';
 import { selectOrgById, selectPostById, selectCommentById } from '../store';
+
+const testBlockchainError = (err) => {
+  if (err.message.indexOf('action declares irrelevant authority') === 0) {
+    throw new Error(BLOCKCHAIN_PERMISSIONS_ERROR);
+  } else {
+    throw err;
+  }
+};
 
 export default class {
   static updatePermissions(activeKey) {
@@ -150,7 +158,7 @@ export default class {
           [action],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
       const data = {
@@ -210,7 +218,7 @@ export default class {
           [updatePostAction],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
       const data = {
@@ -282,7 +290,7 @@ export default class {
           [action],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
       const data = snakes({
@@ -358,7 +366,7 @@ export default class {
           [updateCommentAction],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
 
@@ -441,7 +449,7 @@ export default class {
           [action],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
 
@@ -518,7 +526,7 @@ export default class {
           [updateReplyAction],
         );
       } catch (err) {
-        throw new Error(BLOCKCHAIN_ERROR);
+        testBlockchainError(err);
       }
 
 

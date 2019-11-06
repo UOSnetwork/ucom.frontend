@@ -131,4 +131,4 @@ export const POST_EDIT_TIME_LIMIT = 60 * 1000 * 15;
 export const COMMENT_EDIT_TIME_LIMIT = 60 * 1000 * 15;
 
 export const ORGANIZATION_TYPE_ID_MULTI = 2;
-export const BLOCKCHAIN_ERROR = 'Blockcahin error';
+export const BLOCKCHAIN_PERMISSIONS_ERROR = 'Add social permissions to propose approve and execute';

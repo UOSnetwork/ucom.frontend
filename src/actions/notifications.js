@@ -2,7 +2,7 @@ import { parseResponseError } from '../utils/errors';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
-  NOTIFICATION_TYPE_BLOCKCHAIN_ERROR,
+  NOTIFICATION_TYPE_BLOCKCHAIN_PERMISSIONS_ERROR,
 } from '../store/notifications';
 import {
   ERROR_SERVER,
@@ -11,7 +11,7 @@ import {
   NOTIFICATION_ERROR_FORM_VALIDATION,
   NOTIFICATION_ERROR_MAINTANCE_MODE,
   NOTIFICATION_TITLE_WARNING,
-  BLOCKCHAIN_ERROR,
+  BLOCKCHAIN_PERMISSIONS_ERROR,
 } from '../utils/constants';
 
 export const addNotification = payload => ({ type: 'ADD_NOTIFICATION', payload });
@@ -27,10 +27,10 @@ export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
 };
 
 export const addErrorNotificationFromResponse = payload => (dispatch) => {
-  if (payload.message === BLOCKCHAIN_ERROR) {
+  if (payload.message === BLOCKCHAIN_PERMISSIONS_ERROR) {
     dispatch(addNotification({
       title: NOTIFICATION_TITLE_ERROR,
-      type: NOTIFICATION_TYPE_BLOCKCHAIN_ERROR,
+      type: NOTIFICATION_TYPE_BLOCKCHAIN_PERMISSIONS_ERROR,
       autoClose: false,
     }));
   } else {
