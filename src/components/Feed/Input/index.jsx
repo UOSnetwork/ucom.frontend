@@ -10,13 +10,13 @@ import { selectOwner, selectUserById, selectOrgById } from '../../../store/selec
 import { getSocialKey } from '../../../utils/keys';
 import withLoader from '../../../utils/withLoader';
 import { authShowPopup } from '../../../actions/auth';
-import { addErrorNotificationFromResponse } from '../../../actions/notifications';
+import { addErrorNotificationFromResponse, addNonMultiSignError } from '../../../actions/notifications';
 import { POST_TYPE_DIRECT_ID } from '../../../utils/constants';
 import { createPost } from '../../../actions/feed';
 import styles from './styles.css';
 
 const FeedInput = ({
-  initialText, forUserId, forOrgId, onSubmit,
+  initialText, forUserId, forOrgId, onSubmit, disabledForNonMultiOrg,
 }) => {
   const owner = useSelector(selectOwner, equalByProps(['avatarFilename', 'id', 'accountName']));
   const user = useSelector(selectUserById(forUserId), equalByProps(['accountName']));
@@ -32,6 +32,11 @@ const FeedInput = ({
   };
 
   const showForm = async () => {
+    if (disabledForNonMultiOrg) {
+      dispatch(addNonMultiSignError());
+      return;
+    }
+
     setFormVisible(true);
   };
 

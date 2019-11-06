@@ -29,6 +29,7 @@ import { addErrorNotificationFromResponse } from '../../actions/notifications';
 import NotFoundPage from '../NotFoundPage';
 import { postsFetch } from '../../actions/posts';
 import { getPublicationMetaTags } from '../../utils/posts';
+import { ORGANIZATION_TYPE_ID_MULTI } from '../../utils/constants';
 import * as EntityImages from '../../utils/entityImages';
 
 const OrganizationPage = (props) => {
@@ -131,7 +132,7 @@ const OrganizationPage = (props) => {
 
           {organization && organization.discussions &&
             <Discussions
-              editable={userIsTeam(owner, organization)}
+              editable={organization.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI && userIsTeam(owner, organization)}
               placeholder={t('Link to Article', { title: organization.title })}
               validatePostUrlFn={link => validateDiscationPostUrl(link, organizationId)}
               newDiscussionUrl={urls.getNewOrganizationDiscussionUrl(organizationId)}

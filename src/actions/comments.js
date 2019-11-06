@@ -139,36 +139,21 @@ export const createComment = (postId, parentCommentId, containerId, commentData)
     entity_tags: searchTags(commentData.description),
   };
 
-  if (org && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
+  if (org && org.myselfData && org.myselfData.member && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
     if (parentCommentId) {
       result = await dispatch(multiSignActions.createReply(containerId, org.id, post.id, parentComment.id, commentContent));
     } else {
       result = await dispatch(multiSignActions.createComment(containerId, org.id, post.id, commentContent));
     }
   } else {
-    let signed_transaction;
-    let blockchain_id;
-
-    if (!org) {
-      ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        parentComment ? parentComment.blockchainId : post.blockchainId,
-        commentContent,
-        !!parentComment,
-        TRANSACTION_PERMISSION_SOCIAL,
-      ));
-    } else {
-      ({ signed_transaction, blockchain_id } = await Worker.signCreateCommentFromOrganization(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        parentComment ? parentComment.blockchainId : post.blockchainId,
-        org.blockchainId,
-        commentContent,
-        !!parentComment,
-        TRANSACTION_PERMISSION_SOCIAL,
-      ));
-    }
+    const { signed_transaction, blockchain_id } = await Worker.signCreateCommentFromUser(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      commentContent,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
 
     const data = {
       ...omit(commentContent, ['entity_tags']),
@@ -236,37 +221,22 @@ export const updateComment = (commentId, commentData) => async (dispatch, getSta
     entity_tags: searchTags(commentData.description),
   };
 
-  if (org && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
+  if (org && org.myselfData && org.myselfData.member && org.organizationTypeId === ORGANIZATION_TYPE_ID_MULTI) {
     if (parentComment) {
       result = await dispatch(multiSignActions.updateReply(org.id, comment.id, parentComment.id, commentContent));
     } else {
       result = await dispatch(multiSignActions.updateComment(org.id, post.id, comment.id, commentContent));
     }
   } else {
-    let signed_transaction;
-
-    if (!org) {
-      signed_transaction = await Worker.signUpdateCommentFromAccount(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        parentComment ? parentComment.blockchainId : post.blockchainId,
-        commentContent,
-        comment.blockchainId,
-        !!parentComment,
-        TRANSACTION_PERMISSION_SOCIAL,
-      );
-    } else {
-      signed_transaction = await Worker.signUpdateCommentFromOrganization(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        parentComment ? parentComment.blockchainId : post.blockchainId,
-        org.blockchainId,
-        commentContent,
-        comment.blockchainId,
-        !!parentComment,
-        TRANSACTION_PERMISSION_SOCIAL,
-      );
-    }
+    const signed_transaction = await Worker.signUpdateCommentFromAccount(
+      ownerCredentials.accountName,
+      ownerCredentials.socialKey,
+      parentComment ? parentComment.blockchainId : post.blockchainId,
+      commentContent,
+      comment.blockchainId,
+      !!parentComment,
+      TRANSACTION_PERMISSION_SOCIAL,
+    );
 
     const data = {
       ...omit(commentContent, ['entity_tags']),

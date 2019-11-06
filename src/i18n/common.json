@@ -403,7 +403,9 @@
       "keys.privateNotValid": "Private key is not valid",
       "community.accountName": "Community Account name",
       "accountAlreadyTaken": "Account name {{accountName}} is already taken.",
-      "toContinueAddAccountName": "In order to continue, you need to <1>add the account name</1> of the <3>community.</3>"
+      "toContinueAddAccountName": "In order to continue, the admin of the <1>community</1> needs to transform it into a multisig account.",
+      "accountPermissionsNeedUpdate": "Your account permissions need to be updated in order to interact with communities' multisig accounts. Please provide your brainkey or active key to extend your social key's permissions to support community multisig accounts.",
+      "accountPermissionsUpdated": "Your account permissions updated"
     }
   }
 }

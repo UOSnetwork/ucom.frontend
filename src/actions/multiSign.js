@@ -7,10 +7,24 @@ import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
 import { commentsAddContainerData, addComments } from './comments';
 import { addOrganizations, getOrganization } from './organizations';
-import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID } from '../utils/constants';
+import { TRANSACTION_PERMISSION_SOCIAL, POST_TYPE_MEDIA_ID, BLOCKCHAIN_ERROR } from '../utils/constants';
 import { selectOrgById, selectPostById, selectCommentById } from '../store';
 
 export default class {
+  static updatePermissions(activeKey) {
+    return async (dispatch) => {
+      const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+      if (!ownerCredentials) {
+        return null;
+      }
+
+      await Worker.addSocialPermissionsToProposeApproveAndExecute(ownerCredentials.accountName, activeKey);
+
+      return true;
+    };
+  }
+
   static createOrg(activeKey, data, isMigrate) {
     return async (dispatch) => {
       const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
@@ -128,12 +142,16 @@ export default class {
         content,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [action],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [action],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
 
       const data = {
         ...omit(content, ['entity_tags']),
@@ -184,12 +202,16 @@ export default class {
         post.blockchainId,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [updatePostAction],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [updatePostAction],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
 
       const data = {
         ...omit(content, ['entity_tags']),
@@ -252,12 +274,16 @@ export default class {
         false,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [action],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [action],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
 
       const data = snakes({
         ...omit(content, ['entity_tags']),
@@ -324,12 +350,17 @@ export default class {
         comment.blockchainId,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [updateCommentAction],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [updateCommentAction],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
+
 
       const data = snakes({
         ...omit(content, ['entity_tags']),
@@ -402,12 +433,17 @@ export default class {
         true,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [action],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [action],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
+
 
       const data = snakes({
         ...omit(content, ['entity_tags']),
@@ -474,12 +510,17 @@ export default class {
         comment.blockchainId,
       );
 
-      await Worker.proposeApproveAndExecuteByProposer(
-        ownerCredentials.accountName,
-        ownerCredentials.socialKey,
-        TRANSACTION_PERMISSION_SOCIAL,
-        [updateReplyAction],
-      );
+      try {
+        await Worker.proposeApproveAndExecuteByProposer(
+          ownerCredentials.accountName,
+          ownerCredentials.socialKey,
+          TRANSACTION_PERMISSION_SOCIAL,
+          [updateReplyAction],
+        );
+      } catch (err) {
+        throw new Error(BLOCKCHAIN_ERROR);
+      }
+
 
       const data = snakes({
         ...omit(content, ['entity_tags']),

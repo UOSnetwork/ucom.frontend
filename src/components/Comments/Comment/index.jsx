@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import classNames from 'classnames';
@@ -16,8 +17,10 @@ import { COMMENT_EDIT_TIME_LIMIT } from '../../../utils';
 import { sanitizeCommentText, checkMentionTag, checkHashTag } from '../../../utils/text';
 import entityIsEditable from '../../../utils/entityIsEditable';
 import Command from '../../../utils/command';
+import { addNonMultiSignError } from '../../../actions/notifications';
 
 const Comment = (props) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const [active, setActive] = useState(false);
   const [editFormVisible, setEditFormVisible] = useState(false);
@@ -79,7 +82,7 @@ const Comment = (props) => {
             [styles.active]: active,
           })}
         >
-          {props.ownerId === props.userId &&
+          {!props.disabledForNonMultiOrg && props.ownerId === props.userId &&
             <div className={styles.menu}>
               <DropdownMenu
                 position="bottom-end"
@@ -129,6 +132,11 @@ const Comment = (props) => {
                 role="presentation"
                 className={styles.reply}
                 onClick={() => {
+                  if (props.disabledForNonMultiOrg) {
+                    dispatch(addNonMultiSignError());
+                    return;
+                  }
+
                   if (props.depth < 1) {
                     setFormVisible({ visible: true, name: '' });
                   } else if (props.onClickReply) {

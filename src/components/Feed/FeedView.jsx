@@ -1,53 +1,69 @@
+import { isEqual } from 'lodash';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import React from 'react';
 import FeedInput from './Input';
 import Post from './Post/Post';
 import LoadMore from './LoadMore';
 import Filters from './Filters';
+import { selectOrgById } from '../../store';
+import { ORGANIZATION_TYPE_ID_MULTI } from '../../utils/constants';
 
-const FeedView = props => (
-  <div className={`feed ${props.isMobile ? 'feed-mobile' : ''}`}>
-    {props.showForm &&
-      <FeedInput
-        initialText={props.feedInputInitialText}
-        forUserId={props.forUserId}
-        forOrgId={props.forOrgId}
-        onSubmit={props.callbackOnSubmit}
-      />
-    }
+const FeedView = (props) => {
+  const org = useSelector(selectOrgById(props.forOrgId), isEqual);
+  let disabledForNonMultiOrg;
 
-    <Filters {...props.filters} />
+  if (props.forOrgId) {
+    disabledForNonMultiOrg = org ? org.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI : true;
+  } else {
+    disabledForNonMultiOrg = false;
+  }
 
-    {props.postIds.length > 0 &&
-      <div className="feed__list">
-        {(props.filter ? props.postIds.filter(props.filter) : props.postIds).map(id => (
-          <div className="feed__item" key={id}>
-            <Post
-              id={id}
-              feedTypeId={props.feedTypeId}
-              originEnabled={props.originEnabled}
-              forUserId={props.forUserId}
-              forOrgId={props.forOrgId}
-            />
-          </div>
-        ))}
-      </div>
-    }
-
-    {props.hasMore &&
-      <div className="feed__loadmore">
-        <LoadMore
-          url={props.loadMoreUrl}
-          disabled={props.loading}
-          onClick={() => {
-            if (props.loading) return;
-            props.onClickLoadMore();
-          }}
+  return (
+    <div className={`feed ${props.isMobile ? 'feed-mobile' : ''}`}>
+      {props.showForm &&
+        <FeedInput
+          initialText={props.feedInputInitialText}
+          forUserId={props.forUserId}
+          forOrgId={props.forOrgId}
+          onSubmit={props.callbackOnSubmit}
+          disabledForNonMultiOrg={disabledForNonMultiOrg}
         />
-      </div>
-    }
-  </div>
-);
+      }
+
+      <Filters {...props.filters} />
+
+      {props.postIds.length > 0 &&
+        <div className="feed__list">
+          {(props.filter ? props.postIds.filter(props.filter) : props.postIds).map(id => (
+            <div className="feed__item" key={id}>
+              <Post
+                id={id}
+                feedTypeId={props.feedTypeId}
+                originEnabled={props.originEnabled}
+                forUserId={props.forUserId}
+                forOrgId={props.forOrgId}
+              />
+            </div>
+          ))}
+        </div>
+      }
+
+      {props.hasMore &&
+        <div className="feed__loadmore">
+          <LoadMore
+            url={props.loadMoreUrl}
+            disabled={props.loading}
+            onClick={() => {
+              if (props.loading) return;
+              props.onClickLoadMore();
+            }}
+          />
+        </div>
+      }
+    </div>
+  );
+};
 
 FeedView.propTypes = {
   hasMore: PropTypes.bool.isRequired,

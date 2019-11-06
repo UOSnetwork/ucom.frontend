@@ -60,7 +60,7 @@ const EditPost = ({ match, location }) => {
                 <div className={styles.updateMessage}>
                   <span>
                     <Trans i18nKey="toContinueAddAccountName">
-                      In order to continue, you need to&nbsp;<Link to={urls.getOrganizationEditUrl(org.id)} className="link red">add the account name</Link>&nbsp;of the&nbsp;<Link className="link red" to={urls.getOrganizationUrl(org.id)}>community.</Link>
+                      In order to continue, the admin of the <Link className="link red" to={urls.getOrganizationUrl(org.id)}>community</Link> needs to transform it into a multisig account.
                     </Trans>
                   </span>
                 </div>

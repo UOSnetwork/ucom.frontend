@@ -2,6 +2,7 @@ import { uniqueId } from 'lodash';
 
 export const NOTIFICATION_TYPE_ERROR = 1;
 export const NOTIFICATION_TYPE_SUCCESS = 2;
+export const NOTIFICATION_TYPE_BLOCKCHAIN_ERROR = 3;
 
 const getInitialState = () => ({
   list: [],

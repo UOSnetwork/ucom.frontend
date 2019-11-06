@@ -46,6 +46,7 @@ const Comments = (props) => {
         userPageUrl={props.ownerPageUrl}
         userName={props.ownerName}
         onError={props.onError}
+        disabledForNonMultiOrg={props.disabledForNonMultiOrg}
       />
     </div>
   );
@@ -77,6 +78,7 @@ Comments.propTypes = {
   onClickShowNext: PropTypes.func.isRequired,
   onClickShowReplies: PropTypes.func.isRequired,
   onError: PropTypes.func.isRequired,
+  disabledForNonMultiOrg: PropTypes.bool,
 };
 
 Comments.defaultProps = {
@@ -86,6 +88,7 @@ Comments.defaultProps = {
   ownerImageUrl: null,
   ownerPageUrl: null,
   ownerName: null,
+  disabledForNonMultiOrg: false,
 };
 
 export default memo(Comments, isEqual);

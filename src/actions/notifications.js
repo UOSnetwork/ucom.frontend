@@ -2,6 +2,7 @@ import { parseResponseError } from '../utils/errors';
 import {
   NOTIFICATION_TYPE_ERROR,
   NOTIFICATION_TYPE_SUCCESS,
+  NOTIFICATION_TYPE_BLOCKCHAIN_ERROR,
 } from '../store/notifications';
 import {
   ERROR_SERVER,
@@ -10,6 +11,7 @@ import {
   NOTIFICATION_ERROR_FORM_VALIDATION,
   NOTIFICATION_ERROR_MAINTANCE_MODE,
   NOTIFICATION_TITLE_WARNING,
+  BLOCKCHAIN_ERROR,
 } from '../utils/constants';
 
 export const addNotification = payload => ({ type: 'ADD_NOTIFICATION', payload });
@@ -25,9 +27,17 @@ export const addErrorNotification = (message = ERROR_SERVER) => (dispatch) => {
 };
 
 export const addErrorNotificationFromResponse = payload => (dispatch) => {
-  const { message } = parseResponseError(payload)[0];
+  if (payload.message === BLOCKCHAIN_ERROR) {
+    dispatch(addNotification({
+      title: NOTIFICATION_TITLE_ERROR,
+      type: NOTIFICATION_TYPE_BLOCKCHAIN_ERROR,
+      autoClose: false,
+    }));
+  } else {
+    const { message } = parseResponseError(payload)[0];
 
-  dispatch(addErrorNotification(message));
+    dispatch(addErrorNotification(message));
+  }
 };
 
 export const addValidationErrorNotification = () => (dispatch) => {
@@ -52,5 +62,13 @@ export const addMaintenanceNotification = () => (dispatch) => {
     autoClose: false,
     title: NOTIFICATION_TITLE_WARNING,
     message: NOTIFICATION_ERROR_MAINTANCE_MODE,
+  }));
+};
+
+export const addNonMultiSignError = () => (dispatch) => {
+  dispatch(addNotification({
+    message: 'In order to continue, the admin of the community needs to transform it into a multisig account',
+    title: NOTIFICATION_TITLE_ERROR,
+    type: NOTIFICATION_TYPE_ERROR,
   }));
 };

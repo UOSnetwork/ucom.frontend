@@ -3,10 +3,11 @@ import { isEqual } from 'lodash';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Comments from './index';
-import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById } from '../../store/selectors';
+import { selectCommentsByContainerId, selectCommentsByIds, selectUsersByIds, selectOwner, selectPostById, selectOrgById } from '../../store/selectors';
 import fromNow from '../../utils/fromNow';
 import { getCommentsTree } from '../../utils/comments';
 import urls from '../../utils/urls';
+import { ORGANIZATION_TYPE_ID_MULTI } from '../../utils/constants';
 import { getUserName } from '../../utils/user';
 import { createComment, updateComment, getPostComments, getCommentsOnComment } from '../../actions/comments';
 import { addErrorNotification, addErrorNotificationFromResponse } from '../../actions/notifications';
@@ -21,6 +22,15 @@ const Wrapper = ({ containerId, postId, ...props }) => {
   const comments = useSelector(selectCommentsByIds(commentsByContainerId && commentsByContainerId.commentIds), isEqual);
   const users = useSelector(selectUsersByIds(comments && comments.map(c => c.user)), isEqual);
   const post = useSelector(selectPostById(postId), isEqual);
+  const orgId = post.organizationId;
+  const org = useSelector(selectOrgById(orgId), isEqual);
+  let disabledForNonMultiOrg;
+
+  if (orgId) {
+    disabledForNonMultiOrg = org ? org.organizationTypeId !== ORGANIZATION_TYPE_ID_MULTI : true;
+  } else {
+    disabledForNonMultiOrg = false;
+  }
 
   let commentsTree = [];
   let metadata = {};
@@ -123,6 +133,7 @@ const Wrapper = ({ containerId, postId, ...props }) => {
       onClickShowReplies={onClickShowReplies}
       onError={onError}
       onUpdate={onUpdate}
+      disabledForNonMultiOrg={disabledForNonMultiOrg}
     />
   );
 };

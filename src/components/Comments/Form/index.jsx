@@ -1,9 +1,10 @@
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import autosize from 'autosize';
 import { last } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Fragment } from 'react';
 import styles from './styles.css';
 import UserPick from '../../UserPick';
 import DragAndDrop from '../../DragAndDrop';
@@ -27,8 +28,10 @@ import Embed from '../../Embed';
 import EmbedService from '../../../utils/embedService';
 import { getUrlsFromStr, validUrl } from '../../../utils/url';
 import withLoader from '../../../utils/withLoader';
+import { addNonMultiSignError } from '../../../actions/notifications';
 
 const Form = (props) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(props.message);
@@ -190,8 +193,14 @@ const Form = (props) => {
 
         <div className={styles.content}>
           <div
+            role="presentation"
             ref={fieldEl}
             className={styles.field}
+            onClick={() => {
+              if (props.disabledForNonMultiOrg) {
+                dispatch(addNonMultiSignError());
+              }
+            }}
           >
             <div className={styles.inputWrapper}>
               <TributeWrapper
@@ -210,7 +219,7 @@ const Form = (props) => {
                   ref={textareaEl}
                   autoFocus={props.autoFocus}
                   rows="1"
-                  disabled={loading}
+                  disabled={loading || props.disabledForNonMultiOrg}
                   className={styles.input}
                   placeholder={t('leaveComment')}
                   value={message}
@@ -233,22 +242,26 @@ const Form = (props) => {
                 [styles.disabled]: loading,
               })}
             >
-              <label name="img" className={styles.label}>
-                <IconClip />
-                <DropZone
-                  multiple
-                  className={styles.labelFile}
-                  onDrop={onMultipleImages}
-                />
-              </label>
+              {!props.disabledForNonMultiOrg &&
+                <Fragment>
+                  <label name="img" className={styles.label}>
+                    <IconClip />
+                    <DropZone
+                      multiple
+                      className={styles.labelFile}
+                      onDrop={onMultipleImages}
+                    />
+                  </label>
 
-              <div
-                role="presentation"
-                className={styles.action}
-                onClick={submit}
-              >
-                <IconEnter />
-              </div>
+                  <div
+                    role="presentation"
+                    className={styles.action}
+                    onClick={submit}
+                  >
+                    <IconEnter />
+                  </div>
+                </Fragment>
+              }
             </div>
 
             <DragAndDrop
