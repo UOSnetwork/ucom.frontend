@@ -48,9 +48,12 @@ export default class MultiSignActions {
 
       const content = snakes({
         ...data,
-        blockchainId,
         entityImages: JSON.stringify(data.entityImages),
       });
+
+      if (!isMigrate) {
+        content.blockchain_id = blockchainId;
+      }
 
       const multiSignAccountData = RegistrationApi.generateRandomDataForRegistration();
 
