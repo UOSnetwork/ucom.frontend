@@ -114,7 +114,7 @@ const OrganizationProfile = ({
       if (Object.keys(errors).length !== 0) {
         dispatch(addValidationErrorNotification());
       } else {
-        dispatch(addErrorNotification(err.message));
+        dispatch(addErrorNotificationFromResponse(err));
       }
     }
 
