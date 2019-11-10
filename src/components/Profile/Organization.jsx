@@ -108,8 +108,14 @@ const OrganizationProfile = ({
       dispatch(addSuccessNotification(data.id ? t('Community has been saved') : t('Community has been created')));
       setTimeout(() => onSuccess(result), 0);
     } catch (err) {
-      setErrors(Validate.parseResponseError(err.response));
-      dispatch(addValidationErrorNotification());
+      const errors = Validate.parseResponseError(err.response);
+      setErrors(errors);
+
+      if (Object.keys(errors).length !== 0) {
+        dispatch(addValidationErrorNotification());
+      } else {
+        dispatch(addErrorNotification(err.message));
+      }
     }
 
     setLoading(false);
