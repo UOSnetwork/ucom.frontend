@@ -53,6 +53,7 @@ export default class {
         entityImages: JSON.stringify(data.entityImages),
       });
 
+      console.log('createMultiSignatureAccount');
       await Worker.createMultiSignatureAccount(
         ownerCredentials.accountName,
         activeKey,
