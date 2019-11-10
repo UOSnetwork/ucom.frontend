@@ -106,7 +106,7 @@ export default class {
           activeKey,
           data.nickname,
           content,
-          membersNames,
+          membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
         );
       } else {
         await Worker.multiSignUpdateProfile(
