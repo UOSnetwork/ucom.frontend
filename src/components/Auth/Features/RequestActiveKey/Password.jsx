@@ -35,7 +35,7 @@ const Password = (props) => {
       }}
     >
       <h2 className={styles.title}>{t('auth.signTransaction')}</h2>
-      <p className={styles.text}>{t('auth.enterPasswordPrivateActiveKey.')}</p>
+      <p className={styles.text}>{t('auth.enterPasswordPrivateActiveKey')}</p>
       <div className={styles.field}>
         <TextInput
           autoFocus
