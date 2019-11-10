@@ -1,7 +1,6 @@
 import { omit } from 'lodash';
-import { ContentIdGenerator, ContentCommentsActionsApi } from 'ucom-libs-wallet';
+import { ContentIdGenerator, ContentCommentsActionsApi, RegistrationApi } from 'ucom-libs-wallet';
 import snakes from '../utils/snakes';
-import * as keyUtils from '../utils/keys';
 import Worker from '../worker';
 import api from '../api';
 import { getOwnerCredentialsOrShowAuthPopup } from './users';
@@ -53,16 +52,17 @@ export default class {
         entityImages: JSON.stringify(data.entityImages),
       });
 
-      console.log('createMultiSignatureAccount');
+      const multiSignAccountData = RegistrationApi.generateRandomDataForRegistration();
+
       await Worker.createMultiSignatureAccount(
         ownerCredentials.accountName,
         activeKey,
         data.nickname,
-        activeKey,
-        keyUtils.getPublicKeyByPrivateKey(activeKey),
-        keyUtils.getPublicKeyByPrivateKey(keyUtils.getActiveKeyByOwnerKey(activeKey)),
+        multiSignAccountData.ownerPrivateKey,
+        multiSignAccountData.ownerPublicKey,
+        multiSignAccountData.activePublicKey,
         content,
-        teamMembersNames,
+        teamMembersNames.filter(accountName => accountName !== ownerCredentials.accountName),
       );
 
       content.is_multi_signature = true;
