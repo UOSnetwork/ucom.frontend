@@ -97,36 +97,18 @@ export default class {
         entityImages: JSON.stringify(data.entityImages),
       });
 
-      const membersNames = data.usersTeam.map(u => u.accountName);
+      const membersNames = [ownerCredentials.accountName, ...data.usersTeam.map(u => u.accountName)];
       const membersChanged = await Worker.areSocialMembersChanged(data.nickname, membersNames);
 
       if (membersChanged) {
-        if (window.forTest) {
-          console.log(
-            ownerCredentials.accountName,
-            activeKey,
-            data.nickname,
-            content,
-            membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
-          );
-        }
         await Worker.createAndExecuteProfileUpdateAndSocialMembers(
           ownerCredentials.accountName,
           activeKey,
           data.nickname,
           content,
-          membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
+          membersNames,
         );
       } else {
-        if (window.forTest) {
-          console.log(
-            ownerCredentials.accountName,
-            ownerCredentials.socialKey,
-            TRANSACTION_PERMISSION_SOCIAL,
-            data.nickname,
-            content,
-          );
-        }
         await Worker.multiSignUpdateProfile(
           ownerCredentials.accountName,
           ownerCredentials.socialKey,
