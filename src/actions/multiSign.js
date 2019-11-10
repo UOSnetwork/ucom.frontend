@@ -121,10 +121,10 @@ export default class {
         if (window.forTest) {
           console.log(
             ownerCredentials.accountName,
-            activeKey,
+            ownerCredentials.socialKey,
+            TRANSACTION_PERMISSION_SOCIAL,
             data.nickname,
             content,
-            membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
           );
         }
         await Worker.multiSignUpdateProfile(
