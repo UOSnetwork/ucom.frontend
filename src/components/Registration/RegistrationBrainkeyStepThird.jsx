@@ -29,7 +29,7 @@ class RegistrationBrainkeyStepThird extends PureComponent {
 
         <div className="registration-brainkey">
           {this.props.registration.brainkey.split(' ').map((item, index) => (
-            <div className="registration-brainkey__item" key={index} data-index={index + 1}>{item}&nbsp;</div>
+            <div className="registration-brainkey__item" key={index} data-index={index + 1}>{item}</div>
           ))}
         </div>
 
