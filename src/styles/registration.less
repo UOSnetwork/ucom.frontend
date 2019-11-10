@@ -286,10 +286,8 @@
 }
 
 .registration-brainkey {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  display: table;
+  width: 100%;
   margin: 0 0 64px;
   line-height: 28px;
   font-size: 16px;
@@ -297,15 +295,17 @@
 
   @media (max-width: 1023px) {
     margin: -10px -10px 54px;
-    justify-content: flex-start;
+    display: block;
   }
 }
 
 .registration-brainkey__item {
   position: relative;
+  display: table-cell;
 
   @media (max-width: 1023px) {
     padding: 10px;
+    display: inline-block;
   }
 
   &:before {
