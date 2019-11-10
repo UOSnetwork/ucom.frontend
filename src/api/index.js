@@ -49,6 +49,12 @@ class Api {
       await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
     }
 
+    try {
+      await Worker.addSocialPermissionsToProposeApproveAndExecute(accountName, activeKey);
+    } catch (err) {
+      console.error(err);
+    }
+
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
 
     return humps(response.data);
@@ -64,6 +70,12 @@ class Api {
       await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
     } else {
       await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
+    }
+
+    try {
+      await Worker.addSocialPermissionsToProposeApproveAndExecute(accountName, activeKey);
+    } catch (err) {
+      console.error(err);
     }
 
     const response = await this.actions.post('/api/v1/auth/login', snakes({ sign, accountName, socialPublicKey }));
@@ -91,6 +103,7 @@ class Api {
 
     await Worker.bindSocialKeyWithSocialPermissions(accountName, activeKey, socialPublicKey);
     await Worker.addSocialPermissionsToEmissionAndProfile(accountName, activeKey);
+    await Worker.addSocialPermissionsToProposeApproveAndExecute(accountName, activeKey);
 
     return humps(response.data);
   }
