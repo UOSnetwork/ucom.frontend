@@ -17,7 +17,7 @@ const testBlockchainError = (err) => {
   }
 };
 
-export default class {
+export default class MultiSignActions {
   static updatePermissions(activeKey) {
     return async (dispatch) => {
       const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
@@ -71,7 +71,8 @@ export default class {
 
       if (isMigrate) {
         content.accountName = data.nickname;
-        org = await api.migrateOrganization(data.id, content);
+        await api.migrateOrganization(data.id, content);
+        org = await dispatch(MultiSignActions.updateOrg(activeKey, data));
       } else {
         org = await api.createOrganization(content);
       }
