@@ -101,6 +101,15 @@ export default class {
       const membersChanged = await Worker.areSocialMembersChanged(data.nickname, membersNames);
 
       if (membersChanged) {
+        if (window.forTest) {
+          console.log(
+            ownerCredentials.accountName,
+            activeKey,
+            data.nickname,
+            content,
+            membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
+          );
+        }
         await Worker.createAndExecuteProfileUpdateAndSocialMembers(
           ownerCredentials.accountName,
           activeKey,
@@ -109,6 +118,15 @@ export default class {
           membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
         );
       } else {
+        if (window.forTest) {
+          console.log(
+            ownerCredentials.accountName,
+            activeKey,
+            data.nickname,
+            content,
+            membersNames.filter(accountName => accountName !== ownerCredentials.accountName),
+          );
+        }
         await Worker.multiSignUpdateProfile(
           ownerCredentials.accountName,
           ownerCredentials.socialKey,
