@@ -81,7 +81,7 @@
       "Social Networks": "Social Networks",
       "Trusts": "Trusts",
       "Untrusts": "Untrusts",
-      "Made an update": "<1>{{userName}}</1> made an update {{fromNow}}",
+      "Made an update": "<0>{{userName}}</0> made an update {{fromNow}}",
       "heyWhatsWew": "<0>Hey</0> <1></1> <2>what’s new?</2>",
       "Toggle menu": "Toggle menu",
       "pasteLink": "Paste a link and press Enter",
