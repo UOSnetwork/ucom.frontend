@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import { ContentIdGenerator, ContentCommentsActionsApi, RegistrationApi } from 'ucom-libs-wallet';
+import { ContentIdGenerator, ContentCommentsActionsApi, RegistrationApi, SocialKeyApi } from 'ucom-libs-wallet';
 import snakes from '../utils/snakes';
 import Worker from '../worker';
 import api from '../api';
@@ -18,6 +18,23 @@ const testBlockchainError = (err) => {
 };
 
 export default class MultiSignActions {
+  static checkAdminsOrExeption(accountNames) {
+    return async () => {
+      const accountNamesWithSocialKeys = await Promise.all(accountNames.map(accountName => (
+        SocialKeyApi.getAccountCurrentSocialKey(accountName)
+      )));
+
+      if (accountNamesWithSocialKeys.every(i => i)) {
+        return true;
+      }
+
+      const wrongAccountNames = accountNames.filter((accountName, index) => !accountNamesWithSocialKeys[index]);
+
+      throw new Error(`The following administrators do not have the social key: ${wrongAccountNames.join(', ')}. Social key is required to manage communities. Please ask those adminstrators to log in and assign a social key, or remove them from your community administrators.`);
+    };
+  }
+
+
   static updatePermissions(activeKey) {
     return async (dispatch) => {
       const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
@@ -45,6 +62,8 @@ export default class MultiSignActions {
       const blockchainId = ContentIdGenerator.getForOrganization();
 
       const teamMembersNames = data.usersTeam.map(u => u.accountName);
+
+      await dispatch(MultiSignActions.checkAdminsOrExeption(teamMembersNames));
 
       const content = snakes({
         ...data,
@@ -102,6 +121,9 @@ export default class MultiSignActions {
       });
 
       const membersNames = [ownerCredentials.accountName, ...data.usersTeam.map(u => u.accountName)];
+
+      await dispatch(MultiSignActions.checkAdminsOrExeption(membersNames));
+
       const membersChanged = await Worker.areSocialMembersChanged(data.nickname, membersNames);
 
       if (membersChanged) {
