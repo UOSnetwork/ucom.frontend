@@ -35,7 +35,8 @@ const Overview = (props) => {
   };
 
   const overviewRoutes = overviewUtils.OVERVIEW_ROUTES.map(item => ({
-    path: `/overview/${item.name}/filter/:filter`, component: overviewComponents[item.name],
+    path: `/overview/${item.name}/filter/:filter`,
+    component: overviewComponents[item.name],
   }));
 
   return (
@@ -51,7 +52,7 @@ const Overview = (props) => {
                   responsive
                   capitalize
                   theme="thinBlack"
-                  items={overviewUtils.OVERVIEW_CATEGORIES.map(item => ({
+                  items={overviewUtils.OVERVIEW_CATEGORIES.filter(i => ['fresh', 'top'].includes(i.name)).map(item => ({
                     title: item.name,
                     url: urls.getOverviewCategoryUrl({ filter: item.name, route: overviewRouteName }),
                     active: props.location.pathname.indexOf(`filter/${item.name}`) !== -1,

@@ -125,7 +125,8 @@ const urls = {
   },
 
   getOverviewCategoryUrl(params = {}) {
-    const filter = params.filter || overviewUtils.OVERVIEW_CATEGORIES[0].name;
+    // const filter = params.filter || overviewUtils.OVERVIEW_CATEGORIES[0].name;
+    const filter = params.filter || 'top';
     const route = params.route || overviewUtils.OVERVIEW_ROUTES[0].name;
     const { page } = params;
     let url = `/overview/${route}/filter/${filter}`;
