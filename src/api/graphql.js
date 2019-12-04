@@ -59,7 +59,8 @@ const api = {
       users: GraphQLSchema.getManyUsersQueryPart(params.users),
     });
 
-    const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+    // const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+    const postsQuery = GraphQLSchema.getManyTopPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
 
     try {
       const [data, posts] = await Promise.all([
@@ -111,7 +112,8 @@ const api = {
       }),
     });
 
-    const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+    // const postsQuery = GraphQLSchema.getManyTrendingPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
+    const postsQuery = GraphQLSchema.getManyTopPostsQuery(POST_TYPE_MEDIA_ID, 1, 5, 1, 3);
 
     try {
       const [data, posts] = await Promise.all([
