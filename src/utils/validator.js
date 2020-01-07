@@ -17,7 +17,7 @@ Validator.registerAsync('accountname', (accountName, attribute, req, passes) => 
 });
 
 Validator.register(
-  'shortUrl', value => value.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/),
+  'shortUrl', value => value.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w @\.-]*)*\/?$/),
   'The :attribute format is invalid.',
 );
 
