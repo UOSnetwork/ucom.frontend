@@ -173,6 +173,12 @@ registerPromiseWorker((action) => {
     case actions.GET_UPDATE_PUBLICATION_FROM_ORGANIZATION_ACTION:
       return ContentPublicationsActionsApi.getUpdatePublicationFromOrganizationAction(...action.args);
 
+    case actions.WITHDRAW_TIMELOCKED:
+      return WalletApi.withdrawTimeLocked(...action.args);
+
+    case actions.WITHDRAW_ACTIVITYLOCKED:
+      return WalletApi.withdrawActivityLocked(...action.args);
+
     default:
       return null;
   }

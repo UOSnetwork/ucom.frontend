@@ -53,6 +53,8 @@ const UserWallet = ({ location }) => {
   const [transactionsInitialLoading, setTransactionsInitialLoading] = useState(false);
   const [transactionsMoreLoading, setTransactionsMoreLoading] = useState(false);
   const [emissionLoading, setEmissionLoading] = useState(false);
+  const [timelockLoading, setTimelockLoading] = useState(false);
+  const [activityLoading, setActivityLoading] = useState(false);
   const validTransactionsData = transactions.data.filter(i => transactionTypes.includes(i.trType));
   const transactionsGroups = groupBy(validTransactionsData, (trx) => {
     const date = new Date(trx.updatedAt);
@@ -176,17 +178,47 @@ const UserWallet = ({ location }) => {
 
     if (account.tokens.timelock) {
       emissionCards.push({
-        disabled: true,
+        disabled: account.tokens.timelock.unlocked === 0,
         amount: `${formatNumber(account.tokens.timelock.unlocked)} UOS`,
         label: t('timeLockedTokens', { total: `${account.tokens.timelock.total} UOS` }),
+        requestActiveKeyEnabled: true,
+        onClick: async (activeKey) => {
+          if (timelockLoading && !account.tokens.timelock.unlocked) {
+            return;
+          }
+
+          setTimelockLoading(true);
+          try {
+            await withLoader(dispatch(walletActions.withdrawTimeLocked(activeKey)));
+            dispatch(addSuccessNotification(t('Successfully claim time locked tokens')));
+          } catch (err) {
+            dispatch(addErrorNotificationFromResponse(err));
+          }
+          setTimelockLoading(false);
+        },
       });
     }
 
     if (account.tokens.activitylock) {
       emissionCards.push({
-        disabled: true,
+        disabled: account.tokens.activitylock.unlocked === 0,
         amount: `${formatNumber(account.tokens.activitylock.unlocked)} UOS`,
         label: t('activityLockedTokens', { total: `${account.tokens.activitylock.total} UOS` }),
+        requestActiveKeyEnabled: true,
+        onClick: async (activeKey) => {
+          if (activityLoading && !account.tokens.activitylock.unlocked) {
+            return;
+          }
+
+          setActivityLoading(true);
+          try {
+            await withLoader(dispatch(walletActions.withdrawActivityLocked(activeKey)));
+            dispatch(addSuccessNotification(t('Successfully claim activity locked tokens')));
+          } catch (err) {
+            dispatch(addErrorNotificationFromResponse(err));
+          }
+          setActivityLoading(false);
+        },
       });
     }
   }

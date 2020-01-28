@@ -209,4 +209,12 @@ export default class Api {
   static getUpdatePublicationFromOrganizationAction(...args) {
     return Api.postMessage({ args, type: actions.GET_UPDATE_PUBLICATION_FROM_ORGANIZATION_ACTION });
   }
+
+  static withdrawTimeLocked(...args) {
+    return Api.postMessage({ args, type: actions.WITHDRAW_TIMELOCKED });
+  }
+
+  static withdrawActivityLocked(...args) {
+    return Api.postMessage({ args, type: actions.WITHDRAW_ACTIVITYLOCKED });
+  }
 }

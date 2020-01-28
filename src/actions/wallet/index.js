@@ -62,6 +62,28 @@ export const claimEmission = () => async (dispatch) => {
   await dispatch(getAccount(ownerCredentials.accountName));
 };
 
+export const withdrawTimeLocked = activeKey => async (dispatch) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return;
+  }
+
+  await Worker.withdrawTimeLocked(ownerCredentials.accountName, activeKey);
+  await dispatch(getAccount(ownerCredentials.accountName));
+};
+
+export const withdrawActivityLocked = activeKey => async (dispatch) => {
+  const ownerCredentials = dispatch(getOwnerCredentialsOrShowAuthPopup());
+
+  if (!ownerCredentials) {
+    return;
+  }
+
+  await Worker.withdrawActivityLocked(ownerCredentials.accountName, activeKey);
+  await dispatch(getAccount(ownerCredentials.accountName));
+};
+
 export const resetPopup = () => (dispatch) => {
   dispatch(popupActions.reset());
   dispatch(transactionsActions.reset());
