@@ -173,6 +173,22 @@ const UserWallet = ({ location }) => {
         setEmissionLoading(false);
       },
     }];
+
+    if (account.tokens.timelock) {
+      emissionCards.push({
+        disabled: true,
+        amount: `${formatNumber(account.tokens.timelock.unlocked)} UOS`,
+        label: t('timeLockedTokens', { total: `${account.tokens.timelock.unlocked} UOS` }),
+      });
+    }
+
+    if (account.tokens.activitylock) {
+      emissionCards.push({
+        disabled: true,
+        amount: `${formatNumber(account.tokens.activitylock.unlocked)} UOS`,
+        label: t('activityLockedTokens', { total: `${account.tokens.activitylock.unlocked} UOS` }),
+      });
+    }
   }
 
   const getInitialAccountData = async () => {
