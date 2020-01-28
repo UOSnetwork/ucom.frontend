@@ -178,7 +178,7 @@ const UserWallet = ({ location }) => {
       emissionCards.push({
         disabled: true,
         amount: `${formatNumber(account.tokens.timelock.unlocked)} UOS`,
-        label: t('timeLockedTokens', { total: `${account.tokens.timelock.unlocked} UOS` }),
+        label: t('timeLockedTokens', { total: `${account.tokens.timelock.total} UOS` }),
       });
     }
 
@@ -186,7 +186,7 @@ const UserWallet = ({ location }) => {
       emissionCards.push({
         disabled: true,
         amount: `${formatNumber(account.tokens.activitylock.unlocked)} UOS`,
-        label: t('activityLockedTokens', { total: `${account.tokens.activitylock.unlocked} UOS` }),
+        label: t('activityLockedTokens', { total: `${account.tokens.activitylock.total} UOS` }),
       });
     }
   }
